@@ -1,0 +1,126 @@
+{
+  "name": "SoldeRío - Automatización de Leads Fotovoltaicos (WhatsApp + Email + Alerta)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "solderio-leads",
+        "responseMode": "onReceived",
+        "responseData": "allEntries",
+        "options": {}
+      },
+      "name": "Webhook SoldeRío Cotización",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ],
+      "id": "webhook-solderio-01"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extraer y formatear datos del lead de SoldeRío\nconst body = $input.item.json.body || $input.item.json;\nconst leadId = body.leadId || 'SOL-2026';\nconst cliente = body.cliente || {};\nconst dimension = body.dimensionamiento || {};\n\n// Limpiar teléfono para WhatsApp (formato E.164: +569...)\nlet rawPhone = (cliente.whatsapp || '').replace(/[^0-9]/g, '');\nif (rawPhone.startsWith('9') && rawPhone.length === 9) {\n  rawPhone = '56' + rawPhone;\n} else if (!rawPhone.startsWith('56') && rawPhone.length > 8) {\n  rawPhone = '56' + rawPhone;\n}\n\nconst ahorroFormateado = new Intl.NumberFormat('es-CL', {\n  style: 'currency',\n  currency: 'CLP',\n  maximumFractionDigits: 0\n}).format(dimension.estimatedAnnualSavingsClp || 0);\n\nconst gastoFormateado = new Intl.NumberFormat('es-CL', {\n  style: 'currency',\n  currency: 'CLP',\n  maximumFractionDigits: 0\n}).format(cliente.monthlyBillClp || 0);\n\n// Mensaje para el cliente\nconst mensajeCliente = `¡Hola *${cliente.fullName}*! ☀️ Te saludamos del equipo de ingeniería de *SoldeRío*.\n\nHemos calculado tu pre-evaluación solar para tu propiedad en *${cliente.comuna || 'la Macrozona Sur'}*:\n\n⚡ *Potencia recomendada:* ${dimension.recommendedKwp || 0} kWp (${dimension.panelsCount || 0} módulos Tier 1 N-Type)\n🔋 *Almacenamiento:* ${dimension.batteryKwh > 0 ? dimension.batteryKwh + ' kWh LiFePO4 (<10ms en cortes)' : 'On-Grid Net Billing'}\n💰 *Ahorro anual estimado:* ${ahorroFormateado}\n🌲 *Huella de CO2:* -${dimension.co2TonsAvoidedPerYear || 0} Ton CO2/año\n\nUn Ingeniero Eléctrico SEC Clase A revisará tu factibilidad técnica. ¿Te gustaría coordinar una visita a terreno?\n\n👉 Responde a este chat o agenda tu visita en: https://solderio.cl/cotizacion`;\n\n// Alerta interna para el equipo\nconst mensajeEquipo = `🚨 *NUEVO LEAD SOLAR - ${leadId}*\n\n👤 *Cliente:* ${cliente.fullName}\n📱 *WhatsApp:* +${rawPhone}\n📍 *Ubicación:* ${cliente.comuna} (${cliente.propertyType})\n💡 *Gasto actual:* ${gastoFormateado}/mes (${cliente.distributor})\n☀️ *Propuesta:* ${dimension.recommendedKwp} kWp | Batería: ${dimension.batteryKwh} kWh\n💵 *Ahorro proyectado:* ${ahorroFormateado}/año\n\n👉 Contactar de inmediato: https://wa.me/${rawPhone}`;\n\nreturn {\n  leadId,\n  phone: rawPhone,\n  email: cliente.email,\n  nombre: cliente.fullName,\n  comuna: cliente.comuna,\n  mensajeCliente,\n  mensajeEquipo,\n  dimensionamiento: dimension,\n  rawLead: body\n};"
+      },
+      "name": "Formateador & Preparación",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        470,
+        300
+      ],
+      "id": "code-formatter-02"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v20.0/{{ $env.WHATSAPP_PHONE_NUMBER_ID }}/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $json.phone }}\",\n  \"type\": \"text\",\n  \"text\": {\n    \"preview_url\": true,\n    \"body\": \"{{ $json.mensajeCliente }}\"\n  }\n}",
+        "options": {}
+      },
+      "name": "WhatsApp al Cliente (Meta Cloud API)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        720,
+        200
+      ],
+      "id": "wa-client-03"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.resend.com/emails",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"from\": \"SoldeRío Ingeniería <contacto@solderio.cl>\",\n  \"to\": [\"{{ $json.email }}\"],\n  \"subject\": \"Tu Pre-Informe Solar SoldeRío (Folio {{ $json.leadId }})\",\n  \"html\": \"<div style='font-family:sans-serif;max-width:600px;margin:auto;padding:24px;background:#141414;color:#ffffff;border-radius:16px;'><h1 style='color:#FF8300;font-weight:300;'>SoldeRío</h1><h2>Pre-Evaluación Solar para {{ $json.nombre }}</h2><p>Estimado(a) {{ $json.nombre }}, hemos generado tu propuesta técnica preliminar para tu propiedad en <strong>{{ $json.comuna }}</strong>.</p><div style='background:#1F1F1F;padding:16px;border-radius:12px;margin:20px 0;'><p><strong>Potencia Recomendada:</strong> {{ $json.dimensionamiento.recommendedKwp }} kWp</p><p><strong>Módulos Fotovoltaicos:</strong> {{ $json.dimensionamiento.panelsCount }} paneles N-Type TOPCon 580W</p><p><strong>Ahorro Anual Estimado:</strong> ${{ $json.dimensionamiento.estimatedAnnualSavingsClp }} CLP</p></div><p>Un ingeniero certificado SEC revisará tu empalme. Puedes agendar tu visita a terreno respondiendo este correo.</p></div>\"\n}",
+        "options": {}
+      },
+      "name": "Email al Cliente (Resend)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        720,
+        380
+      ],
+      "id": "email-resend-04"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $env.TELEGRAM_TEAM_CHAT_ID }}",
+        "text": "={{ $json.mensajeEquipo }}",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "name": "Alerta Equipo SoldeRío",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        720,
+        540
+      ],
+      "id": "telegram-alert-05"
+    }
+  ],
+  "connections": {
+    "Webhook SoldeRío Cotización": {
+      "main": [
+        [
+          {
+            "node": "Formateador & Preparación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formateador & Preparación": {
+      "main": [
+        [
+          {
+            "node": "WhatsApp al Cliente (Meta Cloud API)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Email al Cliente (Resend)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Alerta Equipo SoldeRío",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

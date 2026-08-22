@@ -1,0 +1,23 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Reglas para la colección 'leads' (Cotizaciones SoldeRío)
+    match /leads/{leadId} {
+      // Permitir creación pública desde el cotizador web con validación de datos
+      allow create: if request.resource.data.formData.fullName is string
+                    && request.resource.data.formData.fullName.size() >= 2
+                    && request.resource.data.formData.whatsapp is string
+                    && request.resource.data.formData.email is string;
+      
+      // Permitir lectura, actualización y eliminación solo a personal autorizado de SoldeRío
+      allow read, update, delete: if request.auth != null;
+    }
+
+    // Reglas para visitas técnicas y presupuestos
+    match /visitas/{visitaId} {
+      allow create: if request.resource.data.nombre is string;
+      allow read, update, delete: if request.auth != null;
+    }
+  }
+}

@@ -1,0 +1,15 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // Reglas para boletas eléctricas y fotos de techumbre
+    match /boletas/{leadId}/{fileName} {
+      // Permitir subida si el archivo es menor a 10MB y es PDF o Imagen
+      allow write: if request.resource.size < 10 * 1024 * 1024
+                   && (request.resource.contentType.matches('image/.*') || request.resource.contentType == 'application/pdf');
+      
+      // Lectura restringida a personal autenticado de ingeniería SoldeRío
+      allow read: if request.auth != null;
+    }
+  }
+}

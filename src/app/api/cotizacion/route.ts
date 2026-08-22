@@ -43,26 +43,41 @@ async function saveLeadToFirestore(lead: LeadSubmission): Promise<boolean> {
 }
 
 async function dispatchWebhookToN8n(lead: LeadSubmission): Promise<void> {
-  const webhookUrl = process.env.EXTERNAL_WEBHOOK_URL;
-  if (!webhookUrl) return;
+  // Webhook targets to attempt in local / production
+  const candidateUrls: string[] = [];
+  if (process.env.EXTERNAL_WEBHOOK_URL) {
+    candidateUrls.push(process.env.EXTERNAL_WEBHOOK_URL);
+  }
+  // Local fallback endpoints
+  candidateUrls.push("http://localhost:5678/webhook-test/solderio-leads");
+  candidateUrls.push("http://localhost:5678/webhook/solderio-leads");
 
-  try {
-    await fetch(webhookUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-solderio-secret": process.env.WEBHOOK_SECRET || "solde_rio_sec_2026",
-      },
-      body: JSON.stringify({
-        event: "lead.created",
-        leadId: lead.id,
-        createdAt: lead.createdAt,
-        cliente: lead.formData,
-        dimensionamiento: lead.sizingResult,
-      }),
-    });
-  } catch (err) {
-    console.warn("No se pudo despachar webhook a n8n:", err);
+  const payload = {
+    event: "lead.created",
+    leadId: lead.id,
+    createdAt: lead.createdAt,
+    cliente: lead.formData,
+    dimensionamiento: lead.sizingResult,
+  };
+
+  for (const url of candidateUrls) {
+    try {
+      console.log(`[Webhook Dispatcher] Enviando lead ${lead.id} a: ${url}`);
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-solderio-secret": process.env.WEBHOOK_SECRET || "solde_rio_sec_2026",
+        },
+        body: JSON.stringify(payload),
+      });
+      console.log(`[Webhook Dispatcher] Respuesta de ${url}: Status ${res.status}`);
+      if (res.ok) {
+        break; // Successfully received by n8n
+      }
+    } catch (err: any) {
+      console.warn(`[Webhook Dispatcher] Falló conexión con ${url}: ${err.message}`);
+    }
   }
 }
 
@@ -121,7 +136,7 @@ export async function POST(request: Request) {
       saveLeadLocally(newLead),
     ]);
 
-    // 2. Dispatch event to n8n for WhatsApp & Email automations
+    // 2. Dispatch event to n8n for WhatsApp, Email and Telegram
     dispatchWebhookToN8n(newLead).catch((e) => console.error("Webhook background error:", e));
 
     return NextResponse.json({

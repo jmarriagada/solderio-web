@@ -1,5 +1,92 @@
 [
   {
+    "id": "SOL-2026-3873",
+    "createdAt": "2026-08-22T07:16:42.117Z",
+    "formData": {
+      "propertyType": "parcela",
+      "comuna": "Temuco",
+      "address": "",
+      "monthlyBillClp": 90000,
+      "distributor": "saesa",
+      "hasPhases": "monofasico",
+      "systemType": "hibrida",
+      "includeEvCharger": true,
+      "backupPriority": "cargas_criticas",
+      "billFile": {
+        "name": "boleta.pdf",
+        "size": 647102,
+        "type": "application/pdf"
+      },
+      "fullName": "asasd ",
+      "whatsapp": "+56966186667",
+      "email": "asxa@asxasx.com",
+      "acceptTerms": true
+    },
+    "sizingResult": {
+      "recommendedKwp": 5.2,
+      "panelsCount": 9,
+      "panelWatts": 580,
+      "inverterKw": 5,
+      "batteryKwh": 10,
+      "estimatedMonthlyGenKwh": 511,
+      "estimatedAnnualGenKwh": 6136,
+      "estimatedAnnualSavingsClp": 950400,
+      "estimated25YearSavingsClp": 37017944,
+      "paybackYears": 5.4,
+      "co2TonsAvoidedPerYear": 2.4,
+      "equivalentTreesPlanted": 38,
+      "autoconsumoPct": 92,
+      "secNorms": [
+        "Pliego Técnico RIC N°09 (Instalaciones Fotovoltaicas)",
+        "Pliego Técnico RIC N°15 (Protección Anti-Isla & Interconexión)",
+        "Ley N° 21.118 (Generación Distribuida Net Billing)",
+        "RIC N°09 Sección BESS (Almacenamiento LiFePO4)"
+      ]
+    },
+    "status": "NUEVO"
+  },
+  {
+    "id": "SOL-2026-6882",
+    "createdAt": "2026-08-22T07:15:20.540Z",
+    "formData": {
+      "fullName": "Cristian Valenzuela",
+      "whatsapp": "+56912345678",
+      "email": "cristian@ejemplo.cl",
+      "propertyType": "parcela",
+      "comuna": "Puerto Varas",
+      "monthlyBillClp": 180000,
+      "distributor": "saesa",
+      "hasPhases": "monofasico",
+      "systemType": "hibrida",
+      "includeEvCharger": false,
+      "backupPriority": "cargas_criticas",
+      "acceptTerms": true,
+      "billFile": null
+    },
+    "sizingResult": {
+      "recommendedKwp": 9.9,
+      "panelsCount": 17,
+      "panelWatts": 580,
+      "inverterKw": 10,
+      "batteryKwh": 15,
+      "estimatedMonthlyGenKwh": 974,
+      "estimatedAnnualGenKwh": 11682,
+      "estimatedAnnualSavingsClp": 1900800,
+      "estimated25YearSavingsClp": 74035888,
+      "paybackYears": 5.4,
+      "co2TonsAvoidedPerYear": 4.5,
+      "equivalentTreesPlanted": 72,
+      "autoconsumoPct": 92,
+      "secNorms": [
+        "Pliego Técnico RIC N°09 (Instalaciones Fotovoltaicas)",
+        "Pliego Técnico RIC N°15 (Protección Anti-Isla & Interconexión)",
+        "Ley N° 21.118 (Generación Distribuida Net Billing)",
+        "RIC N°09 Sección BESS (Almacenamiento LiFePO4)"
+      ]
+    },
+    "status": "NUEVO"
+  },
+  {
     "id": "SOL-2026-2651",
     "createdAt": "2026-08-22T04:18:28.524Z",
     "formData": {
@@ -85,7 +172,5 @@
       ]
     },
     "status": "NUEVO"
-  }
-]O"
   }
 ]

@@ -35,6 +35,14 @@ export interface QuoteFormData {
   acceptTerms: boolean;
 }
 
+export interface MonthlyGenBreakdown {
+  month: number;
+  monthName: string;
+  monthlyGenKwh: number;
+  poaKwhM2Day: number;
+  tCellCelsius?: number;
+}
+
 export interface SolarSizingResult {
   recommendedKwp: number;
   panelsCount: number;
@@ -50,6 +58,18 @@ export interface SolarSizingResult {
   equivalentTreesPlanted: number;
   autoconsumoPct: number;
   secNorms: string[];
+
+  // Advanced High-Fidelity Physical & Financial Metrics
+  usableBatteryKwh?: number;
+  seasonalVariationRatio?: number;
+  summerAvgMonthlyGenKwh?: number;
+  winterAvgMonthlyGenKwh?: number;
+  monthlyBreakdown?: MonthlyGenBreakdown[];
+  vanClp?: number;
+  tirPercent?: number;
+  lcoeClpPerKwh?: number;
+  requiresThreePhase?: boolean;
+  recommendedPhaseType?: "monofasico" | "trifasico";
 }
 
 export interface LeadSubmission {
@@ -58,4 +78,6 @@ export interface LeadSubmission {
   formData: QuoteFormData;
   sizingResult: SolarSizingResult;
   status: "NUEVO" | "PRE_DIMENSIONADO" | "VISITA_AGENDADA" | "PRESUPUESTO_ENVIADO" | "CERRADO";
+  notes?: string;
+  assignedEngineer?: string;
 }

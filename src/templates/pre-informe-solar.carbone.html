@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Pre-Informe Técnico Solar - SoldeRío</title>
+  <style>
+    @page {
+      size: A4 portrait;
+      margin: 15mm 15mm 15mm 15mm;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    body {
+      background-color: #ffffff;
+      color: #1e293b;
+      font-size: 10pt;
+      line-height: 1.4;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #ea580c;
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+    }
+    .logo-title {
+      font-size: 18pt;
+      font-weight: 700;
+      color: #0f172a;
+      letter-spacing: -0.5px;
+    }
+    .logo-title span {
+      color: #ea580c;
+    }
+    .company-sub {
+      font-size: 8pt;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .doc-meta {
+      text-align: right;
+      font-size: 8.5pt;
+      color: #475569;
+    }
+    .doc-id {
+      display: inline-block;
+      background-color: #fff7ed;
+      color: #c2410c;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-family: monospace;
+      border: 1px solid #ffedd5;
+      margin-bottom: 4px;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .card {
+      background-color: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 12px 14px;
+      break-inside: avoid;
+    }
+    .card-title {
+      font-size: 8.5pt;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 700;
+      color: #64748b;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 3px 0;
+      border-bottom: 1px dashed #e2e8f0;
+      font-size: 9pt;
+    }
+    .stat-row:last-child {
+      border-bottom: none;
+    }
+    .stat-label {
+      color: #64748b;
+    }
+    .stat-value {
+      font-weight: 600;
+      color: #0f172a;
+    }
+    .highlight-card {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: #ffffff;
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      break-inside: avoid;
+    }
+    .highlight-left h3 {
+      font-size: 13pt;
+      font-weight: 600;
+      color: #f8fafc;
+    }
+    .highlight-left p {
+      font-size: 8.5pt;
+      color: #94a3b8;
+    }
+    .highlight-badge {
+      text-align: right;
+    }
+    .highlight-badge .amount {
+      font-size: 16pt;
+      font-weight: 700;
+      color: #34d399;
+      font-family: monospace;
+    }
+    .table-container {
+      margin-bottom: 16px;
+      break-inside: avoid;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 8pt;
+      text-align: left;
+    }
+    th {
+      background-color: #0f172a;
+      color: #f8fafc;
+      padding: 6px 8px;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 7.5pt;
+      letter-spacing: 0.5px;
+    }
+    td {
+      padding: 5px 8px;
+      border-bottom: 1px solid #e2e8f0;
+      color: #334155;
+    }
+    tr:nth-child(even) {
+      background-color: #f8fafc;
+    }
+    .badge-sec {
+      display: inline-block;
+      background-color: #ecfdf5;
+      color: #047857;
+      border: 1px solid #a7f3d0;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 7.5pt;
+      font-weight: 600;
+    }
+    .footer {
+      border-top: 1px solid #cbd5e1;
+      padding-top: 10px;
+      margin-top: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      font-size: 7.5pt;
+      color: #64748b;
+      break-inside: avoid;
+    }
+    .signature-box {
+      border-top: 1px solid #94a3b8;
+      width: 180px;
+      text-align: center;
+      padding-top: 4px;
+      font-size: 7.5pt;
+      color: #334155;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header Membretado SoldeRío -->
+  <div class="header">
+    <div>
+      <div class="logo-title">SOLDE<span>RÍO</span></div>
+      <div class="company-sub">Ingeniería Solar & Almacenamiento • Sur de Chile</div>
+    </div>
+    <div class="doc-meta">
+      <div class="doc-id">PRE-INFORME TÉCNICO N° {d.leadId}</div>
+      <div>Fecha de Emisión: {c.now:formatD('DD/MM/YYYY')}</div>
+      <div>Validez: 30 Días corridos</div>
+    </div>
+  </div>
+
+  <!-- Resumen del Cliente y Ubicación -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">01. Datos del Cliente & Inmueble</div>
+      <div class="stat-row">
+        <span class="stat-label">Titular:</span>
+        <span class="stat-value">{d.formData.fullName}</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Comuna:</span>
+        <span class="stat-value">{d.formData.comuna} (Macrozona Sur)</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Tipo de Inmueble:</span>
+        <span class="stat-value">{d.formData.propertyType:upperCase}</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Distribuidora / Tarifa:</span>
+        <span class="stat-value">{d.formData.distributor:upperCase} (Tarifa BT-1)</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">02. Ingeniería Fotovoltaica Propuesta</div>
+      <div class="stat-row">
+        <span class="stat-label">Potencia Instalada:</span>
+        <span class="stat-value">{d.sizing.recommendedKwp} kWp ({d.sizing.panelsCount} Módulos)</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Tecnología de Módulos:</span>
+        <span class="stat-value">Tier 1 N-Type TOPCon {d.sizing.panelWatts}W</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Inversor Inteligente:</span>
+        <span class="stat-value">{d.sizing.inverterKw} kW ({d.sizing.recommendedPhaseType:upperCase})</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Batería LiFePO4:</span>
+        <span class="stat-value">{d.sizing.batteryKwh:ifGT(0):show(d.sizing.batteryKwh + ' kWh Nominal (' + d.sizing.usableBatteryKwh + ' kWh Útil)'):elseShow('On-Grid')}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Spotlight Financiero -->
+  <div class="highlight-card">
+    <div class="highlight-left">
+      <h3>Nueva Realidad Energética del Hogar</h3>
+      <p>Tu boleta mensual se reduce de {d.formData.monthlyBillClp:formatC(0, 'CLP')} a solo el cargo fijo de red.</p>
+    </div>
+    <div class="highlight-badge">
+      <div style="font-size: 8pt; color: #94a3b8; text-transform: uppercase;">Ahorro Proyectado Año 1</div>
+      <div class="amount">{d.sizing.estimatedAnnualSavingsClp:formatC(0, 'CLP')} / año</div>
+    </div>
+  </div>
+
+  <!-- Tabla de Balance Energético Mes a Mes (TMY Sur) -->
+  <div class="table-container">
+    <div class="card-title" style="margin-bottom: 6px;">03. Balance Energético Mensualizado TMY (Generación vs Consumo)</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Mes</th>
+          <th>Irradiancia POA (kWh/m²/día)</th>
+          <th>Generación Solar (kWh)</th>
+          <th>Consumo Hogar (kWh)</th>
+          <th>Balance / Excedente</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>{d.sizing.monthlyBreakdown[i].monthName}</strong></td>
+          <td>{d.sizing.monthlyBreakdown[i].poaKwhM2Day}</td>
+          <td>{d.sizing.monthlyBreakdown[i].monthlyGenKwh} kWh</td>
+          <td>{d.sizing.monthlyBreakdown[i].monthlyDemandKwh} kWh</td>
+          <td>{d.sizing.monthlyBreakdown[i].surplusKwh:ifGT(0):show('+' + .surplusKwh + ' kWh Excedente'):elseShow('-' + .gridImportKwh + ' kWh Red/BESS')}</td>
+        </tr>
+        <tr><td>{d.sizing.monthlyBreakdown[i+1]}</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Indicadores Financieros y Normativa SEC -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">04. Indicadores Económicos (25 Años)</div>
+      <div class="stat-row">
+        <span class="stat-label">Ahorro Acumulado 25 Años:</span>
+        <span class="stat-value" style="color: #059669;">{d.sizing.estimated25YearSavingsClp:formatC(0, 'CLP')}</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Payback Estimado:</span>
+        <span class="stat-value">{d.sizing.paybackYears} Años</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">VAN (Tasa 7%):</span>
+        <span class="stat-value">{d.sizing.vanClp:formatC(0, 'CLP')}</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Costo LCOE Energía Solar:</span>
+        <span class="stat-value">${d.sizing.lcoeClpPerKwh} CLP / kWh</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">05. Cumplimiento Normativo SEC</div>
+      <div style="margin-bottom: 6px;">
+        <span class="badge-sec">Pliego RIC N°09 (DC/AC)</span>
+        <span class="badge-sec">RIC N°15 (Anti-Isla)</span>
+        <span class="badge-sec">Trámite TE-4 SEC</span>
+      </div>
+      <p style="font-size: 7.5pt; color: #64748b; line-height: 1.3;">
+        Proyecto ejecutado bajo la Ley 21.118 (Net Billing) con inscripción y declaración formal ante la Superintendencia de Electricidad y Combustibles por Ingeniero Eléctrico Clase A.
+      </p>
+    </div>
+  </div>
+
+  <!-- Footer con Firma y Contacto -->
+  <div class="footer">
+    <div>
+      <strong>SoldeRío SpA</strong> • RUT: 77.892.341-K<br>
+      Casa Matriz: Puerto Varas, Región de Los Lagos<br>
+      Contacto: contacto@solderio.cl • +56 9 8765 4321 • www.solderio.cl
+    </div>
+    <div class="signature-box">
+      <strong>Depto. de Ingeniería Solar</strong><br>
+      SoldeRío Energy Solutions<br>
+      Ingeniero Eléctrico SEC Clase A
+    </div>
+  </div>
+
+</body>
+</html>

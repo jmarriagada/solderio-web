@@ -33,6 +33,8 @@ import {
 import { SolarSizingResult, QuoteFormData, MonthlyGenBreakdown } from "@/types/cotizacion";
 import { useVisitaModal } from "@/context/VisitaModalContext";
 
+import { ExecutiveReportModal } from "./ExecutiveReportModal";
+
 interface Props {
   formData: QuoteFormData;
   sizing: SolarSizingResult;
@@ -103,6 +105,7 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
   const { openModal } = useVisitaModal();
   const [hoveredMonth, setHoveredMonth] = useState<MonthlyGenBreakdown | null>(null);
   const [activeModalKey, setActiveModalKey] = useState<string | null>(null);
+  const [isExecutiveReportOpen, setIsExecutiveReportOpen] = useState(false);
 
   const formatCurrency = (val: number) => {
     return new Intl.NumberFormat("es-CL", {
@@ -143,13 +146,14 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
             </p>
           </div>
 
-          <div className="flex items-center gap-3 no-print">
+          <div className="flex flex-wrap items-center gap-3 no-print">
             <button
-              onClick={() => window.print()}
-              className="p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white/80 hover:text-white transition-colors cursor-pointer"
-              title="Descargar o Imprimir Ficha PDF"
+              onClick={() => setIsExecutiveReportOpen(true)}
+              className="px-4 py-2.5 rounded-full bg-white text-black hover:bg-[#FF8300] hover:text-white transition-all text-xs font-light tracking-wide shadow-lg flex items-center gap-2 cursor-pointer"
+              title="Ver y Descargar Ficha PDF Oficial"
             >
-              <Printer className="w-4 h-4" />
+              <Printer className="w-4 h-4 text-[#FF8300] group-hover:text-white" />
+              <span>Descargar Ficha PDF</span>
             </button>
             <button
               onClick={onReset}
@@ -162,7 +166,7 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
               href={`https://wa.me/56987654321?text=Hola%20SoldeR%C3%ADo,%20acabo%20de%20generar%20mi%20pre-informe%20solar%20(${leadId})%20para%20${formData.comuna}%20y%20deseo%20coordinar%20mi%20visita%20t%C3%A9cnica.`}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-6 py-3 rounded-full bg-[#FF8300] text-white font-light text-xs md:text-sm hover:bg-[#e07400] transition-all shadow-lg hover:shadow-[0_0_25px_rgba(255,131,0,0.5)] flex items-center gap-2 cursor-pointer"
+              className="px-6 py-2.5 rounded-full bg-[#FF8300] text-white font-light text-xs md:text-sm hover:bg-[#e07400] transition-all shadow-lg hover:shadow-[0_0_25px_rgba(255,131,0,0.5)] flex items-center gap-2 cursor-pointer"
             >
               <PhoneCall className="w-4 h-4" />
               <span>Hablar con un Ingeniero</span>
@@ -692,6 +696,16 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
         )}
       </AnimatePresence>
 
+      {/* Printable Executive Report Modal (A4 Light-Theme Pixel-Perfect Layout) */}
+      <ExecutiveReportModal
+        isOpen={isExecutiveReportOpen}
+        onClose={() => setIsExecutiveReportOpen(false)}
+        formData={formData}
+        sizing={sizing}
+        leadId={leadId}
+      />
+
     </div>
   );
 }
+

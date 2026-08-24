@@ -1,6 +1,6 @@
 /**
  * Solderío Solar Engineering - Módulo Tarifario y Financiero (Ley 21.118 Net Billing)
- * Estructura tarifaria BT-1 por distribuidora, precio nudo de inyección y flujo de caja descontado a 25 años
+ * Curva Estacional de Demanda del Sur, Mitigación de Límite de Invierno y Flujo de Caja Descontado
  */
 
 import { DistributorType, TopologyType } from "@/types/cotizacion";
@@ -10,6 +10,8 @@ export interface DistributorTariffConfig {
   distributorName: string;
   pCompraClpPerKwh: number; // Tarifa de compra residencial BT-1 ($/kWh)
   pNudoClpPerKwh: number; // Precio Nudo de Inyección Ley 21.118 ($/kWh)
+  pInviernoClpPerKwh: number; // Tarifa con recargo por Límite de Invierno ($/kWh)
+  winterLimitThresholdKwh: number; // Umbral de límite de invierno (350 a 430 kWh)
   fixedChargeMonthlyClp: number; // Cargo fijo mensual ($)
   transmissionChargeClpPerKwh: number;
 }
@@ -20,6 +22,8 @@ export const DISTRIBUTOR_TARIFFS: Record<DistributorType, DistributorTariffConfi
     distributorName: "Grupo Saesa (Llanquihue / Osorno / Valdivia / Chiloé)",
     pCompraClpPerKwh: 188.5,
     pNudoClpPerKwh: 112.4,
+    pInviernoClpPerKwh: 245.0,
+    winterLimitThresholdKwh: 350,
     fixedChargeMonthlyClp: 1850,
     transmissionChargeClpPerKwh: 14.2,
   },
@@ -28,6 +32,8 @@ export const DISTRIBUTOR_TARIFFS: Record<DistributorType, DistributorTariffConfi
     distributorName: "CRELL (Cooperativa Rural Eléctrica Llanquihue)",
     pCompraClpPerKwh: 194.2,
     pNudoClpPerKwh: 116.5,
+    pInviernoClpPerKwh: 252.0,
+    winterLimitThresholdKwh: 350,
     fixedChargeMonthlyClp: 2100,
     transmissionChargeClpPerKwh: 15.0,
   },
@@ -36,6 +42,8 @@ export const DISTRIBUTOR_TARIFFS: Record<DistributorType, DistributorTariffConfi
     distributorName: "CGE Distribución (Araucanía / Temuco / Villarrica)",
     pCompraClpPerKwh: 182.0,
     pNudoClpPerKwh: 108.5,
+    pInviernoClpPerKwh: 238.0,
+    winterLimitThresholdKwh: 430,
     fixedChargeMonthlyClp: 1750,
     transmissionChargeClpPerKwh: 13.8,
   },
@@ -44,6 +52,8 @@ export const DISTRIBUTOR_TARIFFS: Record<DistributorType, DistributorTariffConfi
     distributorName: "Frontel (Zona Rural Araucanía / Bío Bío)",
     pCompraClpPerKwh: 191.0,
     pNudoClpPerKwh: 114.0,
+    pInviernoClpPerKwh: 248.0,
+    winterLimitThresholdKwh: 350,
     fixedChargeMonthlyClp: 1900,
     transmissionChargeClpPerKwh: 14.5,
   },
@@ -52,6 +62,8 @@ export const DISTRIBUTOR_TARIFFS: Record<DistributorType, DistributorTariffConfi
     distributorName: "Edelaysen (Palena / Carretera Austral)",
     pCompraClpPerKwh: 198.0,
     pNudoClpPerKwh: 118.5,
+    pInviernoClpPerKwh: 258.0,
+    winterLimitThresholdKwh: 350,
     fixedChargeMonthlyClp: 2200,
     transmissionChargeClpPerKwh: 15.5,
   },
@@ -60,10 +72,37 @@ export const DISTRIBUTOR_TARIFFS: Record<DistributorType, DistributorTariffConfi
     distributorName: "Otra Distribuidora / Cooperativa Local",
     pCompraClpPerKwh: 185.0,
     pNudoClpPerKwh: 110.0,
+    pInviernoClpPerKwh: 240.0,
+    winterLimitThresholdKwh: 350,
     fixedChargeMonthlyClp: 1800,
     transmissionChargeClpPerKwh: 14.0,
   },
 };
+
+// Ponderadores de demanda mensual para la macrozona sur (12 meses: Ene a Dic)
+// Refleja el incremento por calefacción/pellet/iluminación invernal
+export const SOUTHERN_CHILE_DEMAND_WEIGHTS = [
+  0.82, // Ene (Verano)
+  0.80, // Feb (Verano)
+  0.88, // Mar (Otoño temprano)
+  1.05, // Abr (Inicio frío / Límite Invierno)
+  1.25, // May (Invierno frío)
+  1.40, // Jun (Pico invernal)
+  1.45, // Jul (Pico invernal)
+  1.32, // Ago (Invierno tardío)
+  1.10, // Sep (Fin de Límite Invierno)
+  0.95, // Oct (Primavera)
+  0.88, // Nov (Primavera)
+  0.84, // Dic (Verano)
+];
+
+export interface MonthlyDemandProfile {
+  month: number;
+  monthName: string;
+  demandKwh: number;
+  isWinterLimitPeriod: boolean;
+  hasWinterLimitSurchargeWithoutSolar: boolean;
+}
 
 export interface NetBillingFinancialAnalysis {
   pCompraClpPerKwh: number;
@@ -73,6 +112,8 @@ export interface NetBillingFinancialAnalysis {
   year1SavingsClp: number; // Ahorro neto anual año 1 ($CLP)
   year1AutoconsumoSavingsClp: number; // Ahorro por no comprar a la red ($CLP)
   year1InjectionCreditsClp: number; // Créditos generados por inyección ($CLP)
+  winterLimitSavingsClp: number; // Ahorro específico por eliminar recargo de límite de invierno
+  estimatedNewMonthlyBillClp: number; // Nueva boleta promedio ($12.000 - $25.000 cargo fijo y remanente)
   estimatedSystemCostClp: number; // CAPEX estimado con llave en mano e ingeniería SEC
   paybackYearsSimple: number;
   paybackYearsDiscounted: number;
@@ -83,7 +124,40 @@ export interface NetBillingFinancialAnalysis {
 }
 
 /**
- * Calcula el análisis financiero y económico bajo la Ley 21.118 Net Billing
+ * Calcula la demanda estacional mensual de una vivienda en el sur
+ */
+export function calculateSouthernSeasonalDemand(
+  monthlyBillClp: number,
+  distributorKey: DistributorType = "saesa"
+): MonthlyDemandProfile[] {
+  const tariff = DISTRIBUTOR_TARIFFS[distributorKey] || DISTRIBUTOR_TARIFFS.saesa;
+  const baseAvgMonthlyKwh = Math.max(80, Math.round((monthlyBillClp - tariff.fixedChargeMonthlyClp) / tariff.pCompraClpPerKwh));
+  const sumWeights = SOUTHERN_CHILE_DEMAND_WEIGHTS.reduce((a, b) => a + b, 0);
+  const avgWeight = sumWeights / 12;
+
+  const monthNames = [
+    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+  ];
+
+  return SOUTHERN_CHILE_DEMAND_WEIGHTS.map((weight, idx) => {
+    const month = idx + 1;
+    const isWinterLimitPeriod = month >= 4 && month <= 9; // Abril a Septiembre
+    const demandKwh = Math.round(baseAvgMonthlyKwh * (weight / avgWeight));
+    const hasWinterLimitSurchargeWithoutSolar = isWinterLimitPeriod && demandKwh > tariff.winterLimitThresholdKwh;
+
+    return {
+      month,
+      monthName: monthNames[idx],
+      demandKwh,
+      isWinterLimitPeriod,
+      hasWinterLimitSurchargeWithoutSolar,
+    };
+  });
+}
+
+/**
+ * Calcula el análisis financiero y económico bajo la Ley 21.118 Net Billing con Límite de Invierno
  */
 export function calculateNetBillingFinancials(
   annualGenKwh: number,
@@ -91,11 +165,14 @@ export function calculateNetBillingFinancials(
   distributorKey: DistributorType = "saesa",
   systemType: TopologyType = "hibrida",
   installedKwp: number = 5.0,
-  batteryKwh: number = 0
+  batteryKwh: number = 0,
+  monthlyDemandList?: MonthlyDemandProfile[]
 ): NetBillingFinancialAnalysis {
   const tariff = DISTRIBUTOR_TARIFFS[distributorKey] || DISTRIBUTOR_TARIFFS.saesa;
   const annualBillClp = monthlyBillClp * 12;
-  const annualConsumptionKwh = Math.round((monthlyBillClp - tariff.fixedChargeMonthlyClp) / tariff.pCompraClpPerKwh) * 12;
+
+  const seasonalDemands = monthlyDemandList || calculateSouthernSeasonalDemand(monthlyBillClp, distributorKey);
+  const totalAnnualDemandKwh = seasonalDemands.reduce((acc, d) => acc + d.demandKwh, 0);
 
   // Fracción de autoconsumo según topología
   let autoconsumoRatio = 0.70; // 70% en On-Grid diurno residencial
@@ -107,13 +184,33 @@ export function calculateNetBillingFinancials(
 
   const inyeccionRatio = Math.max(0, 1 - autoconsumoRatio);
 
-  const solarGenUsedLocallyKwh = Math.min(annualConsumptionKwh, annualGenKwh * autoconsumoRatio);
+  const solarGenUsedLocallyKwh = Math.min(totalAnnualDemandKwh, annualGenKwh * autoconsumoRatio);
   const solarGenInjectedKwh = Math.max(0, annualGenKwh - solarGenUsedLocallyKwh);
 
-  // Ahorro año 1: Energía no comprada + Excedentes valorizados a precio nudo
+  // Cálculo del recargo de Límite de Invierno evitado
+  let winterLimitPenaltyWithoutSolarClp = 0;
+  seasonalDemands.forEach((d) => {
+    if (d.hasWinterLimitSurchargeWithoutSolar) {
+      const excessKwh = d.demandKwh - tariff.winterLimitThresholdKwh;
+      const penaltyPerKwh = tariff.pInviernoClpPerKwh - tariff.pCompraClpPerKwh;
+      winterLimitPenaltyWithoutSolarClp += excessKwh * penaltyPerKwh;
+    }
+  });
+
+  const winterLimitSavingsClp = Math.round(winterLimitPenaltyWithoutSolarClp);
+
+  // Ahorro año 1: Energía no comprada + Excedentes valorizados a precio nudo + Multas de invierno evitadas
   const year1AutoconsumoSavings = Math.round(solarGenUsedLocallyKwh * tariff.pCompraClpPerKwh);
   const year1InjectionCredits = Math.round(solarGenInjectedKwh * tariff.pNudoClpPerKwh);
-  const year1Savings = Math.min(annualBillClp * 0.95, year1AutoconsumoSavings + year1InjectionCredits);
+  
+  // Ahorro neto año 1 (con tope de seguridad)
+  const grossSavings = year1AutoconsumoSavings + year1InjectionCredits + winterLimitSavingsClp;
+  const maxPossibleSavings = Math.max(0, annualBillClp - (tariff.fixedChargeMonthlyClp * 12));
+  const year1Savings = Math.min(maxPossibleSavings, grossSavings);
+
+  // Nueva boleta estimada que pagará el cliente (típicamente solo el cargo fijo de red)
+  const estimatedNewAnnualBill = Math.max(tariff.fixedChargeMonthlyClp * 12, annualBillClp - year1Savings);
+  const estimatedNewMonthlyBillClp = Math.round(estimatedNewAnnualBill / 12);
 
   // Estimación de CAPEX Llave en Mano SoldeRío (UF/kWp + baterías)
   let baseCostPerKwpClp = 1150000; // ~$1.15M CLP por kWp instalado con estructura e ingeniería SEC
@@ -138,7 +235,6 @@ export function calculateNetBillingFinancials(
   const cashFlows: number[] = [-estimatedSystemCostClp];
 
   for (let t = 1; t <= 25; t++) {
-    // F_t = F_1 * (1 - R_d)^(t-1) * (1 + i_e)^(t-1)
     const oAndMCost = (estimatedSystemCostClp * 0.01) * Math.pow(1 + 0.03, t - 1); // 1% O&M anual
     const grossSavingsYearT = year1Savings * Math.pow(1 - moduleDegradationAnnual, t - 1) * Math.pow(1 + energyInflationAnnual, t - 1);
     const netCashFlowT = grossSavingsYearT - oAndMCost;
@@ -191,6 +287,8 @@ export function calculateNetBillingFinancials(
     year1SavingsClp: Math.round(year1Savings),
     year1AutoconsumoSavingsClp: Math.round(year1AutoconsumoSavings),
     year1InjectionCreditsClp: Math.round(year1InjectionCredits),
+    winterLimitSavingsClp,
+    estimatedNewMonthlyBillClp,
     estimatedSystemCostClp,
     paybackYearsSimple: Math.round(simplePayback * 10) / 10,
     paybackYearsDiscounted: Math.round(discountedPayback * 10) / 10,

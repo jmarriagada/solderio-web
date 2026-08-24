@@ -39,8 +39,11 @@ export interface MonthlyGenBreakdown {
   month: number;
   monthName: string;
   monthlyGenKwh: number;
+  monthlyDemandKwh: number;
   poaKwhM2Day: number;
   tCellCelsius?: number;
+  surplusKwh?: number;
+  gridImportKwh?: number;
 }
 
 export interface SolarSizingResult {
@@ -70,6 +73,16 @@ export interface SolarSizingResult {
   lcoeClpPerKwh?: number;
   requiresThreePhase?: boolean;
   recommendedPhaseType?: "monofasico" | "trifasico";
+
+  // Friendly Lead Experience Indicators ("Con peras y manzanas")
+  estimatedNewMonthlyBillClp?: number; // Lo que pagará el cliente (ej: $15.000 cargo fijo)
+  winterLimitSavingsClp?: number; // Ahorro por evitar recargo de límite de invierno
+  coberturaTotalAnualPct?: number; // % de cobertura solar sobre el año completo
+  applianceEquivalencies?: Array<{
+    title: string;
+    description: string;
+    icon: string;
+  }>;
 }
 
 export interface LeadSubmission {

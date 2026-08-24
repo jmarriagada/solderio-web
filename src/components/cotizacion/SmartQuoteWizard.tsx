@@ -353,9 +353,10 @@ export function SmartQuoteWizard() {
 
                 {/* Instant Sizing Badge */}
                 <div className="pt-4 border-t border-white/10 flex flex-wrap items-center justify-center gap-4 text-xs font-mono text-white/70">
-                  <span>⚡ Demanda est: ~{Math.round(formData.monthlyBillClp / 165)} kWh/mes</span>
+                  <span>⚡ Demanda est: ~{Math.max(80, Math.round(formData.monthlyBillClp / (formData.distributor === "crell" ? 194 : formData.distributor === "cge" ? 182 : 188)))} kWh/mes</span>
                   <span>☀️ Potencia sug: <strong className="text-white">{instantSizing.recommendedKwp} kWp</strong></span>
-                  <span>🔋 Batería: <strong className="text-emerald-400">{instantSizing.batteryKwh} kWh</strong></span>
+                  <span>🔋 Batería: <strong className="text-emerald-400">{instantSizing.batteryKwh > 0 ? `${instantSizing.batteryKwh} kWh (${instantSizing.usableBatteryKwh || Math.round(instantSizing.batteryKwh * 0.85)} útil)` : "On-Grid"}</strong></span>
+                  <span>🌱 Ahorro est: <strong className="text-[#FF8300]">{formatCurrency(instantSizing.estimatedAnnualSavingsClp)}/año</strong></span>
                 </div>
               </div>
 

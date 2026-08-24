@@ -16,6 +16,7 @@ import {
   Sparkles
 } from "lucide-react";
 import { SolarSizingResult, QuoteFormData } from "@/types/cotizacion";
+import { downloadCarbonePdf } from "@/lib/print-carbone-report";
 
 interface Props {
   isOpen: boolean;
@@ -42,6 +43,10 @@ export function ExecutiveReportModal({ isOpen, onClose, formData, sizing, leadId
     year: "numeric",
   });
 
+  const handlePrintPdf = () => {
+    downloadCarbonePdf(formData, sizing, leadId);
+  };
+
   return (
     <AnimatePresence>
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md overflow-y-auto print:p-0 print:bg-white print:static">
@@ -49,7 +54,7 @@ export function ExecutiveReportModal({ isOpen, onClose, formData, sizing, leadId
         {/* Floating Top Control Bar (Hidden when printing) */}
         <div className="fixed top-6 right-6 z-50 flex items-center gap-3 no-print bg-[#1F1F1F]/90 p-2.5 rounded-2xl border border-white/20 shadow-2xl backdrop-blur-md">
           <button
-            onClick={() => window.print()}
+            onClick={handlePrintPdf}
             className="px-5 py-2.5 rounded-xl bg-[#FF8300] hover:bg-[#e07400] text-white text-xs font-medium uppercase tracking-wider transition-all shadow-lg flex items-center gap-2 cursor-pointer"
           >
             <Printer className="w-4 h-4" />

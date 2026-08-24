@@ -25,3 +25,22 @@ body {
   color: var(--foreground);
   font-family: var(--font-satoshi), system-ui, sans-serif;
 }
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 12mm;
+  }
+  
+  body {
+    background: #ffffff !important;
+    background-image: none !important;
+    color: #1e293b !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .no-print, nav, footer, button {
+    display: none !important;
+  }
+}

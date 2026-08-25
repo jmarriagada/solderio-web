@@ -88,11 +88,12 @@ export function simulateSolarPlantGeneration(
 ): PhysicalSimulationResult {
   const installedKwp = Math.round(((panelsCount * moduleSpecs.pStcWatts) / 1000) * 10) / 10;
 
-  // Selección óptima del inversor con Overclocking (ILR objetivo: 1.20 - 1.35 en el sur)
+  // Selección óptima del inversor con Overclocking (ILR objetivo: 1.18 - 1.33 en el sur)
   let inverterKw = 5.0;
-  if (installedKwp <= 4.0) inverterKw = 3.0;
-  else if (installedKwp <= 5.5) inverterKw = 4.0;
-  else if (installedKwp <= 7.5) inverterKw = 5.0;
+  if (installedKwp <= 3.8) inverterKw = 3.0;
+  else if (installedKwp <= 5.2) inverterKw = 4.0;
+  else if (installedKwp <= 6.6) inverterKw = 5.0;
+  else if (installedKwp <= 8.0) inverterKw = 6.0;
   else if (installedKwp <= 10.5) inverterKw = 8.0;
   else if (installedKwp <= 13.5) inverterKw = 10.0;
   else if (installedKwp <= 16.5) inverterKw = 12.0;

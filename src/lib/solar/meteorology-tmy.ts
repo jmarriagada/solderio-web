@@ -164,23 +164,115 @@ const METEOROLOGY_DATABASE: Record<string, CommuneMeteorologicalProfile> = {
       { month: 12, monthName: "Diciembre", ghiKwhM2Day: 5.9, poaKwhM2Day: 6.3, avgTempCelsius: 14.1, daysInMonth: 31 },
     ],
   },
+  coyhaique: {
+    commune: "Coyhaique",
+    region: "Los Lagos",
+    latitude: -45.57,
+    annualGhiKwhM2: 1140,
+    annualPoaKwhM2: 1280,
+    specificYieldKwhKwp: 1040,
+    monthlyData: [
+      { month: 1, monthName: "Enero", ghiKwhM2Day: 6.0, poaKwhM2Day: 6.4, avgTempCelsius: 14.2, daysInMonth: 31 },
+      { month: 2, monthName: "Febrero", ghiKwhM2Day: 5.1, poaKwhM2Day: 5.7, avgTempCelsius: 13.8, daysInMonth: 28 },
+      { month: 3, monthName: "Marzo", ghiKwhM2Day: 3.6, poaKwhM2Day: 4.3, avgTempCelsius: 11.2, daysInMonth: 31 },
+      { month: 4, monthName: "Abril", ghiKwhM2Day: 1.9, poaKwhM2Day: 2.6, avgTempCelsius: 7.9, daysInMonth: 30 },
+      { month: 5, monthName: "Mayo", ghiKwhM2Day: 0.9, poaKwhM2Day: 1.4, avgTempCelsius: 5.2, daysInMonth: 31 },
+      { month: 6, monthName: "Junio", ghiKwhM2Day: 0.5, poaKwhM2Day: 0.8, avgTempCelsius: 3.1, daysInMonth: 30 },
+      { month: 7, monthName: "Julio", ghiKwhM2Day: 0.7, poaKwhM2Day: 1.1, avgTempCelsius: 2.8, daysInMonth: 31 },
+      { month: 8, monthName: "Agosto", ghiKwhM2Day: 1.3, poaKwhM2Day: 1.9, avgTempCelsius: 4.4, daysInMonth: 31 },
+      { month: 9, monthName: "Septiembre", ghiKwhM2Day: 2.4, poaKwhM2Day: 3.2, avgTempCelsius: 6.8, daysInMonth: 30 },
+      { month: 10, monthName: "Octubre", ghiKwhM2Day: 3.9, poaKwhM2Day: 4.7, avgTempCelsius: 9.2, daysInMonth: 31 },
+      { month: 11, monthName: "Noviembre", ghiKwhM2Day: 5.3, poaKwhM2Day: 5.9, avgTempCelsius: 11.5, daysInMonth: 30 },
+      { month: 12, monthName: "Diciembre", ghiKwhM2Day: 6.1, poaKwhM2Day: 6.6, avgTempCelsius: 13.4, daysInMonth: 31 },
+    ],
+  },
 };
 
-// Aliases para comunas cercanas
+// Aliases para comunas cercanas de toda la macrozona sur (Araucanía, Los Ríos, Los Lagos y Aysén)
 const COMMUNE_ALIASES: Record<string, string> = {
+  // Cuenca del Lago Llanquihue y Seno de Reloncaví
   llanquihue: "puerto_varas",
   frutillar: "puerto_varas",
   puerto_octay: "osorno",
+  calbuco: "puerto_montt",
+  los_muermos: "puerto_montt",
+  fresia: "puerto_varas",
+  maullin: "puerto_montt",
+  cochamo: "puerto_montt",
+
+  // Provincia de Osorno
+  san_pablo: "osorno",
+  puyehue: "osorno",
+  entre_lagos: "osorno",
+  purranque: "osorno",
+  rio_negro: "osorno",
+  san_juan_de_la_costa: "osorno",
+
+  // Región de Los Ríos
   rio_bueno: "osorno",
   la_union: "valdivia",
   panguipulli: "valdivia",
   los_lagos: "valdivia",
+  futrono: "valdivia",
+  lago_ranco: "osorno",
+  paillaco: "valdivia",
+  mariquina: "valdivia",
+  san_jose_de_la_mariquina: "valdivia",
+  lanco: "valdivia",
+  mafil: "valdivia",
+  corral: "valdivia",
+
+  // Provincia de Chiloé y Palena
   ancud: "castro",
   chonchi: "castro",
   quellon: "castro",
+  dalcahue: "castro",
+  curaco_de_velez: "castro",
+  quinchao: "castro",
+  achao: "castro",
+  puqueldon: "castro",
+  queilen: "castro",
+  quemchi: "castro",
+  chaiten: "castro",
+  futaleufu: "castro",
+  palena: "castro",
+  hualaihue: "puerto_montt",
+  horno_piren: "puerto_montt",
+
+  // Región de La Araucanía
   pucon: "temuco",
   villarrica: "temuco",
   lautaro: "temuco",
+  padre_las_casas: "temuco",
+  nueva_imperial: "temuco",
+  carahue: "temuco",
+  victoria: "temuco",
+  angol: "temuco",
+  gorbea: "temuco",
+  loncoche: "temuco",
+  curarrehue: "temuco",
+  cunco: "temuco",
+  melipeuco: "temuco",
+  freire: "temuco",
+  pitrufquen: "temuco",
+  cholchol: "temuco",
+  saavedra: "temuco",
+  teodoro_schmidt: "temuco",
+  tolten: "temuco",
+  traiguen: "temuco",
+  galvarino: "temuco",
+  lumaco: "temuco",
+  puren: "temuco",
+  renaico: "temuco",
+  collipulli: "temuco",
+  curacautin: "temuco",
+  lonquimay: "temuco",
+
+  // Región de Aysén
+  puerto_aysen: "coyhaique",
+  aysen: "coyhaique",
+  chile_chico: "coyhaique",
+  cochrane: "coyhaique",
 };
 
 export function getMeteorologicalProfile(communeName?: string): CommuneMeteorologicalProfile {
@@ -204,3 +296,4 @@ export function getMeteorologicalProfile(communeName?: string): CommuneMeteorolo
   // Default para la macrozona sur
   return METEOROLOGY_DATABASE.puerto_varas;
 }
+

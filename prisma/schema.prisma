@@ -1,0 +1,265 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  directUrl  = env("DIRECT_URL")
+  extensions = [postgis]
+}
+
+enum Role {
+  ADMIN
+  SENIOR_ENGINEER
+  DESIGNER
+  VIEWER
+}
+
+enum ProjectStatus {
+  DRAFT
+  UNDER_REVIEW
+  QUOTED
+  APPROVED
+  IN_CONSTRUCTION
+  COMPLETED
+}
+
+enum SystemType {
+  ON_GRID
+  OFF_GRID
+  HYBRID
+}
+
+enum StructureType {
+  ASPHALT_SHINGLE
+  CLAY_TILE
+  CORRUGATED_FIBER_CEMENT
+  CONCRETE_FLAT
+  METAL_SEAM
+  GROUND_MOUNT
+  CARPORT
+}
+
+enum TariffType {
+  BT1
+  BT1_ECO
+  BT2
+  BT3
+  BT4_1
+  BT4_2
+  BT4_3
+  BT5
+  TRAT
+  TRAT2
+  TRAT3
+  AT2
+  AT3
+  AT4_1
+  AT4_2
+  AT4_3
+  AT5
+  LIBRE
+}
+
+model User {
+  id        String    @id // Supabase auth.users UUID
+  email     String    @unique
+  name      String
+  role      Role      @default(DESIGNER)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  projects  Project[]
+}
+
+model Project {
+  id             String         @id @default(uuid())
+  userId         String?
+  clientName     String
+  clientRut      String?
+  clientEmail    String?
+  clientPhone    String?
+  projectName    String?
+  projectType    String?
+  configuration  String?
+  status         ProjectStatus  @default(DRAFT)
+  inputsProgress Int            @default(0)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  user           User?          @relation(fields: [userId], references: [id])
+  location       ProjectLocation?
+  scaniflyImport ScaniflyImport?
+  consumption    ElectricalConsumption?
+  weatherData    ProjectWeatherData?
+  scenarios      ProjectScenario[]
+  secCompliance  SecCompliance?
+}
+
+model ProjectLocation {
+  id          String   @id @default(uuid())
+  projectId   String   @unique
+  address     String?
+  comuna      String?
+  region      String?
+  distributor String   @default("SAESA")
+  latitude    Decimal  @db.Decimal(10, 8)
+  longitude   Decimal  @db.Decimal(11, 8)
+  altitudeM   Decimal? @db.Decimal(8, 2)
+  geom        Unsupported("geometry(Point, 4326)")?
+
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model ScaniflyImport {
+  id                 String   @id @default(uuid())
+  projectId          String   @unique
+  totalRoofArea      Decimal? @db.Decimal(10, 2)
+  usableRoofArea     Decimal? @db.Decimal(10, 2)
+  pitchDegrees       Decimal? @db.Decimal(5, 2)
+  azimuthDegrees     Decimal? @db.Decimal(5, 2)
+  solarAccessPct     Decimal? @db.Decimal(5, 2)
+  timeOfShadeFactor  Decimal? @default(0.0) @db.Decimal(5, 2)
+  maxPanelsAllowed   Int?
+  roofSegmentsData   Json?
+  model3dObjUrl      String?
+  importedAt         DateTime @default(now())
+
+  project            Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model ElectricalConsumption {
+  id                    String      @id @default(uuid())
+  projectId             String      @unique
+  tariffType            TariffType  @default(BT1)
+  isFreeMarket          Boolean     @default(false)
+  connectedPowerKw      Decimal?    @db.Decimal(10, 2)
+  peakPowerKw           Decimal?    @db.Decimal(10, 2)
+  annualTotal           Decimal?    @db.Decimal(12, 2)
+  monthlyData           Json?
+  monthlyPeakDemandKw   Json?
+  monthlyBillsClp       Json?
+  extractedViaOcr       Boolean     @default(false)
+  ocrRawMetadata        Json?
+  createdAt             DateTime    @default(now())
+
+  project               Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model ProjectWeatherData {
+  id                        String   @id @default(uuid())
+  projectId                 String   @unique
+  source                    String   @default("SOLCAST_API")
+  annualGhiKwhM2            Decimal? @db.Decimal(10, 2)
+  annualDniKwhM2            Decimal? @db.Decimal(10, 2)
+  annualDhiKwhM2            Decimal? @db.Decimal(10, 2)
+  avgTempCelsius            Decimal? @db.Decimal(5, 2)
+  monthlyGhiKwhM2           Json?
+  monthlySpecificYieldKwhKwp Json?
+  fetchedAt                 DateTime @default(now())
+
+  project                   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model EquipmentCatalog {
+  id                  String   @id @default(uuid())
+  category            String
+  brand               String
+  model               String
+  nominalPowerW       Decimal? @db.Decimal(10, 2)
+  efficiencyPct       Decimal? @db.Decimal(5, 2)
+  voltageRangeV       String?
+  baseCostClp         Decimal  @db.Decimal(12, 2)
+  baseCostUsd         Decimal  @db.Decimal(10, 2)
+  defaultMarginPct    Decimal  @default(25.0) @db.Decimal(5, 2)
+  secCertified        Boolean  @default(true)
+  secCertificateCode  String?
+  datasheetUrl        String?
+  isActive            Boolean  @default(true)
+}
+
+model MountingStructure {
+  id                String        @id @default(uuid())
+  structureType     StructureType @unique
+  description       String
+  defaultTiltDeg    Decimal       @db.Decimal(5, 2)
+  powerDensityWpM2  Decimal       @db.Decimal(6, 2)
+  costPerWpUsd      Decimal       @db.Decimal(6, 4)
+  costPerPanelUsd   Decimal       @db.Decimal(8, 2)
+  hardwareSpec      String
+}
+
+model ProjectScenario {
+  id                    String     @id @default(uuid())
+  projectId             String
+  scenarioName          String
+  systemType            SystemType @default(ON_GRID)
+  systemSizeKw          Decimal?   @db.Decimal(10, 2)
+  installedCapacityKwp  Decimal    @db.Decimal(10, 2)
+  numPanels             Int
+  inverterPowerKw       Decimal    @db.Decimal(10, 2)
+  batteryCapacityKwh    Decimal?   @default(0.0) @db.Decimal(10, 2)
+  annualGenerationKwh   Decimal    @db.Decimal(12, 2)
+  selfConsumptionPct    Decimal    @db.Decimal(5, 2)
+  gridInjectionPct      Decimal    @db.Decimal(5, 2)
+  capexClp              Decimal    @db.Decimal(14, 2)
+  opexAnnualClp         Decimal    @db.Decimal(12, 2)
+  firstYearSavingsClp   Decimal    @db.Decimal(12, 2)
+  simplePaybackYears    Decimal    @db.Decimal(5, 2)
+  dynamicPaybackYears   Decimal    @db.Decimal(5, 2)
+  npv25yClp             Decimal    @db.Decimal(14, 2)
+  irrPct                Decimal    @db.Decimal(5, 2)
+  lcoeClpKwh            Decimal    @db.Decimal(10, 2)
+  selectedForProposal   Boolean?   @default(false)
+  createdAt             DateTime   @default(now())
+
+  project               Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+enum ComplianceStatus {
+  PENDING
+  IN_PROGRESS
+  APPROVED
+  REJECTED
+  NOT_APPLICABLE
+}
+
+model SecCompliance {
+  id                  String             @id @default(uuid())
+  projectId           String             @unique
+  te4Folio            String?
+  te4ApprovalDate     DateTime?
+  f3SubmissionDate    DateTime?
+  f4ResponseDate      DateTime?
+  f5SubmissionDate    DateTime?
+  f6CommissioningDate DateTime?
+  meterNumber         String?
+  distributor         String             @default("SAESA")
+  totalProgressPct    Int                @default(0)
+  notes               String?
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+
+  items               SecComplianceItem[]
+  project             Project            @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model SecComplianceItem {
+  id              String           @id @default(uuid())
+  secComplianceId String
+  stageNumber     Int              // 1: Factibilidad F1/F3, 2: Expediente TE4, 3: Protocolos Terreno, 4: Aprobación SEC, 5: F5/F6 Medidor
+  code            String           // e.g. "F3_SOLICITUD", "MEMORIA_CALCULO", "PLANO_UNILINEAL", etc.
+  title           String
+  description     String?
+  status          ComplianceStatus @default(PENDING)
+  documentUrl     String?
+  notes           String?
+  completedAt     DateTime?
+
+  secCompliance   SecCompliance    @relation(fields: [secComplianceId], references: [id], onDelete: Cascade)
+
+  @@unique([secComplianceId, code])
+}
+

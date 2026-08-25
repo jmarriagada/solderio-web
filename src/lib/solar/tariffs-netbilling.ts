@@ -200,16 +200,30 @@ export function calculateNetBillingFinancials(
   const winterLimitSavingsClp = Math.round(winterLimitPenaltyWithoutSolarClp);
 
   // Ahorro año 1: Energía no comprada + Excedentes valorizados a precio nudo + Multas de invierno evitadas
-  const year1AutoconsumoSavings = Math.round(solarGenUsedLocallyKwh * tariff.pCompraClpPerKwh);
-  const year1InjectionCredits = Math.round(solarGenInjectedKwh * tariff.pNudoClpPerKwh);
+  let year1AutoconsumoSavings = Math.round(solarGenUsedLocallyKwh * tariff.pCompraClpPerKwh);
+  let year1InjectionCredits = Math.round(solarGenInjectedKwh * tariff.pNudoClpPerKwh);
   
+  // En sistemas Off-Grid, la energía generada reemplaza el 100% del gasto energético/generador diésel
+  if (systemType === "offgrid") {
+    year1AutoconsumoSavings = Math.round(annualBillClp);
+    year1InjectionCredits = 0;
+  }
+
   // Ahorro neto año 1 (con tope de seguridad)
-  const grossSavings = year1AutoconsumoSavings + year1InjectionCredits + winterLimitSavingsClp;
-  const maxPossibleSavings = Math.max(0, annualBillClp - (tariff.fixedChargeMonthlyClp * 12));
+  let grossSavings = year1AutoconsumoSavings + year1InjectionCredits + winterLimitSavingsClp;
+  let maxPossibleSavings = Math.max(0, annualBillClp - (tariff.fixedChargeMonthlyClp * 12));
+  
+  if (systemType === "offgrid") {
+    maxPossibleSavings = annualBillClp; // En offgrid el ahorro es el 100% del presupuesto energético anual
+    grossSavings = annualBillClp;
+  }
+
   const year1Savings = Math.min(maxPossibleSavings, grossSavings);
 
-  // Nueva boleta estimada que pagará el cliente (típicamente solo el cargo fijo de red)
-  const estimatedNewAnnualBill = Math.max(tariff.fixedChargeMonthlyClp * 12, annualBillClp - year1Savings);
+  // Nueva boleta estimada que pagará el cliente ($0 en Off-Grid, solo cargo fijo en On-Grid/Híbrida)
+  const estimatedNewAnnualBill = systemType === "offgrid" 
+    ? 0 
+    : Math.max(tariff.fixedChargeMonthlyClp * 12, annualBillClp - year1Savings);
   const estimatedNewMonthlyBillClp = Math.round(estimatedNewAnnualBill / 12);
 
   // Estimación de CAPEX Llave en Mano SoldeRío (UF/kWp + baterías)

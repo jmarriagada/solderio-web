@@ -32,7 +32,9 @@ import {
   Compass,
   Thermometer,
   Wind,
-  DollarSign
+  DollarSign,
+  Package,
+  Wrench
 } from 'lucide-react'
 import { 
   PvOperationModel, 
@@ -44,11 +46,14 @@ import {
   calculateMinEnergiaPvGeneration
 } from '@/lib/solar/minenergia-models'
 import { getSolarDataset } from '@/lib/solar/weather-engine'
+import { InteractiveLocationMap } from './InteractiveLocationMap'
+import { EquipmentCapexTab } from './EquipmentCapexTab'
 import { EconomicSavingsReport } from './reports/EconomicSavingsReport'
 import { PvGenerationReport } from './reports/PvGenerationReport'
 import { ExecutiveCommercialReport } from './reports/ExecutiveCommercialReport'
 import { SecComplianceChecklist } from './SecComplianceChecklist'
 import { updateProjectLocationAction, updateProjectConsumptionAction } from '@/app/dashboard/project-actions'
+import { EquipmentItem, PRECONFIGURED_CAPEX_TEMPLATES, calculateTotalCapex } from '@/lib/solar/capex-templates'
 
 interface Props {
   project: {
@@ -79,10 +84,10 @@ interface Props {
 const DEFAULT_MONTHS = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
 
 export function SolarDesignWizard({ project }: Props) {
-  const [currentStep, setCurrentStep] = useState<1 | 2 | 3 | 4 | 5>(1)
+  const [currentStep, setCurrentStep] = useState<1 | 2 | 3 | 4 | 5 | 6>(1)
   const [isPending, startTransition] = useTransition()
 
-  // ================= PASO 1: CLIENTE Y EMPLAZAMIENTO =================
+  // ================= PASO 1: CLIENTE Y EMPLAZAMIENTO CON MAPA GPS =================
   const [clientName, setClientName] = useState(project.clientName || '')
   const [clientRut, setClientRut] = useState(project.clientRut || '')
   const [projectType, setProjectType] = useState(project.projectType || 'RESIDENTIAL')
@@ -90,10 +95,14 @@ export function SolarDesignWizard({ project }: Props) {
   const [isCoplanar, setIsCoplanar] = useState(true)
   const [roofAngleDeg, setRoofAngleDeg] = useState(30)
   const [comunaName, setComunaName] = useState(project.location?.comuna || 'Valdivia')
+  const [latitude, setLatitude] = useState(Number(project.location?.latitude) || -39.8142)
+  const [longitude, setLongitude] = useState(Number(project.location?.longitude) || -73.2459)
   const [distributorName, setDistributorName] = useState(project.location?.distributor || 'SAESA')
 
-  // ================= PASO 2: CONSUMO ELÉCTRICO =================
+  // ================= PASO 2: CONSUMO ELÉCTRICO Y TARIFA MANUAL =================
   const [tariffType, setTariffType] = useState(project.consumption?.tariffType || 'BT1')
+  const [gridTariffClpKwh, setGridTariffClpKwh] = useState(175) // Tarifa manual $/kWh
+  const [injectionTariffClpKwh, setInjectionTariffClpKwh] = useState(95) // Precio nudo de inyección
   const [connectedPowerKw, setConnectedPowerKw] = useState(Number(project.consumption?.connectedPowerKw) || 10)
   const [monthlyKwh, setMonthlyKwh] = useState<number[]>(() => {
     if (project.consumption?.monthlyData && Array.isArray(project.consumption.monthlyData)) {
@@ -104,7 +113,7 @@ export function SolarDesignWizard({ project }: Props) {
   const [isScrapingBill, setIsScrapingBill] = useState(false)
   const [billScrapedSuccess, setBillScrapedSuccess] = useState(false)
 
-  // ================= PASO 3: MODELOS Y GENERACIÓN FV =================
+  // ================= PASO 3: MODELOS FÍSICOS Y GENERACIÓN FV =================
   const [operationModel, setOperationModel] = useState<PvOperationModel>('BIFACIAL')
   const [installedCapacityKwp, setInstalledCapacityKwp] = useState(5.0)
   const [tempCoefficientPctPerC, setTempCoefficientPctPerC] = useState(-0.29)
@@ -117,7 +126,12 @@ export function SolarDesignWizard({ project }: Props) {
   const [systemLossesPct, setSystemLossesPct] = useState(18)
   const [mismatchLossesPct, setMismatchLossesPct] = useState(6)
 
-  // ================= PASO 4: SELECTOR DE REPORTES =================
+  // ================= PASO 4: EQUIPAMIENTO, SERVICIOS Y CAPEX =================
+  const [selectedTemplateName, setSelectedTemplateName] = useState<string>('Residencial Híbrida_PV[4kWp]_ESS[14kWh]_Coplanar_Zinc')
+  const [equipmentList, setEquipmentList] = useState<EquipmentItem[]>(PRECONFIGURED_CAPEX_TEMPLATES[0].items)
+  const [capexClp, setCapexClp] = useState(calculateTotalCapex(PRECONFIGURED_CAPEX_TEMPLATES[0].items).totalClp)
+
+  // ================= PASO 5: SELECTOR DE REPORTES =================
   const [activeReportTab, setActiveReportTab] = useState<'SAVINGS' | 'PV_GENERATION' | 'COMMERCIAL'>('SAVINGS')
 
   // Obtener recurso meteorológico
@@ -147,20 +161,29 @@ export function SolarDesignWizard({ project }: Props) {
   const simResults = calculateMinEnergiaPvGeneration(simInputs)
   const annualConsumptionKwh = monthlyKwh.reduce((a, b) => a + b, 0)
   const averageMonthlyKwh = Math.round(annualConsumptionKwh / 12)
-  const capexClp = Math.round(installedCapacityKwp * 850000)
+
+  // Manejo de cambio de tarifa manual y recálculo automático de inyección
+  const handleGridTariffChange = (value: number) => {
+    const val = Math.max(0, value)
+    setGridTariffClpKwh(val)
+    // Precio de nudo de inyección estimado ~54% del valor de suministro sin distribución
+    setInjectionTariffClpKwh(Math.round(val * 0.54))
+  }
 
   // ================= VALIDACIONES ESTRICTAS POR PASO =================
   const isStep1Valid = clientName.trim().length > 0 && roofAngleDeg >= 0 && comunaName.length > 0
-  const isStep2Valid = annualConsumptionKwh > 0 && connectedPowerKw > 0
+  const isStep2Valid = annualConsumptionKwh > 0 && connectedPowerKw > 0 && gridTariffClpKwh > 0
   const isStep3Valid = installedCapacityKwp > 0 && inverterEfficiencyPct > 0
+  const isStep4Valid = capexClp > 0 && equipmentList.length > 0
 
   // Simulación de Scrapping de Boleta SAESA
   const handleScrapeSaesaBill = () => {
     setIsScrapingBill(true)
     setTimeout(() => {
-      // Extracción automática desde historial de 12 meses
       const saesaExtractedKwh = [410, 390, 425, 480, 560, 620, 640, 590, 490, 440, 400, 415]
       setMonthlyKwh(saesaExtractedKwh)
+      setGridTariffClpKwh(182)
+      setInjectionTariffClpKwh(98)
       setIsScrapingBill(false)
       setBillScrapedSuccess(true)
       setTimeout(() => setBillScrapedSuccess(false), 4000)
@@ -178,8 +201,8 @@ export function SolarDesignWizard({ project }: Props) {
           region: 'Los Ríos',
           distributor: distributorName,
           address: project.location?.address || `${comunaName}, Chile`,
-          latitude: weatherDataset.lat,
-          longitude: weatherDataset.lng,
+          latitude,
+          longitude,
         })
         setCurrentStep(2)
       })
@@ -188,15 +211,17 @@ export function SolarDesignWizard({ project }: Props) {
         const monthlyData = DEFAULT_MONTHS.map((m, i) => ({
           month: m,
           kwh: monthlyKwh[i],
-          costClp: Math.round(monthlyKwh[i] * 175),
+          costClp: Math.round(monthlyKwh[i] * gridTariffClpKwh),
         }))
         await updateProjectConsumptionAction(project.id, tariffType, connectedPowerKw, monthlyData)
         setCurrentStep(3)
       })
     } else if (currentStep === 3 && isStep3Valid) {
       setCurrentStep(4)
-    } else if (currentStep === 4) {
+    } else if (currentStep === 4 && isStep4Valid) {
       setCurrentStep(5)
+    } else if (currentStep === 5) {
+      setCurrentStep(6)
     }
   }
 
@@ -208,15 +233,16 @@ export function SolarDesignWizard({ project }: Props) {
 
   return (
     <div className="space-y-6">
-      {/* Wizard Header Stepper */}
+      {/* Wizard Header Stepper con 6 Pasos */}
       <div className="bg-white rounded-[24px] border border-gray-100 p-4 shadow-sm">
         <div className="flex items-center justify-between overflow-x-auto pb-2 sm:pb-0 gap-2">
           {[
-            { step: 1, label: '1. Cliente & Techo', icon: User, valid: isStep1Valid },
-            { step: 2, label: '2. Consumo Eléctrico', icon: Zap, valid: isStep2Valid },
+            { step: 1, label: '1. Cliente & Mapa GPS', icon: MapPin, valid: isStep1Valid },
+            { step: 2, label: '2. Consumo & Tarifa', icon: Zap, valid: isStep2Valid },
             { step: 3, label: '3. Generación FV (MinEnergía)', icon: Sun, valid: isStep3Valid },
-            { step: 4, label: '4. Informes & Ahorro', icon: FileText, valid: true },
-            { step: 5, label: '5. Tramitación SEC', icon: ShieldCheck, valid: true },
+            { step: 4, label: '4. Equipamiento & CAPEX', icon: Package, valid: isStep4Valid },
+            { step: 5, label: '5. Informes & Ahorro', icon: FileText, valid: true },
+            { step: 6, label: '6. Tramitación SEC', icon: ShieldCheck, valid: true },
           ].map((s) => {
             const isActive = currentStep === s.step
             const isCompleted = currentStep > s.step
@@ -230,7 +256,7 @@ export function SolarDesignWizard({ project }: Props) {
                     setCurrentStep(s.step as any)
                   }
                 }}
-                className={`flex items-center gap-2.5 px-3 py-2 rounded-xl transition-all select-none whitespace-nowrap ${
+                className={`flex items-center gap-2 px-3 py-2 rounded-xl transition-all select-none whitespace-nowrap ${
                   isActive
                     ? 'bg-orange-50 text-[#FF8300] font-bold ring-1 ring-orange-200'
                     : isCompleted
@@ -257,28 +283,46 @@ export function SolarDesignWizard({ project }: Props) {
       </div>
 
       {/* ========================================================================= */}
-      {/* PASO 1: CLIENTE Y EMPLAZAMIENTO                                           */}
+      {/* PASO 1: CLIENTE, EMPLAZAMIENTO & MAPA INTERACTIVO                         */}
       {/* ========================================================================= */}
       {currentStep === 1 && (
         <Card className="rounded-[24px] border-gray-100 shadow-sm bg-white overflow-hidden animate-in fade-in-50 duration-200">
           <CardHeader className="border-b border-gray-50 pb-4">
             <div className="flex items-center gap-2.5">
               <div className="h-9 w-9 rounded-xl bg-orange-50 flex items-center justify-center text-[#FF8300]">
-                <User className="h-5 w-5" />
+                <MapPin className="h-5 w-5" />
               </div>
               <div>
                 <CardTitle className="text-lg font-bold text-[#1F1F1F]">
-                  Paso 1: Información Específica del Cliente y Emplazamiento
+                  Paso 1: Información del Cliente, Emplazamiento & Coordenadas GPS
                 </CardTitle>
                 <CardDescription className="text-xs text-gray-500 mt-0.5">
-                  Ingresa los datos del titular y la geometría de la techumbre o suelo donde se montará la planta
+                  Selecciona la ubicación en el mapa o ingresa latitud/longitud para consultar el recurso solar a 1 km²
                 </CardDescription>
               </div>
             </div>
           </CardHeader>
 
           <CardContent className="p-6 space-y-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Mapa Interactivo con Búsqueda y Coordenadas */}
+            <div className="space-y-2">
+              <Label className="text-xs font-bold uppercase tracking-wider text-gray-700 flex items-center gap-1.5">
+                <Compass className="h-4 w-4 text-[#FF8300]" /> Ubicación Geográfica & Coordenadas de Muestreo (1 km²)
+              </Label>
+              <InteractiveLocationMap
+                latitude={latitude}
+                longitude={longitude}
+                comunaName={comunaName}
+                onChangeLocation={(lat, lng, name) => {
+                  setLatitude(lat)
+                  setLongitude(lng)
+                  setComunaName(name)
+                }}
+              />
+            </div>
+
+            {/* Datos del Cliente y Estructura */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
               <div className="space-y-1.5">
                 <Label className="text-xs font-semibold text-gray-700">Nombre del Cliente *</Label>
                 <Input
@@ -312,21 +356,6 @@ export function SolarDesignWizard({ project }: Props) {
               </div>
 
               <div className="space-y-1.5">
-                <Label className="text-xs font-semibold text-gray-700">Comuna del Proyecto</Label>
-                <select
-                  value={comunaName}
-                  onChange={(e) => setComunaName(e.target.value)}
-                  className="w-full h-10 rounded-xl border border-gray-200 bg-gray-50/50 px-3 text-xs focus:ring-[#FF8300]"
-                >
-                  <option value="Valdivia">Valdivia (Los Ríos)</option>
-                  <option value="Puerto Varas">Puerto Varas (Los Lagos)</option>
-                  <option value="Osorno">Osorno (Los Lagos)</option>
-                  <option value="Puerto Montt">Puerto Montt (Los Lagos)</option>
-                  <option value="Temuco">Temuco (La Araucanía)</option>
-                </select>
-              </div>
-
-              <div className="space-y-1.5">
                 <Label className="text-xs font-semibold text-gray-700">Tipo de Cubierta / Techo</Label>
                 <select
                   value={roofType}
@@ -354,9 +383,9 @@ export function SolarDesignWizard({ project }: Props) {
                 </select>
               </div>
 
-              <div className="space-y-1.5 sm:col-span-2 bg-orange-50/30 p-4 rounded-xl border border-orange-100">
+              <div className="space-y-1.5 bg-orange-50/30 p-4 rounded-xl border border-orange-100">
                 <div className="flex justify-between items-center text-xs mb-1">
-                  <span className="font-semibold text-gray-700">Inclinación de la Cubierta (Ángulo del Techo) *</span>
+                  <span className="font-semibold text-gray-700">Inclinación de la Cubierta (Ángulo Techo) *</span>
                   <span className="font-bold text-[#FF8300]">{roofAngleDeg}°</span>
                 </div>
                 <input
@@ -367,23 +396,20 @@ export function SolarDesignWizard({ project }: Props) {
                   onChange={(e) => setRoofAngleDeg(Number(e.target.value))}
                   className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#FF8300]"
                 />
-                <span className="text-[10px] text-gray-400 block mt-1">
-                  En la zona sur de Chile las pendientes típicas de techumbre varían entre 20° y 35°.
-                </span>
               </div>
             </div>
           </CardContent>
 
           <CardFooter className="border-t border-gray-50 p-4 flex justify-between">
             <span className="text-xs text-gray-400">
-              {!isStep1Valid ? '⚠️ Completa el nombre del cliente para continuar' : '✓ Datos validados'}
+              {!isStep1Valid ? '⚠️ Completa el nombre del cliente para continuar' : '✓ Coordenadas y datos validados'}
             </span>
             <Button
               onClick={handleNext}
               disabled={!isStep1Valid || isPending}
               className="rounded-xl bg-[#FF8300] hover:bg-[#E67600] text-white font-semibold text-xs h-10 px-6 cursor-pointer"
             >
-              Continuar al Paso 2
+              Continuar al Paso 2 (Consumo)
               <ArrowRight className="h-4 w-4 ml-1.5" />
             </Button>
           </CardFooter>
@@ -391,7 +417,7 @@ export function SolarDesignWizard({ project }: Props) {
       )}
 
       {/* ========================================================================= */}
-      {/* PASO 2: CONSUMO ELÉCTRICO                                                 */}
+      {/* PASO 2: CONSUMO ELÉCTRICO Y TARIFA MANUAL                                 */}
       {/* ========================================================================= */}
       {currentStep === 2 && (
         <Card className="rounded-[24px] border-gray-100 shadow-sm bg-white overflow-hidden animate-in fade-in-50 duration-200">
@@ -403,15 +429,14 @@ export function SolarDesignWizard({ project }: Props) {
                 </div>
                 <div>
                   <CardTitle className="text-lg font-bold text-[#1F1F1F]">
-                    Paso 2: Carga de Información de Consumo Eléctrico
+                    Paso 2: Carga de Información de Consumo Eléctrico & Tarifa
                   </CardTitle>
                   <CardDescription className="text-xs text-gray-500 mt-0.5">
-                    Ingresa el consumo mes a mes, carga tu boleta SAESA para scrapping o define un promedio mensual
+                    Configura la tarifa manual $/kWh para recalcular automáticamente el precio nudo de inyección y los costos mensuales
                   </CardDescription>
                 </div>
               </div>
 
-              {/* Botón Scrapping Boleta SAESA */}
               <div className="flex items-center gap-2">
                 {billScrapedSuccess && (
                   <Badge className="bg-emerald-50 text-emerald-700 border-emerald-200 text-xs">
@@ -427,87 +452,104 @@ export function SolarDesignWizard({ project }: Props) {
                   className="rounded-xl border-orange-200 text-[#FF8300] bg-orange-50/50 hover:bg-orange-100 text-xs font-semibold h-9"
                 >
                   <UploadCloud className="h-4 w-4 mr-1.5" />
-                  {isScrapingBill ? 'Analizando Boleta...' : 'Cargar Boleta SAESA (OCR)'}
+                  {isScrapingBill ? 'Extrayendo Boleta...' : 'Cargar Boleta SAESA (OCR)'}
                 </Button>
               </div>
             </div>
           </CardHeader>
 
           <CardContent className="p-6 space-y-6">
-            {/* Parámetros de Red & Distribuidora */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-gray-50/60 p-4 rounded-xl border border-gray-100">
+            {/* Controles de Tarifa Manual y Recálculo de Inyección */}
+            <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 bg-orange-50/30 p-4 rounded-2xl border border-orange-100">
               <div className="space-y-1">
-                <Label className="text-xs font-semibold text-gray-700">Distribuidora Eléctrica</Label>
+                <Label className="text-xs font-bold text-gray-800">Distribuidora</Label>
                 <select
                   value={distributorName}
                   onChange={(e) => setDistributorName(e.target.value)}
                   className="w-full h-9 rounded-xl border border-gray-200 bg-white px-3 text-xs"
                 >
-                  <option value="SAESA">SAESA (Sociedad Austral de Electricidad)</option>
+                  <option value="SAESA">SAESA (Sociedad Austral)</option>
                   <option value="FRONTEL">FRONTEL</option>
                   <option value="ENEL">ENEL Distribución</option>
                   <option value="CGE">CGE</option>
-                  <option value="CHILQUINTA">Chilquinta</option>
                 </select>
               </div>
 
               <div className="space-y-1">
-                <Label className="text-xs font-semibold text-gray-700">Tipo de Tarifa</Label>
+                <Label className="text-xs font-bold text-gray-800">Tipo de Tarifa</Label>
                 <select
                   value={tariffType}
                   onChange={(e) => setTariffType(e.target.value)}
                   className="w-full h-9 rounded-xl border border-gray-200 bg-white px-3 text-xs"
                 >
                   <option value="BT1">BT1 (Residencial Simple)</option>
-                  <option value="BT2">BT2 (Baja Tensión con Potencia)</option>
+                  <option value="BT2">BT2 (Potencia Contratada)</option>
                   <option value="BT3">BT3 (Potencia Leída)</option>
-                  <option value="BT4_3">BT4.3 (Horaria)</option>
-                  <option value="AT3">AT3 (Media Tensión)</option>
+                  <option value="BT4_3">BT4.3 (Horaria Punta/Fuera)</option>
                 </select>
               </div>
 
               <div className="space-y-1">
-                <Label className="text-xs font-semibold text-gray-700">Potencia Conectada (kW)</Label>
+                <Label className="text-xs font-bold text-gray-800 flex items-center justify-between">
+                  <span>Costo Suministro ($/kWh)</span>
+                  <span className="text-[10px] text-[#FF8300] font-normal">Compra a Red</span>
+                </Label>
                 <Input
                   type="number"
-                  value={connectedPowerKw}
-                  onChange={(e) => setConnectedPowerKw(Number(e.target.value))}
-                  className="h-9 rounded-xl bg-white border-gray-200 text-xs"
+                  value={gridTariffClpKwh}
+                  onChange={(e) => handleGridTariffChange(Number(e.target.value))}
+                  className="h-9 rounded-xl bg-white border-gray-200 text-xs font-black text-[#1F1F1F]"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <Label className="text-xs font-bold text-gray-800 flex items-center justify-between">
+                  <span>Precio Inyección ($/kWh)</span>
+                  <span className="text-[10px] text-emerald-600 font-normal">Autocalculado</span>
+                </Label>
+                <Input
+                  type="number"
+                  value={injectionTariffClpKwh}
+                  onChange={(e) => setInjectionTariffClpKwh(Number(e.target.value))}
+                  className="h-9 rounded-xl bg-white border-gray-200 text-xs font-black text-emerald-600"
                 />
               </div>
             </div>
 
-            {/* Matriz 12 Meses */}
+            {/* Matriz 12 Meses con Costos Calculados en Vivo */}
             <div className="space-y-2">
               <div className="flex justify-between items-center">
                 <Label className="text-xs font-bold uppercase tracking-wider text-gray-500">
-                  Consumo Mes a Mes (kWh / Mes)
+                  Consumo Mes a Mes (kWh) & Costo Facturación Calculado (${gridTariffClpKwh} /kWh)
                 </Label>
                 <span className="text-xs font-bold text-[#FF8300]">
-                  Total Anual: {annualConsumptionKwh.toLocaleString('es-CL')} kWh/año (Promedio: {averageMonthlyKwh} kWh/mes)
+                  Total Anual: {annualConsumptionKwh.toLocaleString('es-CL')} kWh/año (~${Math.round(annualConsumptionKwh * gridTariffClpKwh).toLocaleString('es-CL')} CLP)
                 </span>
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-2.5">
-                {DEFAULT_MONTHS.map((m, idx) => (
-                  <div key={m} className="p-3 bg-gray-50 rounded-xl border border-gray-100 space-y-1 text-center">
-                    <span className="font-bold text-xs text-[#1F1F1F] block">{m}</span>
-                    <Input
-                      type="number"
-                      value={monthlyKwh[idx]}
-                      onChange={(e) => {
-                        const val = Number(e.target.value) || 0
-                        const copy = [...monthlyKwh]
-                        copy[idx] = val
-                        setMonthlyKwh(copy)
-                      }}
-                      className="h-8 text-center text-xs font-bold bg-white border-gray-200 rounded-lg"
-                    />
-                    <span className="text-[10px] text-gray-400 block">
-                      ~${Math.round(monthlyKwh[idx] * 175).toLocaleString('es-CL')}
-                    </span>
-                  </div>
-                ))}
+                {DEFAULT_MONTHS.map((m, idx) => {
+                  const monthlyCost = Math.round(monthlyKwh[idx] * gridTariffClpKwh)
+                  return (
+                    <div key={m} className="p-3 bg-gray-50 rounded-xl border border-gray-100 space-y-1 text-center">
+                      <span className="font-bold text-xs text-[#1F1F1F] block">{m}</span>
+                      <Input
+                        type="number"
+                        value={monthlyKwh[idx]}
+                        onChange={(e) => {
+                          const val = Number(e.target.value) || 0
+                          const copy = [...monthlyKwh]
+                          copy[idx] = val
+                          setMonthlyKwh(copy)
+                        }}
+                        className="h-8 text-center text-xs font-bold bg-white border-gray-200 rounded-lg"
+                      />
+                      <span className="text-[10px] font-semibold text-emerald-700 block">
+                        ${monthlyCost.toLocaleString('es-CL')}
+                      </span>
+                    </div>
+                  )
+                })}
               </div>
             </div>
           </CardContent>
@@ -533,7 +575,7 @@ export function SolarDesignWizard({ project }: Props) {
       )}
 
       {/* ========================================================================= */}
-      {/* PASO 3: FORMULARIO DE GENERACIÓN FV (MODELOS FÍSICOS MINENERGÍA)           */}
+      {/* PASO 3: FORMULARIO DE GENERACIÓN FV (MODELOS MINENERGÍA / NREL)           */}
       {/* ========================================================================= */}
       {currentStep === 3 && (
         <Card className="rounded-[24px] border-gray-100 shadow-sm bg-white overflow-hidden animate-in fade-in-50 duration-200">
@@ -773,7 +815,7 @@ export function SolarDesignWizard({ project }: Props) {
               disabled={!isStep3Valid || isPending}
               className="rounded-xl bg-[#FF8300] hover:bg-[#E67600] text-white font-semibold text-xs h-10 px-6 cursor-pointer"
             >
-              Continuar al Paso 4 (Informes & Reportes)
+              Continuar al Paso 4 (Equipamiento & CAPEX)
               <ArrowRight className="h-4 w-4 ml-1.5" />
             </Button>
           </CardFooter>
@@ -781,9 +823,63 @@ export function SolarDesignWizard({ project }: Props) {
       )}
 
       {/* ========================================================================= */}
-      {/* PASO 4: GENERADOR DE INFORMES (3 INFORMES MINENERGÍA / SOLDERÍO)          */}
+      {/* PASO 4: EQUIPAMIENTO, SERVICIOS & CAPEX A MEDIDA (TEMPLATES)              */}
       {/* ========================================================================= */}
       {currentStep === 4 && (
+        <Card className="rounded-[24px] border-gray-100 shadow-sm bg-white overflow-hidden animate-in fade-in-50 duration-200">
+          <CardHeader className="border-b border-gray-50 pb-4">
+            <div className="flex items-center gap-2.5">
+              <div className="h-9 w-9 rounded-xl bg-orange-50 flex items-center justify-center text-[#FF8300]">
+                <Package className="h-5 w-5" />
+              </div>
+              <div>
+                <CardTitle className="text-lg font-bold text-[#1F1F1F]">
+                  Paso 4: Selección de Equipamiento, Servicios & Presupuesto CAPEX
+                </CardTitle>
+                <CardDescription className="text-xs text-gray-500 mt-0.5">
+                  Elige una plantilla preconfigurada SoldeRío o personaliza las partidas de módulos, inversores, baterías y montaje
+                </CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+
+          <CardContent className="p-6 space-y-6">
+            <EquipmentCapexTab
+              initialPvKwp={installedCapacityKwp}
+              roofType={roofType}
+              isCoplanar={isCoplanar}
+              onEquipmentChange={(items, total, tmplName) => {
+                setEquipmentList(items)
+                setCapexClp(total)
+                if (tmplName) setSelectedTemplateName(tmplName)
+              }}
+            />
+          </CardContent>
+
+          <CardFooter className="border-t border-gray-50 p-4 flex justify-between">
+            <Button
+              variant="outline"
+              onClick={handlePrev}
+              className="rounded-xl text-xs h-10 px-5"
+            >
+              <ArrowLeft className="h-4 w-4 mr-1.5" /> Volver
+            </Button>
+            <Button
+              onClick={handleNext}
+              disabled={!isStep4Valid || isPending}
+              className="rounded-xl bg-[#FF8300] hover:bg-[#E67600] text-white font-semibold text-xs h-10 px-6 cursor-pointer"
+            >
+              Continuar al Paso 5 (Informes & Reportes)
+              <ArrowRight className="h-4 w-4 ml-1.5" />
+            </Button>
+          </CardFooter>
+        </Card>
+      )}
+
+      {/* ========================================================================= */}
+      {/* PASO 5: GENERADOR DE INFORMES (3 INFORMES MINENERGÍA / SOLDERÍO)          */}
+      {/* ========================================================================= */}
+      {currentStep === 5 && (
         <div className="space-y-6 animate-in fade-in-50 duration-200">
           {/* Header de Navegación de Reportes */}
           <div className="flex flex-col sm:flex-row justify-between items-center gap-3 bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
@@ -842,7 +938,7 @@ export function SolarDesignWizard({ project }: Props) {
                 onClick={handleNext}
                 className="rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold"
               >
-                Ir a Tramitación SEC (Paso 5)
+                Ir a Tramitación SEC (Paso 6)
                 <ArrowRight className="h-3.5 w-3.5 ml-1.5" />
               </Button>
             </div>
@@ -856,7 +952,9 @@ export function SolarDesignWizard({ project }: Props) {
               comunaName={comunaName}
               distributorName={distributorName}
               tariffType={tariffType}
-              averageMonthlyKwh={averageMonthlyKwh}
+              gridTariffClpKwh={gridTariffClpKwh}
+              injectionTariffClpKwh={injectionTariffClpKwh}
+              monthlyKwh={monthlyKwh}
               simInputs={simInputs}
               simResults={simResults}
               capexClp={capexClp}
@@ -880,31 +978,33 @@ export function SolarDesignWizard({ project }: Props) {
               distributorName={distributorName}
               simInputs={simInputs}
               simResults={simResults}
+              equipmentList={equipmentList}
               capexClp={capexClp}
+              templateName={selectedTemplateName}
             />
           )}
         </div>
       )}
 
       {/* ========================================================================= */}
-      {/* PASO 5: TRAMITACIÓN SEC & DISTRIBUIDORA                                   */}
+      {/* PASO 6: TRAMITACIÓN SEC & DISTRIBUIDORA (LEY 20.571 / 21.118)             */}
       {/* ========================================================================= */}
-      {currentStep === 5 && (
+      {currentStep === 6 && (
         <div className="space-y-6 animate-in fade-in-50 duration-200">
           <div className="flex justify-between items-center bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
             <div>
               <Badge className="bg-orange-50 text-[#FF8300] border-orange-200 text-xs">
-                Paso 5: Cumplimiento Regulatorio & Trámites SEC (Ley 20.571 / 21.118)
+                Paso 6: Cumplimiento Regulatorio & Trámites SEC (Ley 20.571 / 21.118)
               </Badge>
               <p className="text-xs text-gray-500 mt-1">
-                Sube la documentación de respaldo y genera los antecedentes para el e-Declarador SEC
+                Sube la documentación de respaldo y genera los antecedentes para el e-Declarador SEC (TE4)
               </p>
             </div>
 
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setCurrentStep(4)}
+              onClick={() => setCurrentStep(5)}
               className="rounded-xl text-xs"
             >
               <ArrowLeft className="h-3.5 w-3.5 mr-1.5" /> Volver a Informes

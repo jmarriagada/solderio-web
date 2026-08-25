@@ -29,7 +29,8 @@ import {
   Wrench,
   Award,
   AlertCircle,
-  Loader2
+  Loader2,
+  Wallet
 } from "lucide-react";
 import { SolarSizingResult, QuoteFormData, MonthlyGenBreakdown } from "@/types/cotizacion";
 import { useVisitaModal } from "@/context/VisitaModalContext";
@@ -353,6 +354,139 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
             >
               ¿Cómo se paga?
             </button>
+          </div>
+        </div>
+      </div>
+
+      {/* NEW: Presupuesto Llave en Mano, Hitos 50/35/15 & Cobertura O&M */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-stretch">
+        {/* Left: Turnkey Pricing & Cashflow Milestones (7 cols) */}
+        <div className="lg:col-span-7 p-6 sm:p-8 rounded-[24px] sm:rounded-[28px] bg-gradient-to-br from-[#1F1F1F] via-[#1A1A1A] to-black border border-white/10 shadow-xl space-y-6 flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between gap-2 mb-2">
+              <span className="text-xs font-mono uppercase tracking-wider text-[#FF8300] font-semibold flex items-center gap-1.5">
+                <Wallet className="w-4 h-4" />
+                PRESUPUESTO LLAVE EN MANO TRANSPARENTE
+              </span>
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                Flete Sur & SEC Incluido
+              </span>
+            </div>
+
+            <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 mt-3 pb-4 border-b border-white/10">
+              <div>
+                <span className="text-xs text-white/50 font-light block">Inversión Total con IVA (19%)</span>
+                <div className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight">
+                  {formatCurrency(sizing.estimatedSystemCostIvaClp || Math.round((sizing.estimatedSystemCostNetoClp || 0) * 1.19))}
+                </div>
+              </div>
+              <div className="sm:text-right">
+                <span className="text-xs text-white/50 font-light block">Precio Neto</span>
+                <span className="text-lg sm:text-xl font-mono text-[#FF8300] font-bold">
+                  {formatCurrency(sizing.estimatedSystemCostNetoClp || 0)}
+                </span>
+                <span className="text-[11px] text-white/40 block font-mono">
+                  ~{formatCurrency(Math.round((sizing.estimatedSystemCostNetoClp || 0) / Math.max(1, sizing.recommendedKwp)))} / kWp
+                </span>
+              </div>
+            </div>
+
+            {/* 50 / 35 / 15 Milestones */}
+            <div className="mt-5 space-y-3">
+              <span className="text-[11px] font-mono text-white/60 uppercase tracking-wider block">
+                Esquema de Cobranza por Hitos de Avance
+              </span>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                <div className="p-3.5 rounded-xl bg-black/40 border border-orange-500/30 space-y-1">
+                  <div className="flex items-center justify-between text-[#FF8300] font-bold font-mono text-[11px]">
+                    <span>1. Anticipo 50%</span>
+                    <span>Firma</span>
+                  </div>
+                  <div className="text-sm font-black text-white font-mono">
+                    {formatCurrency(sizing.downpaymentHito1Clp || Math.round((sizing.estimatedSystemCostNetoClp || 0) * 0.5))}
+                  </div>
+                  <p className="text-[10px] text-white/50 leading-tight">
+                    Reserva y compra de Inversor Huawei, Paneles Jinko y Estructura.
+                  </p>
+                </div>
+
+                <div className="p-3.5 rounded-xl bg-black/40 border border-amber-500/30 space-y-1">
+                  <div className="flex items-center justify-between text-amber-400 font-bold font-mono text-[11px]">
+                    <span>2. En Obra 35%</span>
+                    <span>Faena</span>
+                  </div>
+                  <div className="text-sm font-black text-white font-mono">
+                    {formatCurrency(sizing.faenaHito2Clp || Math.round((sizing.estimatedSystemCostNetoClp || 0) * 0.35))}
+                  </div>
+                  <p className="text-[10px] text-white/50 leading-tight">
+                    Llegada a terreno, canalización Conduit EMT y montaje eléctrico.
+                  </p>
+                </div>
+
+                <div className="p-3.5 rounded-xl bg-black/40 border border-emerald-500/30 space-y-1">
+                  <div className="flex items-center justify-between text-emerald-400 font-bold font-mono text-[11px]">
+                    <span>3. Final 15%</span>
+                    <span>TE-4 SEC</span>
+                  </div>
+                  <div className="text-sm font-black text-white font-mono">
+                    {formatCurrency(sizing.finalHito3Clp || Math.round((sizing.estimatedSystemCostNetoClp || 0) * 0.15))}
+                  </div>
+                  <p className="text-[10px] text-white/50 leading-tight">
+                    Puesta en marcha, entrega de carpeta SEC y cambio de medidor.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="pt-3 border-t border-white/10 text-[11px] text-white/50 font-light flex items-center justify-between flex-wrap gap-2">
+            <span>✓ Hardware Oficial Huawei FusionSolar & Jinko Solar</span>
+            <span>✓ Cero sobrecostos ocultos</span>
+          </div>
+        </div>
+
+        {/* Right: Selected O&M / Warranty Package Card (5 cols) */}
+        <div className="lg:col-span-5 p-6 sm:p-8 rounded-[24px] sm:rounded-[28px] bg-gradient-to-br from-[#1F1F1F] via-[#1A1A1A] to-[#141414] border border-emerald-500/30 shadow-xl flex flex-col justify-between space-y-4">
+          <div>
+            <div className="flex items-center justify-between gap-2 mb-3">
+              <span className="text-xs font-mono uppercase tracking-wider text-emerald-400 font-semibold flex items-center gap-1.5">
+                <ShieldCheck className="w-4 h-4" />
+                NIVEL DE PROTECCIÓN
+              </span>
+              <span className="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 uppercase font-bold">
+                {sizing.selectedOmPackage?.badge || "Incluida"}
+              </span>
+            </div>
+
+            <h3 className="text-lg sm:text-xl font-bold text-white mb-1">
+              {sizing.selectedOmPackage?.name || "Garantía Estándar SoldeRío"}
+            </h3>
+            <p className="text-xs text-white/60 font-light mb-4">
+              {sizing.selectedOmPackage?.tagline || "Garantía oficial de fábrica y soporte de instalación"}
+            </p>
+
+            <div className="p-3.5 rounded-xl bg-black/40 border border-white/10 mb-4 flex items-baseline justify-between">
+              <span className="text-xs text-white/70">Costo de Suscripción:</span>
+              <span className="text-base font-mono font-bold text-emerald-400">
+                {sizing.selectedOmPackage?.monthlyPriceClp === 0 
+                  ? "$0 / mes (Incluida)" 
+                  : `${formatCurrency(sizing.selectedOmPackage?.monthlyPriceClp || 0)} / mes`}
+              </span>
+            </div>
+
+            <div className="space-y-2">
+              {sizing.selectedOmPackage?.features.slice(0, 4).map((feat, fIdx) => (
+                <div key={fIdx} className="flex items-start gap-2 text-xs text-white/80 font-light leading-snug">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                  <span>{feat}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="pt-3 border-t border-white/10 text-[10px] font-mono text-white/40">
+            * Planes O&M activables o modificables en cualquier momento.
           </div>
         </div>
       </div>

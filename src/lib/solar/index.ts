@@ -10,7 +10,11 @@ import { calculateBessSizing } from "./bess-sizing";
 import { 
   calculateNetBillingFinancials, 
   calculateSouthernSeasonalDemand,
-  DISTRIBUTOR_TARIFFS 
+  calculateDemandFromAnnualKwh,
+  calculateDemandFromMonthlyKwh,
+  DISTRIBUTOR_TARIFFS,
+  MonthlyDemandProfile,
+  OM_PACKAGES 
 } from "./tariffs-netbilling";
 import { validateSecCompliance } from "./sec-compliance";
 
@@ -24,7 +28,8 @@ export * from "./sec-compliance";
  * Función Maestra de Cálculo Solar Fotovoltaico de Alta Fidelidad
  */
 export function calculateSolarSizing(data: Partial<QuoteFormData>): SolarSizingResult {
-  const monthlyBill = data.monthlyBillClp || 120000;
+  const consumptionMode = data.consumptionMode || "monthly_bill_clp";
+  let monthlyBill = data.monthlyBillClp || 120000;
   const systemType = data.systemType || "hibrida";
   const propertyType = data.propertyType || "residencial";
   const comuna = data.comuna || "Puerto Varas";
@@ -36,8 +41,22 @@ export function calculateSolarSizing(data: Partial<QuoteFormData>): SolarSizingR
   const meteoProfile = getMeteorologicalProfile(comuna);
   const tariff = DISTRIBUTOR_TARIFFS[distributor] || DISTRIBUTOR_TARIFFS.saesa;
 
-  // 2. Calcular la Curva Estacional de Demanda Real del Sur (Ene a Dic)
-  const seasonalDemands = calculateSouthernSeasonalDemand(monthlyBill, distributor);
+  // 2. Calcular la Curva Estacional de Demanda Real según el modo de ingreso
+  let seasonalDemands: MonthlyDemandProfile[];
+
+  if (consumptionMode === "monthly_kwh" && data.monthlyKwhBreakdown && data.monthlyKwhBreakdown.length === 12) {
+    seasonalDemands = calculateDemandFromMonthlyKwh(data.monthlyKwhBreakdown, distributor);
+    const totalKwh = data.monthlyKwhBreakdown.reduce((acc, k) => acc + (k || 0), 0);
+    const avgKwh = totalKwh / 12;
+    monthlyBill = Math.round((avgKwh * tariff.pCompraClpPerKwh) + tariff.fixedChargeMonthlyClp);
+  } else if (consumptionMode === "annual_kwh" && data.annualKwh && data.annualKwh > 0) {
+    seasonalDemands = calculateDemandFromAnnualKwh(data.annualKwh, distributor);
+    const avgKwh = data.annualKwh / 12;
+    monthlyBill = Math.round((avgKwh * tariff.pCompraClpPerKwh) + tariff.fixedChargeMonthlyClp);
+  } else {
+    seasonalDemands = calculateSouthernSeasonalDemand(monthlyBill, distributor);
+  }
+
   const totalAnnualDemandKwh = seasonalDemands.reduce((acc, d) => acc + d.demandKwh, 0);
   const avgMonthlyDemandKwh = Math.round(totalAnnualDemandKwh / 12);
 
@@ -48,7 +67,7 @@ export function calculateSolarSizing(data: Partial<QuoteFormData>): SolarSizingR
 
   const targetAnnualGenKwh = totalAnnualDemandKwh * coverageRatio;
 
-  // 4. Dimensionamiento de potencia DC y conteo de módulos N-Type TOPCon 580W
+  // 4. Dimensionamiento de potencia DC y conteo de módulos N-Type TOPCon 585W
   const rawKwp = targetAnnualGenKwh / meteoProfile.specificYieldKwhKwp;
   const rawPanelsCount = Math.ceil((rawKwp * 1000) / TOPCON_580W_SPECS.pStcWatts);
   const panelsCount = Math.max(6, rawPanelsCount); // Mínimo 6 paneles para tensión de arranque MPPT (~220V)
@@ -64,7 +83,7 @@ export function calculateSolarSizing(data: Partial<QuoteFormData>): SolarSizingR
     backupPriority
   );
 
-  // 7. Simulación Financiera Net Billing a 25 años con Límite de Invierno
+  // 7. Simulación Financiera Net Billing y Pricing Oficial SoldeRío
   const financials = calculateNetBillingFinancials(
     physicalSim.annualGenKwh,
     monthlyBill,
@@ -142,6 +161,8 @@ export function calculateSolarSizing(data: Partial<QuoteFormData>): SolarSizingR
 
   const coberturaTotalAnualPct = Math.min(100, Math.round((physicalSim.annualGenKwh / totalAnnualDemandKwh) * 100));
 
+  const selectedOm = OM_PACKAGES[data.omPackage || "basic"] || OM_PACKAGES.basic;
+
   return {
     recommendedKwp: physicalSim.installedKwp,
     panelsCount: physicalSim.panelsCount,
@@ -157,6 +178,17 @@ export function calculateSolarSizing(data: Partial<QuoteFormData>): SolarSizingR
     equivalentTreesPlanted,
     autoconsumoPct: financials.autoconsumoRatioPercent,
     secNorms: secNormsList,
+
+    // Turnkey Pricing & Cashflow Milestones (Huawei + Jinko + BOS + Flete Sur)
+    estimatedSystemCostNetoClp: financials.estimatedSystemCostClp,
+    estimatedSystemCostIvaClp: financials.estimatedSystemCostIvaClp,
+    downpaymentHito1Clp: financials.downpaymentHito1Clp,
+    faenaHito2Clp: financials.faenaHito2Clp,
+    finalHito3Clp: financials.finalHito3Clp,
+    margenBrutoPct: financials.margenBrutoPct,
+
+    // Paquete O&M Seleccionado
+    selectedOmPackage: selectedOm,
 
     // Métricas avanzadas
     usableBatteryKwh: bessResult.usableBatteryKwh,

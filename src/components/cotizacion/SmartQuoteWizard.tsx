@@ -19,14 +19,37 @@ import {
   Loader2,
   FileText,
   Sparkles,
-  Info
+  Info,
+  Wallet,
+  Calendar,
+  BarChart3,
+  RotateCcw,
+  Sliders,
+  Hash
 } from "lucide-react";
-import { QuoteFormData, SolarSizingResult, PropertyType, TopologyType, DistributorType } from "@/types/cotizacion";
+import { QuoteFormData, SolarSizingResult, PropertyType, TopologyType, DistributorType, ConsumptionInputMode } from "@/types/cotizacion";
 import { calculateSolarSizing } from "@/lib/solar-calculator";
 import { SOUTHERN_REGIONS_AND_COMUNAS } from "@/lib/solar/meteorology-tmy";
 import { QuoteReportView } from "./QuoteReportView";
 
 const DEFAULT_REGION = "Región de Los Lagos";
+
+const DEFAULT_MONTHLY_KWH = [420, 400, 450, 550, 680, 780, 810, 720, 590, 500, 460, 430];
+
+const MONTH_LABELS = [
+  { short: "Ene", full: "Enero" },
+  { short: "Feb", full: "Febrero" },
+  { short: "Mar", full: "Marzo" },
+  { short: "Abr", full: "Abril" },
+  { short: "May", full: "Mayo" },
+  { short: "Jun", full: "Junio" },
+  { short: "Jul", full: "Julio" },
+  { short: "Ago", full: "Agosto" },
+  { short: "Sep", full: "Septiembre" },
+  { short: "Oct", full: "Octubre" },
+  { short: "Nov", full: "Noviembre" },
+  { short: "Dic", full: "Diciembre" },
+];
 
 export function SmartQuoteWizard() {
   const [currentStep, setCurrentStep] = useState<number>(1);
@@ -42,12 +65,16 @@ export function SmartQuoteWizard() {
     region: DEFAULT_REGION,
     comuna: "Puerto Varas",
     address: "",
+    consumptionMode: "monthly_bill_clp",
     monthlyBillClp: 120000,
+    annualKwh: 6000,
+    monthlyKwhBreakdown: DEFAULT_MONTHLY_KWH,
     distributor: "saesa",
     hasPhases: "monofasico",
     systemType: "hibrida",
     includeEvCharger: false,
     backupPriority: "cargas_criticas",
+    omPackage: "basic",
     billFile: null,
     fullName: "",
     whatsapp: "",
@@ -93,6 +120,66 @@ export function SmartQuoteWizard() {
 
   // Sizing preview in real-time for Step 2 and 3
   const instantSizing = calculateSolarSizing(formData);
+
+  const handleModeChange = (mode: ConsumptionInputMode) => {
+    setFormData((prev) => ({
+      ...prev,
+      consumptionMode: mode,
+    }));
+  };
+
+  const handleMonthlyBillChange = (val: number) => {
+    setFormData((prev) => ({
+      ...prev,
+      monthlyBillClp: val,
+    }));
+  };
+
+  const handleAnnualKwhChange = (val: number) => {
+    const annual = Math.max(100, val);
+    const avg = annual / 12;
+    const weights = [0.82, 0.80, 0.88, 1.05, 1.25, 1.40, 1.45, 1.32, 1.10, 0.95, 0.88, 0.84];
+    const sumW = weights.reduce((a, b) => a + b, 0);
+    const distributed = weights.map((w) => Math.round(avg * (w / (sumW / 12))));
+    setFormData((prev) => ({
+      ...prev,
+      annualKwh: annual,
+      monthlyKwhBreakdown: distributed,
+    }));
+  };
+
+  const handleMonthKwhChange = (idx: number, val: number) => {
+    const current = formData.monthlyKwhBreakdown ? [...formData.monthlyKwhBreakdown] : [...DEFAULT_MONTHLY_KWH];
+    current[idx] = Math.max(0, val);
+    const total = current.reduce((a, b) => a + b, 0);
+    setFormData((prev) => ({
+      ...prev,
+      monthlyKwhBreakdown: current,
+      annualKwh: total,
+    }));
+  };
+
+  const applySeasonalProfileToMonthly = () => {
+    const total = (formData.monthlyKwhBreakdown || DEFAULT_MONTHLY_KWH).reduce((a, b) => a + b, 0);
+    const avg = total / 12;
+    const weights = [0.82, 0.80, 0.88, 1.05, 1.25, 1.40, 1.45, 1.32, 1.10, 0.95, 0.88, 0.84];
+    const sumW = weights.reduce((a, b) => a + b, 0);
+    const distributed = weights.map((w) => Math.round(avg * (w / (sumW / 12))));
+    setFormData((prev) => ({
+      ...prev,
+      monthlyKwhBreakdown: distributed,
+      annualKwh: total,
+    }));
+  };
+
+  const applyFlatAverageToMonthly = (flatVal: number = 500) => {
+    const flatArray = Array(12).fill(flatVal);
+    setFormData((prev) => ({
+      ...prev,
+      monthlyKwhBreakdown: flatArray,
+      annualKwh: flatVal * 12,
+    }));
+  };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -321,7 +408,7 @@ export function SmartQuoteWizard() {
             </motion.div>
           )}
 
-          {/* STEP 2: MONTHLY BILL & DISTRIBUTOR */}
+          {/* STEP 2: MONTHLY BILL & CONSUMPTION MODES & DISTRIBUTOR */}
           {currentStep === 2 && (
             <motion.div
               key="step2"
@@ -333,51 +420,238 @@ export function SmartQuoteWizard() {
             >
               <div>
                 <span className="text-xs font-mono uppercase tracking-wider text-[#FF8300] block mb-2">
-                  02. Consumo & Tarifa
+                  02. Consumo & Tarifa Eléctrica
                 </span>
                 <h2 className="text-xl sm:text-2xl md:text-3xl font-light tracking-tight text-white mb-2">
-                  ¿Cuánto pagas mensualmente en electricidad?
+                  ¿Cómo prefieres ingresar tu consumo eléctrico?
                 </h2>
                 <p className="text-white/60 text-xs md:text-sm font-light">
-                  Mueve el control para ajustar tu gasto promedio mensual en tu boleta eléctrica.
+                  Selecciona la opción que te sea más cómoda: boleta mensual en pesos, consumo anual total en kWh o desglose mes a mes.
                 </p>
               </div>
 
-              {/* Interactive Bill Slider & Display Box */}
-              <div className="p-5 sm:p-8 rounded-2xl bg-black/40 border border-white/10 text-center space-y-5 sm:space-y-6">
-                <div className="text-xs font-mono uppercase tracking-widest text-white/50">
-                  Gasto Promedio Mensual
-                </div>
-                <div className="text-3xl sm:text-4xl md:text-5xl font-light font-mono text-[#FF8300] tracking-tight">
-                  {formatCurrency(formData.monthlyBillClp)}
-                  <span className="text-xs sm:text-sm font-normal text-white/50 ml-2">/ mes</span>
-                </div>
+              {/* Mode Switcher Tabs */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 p-1.5 rounded-2xl bg-black/50 border border-white/10">
+                <button
+                  type="button"
+                  onClick={() => handleModeChange("monthly_bill_clp")}
+                  className={`px-4 py-3 rounded-xl text-xs sm:text-sm font-light flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                    (formData.consumptionMode || "monthly_bill_clp") === "monthly_bill_clp"
+                      ? "bg-[#FF8300] text-white shadow-lg font-normal"
+                      : "text-white/70 hover:text-white hover:bg-white/5"
+                  }`}
+                >
+                  <Wallet className="w-4 h-4" />
+                  <span>Boleta Mensual ($ CLP)</span>
+                </button>
 
-                <div className="px-1 py-2">
-                  <input
-                    type="range"
-                    min="40000"
-                    max="1500000"
-                    step="10000"
-                    value={formData.monthlyBillClp}
-                    onChange={(e) => setFormData({ ...formData, monthlyBillClp: Number(e.target.value) })}
-                    className="w-full h-2 bg-white/20 rounded-lg appearance-none cursor-pointer accent-[#FF8300]"
-                  />
-                </div>
+                <button
+                  type="button"
+                  onClick={() => handleModeChange("annual_kwh")}
+                  className={`px-4 py-3 rounded-xl text-xs sm:text-sm font-light flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                    formData.consumptionMode === "annual_kwh"
+                      ? "bg-[#FF8300] text-white shadow-lg font-normal"
+                      : "text-white/70 hover:text-white hover:bg-white/5"
+                  }`}
+                >
+                  <Zap className="w-4 h-4" />
+                  <span>Total Anual (kWh)</span>
+                </button>
 
-                <div className="flex justify-between text-[11px] sm:text-xs font-mono text-white/40">
-                  <span>$40.000</span>
-                  <span>$500.000</span>
-                  <span>$1.500.000+</span>
-                </div>
+                <button
+                  type="button"
+                  onClick={() => handleModeChange("monthly_kwh")}
+                  className={`px-4 py-3 rounded-xl text-xs sm:text-sm font-light flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                    formData.consumptionMode === "monthly_kwh"
+                      ? "bg-[#FF8300] text-white shadow-lg font-normal"
+                      : "text-white/70 hover:text-white hover:bg-white/5"
+                  }`}
+                >
+                  <Calendar className="w-4 h-4" />
+                  <span>Mes a Mes (12 Meses)</span>
+                </button>
+              </div>
 
-                {/* Instant Sizing Badge */}
-                <div className="pt-4 border-t border-white/10 grid grid-cols-2 sm:flex sm:flex-wrap items-center justify-center gap-2 sm:gap-4 text-[11px] sm:text-xs font-mono text-white/70">
-                  <span>⚡ Demanda: ~{Math.max(80, Math.round(formData.monthlyBillClp / (formData.distributor === "crell" ? 194 : formData.distributor === "cge" ? 182 : 188)))} kWh</span>
-                  <span>☀️ Potencia: <strong className="text-white">{instantSizing.recommendedKwp} kWp</strong></span>
-                  <span>🔋 Batería: <strong className="text-emerald-400">{instantSizing.batteryKwh > 0 ? `${instantSizing.batteryKwh} kWh` : "On-Grid"}</strong></span>
-                  <span>🌱 Ahorro: <strong className="text-[#FF8300]">{formatCurrency(instantSizing.estimatedAnnualSavingsClp)}/año</strong></span>
+              {/* MODE 1: MONTHLY BILL IN CLP */}
+              {(formData.consumptionMode || "monthly_bill_clp") === "monthly_bill_clp" && (
+                <div className="p-5 sm:p-8 rounded-2xl bg-black/40 border border-white/10 text-center space-y-5 sm:space-y-6">
+                  <div className="text-xs font-mono uppercase tracking-widest text-white/50">
+                    Gasto Promedio Mensual en Boleta
+                  </div>
+                  <div className="text-3xl sm:text-4xl md:text-5xl font-light font-mono text-[#FF8300] tracking-tight">
+                    {formatCurrency(formData.monthlyBillClp)}
+                    <span className="text-xs sm:text-sm font-normal text-white/50 ml-2">/ mes</span>
+                  </div>
+
+                  <div className="px-1 py-2">
+                    <input
+                      type="range"
+                      min="40000"
+                      max="1500000"
+                      step="10000"
+                      value={formData.monthlyBillClp}
+                      onChange={(e) => handleMonthlyBillChange(Number(e.target.value))}
+                      className="w-full h-2 bg-white/20 rounded-lg appearance-none cursor-pointer accent-[#FF8300]"
+                    />
+                  </div>
+
+                  <div className="flex justify-between text-[11px] sm:text-xs font-mono text-white/40">
+                    <span>$40.000</span>
+                    <span>$500.000</span>
+                    <span>$1.500.000+</span>
+                  </div>
                 </div>
+              )}
+
+              {/* MODE 2: TOTAL ANNUAL KWH */}
+              {formData.consumptionMode === "annual_kwh" && (
+                <div className="p-5 sm:p-8 rounded-2xl bg-black/40 border border-white/10 text-center space-y-5 sm:space-y-6">
+                  <div className="text-xs font-mono uppercase tracking-widest text-white/50">
+                    Consumo Total Anual en Energía
+                  </div>
+                  <div className="text-3xl sm:text-4xl md:text-5xl font-light font-mono text-emerald-400 tracking-tight">
+                    {new Intl.NumberFormat("es-CL").format(formData.annualKwh || 6000)}
+                    <span className="text-xs sm:text-sm font-normal text-white/50 ml-2">kWh / año</span>
+                  </div>
+                  <p className="text-xs font-mono text-white/60">
+                    Equivalente a ~{Math.round((formData.annualKwh || 6000) / 12)} kWh/mes promedio (~{formatCurrency(Math.round(((formData.annualKwh || 6000) / 12) * 228 + 2150))}/mes estimado sin solar)
+                  </p>
+
+                  <div className="px-1 py-2">
+                    <input
+                      type="range"
+                      min="1000"
+                      max="40000"
+                      step="250"
+                      value={formData.annualKwh || 6000}
+                      onChange={(e) => handleAnnualKwhChange(Number(e.target.value))}
+                      className="w-full h-2 bg-white/20 rounded-lg appearance-none cursor-pointer accent-emerald-400"
+                    />
+                  </div>
+
+                  <div className="flex justify-between text-[11px] sm:text-xs font-mono text-white/40">
+                    <span>1.000 kWh</span>
+                    <span>20.000 kWh</span>
+                    <span>40.000+ kWh</span>
+                  </div>
+
+                  {/* Preset Chips */}
+                  <div className="pt-2 flex flex-wrap items-center justify-center gap-2">
+                    {[
+                      { label: "3.500 kWh (Casa Compacta)", val: 3500 },
+                      { label: "6.000 kWh (Casa Estándar)", val: 6000 },
+                      { label: "10.000 kWh (Casa Grande / Clima)", val: 10000 },
+                      { label: "18.000 kWh (Parcela / Taller)", val: 18000 },
+                      { label: "30.000 kWh (Comercial / Bombeo)", val: 30000 },
+                    ].map((preset) => (
+                      <button
+                        key={preset.val}
+                        type="button"
+                        onClick={() => handleAnnualKwhChange(preset.val)}
+                        className={`px-3 py-1.5 rounded-full text-xs font-mono border transition-all cursor-pointer ${
+                          formData.annualKwh === preset.val
+                            ? "bg-emerald-500/20 border-emerald-400 text-emerald-300"
+                            : "bg-white/5 border-white/10 text-white/70 hover:bg-white/10 hover:text-white"
+                        }`}
+                      >
+                        {preset.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* MODE 3: MONTH BY MONTH KWH (12 MONTHS) */}
+              {formData.consumptionMode === "monthly_kwh" && (
+                <div className="p-4 sm:p-6 rounded-2xl bg-black/40 border border-white/10 space-y-4 sm:space-y-6">
+                  {/* Top Bar Summary & Helpers */}
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-4 border-b border-white/10">
+                    <div>
+                      <div className="text-xs font-mono text-white/50 uppercase tracking-wider">
+                        Lectura de Consumo Mes a Mes
+                      </div>
+                      <div className="text-lg sm:text-xl font-light text-white flex items-center gap-3">
+                        <span>Total: <strong className="text-[#FF8300] font-mono">{new Intl.NumberFormat("es-CL").format((formData.monthlyKwhBreakdown || DEFAULT_MONTHLY_KWH).reduce((a,b)=>a+b, 0))} kWh/año</strong></span>
+                        <span className="text-xs text-white/50 font-mono">(Promedio: ~{Math.round(((formData.monthlyKwhBreakdown || DEFAULT_MONTHLY_KWH).reduce((a,b)=>a+b, 0))/12)} kWh/mes)</span>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={applySeasonalProfileToMonthly}
+                        className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-[11px] font-mono flex items-center gap-1.5 transition-colors cursor-pointer"
+                        title="Ajusta los 12 meses con la curva típica de invierno del sur"
+                      >
+                        <RotateCcw className="w-3 h-3 text-[#FF8300]" />
+                        <span>Curva Invernal Sur</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => applyFlatAverageToMonthly(500)}
+                        className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-[11px] font-mono flex items-center gap-1.5 transition-colors cursor-pointer"
+                        title="Iguala todos los meses a 500 kWh"
+                      >
+                        <span>500 kWh Plano</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* 12 Months Grid */}
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2.5 sm:gap-3">
+                    {MONTH_LABELS.map((m, idx) => {
+                      const isWinterMonth = idx >= 3 && idx <= 8; // Abr a Sep
+                      const currentVal = formData.monthlyKwhBreakdown ? formData.monthlyKwhBreakdown[idx] : DEFAULT_MONTHLY_KWH[idx];
+
+                      return (
+                        <div
+                          key={m.short}
+                          className={`p-3 rounded-xl border transition-all ${
+                            isWinterMonth
+                              ? "bg-cyan-950/20 border-cyan-500/20 hover:border-cyan-400/50"
+                              : "bg-black/30 border-white/10 hover:border-white/25"
+                          }`}
+                        >
+                          <div className="flex items-center justify-between text-[11px] font-mono text-white/60 mb-1.5">
+                            <span className="font-semibold text-white/80">{m.full}</span>
+                            {isWinterMonth && (
+                              <span className="text-[10px] text-cyan-400 flex items-center" title="Mes dentro de Límite de Invierno">
+                                ❄️
+                              </span>
+                            )}
+                          </div>
+                          <div className="relative flex items-center">
+                            <input
+                              type="number"
+                              min="0"
+                              max="15000"
+                              step="10"
+                              value={currentVal ?? 400}
+                              onChange={(e) => handleMonthKwhChange(idx, Number(e.target.value))}
+                              className="w-full px-2.5 py-1.5 rounded-lg bg-black/60 border border-white/15 text-white font-mono text-xs focus:outline-none focus:border-[#FF8300] focus:ring-1 focus:ring-[#FF8300]"
+                            />
+                            <span className="absolute right-2 text-[10px] font-mono text-white/40 pointer-events-none">
+                              kWh
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <p className="text-[11px] text-white/40 font-light flex items-center gap-1.5">
+                    <Info className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                    <span>Los meses marcados con ❄️ corresponden al período de Límite de Invierno regulado por la SEC (Abril a Septiembre).</span>
+                  </p>
+                </div>
+              )}
+
+              {/* Instant Sizing Badge */}
+              <div className="p-4 rounded-xl bg-gradient-to-r from-black/60 via-[#1F1F1F]/60 to-black/60 border border-white/10 grid grid-cols-2 sm:flex sm:flex-wrap items-center justify-center gap-3 sm:gap-6 text-[11px] sm:text-xs font-mono text-white/80">
+                <span>⚡ Demanda: <strong className="text-white">{instantSizing.averageMonthlyDemandKwh} kWh/mes</strong></span>
+                <span>☀️ Potencia: <strong className="text-white">{instantSizing.recommendedKwp} kWp</strong></span>
+                <span>🔋 Batería: <strong className="text-emerald-400">{instantSizing.batteryKwh > 0 ? `${instantSizing.batteryKwh} kWh` : "BESS-Ready"}</strong></span>
+                <span>🌱 Ahorro: <strong className="text-[#FF8300]">{formatCurrency(instantSizing.estimatedAnnualSavingsClp)}/año</strong></span>
               </div>
 
               {/* Distributor Selector */}
@@ -389,13 +663,13 @@ export function SmartQuoteWizard() {
                   <select
                     value={formData.distributor}
                     onChange={(e) => setFormData({ ...formData, distributor: e.target.value as DistributorType })}
-                    className="w-full px-4 py-3 sm:py-3.5 rounded-xl bg-black/40 border border-white/15 text-white text-xs sm:text-sm font-light focus:outline-none focus:border-[#FF8300] focus:ring-1 focus:ring-[#FF8300]"
+                    className="w-full px-4 py-3 sm:py-3.5 rounded-xl bg-black/40 border border-white/15 text-white text-xs sm:text-sm font-light focus:outline-none focus:border-[#FF8300] focus:ring-1 focus:ring-[#FF8300] cursor-pointer"
                   >
-                    <option value="saesa">Grupo Saesa (Llanquihue, Osorno, Los Ríos)</option>
-                    <option value="crell">Crell (Puerto Varas, Frutillar, Llanquihue)</option>
-                    <option value="frontel">Frontel (La Araucanía)</option>
-                    <option value="cge">CGE (Villarrica, Pucón, Macrozona)</option>
-                    <option value="edelaysen">Edelaysen (Aysén)</option>
+                    <option value="saesa">Grupo Saesa (Llanquihue, Osorno, Los Ríos, Chiloé)</option>
+                    <option value="crell">Crell (Puerto Varas, Frutillar, Llanquihue Rural)</option>
+                    <option value="frontel">Frontel (La Araucanía Rural / Malleco)</option>
+                    <option value="cge">CGE (Temuco, Villarrica, Pucón)</option>
+                    <option value="edelaysen">Edelaysen (Palena / Chaitén)</option>
                     <option value="otra">Otra Distribuidora / Cooperativa</option>
                   </select>
                 </div>
@@ -407,7 +681,7 @@ export function SmartQuoteWizard() {
                   <select
                     value={formData.hasPhases}
                     onChange={(e) => setFormData({ ...formData, hasPhases: e.target.value as any })}
-                    className="w-full px-4 py-3 sm:py-3.5 rounded-xl bg-black/40 border border-white/15 text-white text-xs sm:text-sm font-light focus:outline-none focus:border-[#FF8300] focus:ring-1 focus:ring-[#FF8300]"
+                    className="w-full px-4 py-3 sm:py-3.5 rounded-xl bg-black/40 border border-white/15 text-white text-xs sm:text-sm font-light focus:outline-none focus:border-[#FF8300] focus:ring-1 focus:ring-[#FF8300] cursor-pointer"
                   >
                     <option value="monofasico">Monofásico (220V - Residencial Típico)</option>
                     <option value="trifasico">Trifásico (380V - Bombas / Comercial)</option>
@@ -521,6 +795,103 @@ export function SmartQuoteWizard() {
                   onChange={() => {}}
                   className="w-5 h-5 accent-[#FF8300] rounded cursor-pointer flex-shrink-0"
                 />
+              </div>
+
+              {/* O&M Package & Warranty Selector */}
+              <div className="space-y-3 pt-2">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <span className="text-xs font-mono uppercase tracking-wider text-emerald-400 block">
+                      Protección y Cobertura
+                    </span>
+                    <h3 className="text-sm sm:text-base font-medium text-white">
+                      ¿Qué nivel de garantía y mantenimiento deseas incluir?
+                    </h3>
+                  </div>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/10 text-white/70">
+                    Básica siempre incluida
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  {/* Basic Option */}
+                  <div
+                    onClick={() => setFormData({ ...formData, omPackage: "basic" })}
+                    className={`p-4 rounded-2xl border cursor-pointer transition-all flex flex-col justify-between ${
+                      (formData.omPackage || "basic") === "basic"
+                        ? "bg-white/10 border-white text-white shadow-lg"
+                        : "bg-black/20 border-white/10 text-white/70 hover:bg-black/40"
+                    }`}
+                  >
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold">
+                          Incluida $0
+                        </span>
+                        <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                      </div>
+                      <h4 className="text-sm font-bold text-white mb-1">Garantía Estándar</h4>
+                      <p className="text-[11px] text-white/60 font-light leading-snug">
+                        25 años paneles, 10-15 años Huawei y 1 año mano de obra.
+                      </p>
+                    </div>
+                    <div className="mt-3 pt-2 border-t border-white/10 text-[10px] font-mono text-white/50">
+                      Costo: <strong className="text-white">$0 / mes</strong>
+                    </div>
+                  </div>
+
+                  {/* Essential Care Option */}
+                  <div
+                    onClick={() => setFormData({ ...formData, omPackage: "essential" })}
+                    className={`p-4 rounded-2xl border cursor-pointer transition-all flex flex-col justify-between ${
+                      formData.omPackage === "essential"
+                        ? "bg-white/10 border-[#FF8300] text-white shadow-lg"
+                        : "bg-black/20 border-white/10 text-white/70 hover:bg-black/40"
+                    }`}
+                  >
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-[#FF8300]/20 text-[#FF8300] font-bold">
+                          Essential Care
+                        </span>
+                        <Sparkles className="w-4 h-4 text-[#FF8300]" />
+                      </div>
+                      <h4 className="text-sm font-bold text-white mb-1">Telemetría + 1 Lavado/Año</h4>
+                      <p className="text-[11px] text-white/60 font-light leading-snug">
+                        Monitoreo activo 24/7 con IA + 1 mantenimiento anual preventivo.
+                      </p>
+                    </div>
+                    <div className="mt-3 pt-2 border-t border-white/10 text-[10px] font-mono text-[#FF8300]">
+                      Suscripción: <strong>$18.000 / mes</strong>
+                    </div>
+                  </div>
+
+                  {/* Total Guard Option */}
+                  <div
+                    onClick={() => setFormData({ ...formData, omPackage: "total_guard" })}
+                    className={`p-4 rounded-2xl border cursor-pointer transition-all flex flex-col justify-between ${
+                      formData.omPackage === "total_guard"
+                        ? "bg-white/10 border-emerald-400 text-white shadow-lg"
+                        : "bg-black/20 border-white/10 text-white/70 hover:bg-black/40"
+                    }`}
+                  >
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold">
+                          Total Guard
+                        </span>
+                        <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                      </div>
+                      <h4 className="text-sm font-bold text-white mb-1">Seguro SoldeRío 100%</h4>
+                      <p className="text-[11px] text-white/60 font-light leading-snug">
+                        2 visitas/año + Mano de obra correctiva 100% + Inversor Swap &lt;48h.
+                      </p>
+                    </div>
+                    <div className="mt-3 pt-2 border-t border-white/10 text-[10px] font-mono text-emerald-400">
+                      Suscripción: <strong>$25.000 / mes</strong>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               {/* Navigation Actions */}

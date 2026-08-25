@@ -4,6 +4,10 @@ export type TopologyType = "hibrida" | "ongrid" | "offgrid";
 
 export type DistributorType = "saesa" | "crell" | "cge" | "frontel" | "edelaysen" | "otra";
 
+export type OMPackageType = "basic" | "essential" | "total_guard";
+
+export type ConsumptionInputMode = "monthly_bill_clp" | "annual_kwh" | "monthly_kwh";
+
 export interface QuoteFormData {
   // Step 1: Property & Location
   propertyType: PropertyType;
@@ -12,7 +16,10 @@ export interface QuoteFormData {
   address?: string;
 
   // Step 2: Consumption & Distributor
+  consumptionMode?: ConsumptionInputMode;
   monthlyBillClp: number;
+  annualKwh?: number;
+  monthlyKwhBreakdown?: number[]; // Array de 12 meses (Ene a Dic) en kWh
   distributor: DistributorType;
   hasPhases: "monofasico" | "trifasico" | "desconoce";
 
@@ -20,6 +27,7 @@ export interface QuoteFormData {
   systemType: TopologyType;
   includeEvCharger: boolean;
   backupPriority: "cargas_criticas" | "hogar_completo" | "solo_ahorro";
+  omPackage?: OMPackageType;
 
   // Step 4: Bill Upload
   billFile?: {
@@ -45,6 +53,17 @@ export interface MonthlyGenBreakdown {
   tCellCelsius?: number;
   surplusKwh?: number;
   gridImportKwh?: number;
+}
+
+export interface OMPackageDetail {
+  id: OMPackageType;
+  name: string;
+  badge?: string;
+  monthlyPriceClp: number;
+  monthlyPriceUf: number;
+  tagline: string;
+  features: string[];
+  isDefault?: boolean;
 }
 
 export interface SolarSizingResult {
@@ -74,6 +93,17 @@ export interface SolarSizingResult {
   lcoeClpPerKwh?: number;
   requiresThreePhase?: boolean;
   recommendedPhaseType?: "monofasico" | "trifasico";
+
+  // Turnkey Pricing & Cashflow Milestones (Huawei + Jinko + BOS + Flete Sur)
+  estimatedSystemCostNetoClp?: number;
+  estimatedSystemCostIvaClp?: number;
+  downpaymentHito1Clp?: number; // 50%
+  faenaHito2Clp?: number;       // 35%
+  finalHito3Clp?: number;       // 15%
+  margenBrutoPct?: number;
+
+  // O&M Package Selected
+  selectedOmPackage?: OMPackageDetail;
 
   // Friendly Lead Experience Indicators ("Con peras y manzanas")
   estimatedNewMonthlyBillClp?: number; // Lo que pagará el cliente (ej: $15.000 cargo fijo)

@@ -19,6 +19,8 @@ import {
   HelpCircle,
   X,
   Printer,
+  Download,
+  FileText,
   Refrigerator,
   Wifi,
   Flame,
@@ -28,12 +30,14 @@ import {
   FileCheck2,
   Wrench,
   Award,
-  AlertCircle
+  AlertCircle,
+  Loader2
 } from "lucide-react";
 import { SolarSizingResult, QuoteFormData, MonthlyGenBreakdown } from "@/types/cotizacion";
 import { useVisitaModal } from "@/context/VisitaModalContext";
 
 import { ExecutiveReportModal } from "./ExecutiveReportModal";
+import { downloadDirectSolarPdf } from "@/lib/pdf-generator";
 
 interface Props {
   formData: QuoteFormData;
@@ -148,13 +152,29 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
 
           <div className="flex flex-wrap items-center gap-3 no-print">
             <button
-              onClick={() => setIsExecutiveReportOpen(true)}
-              className="px-4 py-2.5 rounded-full bg-white text-black hover:bg-[#FF8300] hover:text-white transition-all text-xs font-light tracking-wide shadow-lg flex items-center gap-2 cursor-pointer"
-              title="Ver y Descargar Ficha PDF Oficial"
+              onClick={async () => {
+                try {
+                  await downloadDirectSolarPdf(formData, sizing, leadId);
+                } catch (e) {
+                  setIsExecutiveReportOpen(true);
+                }
+              }}
+              className="px-5 py-2.5 rounded-full bg-[#FF8300] hover:bg-[#e07400] text-white transition-all text-xs font-medium tracking-wide shadow-lg hover:shadow-[0_0_20px_rgba(255,131,0,0.4)] flex items-center gap-2 cursor-pointer"
+              title="Descargar archivo PDF oficial del pre-informe"
             >
-              <Printer className="w-4 h-4 text-[#FF8300] group-hover:text-white" />
-              <span>Descargar Ficha PDF</span>
+              <Download className="w-4 h-4" />
+              <span>Descargar PDF Directo</span>
             </button>
+
+            <button
+              onClick={() => setIsExecutiveReportOpen(true)}
+              className="px-4 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all text-xs font-light tracking-wide flex items-center gap-1.5 cursor-pointer"
+              title="Previsualizar Ficha Ejecutiva"
+            >
+              <FileText className="w-4 h-4 text-white/70" />
+              <span>Ver Ficha</span>
+            </button>
+
             <button
               onClick={onReset}
               className="p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white/70 hover:text-white transition-colors cursor-pointer"
@@ -162,11 +182,12 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
             >
               <RotateCcw className="w-4 h-4" />
             </button>
+
             <a
               href={`https://wa.me/56987654321?text=Hola%20SoldeR%C3%ADo,%20acabo%20de%20generar%20mi%20pre-informe%20solar%20(${leadId})%20para%20${formData.comuna}%20y%20deseo%20coordinar%20mi%20visita%20t%C3%A9cnica.`}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-6 py-2.5 rounded-full bg-[#FF8300] text-white font-light text-xs md:text-sm hover:bg-[#e07400] transition-all shadow-lg hover:shadow-[0_0_25px_rgba(255,131,0,0.5)] flex items-center gap-2 cursor-pointer"
+              className="px-5 py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white font-light text-xs md:text-sm transition-all shadow-lg flex items-center gap-2 cursor-pointer"
             >
               <PhoneCall className="w-4 h-4" />
               <span>Hablar con un Ingeniero</span>

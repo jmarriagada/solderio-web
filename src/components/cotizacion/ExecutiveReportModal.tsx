@@ -1,10 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
-  Printer, 
-  X, 
   Download, 
+  X, 
   CheckCircle2, 
   ShieldCheck, 
   Sun, 
@@ -12,11 +12,11 @@ import {
   TrendingUp, 
   Building2, 
   FileText,
-  PhoneCall,
-  Sparkles
+  Sparkles,
+  Loader2
 } from "lucide-react";
 import { SolarSizingResult, QuoteFormData } from "@/types/cotizacion";
-import { downloadCarbonePdf } from "@/lib/print-carbone-report";
+import { downloadDirectSolarPdf } from "@/lib/pdf-generator";
 
 interface Props {
   isOpen: boolean;
@@ -27,6 +27,8 @@ interface Props {
 }
 
 export function ExecutiveReportModal({ isOpen, onClose, formData, sizing, leadId }: Props) {
+  const [isGenerating, setIsGenerating] = useState(false);
+
   if (!isOpen) return null;
 
   const formatCurrency = (val: number) => {
@@ -43,22 +45,40 @@ export function ExecutiveReportModal({ isOpen, onClose, formData, sizing, leadId
     year: "numeric",
   });
 
-  const handlePrintPdf = () => {
-    downloadCarbonePdf(formData, sizing, leadId);
+  const handleDownloadPdf = async () => {
+    setIsGenerating(true);
+    try {
+      await downloadDirectSolarPdf(formData, sizing, leadId);
+    } catch (err) {
+      console.error("Error generating PDF:", err);
+      alert("No se pudo generar el archivo PDF directamente. Inténtalo de nuevo.");
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md overflow-y-auto print:p-0 print:bg-white print:static">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md overflow-y-auto">
         
-        {/* Floating Top Control Bar (Hidden when printing) */}
-        <div className="fixed top-6 right-6 z-50 flex items-center gap-3 no-print bg-[#1F1F1F]/90 p-2.5 rounded-2xl border border-white/20 shadow-2xl backdrop-blur-md">
+        {/* Floating Top Control Bar */}
+        <div className="fixed top-6 right-6 z-50 flex items-center gap-3 bg-[#1F1F1F]/95 p-2.5 rounded-2xl border border-white/20 shadow-2xl backdrop-blur-md">
           <button
-            onClick={handlePrintPdf}
-            className="px-5 py-2.5 rounded-xl bg-[#FF8300] hover:bg-[#e07400] text-white text-xs font-medium uppercase tracking-wider transition-all shadow-lg flex items-center gap-2 cursor-pointer"
+            onClick={handleDownloadPdf}
+            disabled={isGenerating}
+            className="px-5 py-2.5 rounded-xl bg-[#FF8300] hover:bg-[#e07400] text-white text-xs font-medium uppercase tracking-wider transition-all shadow-lg flex items-center gap-2 cursor-pointer disabled:opacity-50"
           >
-            <Printer className="w-4 h-4" />
-            <span>Guardar como PDF / Imprimir</span>
+            {isGenerating ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span>Generando PDF...</span>
+              </>
+            ) : (
+              <>
+                <Download className="w-4 h-4" />
+                <span>Descargar PDF Directo</span>
+              </>
+            )}
           </button>
           <button
             onClick={onClose}
@@ -69,12 +89,12 @@ export function ExecutiveReportModal({ isOpen, onClose, formData, sizing, leadId
           </button>
         </div>
 
-        {/* Printable Executive Sheet (A4 Dimensions on screen and print) */}
+        {/* Printable Executive Sheet Preview (A4 Dimensions) */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 20 }}
-          className="w-full max-w-4xl my-auto bg-white text-slate-900 rounded-[24px] print:rounded-none shadow-2xl p-8 md:p-12 print:p-8 font-sans print:shadow-none print:max-w-none print:w-full"
+          className="w-full max-w-4xl my-auto bg-white text-slate-900 rounded-[24px] shadow-2xl p-8 md:p-12 font-sans"
         >
           {/* Header Membretado */}
           <div className="flex items-center justify-between border-b-2 border-[#ea580c] pb-4 mb-6">

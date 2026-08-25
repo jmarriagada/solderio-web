@@ -13,12 +13,10 @@ import {
   Calendar, 
   PhoneCall, 
   ArrowRight, 
-  RotateCcw,
   Sparkles,
   CloudSun,
   HelpCircle,
   X,
-  Printer,
   Download,
   FileText,
   Refrigerator,
@@ -128,29 +126,29 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
   const activeModal = activeModalKey ? EXPLANATORY_MODALS[activeModalKey] : null;
 
   return (
-    <div className="w-full max-w-5xl mx-auto py-4 sm:py-8 px-2 sm:px-4 text-white space-y-6 sm:space-y-8 animate-in fade-in zoom-in-95 duration-500">
+    <div className="w-full max-w-6xl 2xl:max-w-7xl mx-auto py-4 sm:py-8 px-3 sm:px-6 md:px-8 text-white space-y-6 sm:space-y-8 animate-in fade-in zoom-in-95 duration-500">
       
       {/* Header Banner */}
       <div className="p-5 sm:p-8 md:p-10 rounded-[24px] sm:rounded-[28px] bg-gradient-to-br from-[#1F1F1F] via-[#181818] to-black border border-white/10 shadow-2xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-80 h-80 bg-[#FF8300]/15 rounded-full blur-3xl pointer-events-none" />
         
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-mono mb-3 border border-emerald-500/30">
               <CheckCircle2 className="w-3.5 h-3.5" />
               <span>Pre-Informe de Ingeniería • ID: {leadId}</span>
             </div>
-            <h2 className="text-xl sm:text-2xl md:text-4xl font-light tracking-tight text-white mb-2">
+            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light tracking-tight text-white mb-2">
               Propuesta Solar para {formData.fullName}
             </h2>
             <p className="text-white/60 text-xs md:text-sm font-light">
               Ubicación: <span className="text-white capitalize">{formData.comuna}</span> • Gasto Actual:{" "}
-              <span className="text-[#FF8300] font-mono">{formatCurrency(formData.monthlyBillClp)} / mes</span> • Distribuidora:{" "}
+              <span className="text-[#FF8300] font-mono font-medium">{formatCurrency(formData.monthlyBillClp)} / mes</span> • Distribuidora:{" "}
               <span className="text-white capitalize">{formData.distributor}</span>
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full md:w-auto no-print">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full lg:w-auto no-print">
             <button
               onClick={async () => {
                 try {
@@ -173,14 +171,6 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
             >
               <FileText className="w-4 h-4 text-white/70" />
               <span>Ver Ficha</span>
-            </button>
-
-            <button
-              onClick={onReset}
-              className="hidden sm:flex p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white/70 hover:text-white transition-colors cursor-pointer items-center justify-center"
-              title="Calcular de nuevo"
-            >
-              <RotateCcw className="w-4 h-4" />
             </button>
 
             <a
@@ -227,11 +217,11 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
       </div>
 
       {/* 4 Main Technical & Financial Metrics Bento with Help Modals */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 items-stretch">
         {/* Metric 1: Potencia Peak & Módulos */}
-        <div className="p-6 rounded-[24px] bg-[#1F1F1F]/90 backdrop-blur-md border border-white/10 shadow-lg flex flex-col justify-between relative group">
+        <div className="p-5 sm:p-6 rounded-[24px] bg-[#1F1F1F]/90 backdrop-blur-md border border-white/10 shadow-lg flex flex-col justify-between relative group min-h-[210px]">
           <div>
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-3">
               <span className="text-[11px] font-mono uppercase tracking-wider text-[#FF8300] font-semibold flex items-center gap-1.5">
                 POTENCIA SUGERIDA
                 <button
@@ -243,20 +233,20 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
                   <HelpCircle className="w-3.5 h-3.5" />
                 </button>
               </span>
-              <Sun className="w-5 h-5 text-amber-400" />
+              <Sun className="w-5 h-5 text-amber-400 flex-shrink-0" />
             </div>
-            <div className="text-3xl font-light font-mono text-white mb-1">
-              {sizing.recommendedKwp} <span className="text-base text-white/50">kWp</span>
+            <div className="text-2xl sm:text-3xl font-light font-mono text-white mb-1">
+              {sizing.recommendedKwp} <span className="text-sm sm:text-base text-white/50">kWp</span>
             </div>
-            <p className="text-xs text-white/60 font-light">
+            <p className="text-xs text-white/60 font-light leading-snug">
               {sizing.panelsCount} Módulos Tier 1 N-Type TOPCon {sizing.panelWatts}W
             </p>
           </div>
-          <div className="pt-4 mt-4 border-t border-white/10 text-[11px] text-white/50 font-mono flex items-center justify-between">
-            <span>Inversor: {sizing.inverterKw} kW</span>
+          <div className="pt-3 mt-3 border-t border-white/10 text-[11px] text-white/60 font-mono flex items-center justify-between gap-1 flex-wrap">
+            <span>Inversor: <strong className="text-white font-medium">{sizing.inverterKw} kW</strong></span>
             <button
               onClick={() => setActiveModalKey("kwp")}
-              className="text-[#FF8300] hover:underline text-[10px]"
+              className="text-[#FF8300] hover:underline text-[10px] cursor-pointer"
             >
               ¿Cómo funciona?
             </button>
@@ -264,9 +254,9 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
         </div>
 
         {/* Metric 2: Batería LiFePO4 & Capacidad Útil */}
-        <div className="p-6 rounded-[24px] bg-[#1F1F1F]/90 backdrop-blur-md border border-white/10 shadow-lg flex flex-col justify-between relative group">
+        <div className="p-5 sm:p-6 rounded-[24px] bg-[#1F1F1F]/90 backdrop-blur-md border border-white/10 shadow-lg flex flex-col justify-between relative group min-h-[210px]">
           <div>
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-3">
               <span className="text-[11px] font-mono uppercase tracking-wider text-emerald-400 font-semibold flex items-center gap-1.5">
                 ALMACENAMIENTO BESS
                 <button
@@ -278,22 +268,22 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
                   <HelpCircle className="w-3.5 h-3.5" />
                 </button>
               </span>
-              <Battery className="w-5 h-5 text-emerald-400" />
+              <Battery className="w-5 h-5 text-emerald-400 flex-shrink-0" />
             </div>
-            <div className="text-3xl font-light font-mono text-white mb-1">
+            <div className="text-2xl sm:text-3xl font-light font-mono text-white mb-1">
               {sizing.batteryKwh > 0 ? `${sizing.batteryKwh} kWh` : "On-Grid"}
             </div>
-            <p className="text-xs text-white/60 font-light">
+            <p className="text-xs text-white/60 font-light leading-snug">
               {sizing.batteryKwh > 0
                 ? `Capacidad útil: ${sizing.usableBatteryKwh || Math.round(sizing.batteryKwh * 0.85)} kWh (DoD 90%)`
                 : "Inyección directa Ley Net Billing"}
             </p>
           </div>
-          <div className="pt-4 mt-4 border-t border-white/10 text-[11px] text-emerald-400 font-mono flex items-center justify-between">
+          <div className="pt-3 mt-3 border-t border-white/10 text-[11px] text-emerald-400 font-mono flex items-center justify-between gap-1 flex-wrap">
             <span>{sizing.batteryKwh > 0 ? "Respaldo <10ms en cortes" : "Sin baterías"}</span>
             <button
               onClick={() => setActiveModalKey("bess")}
-              className="text-emerald-400 hover:underline text-[10px]"
+              className="text-emerald-400 hover:underline text-[10px] cursor-pointer"
             >
               ¿Cómo funciona?
             </button>
@@ -301,9 +291,9 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
         </div>
 
         {/* Metric 3: Ahorro Anual Net Billing */}
-        <div className="p-6 rounded-[24px] bg-[#1F1F1F]/90 backdrop-blur-md border border-white/10 shadow-lg flex flex-col justify-between relative group">
+        <div className="p-5 sm:p-6 rounded-[24px] bg-[#1F1F1F]/90 backdrop-blur-md border border-white/10 shadow-lg flex flex-col justify-between relative group min-h-[210px]">
           <div>
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-3">
               <span className="text-[11px] font-mono uppercase tracking-wider text-blue-400 font-semibold flex items-center gap-1.5">
                 AHORRO AÑO 1
                 <button
@@ -315,20 +305,20 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
                   <HelpCircle className="w-3.5 h-3.5" />
                 </button>
               </span>
-              <TrendingUp className="w-5 h-5 text-blue-400" />
+              <TrendingUp className="w-5 h-5 text-blue-400 flex-shrink-0" />
             </div>
-            <div className="text-2xl lg:text-3xl font-light font-mono text-emerald-400 mb-1">
+            <div className="text-xl sm:text-2xl lg:text-[22px] xl:text-2xl 2xl:text-3xl font-light font-mono text-emerald-400 mb-1">
               {formatCurrency(sizing.estimatedAnnualSavingsClp)}
             </div>
-            <p className="text-xs text-white/60 font-light">
-              Autoconsumo {sizing.autoconsumoPct}% + Excedentes a tu favor
+            <p className="text-xs text-white/60 font-light leading-snug">
+              Autoconsumo {sizing.autoconsumoPct}% + Excedentes
             </p>
           </div>
-          <div className="pt-4 mt-4 border-t border-white/10 text-[11px] text-white/50 font-mono flex items-center justify-between">
-            <span>25 Años: {formatCurrency(sizing.estimated25YearSavingsClp)}</span>
+          <div className="pt-3 mt-3 border-t border-white/10 text-[10px] sm:text-[11px] text-white/60 font-mono flex items-center justify-between gap-1 flex-wrap">
+            <span>25 Años: <strong className="text-emerald-400">{formatCurrency(sizing.estimated25YearSavingsClp)}</strong></span>
             <button
               onClick={() => setActiveModalKey("netbilling")}
-              className="text-blue-400 hover:underline text-[10px]"
+              className="text-blue-400 hover:underline text-[10px] cursor-pointer"
             >
               Ley 21.118
             </button>
@@ -336,9 +326,9 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
         </div>
 
         {/* Metric 4: Retorno Financiero & VAN */}
-        <div className="p-6 rounded-[24px] bg-[#1F1F1F]/90 backdrop-blur-md border border-white/10 shadow-lg flex flex-col justify-between relative group">
+        <div className="p-5 sm:p-6 rounded-[24px] bg-[#1F1F1F]/90 backdrop-blur-md border border-white/10 shadow-lg flex flex-col justify-between relative group min-h-[210px]">
           <div>
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-3">
               <span className="text-[11px] font-mono uppercase tracking-wider text-amber-400 font-semibold flex items-center gap-1.5">
                 RETORNO & GARANTÍA
                 <button
@@ -350,20 +340,20 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
                   <HelpCircle className="w-3.5 h-3.5" />
                 </button>
               </span>
-              <Leaf className="w-5 h-5 text-emerald-400" />
+              <Leaf className="w-5 h-5 text-emerald-400 flex-shrink-0" />
             </div>
-            <div className="text-3xl font-light font-mono text-white mb-1">
-              {sizing.paybackYears} <span className="text-base text-white/50">años</span>
+            <div className="text-2xl sm:text-3xl font-light font-mono text-white mb-1">
+              {sizing.paybackYears} <span className="text-sm sm:text-base text-white/50">años</span>
             </div>
-            <p className="text-xs text-white/60 font-light">
-              Garantía de 25 Años • -{sizing.co2TonsAvoidedPerYear} Ton CO2/año
+            <p className="text-xs text-white/60 font-light leading-snug">
+              Garantía 25 Años • -{sizing.co2TonsAvoidedPerYear} Ton CO2
             </p>
           </div>
-          <div className="pt-4 mt-4 border-t border-white/10 text-[11px] text-amber-400 font-mono flex items-center justify-between">
-            <span>VAN: {sizing.vanClp ? formatCurrency(sizing.vanClp) : "Positivo"}</span>
+          <div className="pt-3 mt-3 border-t border-white/10 text-[10px] sm:text-[11px] text-amber-400 font-mono flex items-center justify-between gap-1 flex-wrap">
+            <span>VAN: <strong className="text-white font-medium">{sizing.vanClp ? formatCurrency(sizing.vanClp) : "Positivo"}</strong></span>
             <button
               onClick={() => setActiveModalKey("retorno")}
-              className="text-amber-400 hover:underline text-[10px]"
+              className="text-amber-400 hover:underline text-[10px] cursor-pointer"
             >
               ¿Cómo se paga?
             </button>

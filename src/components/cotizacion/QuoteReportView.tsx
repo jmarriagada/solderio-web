@@ -128,10 +128,10 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
   const activeModal = activeModalKey ? EXPLANATORY_MODALS[activeModalKey] : null;
 
   return (
-    <div className="w-full max-w-5xl mx-auto py-8 text-white space-y-8 animate-in fade-in zoom-in-95 duration-500">
+    <div className="w-full max-w-5xl mx-auto py-4 sm:py-8 px-2 sm:px-4 text-white space-y-6 sm:space-y-8 animate-in fade-in zoom-in-95 duration-500">
       
       {/* Header Banner */}
-      <div className="p-8 md:p-10 rounded-[28px] bg-gradient-to-br from-[#1F1F1F] via-[#181818] to-black border border-white/10 shadow-2xl relative overflow-hidden">
+      <div className="p-5 sm:p-8 md:p-10 rounded-[24px] sm:rounded-[28px] bg-gradient-to-br from-[#1F1F1F] via-[#181818] to-black border border-white/10 shadow-2xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-80 h-80 bg-[#FF8300]/15 rounded-full blur-3xl pointer-events-none" />
         
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
@@ -140,7 +140,7 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
               <CheckCircle2 className="w-3.5 h-3.5" />
               <span>Pre-Informe de Ingeniería • ID: {leadId}</span>
             </div>
-            <h2 className="text-2xl md:text-4xl font-light tracking-tight text-white mb-2">
+            <h2 className="text-xl sm:text-2xl md:text-4xl font-light tracking-tight text-white mb-2">
               Propuesta Solar para {formData.fullName}
             </h2>
             <p className="text-white/60 text-xs md:text-sm font-light">
@@ -150,7 +150,7 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3 no-print">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full md:w-auto no-print">
             <button
               onClick={async () => {
                 try {
@@ -159,7 +159,7 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
                   setIsExecutiveReportOpen(true);
                 }
               }}
-              className="px-5 py-2.5 rounded-full bg-[#FF8300] hover:bg-[#e07400] text-white transition-all text-xs font-medium tracking-wide shadow-lg hover:shadow-[0_0_20px_rgba(255,131,0,0.4)] flex items-center gap-2 cursor-pointer"
+              className="w-full sm:w-auto px-5 py-2.5 rounded-full bg-[#FF8300] hover:bg-[#e07400] text-white transition-all text-xs font-medium tracking-wide shadow-lg hover:shadow-[0_0_20px_rgba(255,131,0,0.4)] flex items-center justify-center gap-2 cursor-pointer"
               title="Descargar archivo PDF oficial del pre-informe"
             >
               <Download className="w-4 h-4" />
@@ -168,7 +168,7 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
 
             <button
               onClick={() => setIsExecutiveReportOpen(true)}
-              className="px-4 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all text-xs font-light tracking-wide flex items-center gap-1.5 cursor-pointer"
+              className="w-full sm:w-auto px-4 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all text-xs font-light tracking-wide flex items-center justify-center gap-1.5 cursor-pointer"
               title="Previsualizar Ficha Ejecutiva"
             >
               <FileText className="w-4 h-4 text-white/70" />
@@ -177,7 +177,7 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
 
             <button
               onClick={onReset}
-              className="p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white/70 hover:text-white transition-colors cursor-pointer"
+              className="hidden sm:flex p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white/70 hover:text-white transition-colors cursor-pointer items-center justify-center"
               title="Calcular de nuevo"
             >
               <RotateCcw className="w-4 h-4" />
@@ -187,7 +187,7 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
               href={`https://wa.me/56987654321?text=Hola%20SoldeR%C3%ADo,%20acabo%20de%20generar%20mi%20pre-informe%20solar%20(${leadId})%20para%20${formData.comuna}%20y%20deseo%20coordinar%20mi%20visita%20t%C3%A9cnica.`}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-5 py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white font-light text-xs md:text-sm transition-all shadow-lg flex items-center gap-2 cursor-pointer"
+              className="w-full sm:w-auto px-5 py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white font-light text-xs md:text-sm transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer"
             >
               <PhoneCall className="w-4 h-4" />
               <span>Hablar con un Ingeniero</span>
@@ -197,14 +197,14 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
       </div>
 
       {/* Spotlight: "¿Cuánto vas a pagar ahora?" (Comparativa de Boleta) */}
-      <div className="p-8 rounded-[28px] bg-gradient-to-r from-emerald-950/40 via-[#181818] to-emerald-900/20 border border-emerald-500/30 shadow-2xl relative overflow-hidden">
+      <div className="p-5 sm:p-8 rounded-[24px] sm:rounded-[28px] bg-gradient-to-r from-emerald-950/40 via-[#181818] to-emerald-900/20 border border-emerald-500/30 shadow-2xl relative overflow-hidden">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="space-y-2 text-center md:text-left">
             <span className="text-xs font-mono uppercase tracking-wider text-emerald-400 font-semibold flex items-center justify-center md:justify-start gap-1.5">
               <Sparkles className="w-4 h-4" />
               <span>TU NUEVA REALIDAD ENERGÉTICA</span>
             </span>
-            <h3 className="text-2xl md:text-3xl font-light text-white">
+            <h3 className="text-xl sm:text-2xl md:text-3xl font-light text-white">
               Tu cuenta mensual baja de{" "}
               <span className="line-through text-white/50">{formatCurrency(formData.monthlyBillClp)}</span> a solo{" "}
               <strong className="text-emerald-400 font-mono font-normal">
@@ -217,7 +217,7 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
             </p>
           </div>
 
-          <div className="flex-shrink-0 bg-emerald-500/10 border border-emerald-500/30 px-6 py-4 rounded-2xl text-center">
+          <div className="w-full md:w-auto flex-shrink-0 bg-emerald-500/10 border border-emerald-500/30 px-6 py-4 rounded-2xl text-center">
             <span className="text-[11px] font-mono text-emerald-300 uppercase block">COBERTURA SOLAR ANUAL</span>
             <span className="text-3xl md:text-4xl font-light font-mono text-emerald-400">
               {sizing.coberturaTotalAnualPct || 88}%
@@ -227,7 +227,7 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
       </div>
 
       {/* 4 Main Technical & Financial Metrics Bento with Help Modals */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-5">
         {/* Metric 1: Potencia Peak & Módulos */}
         <div className="p-6 rounded-[24px] bg-[#1F1F1F]/90 backdrop-blur-md border border-white/10 shadow-lg flex flex-col justify-between relative group">
           <div>
@@ -372,14 +372,14 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
       </div>
 
       {/* Side-by-Side Chart: Generación Solar vs Consumo Real de tu Casa (Sur de Chile) */}
-      <div className="p-8 rounded-[28px] bg-[#1A1A1A] border border-white/10 shadow-2xl relative overflow-hidden">
+      <div className="p-5 sm:p-8 rounded-[24px] sm:rounded-[28px] bg-[#1A1A1A] border border-white/10 shadow-2xl relative overflow-hidden">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
           <div>
             <div className="flex items-center gap-2 text-[#FF8300] text-xs font-mono uppercase mb-1">
               <CloudSun className="w-4 h-4" />
               <span>Simulación Física Mensual ({formData.comuna})</span>
             </div>
-            <h3 className="text-xl md:text-2xl font-light text-white">
+            <h3 className="text-lg sm:text-xl md:text-2xl font-light text-white">
               Generación Solar vs Consumo de tu Hogar (Mes a Mes)
             </h3>
             <p className="text-xs text-white/60 font-light mt-1">
@@ -387,90 +387,94 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
             </p>
           </div>
 
-          <div className="flex items-center gap-4 text-xs font-mono bg-black/40 px-4 py-2 rounded-xl border border-white/5">
+          <div className="flex items-center justify-between sm:justify-start gap-2 sm:gap-4 text-[10px] sm:text-xs font-mono bg-black/40 px-3 sm:px-4 py-2 rounded-xl border border-white/5">
             <div className="text-center">
-              <span className="text-white/40 block text-[10px]">VERANO SOLAR</span>
+              <span className="text-white/40 block text-[9px] sm:text-[10px]">VERANO</span>
               <span className="text-amber-400 font-semibold">
-                {sizing.summerAvgMonthlyGenKwh || Math.round(sizing.estimatedAnnualGenKwh / 8)} kWh/mes
+                {sizing.summerAvgMonthlyGenKwh || Math.round(sizing.estimatedAnnualGenKwh / 8)} kWh
               </span>
             </div>
-            <div className="h-6 w-px bg-white/10" />
+            <div className="h-5 sm:h-6 w-px bg-white/10" />
             <div className="text-center">
-              <span className="text-white/40 block text-[10px]">INVIERNO SOLAR</span>
+              <span className="text-white/40 block text-[9px] sm:text-[10px]">INVIERNO</span>
               <span className="text-blue-400 font-semibold">
-                {sizing.winterAvgMonthlyGenKwh || Math.round(sizing.estimatedAnnualGenKwh / 26)} kWh/mes
+                {sizing.winterAvgMonthlyGenKwh || Math.round(sizing.estimatedAnnualGenKwh / 26)} kWh
               </span>
             </div>
-            <div className="h-6 w-px bg-white/10" />
+            <div className="h-5 sm:h-6 w-px bg-white/10" />
             <div className="text-center">
-              <span className="text-white/40 block text-[10px]">VARIACIÓN SUR</span>
+              <span className="text-white/40 block text-[9px] sm:text-[10px]">ESTACIONAL</span>
               <span className="text-[#FF8300] font-semibold">{sizing.seasonalVariationRatio || 3.4}x</span>
             </div>
           </div>
         </div>
 
-        {/* 12-Month Side-by-Side Visualizer */}
-        <div className="pt-6 pb-2">
-          <div className="grid grid-cols-12 gap-1.5 md:gap-3 items-end h-56 border-b border-white/10 pb-2">
-            {monthlyData.map((m) => {
-              const genHeightPercent = Math.max(8, Math.round((m.monthlyGenKwh / maxMonthlyVal) * 100));
-              const demandHeightPercent = Math.max(8, Math.round((m.monthlyDemandKwh / maxMonthlyVal) * 100));
-              const isHovered = hoveredMonth?.month === m.month;
-              const hasSurplus = m.monthlyGenKwh >= m.monthlyDemandKwh;
+        {/* 12-Month Side-by-Side Visualizer with Mobile Horizontal Scroll */}
+        <div className="pt-4 sm:pt-6 pb-2">
+          <div className="overflow-x-auto pb-3 -mx-2 px-2 scrollbar-none">
+            <div className="min-w-[480px] sm:min-w-0">
+              <div className="grid grid-cols-12 gap-1.5 md:gap-3 items-end h-52 sm:h-56 border-b border-white/10 pb-2">
+                {monthlyData.map((m) => {
+                  const genHeightPercent = Math.max(8, Math.round((m.monthlyGenKwh / maxMonthlyVal) * 100));
+                  const demandHeightPercent = Math.max(8, Math.round((m.monthlyDemandKwh / maxMonthlyVal) * 100));
+                  const isHovered = hoveredMonth?.month === m.month;
+                  const hasSurplus = m.monthlyGenKwh >= m.monthlyDemandKwh;
 
-              return (
-                <div
-                  key={m.month}
-                  className="flex flex-col items-center h-full justify-end group cursor-pointer relative"
-                  onMouseEnter={() => setHoveredMonth(m)}
-                  onMouseLeave={() => setHoveredMonth(null)}
-                >
-                  {/* Tooltip on Hover */}
-                  {isHovered && (
-                    <div className="absolute -top-20 z-30 bg-black/95 text-white text-[11px] font-mono px-3.5 py-2 rounded-xl border border-white/20 shadow-2xl pointer-events-none whitespace-nowrap animate-in fade-in zoom-in-90 duration-200">
-                      <span className="text-[#FF8300] font-bold block">{m.monthName}</span>
-                      <span className="text-amber-400">☀️ Generación: {m.monthlyGenKwh} kWh</span>
-                      <span className="text-white/70 block">🏠 Consumo casa: {m.monthlyDemandKwh} kWh</span>
-                      <span className={hasSurplus ? "text-emerald-400 font-bold block" : "text-blue-300 block"}>
-                        {hasSurplus ? `+${m.monthlyGenKwh - m.monthlyDemandKwh} kWh Excedente inyectado` : `-${m.monthlyDemandKwh - m.monthlyGenKwh} kWh Red/Batería`}
+                  return (
+                    <div
+                      key={m.month}
+                      className="flex flex-col items-center h-full justify-end group cursor-pointer relative"
+                      onMouseEnter={() => setHoveredMonth(m)}
+                      onMouseLeave={() => setHoveredMonth(null)}
+                    >
+                      {/* Tooltip on Hover */}
+                      {isHovered && (
+                        <div className="absolute -top-20 z-30 bg-black/95 text-white text-[11px] font-mono px-3.5 py-2 rounded-xl border border-white/20 shadow-2xl pointer-events-none whitespace-nowrap animate-in fade-in zoom-in-90 duration-200">
+                          <span className="text-[#FF8300] font-bold block">{m.monthName}</span>
+                          <span className="text-amber-400">☀️ Generación: {m.monthlyGenKwh} kWh</span>
+                          <span className="text-white/70 block">🏠 Consumo casa: {m.monthlyDemandKwh} kWh</span>
+                          <span className={hasSurplus ? "text-emerald-400 font-bold block" : "text-blue-300 block"}>
+                            {hasSurplus ? `+${m.monthlyGenKwh - m.monthlyDemandKwh} kWh Inyectado` : `-${m.monthlyDemandKwh - m.monthlyGenKwh} kWh Red/BESS`}
+                          </span>
+                        </div>
+                      )}
+
+                      {/* Dual Bars Container */}
+                      <div className="flex items-end gap-1 w-full justify-center h-full">
+                        {/* Solar Generation Bar */}
+                        <div
+                          style={{ height: `${genHeightPercent}%` }}
+                          className={`w-1/2 rounded-t-md transition-all duration-300 ${
+                            isHovered
+                              ? "bg-[#FF8300] shadow-[0_0_15px_rgba(255,131,0,0.6)]"
+                              : "bg-gradient-to-t from-amber-600 to-amber-400"
+                          }`}
+                          title={`Generación: ${m.monthlyGenKwh} kWh`}
+                        />
+                        
+                        {/* Home Demand Bar */}
+                        <div
+                          style={{ height: `${demandHeightPercent}%` }}
+                          className="w-1/2 rounded-t-md bg-white/25 hover:bg-white/40 transition-all duration-300"
+                          title={`Consumo casa: ${m.monthlyDemandKwh} kWh`}
+                        />
+                      </div>
+                      
+                      {/* Month Label */}
+                      <span className={`text-[9px] sm:text-[10px] font-mono mt-2 transition-colors ${isHovered ? "text-[#FF8300] font-bold" : "text-white/50"}`}>
+                        {m.monthName.slice(0, 3)}
                       </span>
                     </div>
-                  )}
-
-                  {/* Dual Bars Container */}
-                  <div className="flex items-end gap-1 w-full justify-center h-full">
-                    {/* Solar Generation Bar */}
-                    <div
-                      style={{ height: `${genHeightPercent}%` }}
-                      className={`w-1/2 rounded-t-md transition-all duration-300 ${
-                        isHovered
-                          ? "bg-[#FF8300] shadow-[0_0_15px_rgba(255,131,0,0.6)]"
-                          : "bg-gradient-to-t from-amber-600 to-amber-400"
-                      }`}
-                      title={`Generación: ${m.monthlyGenKwh} kWh`}
-                    />
-                    
-                    {/* Home Demand Bar */}
-                    <div
-                      style={{ height: `${demandHeightPercent}%` }}
-                      className="w-1/2 rounded-t-md bg-white/25 hover:bg-white/40 transition-all duration-300"
-                      title={`Consumo casa: ${m.monthlyDemandKwh} kWh`}
-                    />
-                  </div>
-                  
-                  {/* Month Label */}
-                  <span className={`text-[10px] font-mono mt-2 transition-colors ${isHovered ? "text-[#FF8300] font-bold" : "text-white/50"}`}>
-                    {m.monthName.slice(0, 3)}
-                  </span>
-                </div>
-              );
-            })}
+                  );
+                })}
+              </div>
+            </div>
           </div>
 
-          <div className="flex flex-wrap items-center justify-between text-[11px] text-white/50 font-mono mt-4 gap-2">
-            <div className="flex items-center gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between text-[10px] sm:text-[11px] text-white/50 font-mono mt-3 sm:mt-4 gap-2">
+            <div className="flex items-center gap-3 sm:gap-4">
               <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-sm bg-amber-400" /> Generación Solar</span>
-              <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-sm bg-white/30" /> Consumo Estimado de tu Hogar</span>
+              <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-sm bg-white/30" /> Consumo Hogar</span>
             </div>
             <span className="text-emerald-400">
               ⚡ En verano acumulas saldos para cubrir el invierno
@@ -480,12 +484,12 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
       </div>
 
       {/* Everyday Appliances Powered ("Con peras y manzanas") */}
-      <div className="p-8 rounded-[28px] bg-[#1F1F1F]/90 border border-white/10 shadow-xl">
+      <div className="p-5 sm:p-8 rounded-[24px] sm:rounded-[28px] bg-[#1F1F1F]/90 border border-white/10 shadow-xl">
         <div className="mb-6">
           <span className="text-xs font-mono uppercase tracking-wider text-[#FF8300] block mb-1">
             CONTINUIDAD OPERATIVA EN TU HOGAR
           </span>
-          <h3 className="text-xl md:text-2xl font-light text-white">
+          <h3 className="text-lg sm:text-xl md:text-2xl font-light text-white">
             ¿Qué podrás mantener funcionando con tu planta solar?
           </h3>
           <p className="text-xs text-white/60 font-light mt-1">
@@ -493,9 +497,9 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
           {sizing.applianceEquivalencies?.map((app, idx) => (
-            <div key={idx} className="p-5 rounded-2xl bg-black/40 border border-white/10 flex items-start gap-3.5">
+            <div key={idx} className="p-4 sm:p-5 rounded-2xl bg-black/40 border border-white/10 flex items-start gap-3.5">
               <div className="w-10 h-10 rounded-xl bg-[#FF8300]/10 text-[#FF8300] flex items-center justify-center flex-shrink-0">
                 {idx === 0 && <Refrigerator className="w-5 h-5" />}
                 {idx === 1 && <Wifi className="w-5 h-5" />}
@@ -513,12 +517,12 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
       </div>
 
       {/* Checklist del Proceso Residencial (Paso a Paso) */}
-      <div className="p-8 rounded-[28px] bg-[#1A1A1A] border border-white/10 shadow-xl">
+      <div className="p-5 sm:p-8 rounded-[24px] sm:rounded-[28px] bg-[#1A1A1A] border border-white/10 shadow-xl">
         <div className="mb-6">
           <span className="text-xs font-mono uppercase tracking-wider text-emerald-400 block mb-1">
             TRANSPARENCIA TOTAL
           </span>
-          <h3 className="text-xl md:text-2xl font-light text-white">
+          <h3 className="text-lg sm:text-xl md:text-2xl font-light text-white">
             Checklist del Proceso Residencial Llave en Mano
           </h3>
           <p className="text-xs text-white/60 font-light mt-1">
@@ -526,7 +530,7 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5 sm:gap-4">
           {[
             {
               step: "01",
@@ -571,9 +575,9 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
             return (
               <div
                 key={i}
-                className={`p-5 rounded-2xl border flex flex-col justify-between transition-all ${
+                className={`p-4 sm:p-5 rounded-2xl border flex flex-col justify-between transition-all ${
                   isCurrent
-                    ? "bg-[#FF8300]/10 border-[#FF8300] shadow-lg shadow-[#FF8300]/10 scale-[1.02]"
+                    ? "bg-[#FF8300]/10 border-[#FF8300] shadow-lg shadow-[#FF8300]/10 scale-[1.01]"
                     : isDone
                     ? "bg-emerald-500/10 border-emerald-500/30"
                     : "bg-black/30 border-white/10 text-white/70"
@@ -599,28 +603,28 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
       </div>
 
       {/* SEC Normative Compliance & Technical Visit CTA */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-stretch">
         
         {/* Left: Engineering & SEC Badges (7 cols) */}
-        <div className="lg:col-span-7 p-8 rounded-[28px] bg-[#1A1A1A] border border-white/10 shadow-xl flex flex-col justify-between">
+        <div className="lg:col-span-7 p-6 sm:p-8 rounded-[24px] sm:rounded-[28px] bg-[#1A1A1A] border border-white/10 shadow-xl flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between mb-3">
+            <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
               <div className="flex items-center gap-2 text-[#FF8300] text-xs font-mono uppercase">
                 <ShieldCheck className="w-4 h-4" />
-                <span>Cumplimiento Normativo SEC (Pliegos RIC)</span>
+                <span>Cumplimiento Normativo SEC</span>
               </div>
-              <span className="px-2.5 py-0.5 rounded-full bg-white/10 text-white/80 font-mono text-[11px] uppercase">
+              <span className="px-2.5 py-0.5 rounded-full bg-white/10 text-white/80 font-mono text-[10px] sm:text-[11px] uppercase">
                 {sizing.recommendedPhaseType === "trifasico" ? "Trifásico 380V" : "Monofásico 220V"}
               </span>
             </div>
-            <h3 className="text-xl font-light text-white mb-4">
+            <h3 className="text-lg sm:text-xl font-light text-white mb-3">
               Ingeniería y Certificación SEC Llave en Mano
             </h3>
-            <p className="text-xs md:text-sm text-white/70 font-light leading-relaxed mb-6">
+            <p className="text-xs sm:text-sm text-white/70 font-light leading-relaxed mb-5">
               Tu instalación solar será proyectada y declarada formalmente ante la SEC por nuestro equipo de ingenieros Clase A, asegurando total compatibilidad con la red de {formData.distributor} y habilitando la Ley Net Billing.
             </p>
 
-            <div className="space-y-2.5">
+            <div className="space-y-2">
               {sizing.secNorms.map((norm, nIdx) => (
                 <div key={nIdx} className="flex items-center gap-2 text-xs text-white/90 font-light">
                   <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
@@ -630,30 +634,30 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
             </div>
           </div>
 
-          <div className="pt-6 mt-6 border-t border-white/10 text-xs text-white/50 font-light flex items-center justify-between">
+          <div className="pt-5 mt-5 border-t border-white/10 text-[11px] sm:text-xs text-white/50 font-light flex items-center justify-between">
             <span>Distribuidora: <strong className="text-white capitalize">{formData.distributor}</strong></span>
             <span>Topología: <strong className="text-[#FF8300] uppercase font-mono">{formData.systemType}</strong></span>
           </div>
         </div>
 
         {/* Right: Schedule Technical Visit CTA Box (5 cols) */}
-        <div className="lg:col-span-5 p-8 rounded-[28px] bg-gradient-to-br from-[#FF8300]/20 via-[#1F1F1F] to-[#141414] border border-[#FF8300]/40 shadow-2xl flex flex-col justify-between text-center no-print">
+        <div className="lg:col-span-5 p-6 sm:p-8 rounded-[24px] sm:rounded-[28px] bg-gradient-to-br from-[#FF8300]/20 via-[#1F1F1F] to-[#141414] border border-[#FF8300]/40 shadow-2xl flex flex-col justify-between text-center no-print">
           <div>
             <div className="w-12 h-12 rounded-2xl bg-[#FF8300] text-white flex items-center justify-center mx-auto mb-4 shadow-lg shadow-[#FF8300]/30">
               <Calendar className="w-6 h-6 stroke-[1.5]" />
             </div>
-            <h3 className="text-xl font-normal text-white mb-2">
+            <h3 className="text-lg sm:text-xl font-normal text-white mb-2">
               Siguiente Paso: Visita en Terreno
             </h3>
             <p className="text-xs text-white/70 font-light leading-relaxed mb-6">
-              Un Ingeniero Eléctrico SEC visitará tu propiedad en {formData.comuna} para verificar la orientación de techumbres, inclinación, pérdidas por sombreado y tablero general.
+              Un Ingeniero Eléctrico SEC visitará tu propiedad en {formData.comuna} para verificar techumbres, orientación, pérdidas y empalme.
             </p>
           </div>
 
           <button
             type="button"
             onClick={() => openModal()}
-            className="w-full py-4 rounded-full bg-white text-black font-light text-xs md:text-sm uppercase tracking-wider hover:bg-[#FF8300] hover:text-white transition-all duration-300 shadow-xl cursor-pointer flex items-center justify-center gap-2 group"
+            className="w-full py-3.5 sm:py-4 rounded-full bg-white text-black font-light text-xs md:text-sm uppercase tracking-wider hover:bg-[#FF8300] hover:text-white transition-all duration-300 shadow-xl cursor-pointer flex items-center justify-center gap-2 group"
           >
             <span>Agendar Visita Técnica</span>
             <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />

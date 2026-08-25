@@ -211,7 +211,7 @@ export function SmartQuoteWizard() {
       </div>
 
       {/* Main Form Container */}
-      <div className="p-8 md:p-12 rounded-[28px] bg-[#1F1F1F]/95 backdrop-blur-xl border border-white/10 shadow-2xl relative overflow-hidden">
+      <div className="p-5 sm:p-8 md:p-12 rounded-[24px] sm:rounded-[28px] bg-[#1F1F1F]/95 backdrop-blur-xl border border-white/10 shadow-2xl relative overflow-hidden">
         
         <AnimatePresence mode="wait">
           {/* STEP 1: PROPERTY TYPE & COMUNA */}
@@ -222,13 +222,13 @@ export function SmartQuoteWizard() {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.35 }}
-              className="space-y-8"
+              className="space-y-6 sm:space-y-8"
             >
               <div>
                 <span className="text-xs font-mono uppercase tracking-wider text-[#FF8300] block mb-2">
                   01. Tipo de Propiedad
                 </span>
-                <h2 className="text-2xl md:text-3xl font-light tracking-tight text-white mb-2">
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-light tracking-tight text-white mb-2">
                   ¿Dónde instalaremos la planta solar?
                 </h2>
                 <p className="text-white/60 text-xs md:text-sm font-light">
@@ -237,7 +237,7 @@ export function SmartQuoteWizard() {
               </div>
 
               {/* Property Types Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
                 {propertyTypes.map((prop) => {
                   const Icon = prop.icon;
                   const isSelected = formData.propertyType === prop.id;
@@ -246,7 +246,7 @@ export function SmartQuoteWizard() {
                       key={prop.id}
                       type="button"
                       onClick={() => setFormData({ ...formData, propertyType: prop.id })}
-                      className={`p-5 rounded-2xl border text-left transition-all duration-300 cursor-pointer flex items-start gap-4 ${
+                      className={`p-4 sm:p-5 rounded-2xl border text-left transition-all duration-300 cursor-pointer flex items-start gap-3.5 sm:gap-4 ${
                         isSelected
                           ? "bg-white text-black border-white shadow-xl scale-[1.02]"
                           : "bg-black/30 border-white/10 text-white hover:bg-black/50"
@@ -311,13 +311,13 @@ export function SmartQuoteWizard() {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.35 }}
-              className="space-y-8"
+              className="space-y-6 sm:space-y-8"
             >
               <div>
                 <span className="text-xs font-mono uppercase tracking-wider text-[#FF8300] block mb-2">
                   02. Consumo & Tarifa
                 </span>
-                <h2 className="text-2xl md:text-3xl font-light tracking-tight text-white mb-2">
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-light tracking-tight text-white mb-2">
                   ¿Cuánto pagas mensualmente en electricidad?
                 </h2>
                 <p className="text-white/60 text-xs md:text-sm font-light">
@@ -326,42 +326,44 @@ export function SmartQuoteWizard() {
               </div>
 
               {/* Interactive Bill Slider & Display Box */}
-              <div className="p-8 rounded-2xl bg-black/40 border border-white/10 text-center space-y-6">
+              <div className="p-5 sm:p-8 rounded-2xl bg-black/40 border border-white/10 text-center space-y-5 sm:space-y-6">
                 <div className="text-xs font-mono uppercase tracking-widest text-white/50">
                   Gasto Promedio Mensual
                 </div>
-                <div className="text-4xl md:text-5xl font-light font-mono text-[#FF8300] tracking-tight">
+                <div className="text-3xl sm:text-4xl md:text-5xl font-light font-mono text-[#FF8300] tracking-tight">
                   {formatCurrency(formData.monthlyBillClp)}
-                  <span className="text-sm font-normal text-white/50 ml-2">/ mes</span>
+                  <span className="text-xs sm:text-sm font-normal text-white/50 ml-2">/ mes</span>
                 </div>
 
-                <input
-                  type="range"
-                  min="40000"
-                  max="1500000"
-                  step="10000"
-                  value={formData.monthlyBillClp}
-                  onChange={(e) => setFormData({ ...formData, monthlyBillClp: Number(e.target.value) })}
-                  className="w-full h-2 bg-white/20 rounded-lg appearance-none cursor-pointer accent-[#FF8300]"
-                />
+                <div className="px-1 py-2">
+                  <input
+                    type="range"
+                    min="40000"
+                    max="1500000"
+                    step="10000"
+                    value={formData.monthlyBillClp}
+                    onChange={(e) => setFormData({ ...formData, monthlyBillClp: Number(e.target.value) })}
+                    className="w-full h-2 bg-white/20 rounded-lg appearance-none cursor-pointer accent-[#FF8300]"
+                  />
+                </div>
 
-                <div className="flex justify-between text-xs font-mono text-white/40">
-                  <span>$40.000 CLP</span>
-                  <span>$500.000 CLP</span>
-                  <span>$1.500.000+ CLP</span>
+                <div className="flex justify-between text-[11px] sm:text-xs font-mono text-white/40">
+                  <span>$40.000</span>
+                  <span>$500.000</span>
+                  <span>$1.500.000+</span>
                 </div>
 
                 {/* Instant Sizing Badge */}
-                <div className="pt-4 border-t border-white/10 flex flex-wrap items-center justify-center gap-4 text-xs font-mono text-white/70">
-                  <span>⚡ Demanda est: ~{Math.max(80, Math.round(formData.monthlyBillClp / (formData.distributor === "crell" ? 194 : formData.distributor === "cge" ? 182 : 188)))} kWh/mes</span>
-                  <span>☀️ Potencia sug: <strong className="text-white">{instantSizing.recommendedKwp} kWp</strong></span>
-                  <span>🔋 Batería: <strong className="text-emerald-400">{instantSizing.batteryKwh > 0 ? `${instantSizing.batteryKwh} kWh (${instantSizing.usableBatteryKwh || Math.round(instantSizing.batteryKwh * 0.85)} útil)` : "On-Grid"}</strong></span>
-                  <span>🌱 Ahorro est: <strong className="text-[#FF8300]">{formatCurrency(instantSizing.estimatedAnnualSavingsClp)}/año</strong></span>
+                <div className="pt-4 border-t border-white/10 grid grid-cols-2 sm:flex sm:flex-wrap items-center justify-center gap-2 sm:gap-4 text-[11px] sm:text-xs font-mono text-white/70">
+                  <span>⚡ Demanda: ~{Math.max(80, Math.round(formData.monthlyBillClp / (formData.distributor === "crell" ? 194 : formData.distributor === "cge" ? 182 : 188)))} kWh</span>
+                  <span>☀️ Potencia: <strong className="text-white">{instantSizing.recommendedKwp} kWp</strong></span>
+                  <span>🔋 Batería: <strong className="text-emerald-400">{instantSizing.batteryKwh > 0 ? `${instantSizing.batteryKwh} kWh` : "On-Grid"}</strong></span>
+                  <span>🌱 Ahorro: <strong className="text-[#FF8300]">{formatCurrency(instantSizing.estimatedAnnualSavingsClp)}/año</strong></span>
                 </div>
               </div>
 
               {/* Distributor Selector */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 <div>
                   <label className="text-xs text-white/70 font-light block mb-2">
                     Compañía Distribuidora Eléctrica *
@@ -369,7 +371,7 @@ export function SmartQuoteWizard() {
                   <select
                     value={formData.distributor}
                     onChange={(e) => setFormData({ ...formData, distributor: e.target.value as DistributorType })}
-                    className="w-full px-4 py-3.5 rounded-xl bg-black/40 border border-white/15 text-white text-sm font-light focus:outline-none focus:border-[#FF8300] focus:ring-1 focus:ring-[#FF8300]"
+                    className="w-full px-4 py-3 sm:py-3.5 rounded-xl bg-black/40 border border-white/15 text-white text-xs sm:text-sm font-light focus:outline-none focus:border-[#FF8300] focus:ring-1 focus:ring-[#FF8300]"
                   >
                     <option value="saesa">Grupo Saesa (Llanquihue, Osorno, Los Ríos)</option>
                     <option value="crell">Crell (Puerto Varas, Frutillar, Llanquihue)</option>
@@ -387,7 +389,7 @@ export function SmartQuoteWizard() {
                   <select
                     value={formData.hasPhases}
                     onChange={(e) => setFormData({ ...formData, hasPhases: e.target.value as any })}
-                    className="w-full px-4 py-3.5 rounded-xl bg-black/40 border border-white/15 text-white text-sm font-light focus:outline-none focus:border-[#FF8300] focus:ring-1 focus:ring-[#FF8300]"
+                    className="w-full px-4 py-3 sm:py-3.5 rounded-xl bg-black/40 border border-white/15 text-white text-xs sm:text-sm font-light focus:outline-none focus:border-[#FF8300] focus:ring-1 focus:ring-[#FF8300]"
                   >
                     <option value="monofasico">Monofásico (220V - Residencial Típico)</option>
                     <option value="trifasico">Trifásico (380V - Bombas / Comercial)</option>
@@ -397,11 +399,11 @@ export function SmartQuoteWizard() {
               </div>
 
               {/* Navigation Actions */}
-              <div className="pt-6 border-t border-white/10 flex items-center justify-between">
+              <div className="pt-6 border-t border-white/10 flex flex-col-reverse sm:flex-row items-center justify-between gap-3">
                 <button
                   type="button"
                   onClick={() => setCurrentStep(1)}
-                  className="px-6 py-3 rounded-full bg-white/10 hover:bg-white/20 text-white font-light text-xs uppercase tracking-wider transition-colors cursor-pointer flex items-center gap-2"
+                  className="w-full sm:w-auto px-6 py-3 rounded-full bg-white/10 hover:bg-white/20 text-white font-light text-xs uppercase tracking-wider transition-colors cursor-pointer flex items-center justify-center gap-2"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" />
                   <span>Atrás</span>
@@ -410,7 +412,7 @@ export function SmartQuoteWizard() {
                 <button
                   type="button"
                   onClick={() => setCurrentStep(3)}
-                  className="px-8 py-3.5 rounded-full bg-[#FF8300] text-white font-light text-xs md:text-sm uppercase tracking-wider hover:bg-[#e07400] transition-all shadow-lg flex items-center gap-2 cursor-pointer group"
+                  className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-[#FF8300] text-white font-light text-xs md:text-sm uppercase tracking-wider hover:bg-[#e07400] transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer group"
                 >
                   <span>Siguiente: Topología Solar</span>
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -427,13 +429,13 @@ export function SmartQuoteWizard() {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.35 }}
-              className="space-y-8"
+              className="space-y-6 sm:space-y-8"
             >
               <div>
                 <span className="text-xs font-mono uppercase tracking-wider text-[#FF8300] block mb-2">
                   03. Configuración del Sistema
                 </span>
-                <h2 className="text-2xl md:text-3xl font-light tracking-tight text-white mb-2">
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-light tracking-tight text-white mb-2">
                   ¿Qué objetivo priorizas en tu proyecto?
                 </h2>
                 <p className="text-white/60 text-xs md:text-sm font-light">
@@ -442,7 +444,7 @@ export function SmartQuoteWizard() {
               </div>
 
               {/* System Selector Cards */}
-              <div className="space-y-4">
+              <div className="space-y-3.5 sm:space-y-4">
                 {systems.map((sys) => {
                   const isSelected = formData.systemType === sys.id;
                   return (
@@ -450,17 +452,17 @@ export function SmartQuoteWizard() {
                       key={sys.id}
                       type="button"
                       onClick={() => setFormData({ ...formData, systemType: sys.id })}
-                      className={`w-full p-6 rounded-2xl border text-left transition-all duration-300 cursor-pointer flex items-start justify-between gap-4 ${
+                      className={`w-full p-4 sm:p-6 rounded-2xl border text-left transition-all duration-300 cursor-pointer flex items-start justify-between gap-3.5 sm:gap-4 ${
                         isSelected
                           ? "bg-white text-black border-white shadow-xl scale-[1.01]"
                           : "bg-black/30 border-white/10 text-white hover:bg-black/50"
                       }`}
                     >
                       <div>
-                        <div className="flex items-center gap-2.5 mb-1.5">
-                          <h3 className="text-lg font-medium leading-snug">{sys.title}</h3>
+                        <div className="flex flex-wrap items-center gap-2 mb-1.5">
+                          <h3 className="text-base sm:text-lg font-medium leading-snug">{sys.title}</h3>
                           <span
-                            className={`text-[10px] font-mono uppercase tracking-wider px-2.5 py-0.5 rounded-full ${
+                            className={`text-[9px] sm:text-[10px] font-mono uppercase tracking-wider px-2.5 py-0.5 rounded-full ${
                               isSelected
                                 ? "bg-[#FF8300] text-white"
                                 : "bg-white/10 text-white/60"
@@ -475,11 +477,11 @@ export function SmartQuoteWizard() {
                       </div>
 
                       <div
-                        className={`w-6 h-6 rounded-full border flex items-center justify-center flex-shrink-0 mt-1 ${
+                        className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full border flex items-center justify-center flex-shrink-0 mt-1 ${
                           isSelected ? "border-[#FF8300] bg-[#FF8300] text-white" : "border-white/30"
                         }`}
                       >
-                        {isSelected && <CheckCircle2 className="w-4 h-4" />}
+                        {isSelected && <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
                       </div>
                     </button>
                   );
@@ -487,28 +489,28 @@ export function SmartQuoteWizard() {
               </div>
 
               {/* EV Charger Add-on Checkbox */}
-              <div className="p-5 rounded-2xl bg-black/30 border border-white/10 flex items-center justify-between cursor-pointer" onClick={() => setFormData({ ...formData, includeEvCharger: !formData.includeEvCharger })}>
+              <div className="p-4 sm:p-5 rounded-2xl bg-black/30 border border-white/10 flex items-center justify-between cursor-pointer gap-3" onClick={() => setFormData({ ...formData, includeEvCharger: !formData.includeEvCharger })}>
                 <div className="flex items-center gap-3">
-                  <Zap className="w-5 h-5 text-[#FF8300]" />
+                  <Zap className="w-5 h-5 text-[#FF8300] flex-shrink-0" />
                   <div>
-                    <h4 className="text-sm font-medium text-white">¿Deseas incluir Cargador para Vehículo Eléctrico?</h4>
-                    <p className="text-xs text-white/50 font-light">Wallbox inteligente 7.4 kW / 22 kW con certificación SEC TE-6.</p>
+                    <h4 className="text-xs sm:text-sm font-medium text-white">¿Deseas incluir Cargador para Vehículo Eléctrico?</h4>
+                    <p className="text-[11px] sm:text-xs text-white/50 font-light">Wallbox inteligente 7.4 kW / 22 kW con certificación SEC TE-6.</p>
                   </div>
                 </div>
                 <input
                   type="checkbox"
                   checked={formData.includeEvCharger}
                   onChange={() => {}}
-                  className="w-5 h-5 accent-[#FF8300] rounded cursor-pointer"
+                  className="w-5 h-5 accent-[#FF8300] rounded cursor-pointer flex-shrink-0"
                 />
               </div>
 
               {/* Navigation Actions */}
-              <div className="pt-6 border-t border-white/10 flex items-center justify-between">
+              <div className="pt-6 border-t border-white/10 flex flex-col-reverse sm:flex-row items-center justify-between gap-3">
                 <button
                   type="button"
                   onClick={() => setCurrentStep(2)}
-                  className="px-6 py-3 rounded-full bg-white/10 hover:bg-white/20 text-white font-light text-xs uppercase tracking-wider transition-colors cursor-pointer flex items-center gap-2"
+                  className="w-full sm:w-auto px-6 py-3 rounded-full bg-white/10 hover:bg-white/20 text-white font-light text-xs uppercase tracking-wider transition-colors cursor-pointer flex items-center justify-center gap-2"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" />
                   <span>Atrás</span>
@@ -517,7 +519,7 @@ export function SmartQuoteWizard() {
                 <button
                   type="button"
                   onClick={() => setCurrentStep(4)}
-                  className="px-8 py-3.5 rounded-full bg-[#FF8300] text-white font-light text-xs md:text-sm uppercase tracking-wider hover:bg-[#e07400] transition-all shadow-lg flex items-center gap-2 cursor-pointer group"
+                  className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-[#FF8300] text-white font-light text-xs md:text-sm uppercase tracking-wider hover:bg-[#e07400] transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer group"
                 >
                   <span>Siguiente: Boleta Eléctrica</span>
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -534,13 +536,13 @@ export function SmartQuoteWizard() {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.35 }}
-              className="space-y-8"
+              className="space-y-6 sm:space-y-8"
             >
               <div>
                 <span className="text-xs font-mono uppercase tracking-wider text-[#FF8300] block mb-2">
                   04. Boleta Eléctrica (Opcional)
                 </span>
-                <h2 className="text-2xl md:text-3xl font-light tracking-tight text-white mb-2">
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-light tracking-tight text-white mb-2">
                   Sube tu boleta para un dimensionamiento exacto
                 </h2>
                 <p className="text-white/60 text-xs md:text-sm font-light">
@@ -549,11 +551,11 @@ export function SmartQuoteWizard() {
               </div>
 
               {/* Upload Box */}
-              <label className="border-2 border-dashed border-white/20 hover:border-[#FF8300] rounded-[24px] p-10 flex flex-col items-center justify-center cursor-pointer transition-all duration-300 bg-black/20 group text-center">
-                <div className="w-16 h-16 rounded-full bg-[#FF8300]/15 text-[#FF8300] flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  <Upload className="w-8 h-8 stroke-[1.5]" />
+              <label className="border-2 border-dashed border-white/20 hover:border-[#FF8300] rounded-[24px] p-6 sm:p-10 flex flex-col items-center justify-center cursor-pointer transition-all duration-300 bg-black/20 group text-center">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#FF8300]/15 text-[#FF8300] flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform">
+                  <Upload className="w-7 h-7 sm:w-8 sm:h-8 stroke-[1.5]" />
                 </div>
-                <h3 className="text-base font-normal text-white mb-1">
+                <h3 className="text-sm sm:text-base font-normal text-white mb-1">
                   {formData.billFile ? formData.billFile.name : "Haz clic para subir tu boleta o arrástrala aquí"}
                 </h3>
                 <p className="text-xs text-white/50 font-light max-w-sm mb-4">
@@ -573,17 +575,17 @@ export function SmartQuoteWizard() {
               </label>
 
               {/* Privacy Notice */}
-              <div className="p-4 rounded-xl bg-white/5 border border-white/5 flex items-center gap-3 text-xs text-white/60 font-light">
+              <div className="p-3.5 sm:p-4 rounded-xl bg-white/5 border border-white/5 flex items-center gap-3 text-xs text-white/60 font-light">
                 <ShieldCheck className="w-4 h-4 text-emerald-400 flex-shrink-0" />
                 <span>Tus datos de boleta están protegidos bajo estricta confidencialidad (Ley 19.628).</span>
               </div>
 
               {/* Navigation Actions */}
-              <div className="pt-6 border-t border-white/10 flex items-center justify-between">
+              <div className="pt-6 border-t border-white/10 flex flex-col-reverse sm:flex-row items-center justify-between gap-3">
                 <button
                   type="button"
                   onClick={() => setCurrentStep(3)}
-                  className="px-6 py-3 rounded-full bg-white/10 hover:bg-white/20 text-white font-light text-xs uppercase tracking-wider transition-colors cursor-pointer flex items-center gap-2"
+                  className="w-full sm:w-auto px-6 py-3 rounded-full bg-white/10 hover:bg-white/20 text-white font-light text-xs uppercase tracking-wider transition-colors cursor-pointer flex items-center justify-center gap-2"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" />
                   <span>Atrás</span>
@@ -592,7 +594,7 @@ export function SmartQuoteWizard() {
                 <button
                   type="button"
                   onClick={() => setCurrentStep(5)}
-                  className="px-8 py-3.5 rounded-full bg-[#FF8300] text-white font-light text-xs md:text-sm uppercase tracking-wider hover:bg-[#e07400] transition-all shadow-lg flex items-center gap-2 cursor-pointer group"
+                  className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-[#FF8300] text-white font-light text-xs md:text-sm uppercase tracking-wider hover:bg-[#e07400] transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer group"
                 >
                   <span>{formData.billFile ? "Continuar con Boleta" : "Omitir y Continuar"}</span>
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -609,13 +611,13 @@ export function SmartQuoteWizard() {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.35 }}
-              className="space-y-8"
+              className="space-y-6 sm:space-y-8"
             >
               <div>
                 <span className="text-xs font-mono uppercase tracking-wider text-[#FF8300] block mb-2">
                   05. Generación del Pre-Informe
                 </span>
-                <h2 className="text-2xl md:text-3xl font-light tracking-tight text-white mb-2">
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-light tracking-tight text-white mb-2">
                   ¿A dónde enviamos tu propuesta solar?
                 </h2>
                 <p className="text-white/60 text-xs md:text-sm font-light">
@@ -623,7 +625,7 @@ export function SmartQuoteWizard() {
                 </p>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
                 <div>
                   <label className="text-xs text-white/70 font-light block mb-2">
                     Nombre Completo *
@@ -634,11 +636,11 @@ export function SmartQuoteWizard() {
                     placeholder="Ej: Carolina Muñoz"
                     value={formData.fullName}
                     onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                    className="w-full px-4 py-3.5 rounded-xl bg-black/40 border border-white/15 text-white placeholder:text-white/30 text-sm font-light focus:outline-none focus:border-[#FF8300] focus:ring-1 focus:ring-[#FF8300]"
+                    className="w-full px-4 py-3 sm:py-3.5 rounded-xl bg-black/40 border border-white/15 text-white placeholder:text-white/30 text-xs sm:text-sm font-light focus:outline-none focus:border-[#FF8300] focus:ring-1 focus:ring-[#FF8300]"
                   />
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                   <div>
                     <label className="text-xs text-white/70 font-light block mb-2">
                       Teléfono WhatsApp *
@@ -649,7 +651,7 @@ export function SmartQuoteWizard() {
                       placeholder="+56 9 8765 4321"
                       value={formData.whatsapp}
                       onChange={(e) => setFormData({ ...formData, whatsapp: e.target.value })}
-                      className="w-full px-4 py-3.5 rounded-xl bg-black/40 border border-white/15 text-white placeholder:text-white/30 text-sm font-light focus:outline-none focus:border-[#FF8300] focus:ring-1 focus:ring-[#FF8300]"
+                      className="w-full px-4 py-3 sm:py-3.5 rounded-xl bg-black/40 border border-white/15 text-white placeholder:text-white/30 text-xs sm:text-sm font-light focus:outline-none focus:border-[#FF8300] focus:ring-1 focus:ring-[#FF8300]"
                     />
                   </div>
 
@@ -663,7 +665,7 @@ export function SmartQuoteWizard() {
                       placeholder="nombre@ejemplo.cl"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full px-4 py-3.5 rounded-xl bg-black/40 border border-white/15 text-white placeholder:text-white/30 text-sm font-light focus:outline-none focus:border-[#FF8300] focus:ring-1 focus:ring-[#FF8300]"
+                      className="w-full px-4 py-3 sm:py-3.5 rounded-xl bg-black/40 border border-white/15 text-white placeholder:text-white/30 text-xs sm:text-sm font-light focus:outline-none focus:border-[#FF8300] focus:ring-1 focus:ring-[#FF8300]"
                     />
                   </div>
                 </div>
@@ -676,7 +678,7 @@ export function SmartQuoteWizard() {
                     required
                     checked={formData.acceptTerms}
                     onChange={(e) => setFormData({ ...formData, acceptTerms: e.target.checked })}
-                    className="w-4 h-4 mt-0.5 accent-[#FF8300] rounded cursor-pointer"
+                    className="w-4 h-4 mt-0.5 accent-[#FF8300] rounded cursor-pointer flex-shrink-0"
                   />
                   <label htmlFor="terms" className="text-xs text-white/60 font-light cursor-pointer">
                     Acepto las <a href="/politicas-de-privacidad" className="text-[#FF8300] underline" target="_blank">políticas de privacidad</a> y autorizo a SoldeRío a contactarme para presentar la propuesta técnica.
@@ -684,11 +686,11 @@ export function SmartQuoteWizard() {
                 </div>
 
                 {/* Navigation Actions */}
-                <div className="pt-6 border-t border-white/10 flex items-center justify-between">
+                <div className="pt-6 border-t border-white/10 flex flex-col-reverse sm:flex-row items-center justify-between gap-3">
                   <button
                     type="button"
                     onClick={() => setCurrentStep(4)}
-                    className="px-6 py-3 rounded-full bg-white/10 hover:bg-white/20 text-white font-light text-xs uppercase tracking-wider transition-colors cursor-pointer flex items-center gap-2"
+                    className="w-full sm:w-auto px-6 py-3 rounded-full bg-white/10 hover:bg-white/20 text-white font-light text-xs uppercase tracking-wider transition-colors cursor-pointer flex items-center justify-center gap-2"
                   >
                     <ArrowLeft className="w-3.5 h-3.5" />
                     <span>Atrás</span>
@@ -697,7 +699,7 @@ export function SmartQuoteWizard() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="px-10 py-4 rounded-full bg-[#FF8300] text-white font-light text-xs md:text-sm uppercase tracking-wider hover:bg-[#e07400] transition-all shadow-xl hover:shadow-[0_0_30px_rgba(255,131,0,0.5)] flex items-center gap-2 cursor-pointer disabled:opacity-50"
+                    className="w-full sm:w-auto px-10 py-4 rounded-full bg-[#FF8300] text-white font-light text-xs md:text-sm uppercase tracking-wider hover:bg-[#e07400] transition-all shadow-xl hover:shadow-[0_0_30px_rgba(255,131,0,0.5)] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
                   >
                     {isSubmitting ? (
                       <>

@@ -36,6 +36,7 @@ import { useVisitaModal } from "@/context/VisitaModalContext";
 
 import { ExecutiveReportModal } from "./ExecutiveReportModal";
 import { downloadDirectSolarPdf } from "@/lib/pdf-generator";
+import { SolarSeasonalChart } from "./SolarSeasonalChart";
 
 interface Props {
   formData: QuoteFormData;
@@ -105,7 +106,6 @@ const EXPLANATORY_MODALS: Record<string, ExplanatoryModalContent> = {
 
 export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
   const { openModal } = useVisitaModal();
-  const [hoveredMonth, setHoveredMonth] = useState<MonthlyGenBreakdown | null>(null);
   const [activeModalKey, setActiveModalKey] = useState<string | null>(null);
   const [isExecutiveReportOpen, setIsExecutiveReportOpen] = useState(false);
 
@@ -118,10 +118,6 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
   };
 
   const monthlyData = sizing.monthlyBreakdown || [];
-  const maxMonthlyVal = Math.max(
-    ...monthlyData.map((m) => Math.max(m.monthlyGenKwh, m.monthlyDemandKwh)),
-    1
-  );
 
   const activeModal = activeModalKey ? EXPLANATORY_MODALS[activeModalKey] : null;
 
@@ -362,116 +358,14 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
       </div>
 
       {/* Side-by-Side Chart: Generación Solar vs Consumo Real de tu Casa (Sur de Chile) */}
-      <div className="p-5 sm:p-8 rounded-[24px] sm:rounded-[28px] bg-[#1A1A1A] border border-white/10 shadow-2xl relative overflow-hidden">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-          <div>
-            <div className="flex items-center gap-2 text-[#FF8300] text-xs font-mono uppercase mb-1">
-              <CloudSun className="w-4 h-4" />
-              <span>Simulación Física Mensual ({formData.comuna})</span>
-            </div>
-            <h3 className="text-lg sm:text-xl md:text-2xl font-light text-white">
-              Generación Solar vs Consumo de tu Hogar (Mes a Mes)
-            </h3>
-            <p className="text-xs text-white/60 font-light mt-1">
-              Compara mes a mes tu generación solar estimada con la demanda real de tu vivienda en el sur.
-            </p>
-          </div>
-
-          <div className="flex items-center justify-between sm:justify-start gap-2 sm:gap-4 text-[10px] sm:text-xs font-mono bg-black/40 px-3 sm:px-4 py-2 rounded-xl border border-white/5">
-            <div className="text-center">
-              <span className="text-white/40 block text-[9px] sm:text-[10px]">VERANO</span>
-              <span className="text-amber-400 font-semibold">
-                {sizing.summerAvgMonthlyGenKwh || Math.round(sizing.estimatedAnnualGenKwh / 8)} kWh
-              </span>
-            </div>
-            <div className="h-5 sm:h-6 w-px bg-white/10" />
-            <div className="text-center">
-              <span className="text-white/40 block text-[9px] sm:text-[10px]">INVIERNO</span>
-              <span className="text-blue-400 font-semibold">
-                {sizing.winterAvgMonthlyGenKwh || Math.round(sizing.estimatedAnnualGenKwh / 26)} kWh
-              </span>
-            </div>
-            <div className="h-5 sm:h-6 w-px bg-white/10" />
-            <div className="text-center">
-              <span className="text-white/40 block text-[9px] sm:text-[10px]">ESTACIONAL</span>
-              <span className="text-[#FF8300] font-semibold">{sizing.seasonalVariationRatio || 3.4}x</span>
-            </div>
-          </div>
-        </div>
-
-        {/* 12-Month Side-by-Side Visualizer with Mobile Horizontal Scroll */}
-        <div className="pt-4 sm:pt-6 pb-2">
-          <div className="overflow-x-auto pb-3 -mx-2 px-2 scrollbar-none">
-            <div className="min-w-[480px] sm:min-w-0">
-              <div className="grid grid-cols-12 gap-1.5 md:gap-3 items-end h-52 sm:h-56 border-b border-white/10 pb-2">
-                {monthlyData.map((m) => {
-                  const genHeightPercent = Math.max(8, Math.round((m.monthlyGenKwh / maxMonthlyVal) * 100));
-                  const demandHeightPercent = Math.max(8, Math.round((m.monthlyDemandKwh / maxMonthlyVal) * 100));
-                  const isHovered = hoveredMonth?.month === m.month;
-                  const hasSurplus = m.monthlyGenKwh >= m.monthlyDemandKwh;
-
-                  return (
-                    <div
-                      key={m.month}
-                      className="flex flex-col items-center h-full justify-end group cursor-pointer relative"
-                      onMouseEnter={() => setHoveredMonth(m)}
-                      onMouseLeave={() => setHoveredMonth(null)}
-                    >
-                      {/* Tooltip on Hover */}
-                      {isHovered && (
-                        <div className="absolute -top-20 z-30 bg-black/95 text-white text-[11px] font-mono px-3.5 py-2 rounded-xl border border-white/20 shadow-2xl pointer-events-none whitespace-nowrap animate-in fade-in zoom-in-90 duration-200">
-                          <span className="text-[#FF8300] font-bold block">{m.monthName}</span>
-                          <span className="text-amber-400">☀️ Generación: {m.monthlyGenKwh} kWh</span>
-                          <span className="text-white/70 block">🏠 Consumo casa: {m.monthlyDemandKwh} kWh</span>
-                          <span className={hasSurplus ? "text-emerald-400 font-bold block" : "text-blue-300 block"}>
-                            {hasSurplus ? `+${m.monthlyGenKwh - m.monthlyDemandKwh} kWh Inyectado` : `-${m.monthlyDemandKwh - m.monthlyGenKwh} kWh Red/BESS`}
-                          </span>
-                        </div>
-                      )}
-
-                      {/* Dual Bars Container */}
-                      <div className="flex items-end gap-1 w-full justify-center h-full">
-                        {/* Solar Generation Bar */}
-                        <div
-                          style={{ height: `${genHeightPercent}%` }}
-                          className={`w-1/2 rounded-t-md transition-all duration-300 ${
-                            isHovered
-                              ? "bg-[#FF8300] shadow-[0_0_15px_rgba(255,131,0,0.6)]"
-                              : "bg-gradient-to-t from-amber-600 to-amber-400"
-                          }`}
-                          title={`Generación: ${m.monthlyGenKwh} kWh`}
-                        />
-                        
-                        {/* Home Demand Bar */}
-                        <div
-                          style={{ height: `${demandHeightPercent}%` }}
-                          className="w-1/2 rounded-t-md bg-white/25 hover:bg-white/40 transition-all duration-300"
-                          title={`Consumo casa: ${m.monthlyDemandKwh} kWh`}
-                        />
-                      </div>
-                      
-                      {/* Month Label */}
-                      <span className={`text-[9px] sm:text-[10px] font-mono mt-2 transition-colors ${isHovered ? "text-[#FF8300] font-bold" : "text-white/50"}`}>
-                        {m.monthName.slice(0, 3)}
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between text-[10px] sm:text-[11px] text-white/50 font-mono mt-3 sm:mt-4 gap-2">
-            <div className="flex items-center gap-3 sm:gap-4">
-              <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-sm bg-amber-400" /> Generación Solar</span>
-              <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-sm bg-white/30" /> Consumo Hogar</span>
-            </div>
-            <span className="text-emerald-400">
-              ⚡ En verano acumulas saldos para cubrir el invierno
-            </span>
-          </div>
-        </div>
-      </div>
+      {monthlyData.length > 0 && (
+        <SolarSeasonalChart
+          monthlyData={monthlyData}
+          comuna={formData.comuna}
+          distributor={formData.distributor}
+          sizing={sizing}
+        />
+      )}
 
       {/* Everyday Appliances Powered ("Con peras y manzanas") */}
       <div className="p-5 sm:p-8 rounded-[24px] sm:rounded-[28px] bg-[#1F1F1F]/90 border border-white/10 shadow-xl">

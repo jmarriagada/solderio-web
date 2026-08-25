@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { createClient } from '@/utils/supabase/server'
 import { SEC_CHECKLIST_TEMPLATES } from '@/lib/sec-compliance/catalog'
-import { ComplianceStatus } from '@prisma/client'
+import { ComplianceStatus, TariffType } from '@prisma/client'
 
 export async function createProjectAction(formData: FormData) {
   const supabase = await createClient()
@@ -27,7 +27,6 @@ export async function createProjectAction(formData: FormData) {
   const distributor = (formData.get('distributor') as string) || 'SAESA'
   const tariffType = (formData.get('tariffType') as string) || 'BT1'
 
-  // Default coordinates based on chosen southern Chile comuna
   const coordsMap: Record<string, { lat: number; lng: number }> = {
     Valdivia: { lat: -39.8142, lng: -73.2459 },
     'Puerto Varas': { lat: -41.3195, lng: -72.9854 },
@@ -51,7 +50,7 @@ export async function createProjectAction(formData: FormData) {
     },
   })
 
-  // 1. Create Project with Location, Electrical Consumption and Weather baseline
+  // 1. Create Project with Location, Electrical Consumption, Weather baseline and SEC Compliance
   const project = await prisma.project.create({
     data: {
       userId: user.id,
@@ -63,7 +62,7 @@ export async function createProjectAction(formData: FormData) {
       projectType,
       configuration,
       status: 'DRAFT',
-      inputsProgress: 15,
+      inputsProgress: 25,
       location: {
         create: {
           comuna,
@@ -75,43 +74,43 @@ export async function createProjectAction(formData: FormData) {
       },
       consumption: {
         create: {
-          tariffType: tariffType as any,
-          annualTotal: 4800, // 400 kWh/month standard baseline
+          tariffType: tariffType as TariffType,
+          annualTotal: 4800,
           connectedPowerKw: projectType === 'RESIDENTIAL' ? 10 : 50,
           monthlyData: [
-            { month: 'Ene', kwh: 380, costClp: 65000 },
-            { month: 'Feb', kwh: 360, costClp: 62000 },
-            { month: 'Mar', kwh: 390, costClp: 67000 },
-            { month: 'Abr', kwh: 420, costClp: 72000 },
-            { month: 'May', kwh: 480, costClp: 82000 },
-            { month: 'Jun', kwh: 510, costClp: 87000 },
-            { month: 'Jul', kwh: 520, costClp: 89000 },
-            { month: 'Ago', kwh: 490, costClp: 84000 },
-            { month: 'Sep', kwh: 430, costClp: 74000 },
-            { month: 'Oct', kwh: 400, costClp: 69000 },
-            { month: 'Nov', kwh: 370, costClp: 63000 },
-            { month: 'Dic', kwh: 390, costClp: 67000 },
+            { month: 'Ene', kwh: 380, costClp: 66500 },
+            { month: 'Feb', kwh: 360, costClp: 63000 },
+            { month: 'Mar', kwh: 390, costClp: 68250 },
+            { month: 'Abr', kwh: 420, costClp: 73500 },
+            { month: 'May', kwh: 480, costClp: 84000 },
+            { month: 'Jun', kwh: 510, costClp: 89250 },
+            { month: 'Jul', kwh: 520, costClp: 91000 },
+            { month: 'Ago', kwh: 490, costClp: 85750 },
+            { month: 'Sep', kwh: 430, costClp: 75250 },
+            { month: 'Oct', kwh: 400, costClp: 70000 },
+            { month: 'Nov', kwh: 370, costClp: 64750 },
+            { month: 'Dic', kwh: 390, costClp: 68250 },
           ],
         },
       },
       weatherData: {
         create: {
           source: 'SOLCAST_API',
-          annualGhiKwhM2: 1350.5,
-          avgTempCelsius: 11.8,
+          annualGhiKwhM2: 1380.0,
+          avgTempCelsius: 12.2,
           monthlySpecificYieldKwhKwp: [
-            { month: 'Ene', hsp: 5.8 },
-            { month: 'Feb', hsp: 5.1 },
-            { month: 'Mar', hsp: 4.2 },
-            { month: 'Abr', hsp: 2.8 },
-            { month: 'May', hsp: 1.8 },
-            { month: 'Jun', hsp: 1.4 },
-            { month: 'Jul', hsp: 1.6 },
-            { month: 'Ago', hsp: 2.3 },
-            { month: 'Sep', hsp: 3.4 },
-            { month: 'Oct', hsp: 4.5 },
-            { month: 'Nov', hsp: 5.4 },
-            { month: 'Dic', hsp: 5.9 },
+            { month: 'Ene', hsp: 6.38 },
+            { month: 'Feb', hsp: 5.89 },
+            { month: 'Mar', hsp: 4.35 },
+            { month: 'Abr', hsp: 2.73 },
+            { month: 'May', hsp: 1.55 },
+            { month: 'Jun', hsp: 1.17 },
+            { month: 'Jul', hsp: 1.35 },
+            { month: 'Ago', hsp: 2.19 },
+            { month: 'Sep', hsp: 3.50 },
+            { month: 'Oct', hsp: 4.77 },
+            { month: 'Nov', hsp: 5.73 },
+            { month: 'Dic', hsp: 5.87 },
           ],
         },
       },
@@ -159,7 +158,7 @@ export async function updateSecComplianceItemAction(
     },
   })
 
-  // Recalculate progress for the project's SEC compliance
+  // Recalculate progress
   const sec = await prisma.secCompliance.findUnique({
     where: { projectId },
     include: { items: true },
@@ -175,6 +174,94 @@ export async function updateSecComplianceItemAction(
       data: { totalProgressPct: progress },
     })
   }
+
+  revalidatePath(`/dashboard/projects/${projectId}`)
+}
+
+export async function updateProjectLocationAction(projectId: string, formData: FormData) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) {
+    throw new Error('No autorizado')
+  }
+
+  const comuna = formData.get('comuna') as string
+  const region = formData.get('region') as string
+  const distributor = formData.get('distributor') as string
+  const address = formData.get('address') as string
+  const lat = parseFloat(formData.get('latitude') as string)
+  const lng = parseFloat(formData.get('longitude') as string)
+  const clientName = formData.get('clientName') as string
+  const clientRut = formData.get('clientRut') as string
+  const configuration = formData.get('configuration') as string
+  const projectType = formData.get('projectType') as string
+
+  await prisma.project.update({
+    where: { id: projectId },
+    data: {
+      clientName: clientName || undefined,
+      clientRut: clientRut || undefined,
+      configuration: configuration || undefined,
+      projectType: projectType || undefined,
+      location: {
+        upsert: {
+          create: {
+            comuna,
+            region,
+            distributor,
+            address,
+            latitude: isNaN(lat) ? -39.8142 : lat,
+            longitude: isNaN(lng) ? -73.2459 : lng,
+          },
+          update: {
+            comuna,
+            region,
+            distributor,
+            address,
+            latitude: isNaN(lat) ? undefined : lat,
+            longitude: isNaN(lng) ? undefined : lng,
+          },
+        },
+      },
+    },
+  })
+
+  revalidatePath(`/dashboard/projects/${projectId}`)
+  revalidatePath('/dashboard')
+}
+
+export async function updateProjectConsumptionAction(
+  projectId: string, 
+  tariffType: string,
+  connectedPowerKw: number,
+  monthlyData: Array<{ month: string; kwh: number; costClp: number }>
+) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) {
+    throw new Error('No autorizado')
+  }
+
+  const annualTotal = monthlyData.reduce((acc, curr) => acc + (Number(curr.kwh) || 0), 0)
+
+  await prisma.electricalConsumption.upsert({
+    where: { projectId },
+    create: {
+      projectId,
+      tariffType: tariffType as TariffType,
+      connectedPowerKw,
+      annualTotal,
+      monthlyData,
+    },
+    update: {
+      tariffType: tariffType as TariffType,
+      connectedPowerKw,
+      annualTotal,
+      monthlyData,
+    },
+  })
 
   revalidatePath(`/dashboard/projects/${projectId}`)
 }

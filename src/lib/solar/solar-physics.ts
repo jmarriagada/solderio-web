@@ -34,11 +34,11 @@ export interface SystemLossesBOS {
 }
 
 export const DEFAULT_BOS_LOSSES: SystemLossesBOS = {
-  soilingLossPercent: 2.0,
-  mismatchLossPercent: 1.5,
-  dcWiringLossPercent: 1.2,
-  acWiringLossPercent: 1.8,
-  inverterEfficiencyPercent: 97.5,
+  soilingLossPercent: 1.6,
+  mismatchLossPercent: 1.2,
+  dcWiringLossPercent: 1.0,
+  acWiringLossPercent: 1.4,
+  inverterEfficiencyPercent: 98.2,
 };
 
 export interface MonthlyGenerationResult {

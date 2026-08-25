@@ -221,6 +221,102 @@ const METEOROLOGY_DATABASE: Record<string, CommuneMeteorologicalProfile> = {
   },
 };
 
+// Catálogo oficial completo de Regiones y Comunas de la Macrozona Sur (Araucanía, Los Ríos, Los Lagos y Aysén)
+export const SOUTHERN_REGIONS_AND_COMUNAS: Record<string, string[]> = {
+  "Región de Los Lagos": [
+    "Puerto Varas",
+    "Puerto Montt",
+    "Osorno",
+    "Frutillar",
+    "Llanquihue",
+    "Castro",
+    "Ancud",
+    "Calbuco",
+    "Chaitén",
+    "Chonchi",
+    "Cochamó",
+    "Curaco de Vélez",
+    "Dalcahue",
+    "Fresia",
+    "Futaleufú",
+    "Hualaihué",
+    "Los Muermos",
+    "Maullín",
+    "Palena",
+    "Puerto Octay",
+    "Puqueldón",
+    "Purranque",
+    "Puyehue",
+    "Queilén",
+    "Quellón",
+    "Quemchi",
+    "Quinchao",
+    "Río Negro",
+    "San Juan de la Costa",
+    "San Pablo",
+  ],
+  "Región de Los Ríos": [
+    "Valdivia",
+    "Panguipulli",
+    "La Unión",
+    "Río Bueno",
+    "Corral",
+    "Futrono",
+    "Lago Ranco",
+    "Lanco",
+    "Los Lagos",
+    "Máfil",
+    "Mariquina",
+    "Paillaco",
+  ],
+  "Región de La Araucanía": [
+    "Temuco",
+    "Padre Las Casas",
+    "Villarrica",
+    "Pucón",
+    "Angol",
+    "Victoria",
+    "Lautaro",
+    "Nueva Imperial",
+    "Carahue",
+    "Cholchol",
+    "Collipulli",
+    "Cunco",
+    "Curacautín",
+    "Curarrehue",
+    "Ercilla",
+    "Freire",
+    "Galvarino",
+    "Gorbea",
+    "Loncoche",
+    "Lonquimay",
+    "Los Sauces",
+    "Lumaco",
+    "Melipeuco",
+    "Perquenco",
+    "Pitrufquén",
+    "Purén",
+    "Renaico",
+    "Saavedra",
+    "Teodoro Schmidt",
+    "Toltén",
+    "Traiguén",
+    "Vilcún",
+  ],
+  "Región de Aysén": [
+    "Coyhaique",
+    "Aysén",
+    "Chile Chico",
+    "Cisnes",
+    "Cochrane",
+    "Guaitecas",
+    "Lago Verde",
+    "O'Higgins",
+    "Río Ibáñez",
+    "Tortel",
+  ],
+};
+
 // Aliases para comunas cercanas de toda la macrozona sur (Araucanía, Los Ríos, Los Lagos y Aysén)
 const COMMUNE_ALIASES: Record<string, string> = {
   // Cuenca del Lago Llanquihue y Seno de Reloncaví
@@ -290,6 +386,7 @@ const COMMUNE_ALIASES: Record<string, string> = {
   pitrufquen: "temuco",
   cholchol: "temuco",
   saavedra: "temuco",
+  puerto_saavedra: "temuco",
   teodoro_schmidt: "temuco",
   tolten: "temuco",
   traiguen: "temuco",
@@ -300,12 +397,22 @@ const COMMUNE_ALIASES: Record<string, string> = {
   collipulli: "temuco",
   curacautin: "temuco",
   lonquimay: "temuco",
+  ercilla: "temuco",
+  los_sauces: "temuco",
+  perquenco: "temuco",
+  vilcun: "temuco",
 
   // Región de Aysén
   puerto_aysen: "coyhaique",
   aysen: "coyhaique",
   chile_chico: "coyhaique",
   cochrane: "coyhaique",
+  cisnes: "coyhaique",
+  guaitecas: "coyhaique",
+  lago_verde: "coyhaique",
+  ohiggins: "coyhaique",
+  rio_ibanez: "coyhaique",
+  tortel: "coyhaique",
 };
 
 export function getMeteorologicalProfile(communeName?: string): CommuneMeteorologicalProfile {
@@ -315,7 +422,7 @@ export function getMeteorologicalProfile(communeName?: string): CommuneMeteorolo
     .toLowerCase()
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[\s-]/g, "_");
+    .replace(/[\s-']/g, "_");
 
   if (METEOROLOGY_DATABASE[normalized]) {
     return METEOROLOGY_DATABASE[normalized];

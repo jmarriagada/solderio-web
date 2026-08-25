@@ -7,6 +7,7 @@ export type DistributorType = "saesa" | "crell" | "cge" | "frontel" | "edelaysen
 export interface QuoteFormData {
   // Step 1: Property & Location
   propertyType: PropertyType;
+  region?: string;
   comuna: string;
   address?: string;
 

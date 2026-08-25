@@ -23,30 +23,15 @@ import {
 } from "lucide-react";
 import { QuoteFormData, SolarSizingResult, PropertyType, TopologyType, DistributorType } from "@/types/cotizacion";
 import { calculateSolarSizing } from "@/lib/solar-calculator";
+import { SOUTHERN_REGIONS_AND_COMUNAS } from "@/lib/solar/meteorology-tmy";
 import { QuoteReportView } from "./QuoteReportView";
 
-const SOUTHERN_COMUNAS = [
-  "Puerto Varas",
-  "Osorno",
-  "Valdivia",
-  "Frutillar",
-  "Llanquihue",
-  "Puerto Montt",
-  "Panguipulli",
-  "Villarrica",
-  "Pucón",
-  "Temuco",
-  "Castro",
-  "Ancud",
-  "Río Bueno",
-  "La Unión",
-  "Coyhaique",
-  "Otra Comuna",
-];
+const DEFAULT_REGION = "Región de Los Lagos";
 
 export function SmartQuoteWizard() {
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedRegion, setSelectedRegion] = useState<string>(DEFAULT_REGION);
   const [submissionResult, setSubmissionResult] = useState<{
     sizing: SolarSizingResult;
     leadId: string;
@@ -54,6 +39,7 @@ export function SmartQuoteWizard() {
 
   const [formData, setFormData] = useState<QuoteFormData>({
     propertyType: "residencial",
+    region: DEFAULT_REGION,
     comuna: "Puerto Varas",
     address: "",
     monthlyBillClp: 120000,
@@ -270,23 +256,55 @@ export function SmartQuoteWizard() {
                 })}
               </div>
 
-              {/* Comuna Selector */}
-              <div>
-                <label className="text-xs text-white/70 font-light block mb-2 flex items-center gap-1.5">
-                  <MapPin className="w-3.5 h-3.5 text-[#FF8300]" />
-                  <span>Comuna en la Macrozona Sur *</span>
-                </label>
-                <select
-                  value={formData.comuna}
-                  onChange={(e) => setFormData({ ...formData, comuna: e.target.value })}
-                  className="w-full px-4 py-3.5 rounded-xl bg-black/40 border border-white/15 text-white text-sm font-light focus:outline-none focus:border-[#FF8300] focus:ring-1 focus:ring-[#FF8300]"
-                >
-                  {SOUTHERN_COMUNAS.map((c) => (
-                    <option key={c} value={c} className="bg-[#1F1F1F] text-white">
-                      {c}
-                    </option>
-                  ))}
-                </select>
+              {/* Region and Comuna Selectors (Cascading Dropdowns) */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {/* 1. Region Selector */}
+                <div>
+                  <label className="text-xs text-white/70 font-light block mb-2 flex items-center gap-1.5">
+                    <MapPin className="w-3.5 h-3.5 text-[#FF8300]" />
+                    <span>Región en la Macrozona Sur *</span>
+                  </label>
+                  <select
+                    value={selectedRegion}
+                    onChange={(e) => {
+                      const newRegion = e.target.value;
+                      setSelectedRegion(newRegion);
+                      const comunasInRegion = SOUTHERN_REGIONS_AND_COMUNAS[newRegion] || [];
+                      const defaultComuna = comunasInRegion[0] || "Puerto Varas";
+                      setFormData({
+                        ...formData,
+                        region: newRegion,
+                        comuna: defaultComuna,
+                      });
+                    }}
+                    className="w-full px-4 py-3.5 rounded-xl bg-black/40 border border-white/15 text-white text-sm font-light focus:outline-none focus:border-[#FF8300] focus:ring-1 focus:ring-[#FF8300] cursor-pointer"
+                  >
+                    {Object.keys(SOUTHERN_REGIONS_AND_COMUNAS).map((regionName) => (
+                      <option key={regionName} value={regionName} className="bg-[#1F1F1F] text-white">
+                        {regionName}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* 2. Comuna Selector (Filtered by Region) */}
+                <div>
+                  <label className="text-xs text-white/70 font-light block mb-2 flex items-center gap-1.5">
+                    <MapPin className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Comuna de Instalación *</span>
+                  </label>
+                  <select
+                    value={formData.comuna}
+                    onChange={(e) => setFormData({ ...formData, comuna: e.target.value })}
+                    className="w-full px-4 py-3.5 rounded-xl bg-black/40 border border-white/15 text-white text-sm font-light focus:outline-none focus:border-[#FF8300] focus:ring-1 focus:ring-[#FF8300] cursor-pointer"
+                  >
+                    {(SOUTHERN_REGIONS_AND_COMUNAS[selectedRegion] || []).map((c) => (
+                      <option key={c} value={c} className="bg-[#1F1F1F] text-white">
+                        {c}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
 
               {/* Forward Action */}

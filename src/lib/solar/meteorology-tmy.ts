@@ -16,7 +16,7 @@ export interface MonthlyMeteorology {
 
 export interface CommuneMeteorologicalProfile {
   commune: string;
-  region: "Araucanía" | "Los Ríos" | "Los Lagos" | "Aysén";
+  region: "Araucanía" | "Los Ríos" | "Los Lagos";
   latitude: number;
   optimalTiltDeg: number; // Inclinación óptima anual recomendada (° Norte) según SIG MinEnergía
   annualGhiKwhM2: number;
@@ -193,35 +193,9 @@ const METEOROLOGY_DATABASE: Record<string, CommuneMeteorologicalProfile> = {
       { month: 12, monthName: "Diciembre", ghiKwhM2Day: 5.9, poaKwhM2Day: 6.3, dhiKwhM2Day: 2.1, avgTempCelsius: 14.1, daysInMonth: 31 },
     ],
   },
-  coyhaique: {
-    commune: "Coyhaique",
-    region: "Aysén",
-    latitude: -45.57,
-    optimalTiltDeg: 38,
-    annualGhiKwhM2: 1140,
-    annualPoaKwhM2: 1280,
-    specificYieldKwhKwp: 1040,
-    soilingLossPct: 1.4,
-    albedoDefault: 0.22,
-    dataSource: "Explorador Solar MinEnergía (Resolución 1km)",
-    monthlyData: [
-      { month: 1, monthName: "Enero", ghiKwhM2Day: 6.0, poaKwhM2Day: 6.4, dhiKwhM2Day: 2.0, avgTempCelsius: 14.2, daysInMonth: 31 },
-      { month: 2, monthName: "Febrero", ghiKwhM2Day: 5.1, poaKwhM2Day: 5.7, dhiKwhM2Day: 1.8, avgTempCelsius: 13.8, daysInMonth: 28 },
-      { month: 3, monthName: "Marzo", ghiKwhM2Day: 3.6, poaKwhM2Day: 4.3, dhiKwhM2Day: 1.4, avgTempCelsius: 11.2, daysInMonth: 31 },
-      { month: 4, monthName: "Abril", ghiKwhM2Day: 1.9, poaKwhM2Day: 2.6, dhiKwhM2Day: 1.0, avgTempCelsius: 7.9, daysInMonth: 30 },
-      { month: 5, monthName: "Mayo", ghiKwhM2Day: 0.9, poaKwhM2Day: 1.4, dhiKwhM2Day: 0.6, avgTempCelsius: 5.2, daysInMonth: 31 },
-      { month: 6, monthName: "Junio", ghiKwhM2Day: 0.5, poaKwhM2Day: 0.8, dhiKwhM2Day: 0.4, avgTempCelsius: 3.1, daysInMonth: 30 },
-      { month: 7, monthName: "Julio", ghiKwhM2Day: 0.7, poaKwhM2Day: 1.1, dhiKwhM2Day: 0.5, avgTempCelsius: 2.8, daysInMonth: 31 },
-      { month: 8, monthName: "Agosto", ghiKwhM2Day: 1.3, poaKwhM2Day: 1.9, dhiKwhM2Day: 0.8, avgTempCelsius: 4.4, daysInMonth: 31 },
-      { month: 9, monthName: "Septiembre", ghiKwhM2Day: 2.4, poaKwhM2Day: 3.2, dhiKwhM2Day: 1.2, avgTempCelsius: 6.8, daysInMonth: 30 },
-      { month: 10, monthName: "Octubre", ghiKwhM2Day: 3.9, poaKwhM2Day: 4.7, dhiKwhM2Day: 1.6, avgTempCelsius: 9.2, daysInMonth: 31 },
-      { month: 11, monthName: "Noviembre", ghiKwhM2Day: 5.3, poaKwhM2Day: 5.9, dhiKwhM2Day: 1.9, avgTempCelsius: 11.5, daysInMonth: 30 },
-      { month: 12, monthName: "Diciembre", ghiKwhM2Day: 6.1, poaKwhM2Day: 6.6, dhiKwhM2Day: 2.0, avgTempCelsius: 13.4, daysInMonth: 31 },
-    ],
-  },
 };
 
-// Catálogo oficial completo de Regiones y Comunas de la Macrozona Sur (Araucanía, Los Ríos, Los Lagos y Aysén)
+// Catálogo oficial completo de Regiones y Comunas de la Macrozona Sur (Araucanía, Los Ríos y Los Lagos)
 export const SOUTHERN_REGIONS_AND_COMUNAS: Record<string, string[]> = {
   "Región de Los Lagos": [
     "Puerto Varas",
@@ -303,21 +277,9 @@ export const SOUTHERN_REGIONS_AND_COMUNAS: Record<string, string[]> = {
     "Traiguén",
     "Vilcún",
   ],
-  "Región de Aysén": [
-    "Coyhaique",
-    "Aysén",
-    "Chile Chico",
-    "Cisnes",
-    "Cochrane",
-    "Guaitecas",
-    "Lago Verde",
-    "O'Higgins",
-    "Río Ibáñez",
-    "Tortel",
-  ],
 };
 
-// Aliases para comunas cercanas de toda la macrozona sur (Araucanía, Los Ríos, Los Lagos y Aysén)
+// Aliases para comunas de la macrozona sur (Araucanía, Los Ríos y Los Lagos)
 const COMMUNE_ALIASES: Record<string, string> = {
   // Cuenca del Lago Llanquihue y Seno de Reloncaví
   llanquihue: "puerto_varas",
@@ -401,18 +363,6 @@ const COMMUNE_ALIASES: Record<string, string> = {
   los_sauces: "temuco",
   perquenco: "temuco",
   vilcun: "temuco",
-
-  // Región de Aysén
-  puerto_aysen: "coyhaique",
-  aysen: "coyhaique",
-  chile_chico: "coyhaique",
-  cochrane: "coyhaique",
-  cisnes: "coyhaique",
-  guaitecas: "coyhaique",
-  lago_verde: "coyhaique",
-  ohiggins: "coyhaique",
-  rio_ibanez: "coyhaique",
-  tortel: "coyhaique",
 };
 
 export function getMeteorologicalProfile(communeName?: string): CommuneMeteorologicalProfile {

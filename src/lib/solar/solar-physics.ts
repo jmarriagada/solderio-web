@@ -102,9 +102,11 @@ export function simulateSolarPlantGeneration(
 
   const ilrRatio = Math.round((installedKwp / inverterKw) * 100) / 100;
 
-  // Factor de pérdidas no térmicas
+  const effectiveSoiling = communeProfile.soilingLossPct || bosLosses.soilingLossPercent;
+
+  // Factor de pérdidas no térmicas (calibrado con régimen pluvial de la macrozona sur)
   const nonThermalLossesFactor =
-    (1 - bosLosses.soilingLossPercent / 100) *
+    (1 - effectiveSoiling / 100) *
     (1 - bosLosses.mismatchLossPercent / 100) *
     (1 - bosLosses.dcWiringLossPercent / 100) *
     (1 - bosLosses.acWiringLossPercent / 100) *

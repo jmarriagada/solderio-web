@@ -178,7 +178,21 @@ export async function updateSecComplianceItemAction(
   revalidatePath(`/dashboard/projects/${projectId}`)
 }
 
-export async function updateProjectLocationAction(projectId: string, formData: FormData) {
+export async function updateProjectLocationAction(
+  projectId: string, 
+  data: FormData | {
+    clientName?: string
+    clientRut?: string | null
+    configuration?: string | null
+    projectType?: string | null
+    comuna?: string | null
+    region?: string | null
+    distributor?: string | null
+    address?: string | null
+    latitude?: number | null
+    longitude?: number | null
+  }
+) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -186,46 +200,73 @@ export async function updateProjectLocationAction(projectId: string, formData: F
     throw new Error('No autorizado')
   }
 
-  const comuna = formData.get('comuna') as string
-  const region = formData.get('region') as string
-  const distributor = formData.get('distributor') as string
-  const address = formData.get('address') as string
-  const lat = parseFloat(formData.get('latitude') as string)
-  const lng = parseFloat(formData.get('longitude') as string)
-  const clientName = formData.get('clientName') as string
-  const clientRut = formData.get('clientRut') as string
-  const configuration = formData.get('configuration') as string
-  const projectType = formData.get('projectType') as string
+  let comuna: string | undefined
+  let region: string | undefined
+  let distributor: string | undefined
+  let address: string | undefined
+  let lat: number | undefined
+  let lng: number | undefined
+  let clientName: string | undefined
+  let clientRut: string | undefined
+  let configuration: string | undefined
+  let projectType: string | undefined
+
+  if (data instanceof FormData) {
+    comuna = (data.get('comuna') as string) || undefined
+    region = (data.get('region') as string) || undefined
+    distributor = (data.get('distributor') as string) || undefined
+    address = (data.get('address') as string) || undefined
+    lat = parseFloat(data.get('latitude') as string)
+    lng = parseFloat(data.get('longitude') as string)
+    clientName = (data.get('clientName') as string) || undefined
+    clientRut = (data.get('clientRut') as string) || undefined
+    configuration = (data.get('configuration') as string) || undefined
+    projectType = (data.get('projectType') as string) || undefined
+  } else {
+    comuna = data.comuna || undefined
+    region = data.region || undefined
+    distributor = data.distributor || undefined
+    address = data.address || undefined
+    lat = data.latitude ?? undefined
+    lng = data.longitude ?? undefined
+    clientName = data.clientName || undefined
+    clientRut = data.clientRut || undefined
+    configuration = data.configuration || undefined
+    projectType = data.projectType || undefined
+  }
+
+  const validLat = lat !== undefined && !isNaN(lat) ? lat : undefined
+  const validLng = lng !== undefined && !isNaN(lng) ? lng : undefined
 
   await prisma.project.update({
     where: { id: projectId },
-    data: {
-      clientName: clientName || undefined,
-      clientRut: clientRut || undefined,
-      configuration: configuration || undefined,
-      projectType: projectType || undefined,
-      location: {
-        upsert: {
-          create: {
-            comuna,
-            region,
-            distributor,
-            address,
-            latitude: isNaN(lat) ? -39.8142 : lat,
-            longitude: isNaN(lng) ? -73.2459 : lng,
-          },
-          update: {
-            comuna,
-            region,
-            distributor,
-            address,
-            latitude: isNaN(lat) ? undefined : lat,
-            longitude: isNaN(lng) ? undefined : lng,
+      data: {
+        clientName: clientName || undefined,
+        clientRut: clientRut || undefined,
+        configuration: configuration || undefined,
+        projectType: projectType || undefined,
+        location: {
+          upsert: {
+            create: {
+              comuna,
+              region,
+              distributor,
+              address,
+              latitude: validLat ?? -39.8142,
+              longitude: validLng ?? -73.2459,
+            },
+            update: {
+              comuna,
+              region,
+              distributor,
+              address,
+              latitude: validLat,
+              longitude: validLng,
+            },
           },
         },
       },
-    },
-  })
+    })
 
   revalidatePath(`/dashboard/projects/${projectId}`)
   revalidatePath('/dashboard')

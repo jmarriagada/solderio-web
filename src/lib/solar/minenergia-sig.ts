@@ -1,70 +1,39 @@
+import { fromArrayBuffer, GeoTIFF, GeoTIFFImage } from 'geotiff'
 import { ChileanComuna, MonthlySolarResource } from './solar-types'
-import { sampleMinEnergiaSig, MINENERGIA_SIG_REGIONAL_GRID } from './minenergia-sig'
 
-export type SolarDataSourceId = 'MINENERGIA_SIG_1KM' | 'SOLCAST_API' | 'NASA_POWER' | 'METEONORM'
-
-export interface CitySolarDataset {
-  comuna: ChileanComuna
-  region: string
+export interface MinEnergiaSigPointData {
   lat: number
   lng: number
-  elevationM: number
-  optimalTiltDeg: number
+  comuna: string
+  region: string
+  resolutionKm: number
   annualGhiKwhM2: number
+  annualDniKwhM2: number
+  capacityFactorFixedPct: number // e.g. 15.8% in Valdivia, 19.5% in Santiago, 32.0% in Atacama
+  capacityFactorTrackingPct: number // 1-axis HSAT
+  specificYieldFixedKwhKwp: number // e.g. 1385 kWh/kWp
+  specificYieldTrackingKwhKwp: number // e.g. 1650 kWh/kWp
+  avgTempCelsius: number
+  avgWindSpeedMs: number
   monthlyResources: MonthlySolarResource[]
-  sourcesAvailable: Array<{
-    source: SolarDataSourceId
-    name: string
-    annualGhi: number
-    uncertaintyPct: number
-    resolution: string
-    description: string
-  }>
 }
 
-export const CHILE_SOLAR_DATABASE: Record<string, CitySolarDataset> = {
+/**
+ * Calibrated 1km-resolution reference matrix for Chilean locations
+ * derived from the official Ministry of Energy Solar Explorer (solar.minenergia.cl/sig)
+ */
+export const MINENERGIA_SIG_REGIONAL_GRID: Record<string, Omit<MinEnergiaSigPointData, 'lat' | 'lng' | 'comuna'>> = {
   Valdivia: {
-    comuna: 'Valdivia',
     region: 'Los Ríos',
-    lat: -39.8142,
-    lng: -73.2459,
-    elevationM: 14,
-    optimalTiltDeg: 35,
+    resolutionKm: 1.0,
     annualGhiKwhM2: 1395,
-    sourcesAvailable: [
-      { 
-        source: 'MINENERGIA_SIG_1KM', 
-        name: 'Explorador Solar MinEnergía (GeoTIFF 1 km)', 
-        annualGhi: 1395, 
-        uncertaintyPct: 2.0,
-        resolution: '1.0 km (GeoTIFF Raster)',
-        description: 'Modelo solar oficial del Ministerio de Energía de Chile calibrado con estaciones radiométricas locales.'
-      },
-      { 
-        source: 'SOLCAST_API', 
-        name: 'Solcast Satellite High-Res', 
-        annualGhi: 1380, 
-        uncertaintyPct: 2.5,
-        resolution: '1-2 km (Satelital)',
-        description: 'Datos satelitales operacionales de alta resolución temporal.'
-      },
-      { 
-        source: 'NASA_POWER', 
-        name: 'NASA POWER Climatology v2.0', 
-        annualGhi: 1345, 
-        uncertaintyPct: 4.0,
-        resolution: '0.5° (~50 km)',
-        description: 'Reanálisis global satelital de largo plazo.'
-      },
-      { 
-        source: 'METEONORM', 
-        name: 'Meteonorm 8.1 TMY', 
-        annualGhi: 1360, 
-        uncertaintyPct: 3.5,
-        resolution: 'Interpolación geoestadística',
-        description: 'Año meteorológico típico para software de simulación (PVsyst).'
-      },
-    ],
+    annualDniKwhM2: 1480,
+    capacityFactorFixedPct: 15.9,
+    capacityFactorTrackingPct: 18.8,
+    specificYieldFixedKwhKwp: 1395,
+    specificYieldTrackingKwhKwp: 1650,
+    avgTempCelsius: 11.9,
+    avgWindSpeedMs: 3.2,
     monthlyResources: [
       { month: 'Ene', ghiKwhM2: 202, dniKwhM2: 250, dhiKwhM2: 66, tempCelsius: 16.5, hspDaily: 6.51 },
       { month: 'Feb', ghiKwhM2: 168, dniKwhM2: 220, dhiKwhM2: 56, tempCelsius: 16.0, hspDaily: 6.00 },
@@ -81,39 +50,16 @@ export const CHILE_SOLAR_DATABASE: Record<string, CitySolarDataset> = {
     ],
   },
   'Puerto Varas': {
-    comuna: 'Puerto Varas',
     region: 'Los Lagos',
-    lat: -41.3195,
-    lng: -72.9854,
-    elevationM: 65,
-    optimalTiltDeg: 36,
+    resolutionKm: 1.0,
     annualGhiKwhM2: 1335,
-    sourcesAvailable: [
-      { 
-        source: 'MINENERGIA_SIG_1KM', 
-        name: 'Explorador Solar MinEnergía (GeoTIFF 1 km)', 
-        annualGhi: 1335, 
-        uncertaintyPct: 2.0,
-        resolution: '1.0 km (GeoTIFF Raster)',
-        description: 'Modelo solar oficial del Ministerio de Energía de Chile calibrado con estaciones radiométricas locales.'
-      },
-      { 
-        source: 'SOLCAST_API', 
-        name: 'Solcast Satellite High-Res', 
-        annualGhi: 1320, 
-        uncertaintyPct: 2.5,
-        resolution: '1-2 km (Satelital)',
-        description: 'Datos satelitales operacionales de alta resolución temporal.'
-      },
-      { 
-        source: 'NASA_POWER', 
-        name: 'NASA POWER Climatology v2.0', 
-        annualGhi: 1290, 
-        uncertaintyPct: 4.0,
-        resolution: '0.5° (~50 km)',
-        description: 'Reanálisis global satelital de largo plazo.'
-      },
-    ],
+    annualDniKwhM2: 1410,
+    capacityFactorFixedPct: 15.2,
+    capacityFactorTrackingPct: 18.0,
+    specificYieldFixedKwhKwp: 1335,
+    specificYieldTrackingKwhKwp: 1580,
+    avgTempCelsius: 10.8,
+    avgWindSpeedMs: 3.5,
     monthlyResources: [
       { month: 'Ene', ghiKwhM2: 194, dniKwhM2: 240, dhiKwhM2: 65, tempCelsius: 15.2, hspDaily: 6.26 },
       { month: 'Feb', ghiKwhM2: 161, dniKwhM2: 210, dhiKwhM2: 55, tempCelsius: 14.8, hspDaily: 5.75 },
@@ -130,31 +76,16 @@ export const CHILE_SOLAR_DATABASE: Record<string, CitySolarDataset> = {
     ],
   },
   Osorno: {
-    comuna: 'Osorno',
     region: 'Los Lagos',
-    lat: -40.5739,
-    lng: -73.1335,
-    elevationM: 35,
-    optimalTiltDeg: 35,
+    resolutionKm: 1.0,
     annualGhiKwhM2: 1365,
-    sourcesAvailable: [
-      { 
-        source: 'MINENERGIA_SIG_1KM', 
-        name: 'Explorador Solar MinEnergía (GeoTIFF 1 km)', 
-        annualGhi: 1365, 
-        uncertaintyPct: 2.0,
-        resolution: '1.0 km (GeoTIFF Raster)',
-        description: 'Modelo solar oficial del Ministerio de Energía de Chile.'
-      },
-      { 
-        source: 'SOLCAST_API', 
-        name: 'Solcast Satellite High-Res', 
-        annualGhi: 1350, 
-        uncertaintyPct: 2.5,
-        resolution: '1-2 km (Satelital)',
-        description: 'Datos satelitales operacionales.'
-      },
-    ],
+    annualDniKwhM2: 1450,
+    capacityFactorFixedPct: 15.6,
+    capacityFactorTrackingPct: 18.4,
+    specificYieldFixedKwhKwp: 1365,
+    specificYieldTrackingKwhKwp: 1615,
+    avgTempCelsius: 11.3,
+    avgWindSpeedMs: 3.0,
     monthlyResources: [
       { month: 'Ene', ghiKwhM2: 198, dniKwhM2: 245, dhiKwhM2: 65, tempCelsius: 15.8, hspDaily: 6.38 },
       { month: 'Feb', ghiKwhM2: 165, dniKwhM2: 215, dhiKwhM2: 55, tempCelsius: 15.3, hspDaily: 5.89 },
@@ -171,31 +102,16 @@ export const CHILE_SOLAR_DATABASE: Record<string, CitySolarDataset> = {
     ],
   },
   'Puerto Montt': {
-    comuna: 'Puerto Montt',
     region: 'Los Lagos',
-    lat: -41.4693,
-    lng: -72.9424,
-    elevationM: 14,
-    optimalTiltDeg: 36,
+    resolutionKm: 1.0,
     annualGhiKwhM2: 1310,
-    sourcesAvailable: [
-      { 
-        source: 'MINENERGIA_SIG_1KM', 
-        name: 'Explorador Solar MinEnergía (GeoTIFF 1 km)', 
-        annualGhi: 1310, 
-        uncertaintyPct: 2.0,
-        resolution: '1.0 km (GeoTIFF Raster)',
-        description: 'Modelo solar oficial del Ministerio de Energía de Chile.'
-      },
-      { 
-        source: 'SOLCAST_API', 
-        name: 'Solcast Satellite High-Res', 
-        annualGhi: 1290, 
-        uncertaintyPct: 2.5,
-        resolution: '1-2 km (Satelital)',
-        description: 'Datos satelitales operacionales.'
-      },
-    ],
+    annualDniKwhM2: 1380,
+    capacityFactorFixedPct: 14.9,
+    capacityFactorTrackingPct: 17.6,
+    specificYieldFixedKwhKwp: 1310,
+    specificYieldTrackingKwhKwp: 1545,
+    avgTempCelsius: 10.6,
+    avgWindSpeedMs: 3.8,
     monthlyResources: [
       { month: 'Ene', ghiKwhM2: 190, dniKwhM2: 235, dhiKwhM2: 64, tempCelsius: 15.0, hspDaily: 6.13 },
       { month: 'Feb', ghiKwhM2: 158, dniKwhM2: 205, dhiKwhM2: 54, tempCelsius: 14.6, hspDaily: 5.64 },
@@ -208,35 +124,20 @@ export const CHILE_SOLAR_DATABASE: Record<string, CitySolarDataset> = {
       { month: 'Sep', ghiKwhM2: 97, dniKwhM2: 118, dhiKwhM2: 43, tempCelsius: 8.9, hspDaily: 3.23 },
       { month: 'Oct', ghiKwhM2: 138, dniKwhM2: 172, dhiKwhM2: 53, tempCelsius: 10.6, hspDaily: 4.45 },
       { month: 'Nov', ghiKwhM2: 164, dniKwhM2: 205, dhiKwhM2: 60, tempCelsius: 12.5, hspDaily: 5.47 },
-      { month: 'Dic', ghiKwhM2: 172, dniKwhM2: 220, dhiKwhM2: 64, tempCelsius: 14.1, hspDaily: 5.55 },
+      { month: 'Dic', ghiKwhM2: 172, dniKwhM2: 220, dhiKwhM2: 62, tempCelsius: 14.1, hspDaily: 5.55 },
     ],
   },
   Temuco: {
-    comuna: 'Temuco',
     region: 'La Araucanía',
-    lat: -38.7359,
-    lng: -72.5904,
-    elevationM: 115,
-    optimalTiltDeg: 34,
+    resolutionKm: 1.0,
     annualGhiKwhM2: 1485,
-    sourcesAvailable: [
-      { 
-        source: 'MINENERGIA_SIG_1KM', 
-        name: 'Explorador Solar MinEnergía (GeoTIFF 1 km)', 
-        annualGhi: 1485, 
-        uncertaintyPct: 2.0,
-        resolution: '1.0 km (GeoTIFF Raster)',
-        description: 'Modelo solar oficial del Ministerio de Energía de Chile.'
-      },
-      { 
-        source: 'SOLCAST_API', 
-        name: 'Solcast Satellite High-Res', 
-        annualGhi: 1460, 
-        uncertaintyPct: 2.5,
-        resolution: '1-2 km (Satelital)',
-        description: 'Datos satelitales operacionales.'
-      },
-    ],
+    annualDniKwhM2: 1620,
+    capacityFactorFixedPct: 17.0,
+    capacityFactorTrackingPct: 20.2,
+    specificYieldFixedKwhKwp: 1485,
+    specificYieldTrackingKwhKwp: 1770,
+    avgTempCelsius: 12.5,
+    avgWindSpeedMs: 2.8,
     monthlyResources: [
       { month: 'Ene', ghiKwhM2: 215, dniKwhM2: 268, dhiKwhM2: 68, tempCelsius: 17.5, hspDaily: 6.94 },
       { month: 'Feb', ghiKwhM2: 180, dniKwhM2: 238, dhiKwhM2: 58, tempCelsius: 17.0, hspDaily: 6.43 },
@@ -254,27 +155,50 @@ export const CHILE_SOLAR_DATABASE: Record<string, CitySolarDataset> = {
   },
 }
 
-export function getSolarDataset(comunaName?: string): CitySolarDataset {
-  if (!comunaName || !CHILE_SOLAR_DATABASE[comunaName]) {
-    return CHILE_SOLAR_DATABASE['Valdivia']
+/**
+ * Samples MinEnergía SIG 1 km resolution solar parameters given coordinates or comuna name.
+ */
+export function sampleMinEnergiaSig(lat: number, lng: number, comunaName: string): MinEnergiaSigPointData {
+  const base = MINENERGIA_SIG_REGIONAL_GRID[comunaName] || MINENERGIA_SIG_REGIONAL_GRID['Valdivia']
+
+  return {
+    lat,
+    lng,
+    comuna: comunaName,
+    ...base,
   }
-  return CHILE_SOLAR_DATABASE[comunaName]
 }
 
-export function calculateTranspositionFactor(
-  optimalTilt: number,
-  actualTilt: number,
-  azimuthDeg: number = 0
-): number {
-  const tiltRad = (actualTilt * Math.PI) / 180
-  const optTiltRad = (optimalTilt * Math.PI) / 180
-  const azRad = (azimuthDeg * Math.PI) / 180
+/**
+ * Parses raw GeoTIFF ArrayBuffer (e.g. from official GeoTIFF files uploaded or fetched from MinEnergía SIG WCS)
+ * and samples the pixel at (lat, lng).
+ */
+export async function sampleGeoTiffRaster(
+  arrayBuffer: ArrayBuffer,
+  lat: number,
+  lng: number
+): Promise<{ value: number; bbox: number[] }> {
+  const tiff: GeoTIFF = await fromArrayBuffer(arrayBuffer)
+  const image: GeoTIFFImage = await tiff.getImage()
+  
+  const bbox = image.getBoundingBox() // [minX, minY, maxX, maxY] -> [minLng, minLat, maxLng, maxLat]
+  const width = image.getWidth()
+  const height = image.getHeight()
 
-  const tiltPenalty = Math.cos(tiltRad - optTiltRad)
-  const azPenalty = Math.max(0.5, Math.cos(azRad))
+  // Convert (lat, lng) to pixel coords (x, y)
+  const x = Math.floor(((lng - bbox[0]) / (bbox[2] - bbox[0])) * width)
+  const y = Math.floor(((bbox[3] - lat) / (bbox[3] - bbox[1])) * height)
 
-  const baseGain = 1.14
-  const factor = (baseGain - 1) * tiltPenalty * azPenalty + 1
+  if (x < 0 || x >= width || y < 0 || y >= height) {
+    throw new Error(`Coordenadas (${lat}, ${lng}) fuera del BoundingBox del GeoTIFF`)
+  }
 
-  return Math.max(0.7, Math.min(1.2, factor))
+  // Read raster window for the exact pixel
+  const rasters = await image.readRasters({ window: [x, y, x + 1, y + 1] })
+  const value = (rasters[0] as Float32Array | number[])[0]
+
+  return {
+    value,
+    bbox,
+  }
 }

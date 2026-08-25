@@ -117,7 +117,7 @@ export function ExecutiveReportModal({ isOpen, onClose, formData, sizing, leadId
           </div>
 
           {/* Grid 1: Cliente vs Ingeniería */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
             {/* Box 1: Cliente */}
             <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
               <div className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-3 flex items-center gap-1.5">
@@ -173,8 +173,65 @@ export function ExecutiveReportModal({ isOpen, onClose, formData, sizing, leadId
             </div>
           </div>
 
-          {/* Spotlight Ahorro Banner */}
-          <div className="p-5 bg-gradient-to-r from-slate-900 to-slate-800 text-white rounded-xl mb-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+          {/* Grid 2: Finanzas (03) & Normativa SEC (04) - UBICADOS ANTES DE NUEVA REALIDAD TARIFARIA */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+            {/* Finanzas (03) */}
+            <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
+              <div className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-3 flex items-center gap-1.5">
+                <TrendingUp className="w-3.5 h-3.5 text-[#ea580c]" />
+                <span>03. Indicadores Financieros a 25 Años</span>
+              </div>
+              <div className="space-y-1.5 text-xs">
+                <div className="flex justify-between py-1 border-b border-slate-200/60">
+                  <span className="text-slate-500">Ahorro Acumulado (25 años):</span>
+                  <span className="font-bold text-emerald-700 font-mono">{formatCurrency(sizing.estimated25YearSavingsClp)}</span>
+                </div>
+                <div className="flex justify-between py-1 border-b border-slate-200/60">
+                  <span className="text-slate-500">Período de Retorno (Payback):</span>
+                  <span className="font-semibold text-slate-900">{sizing.paybackYears} años</span>
+                </div>
+                <div className="flex justify-between py-1 border-b border-slate-200/60">
+                  <span className="text-slate-500">Valor Actual Neto (VAN):</span>
+                  <span className="font-semibold text-slate-900 font-mono">{sizing.vanClp ? formatCurrency(sizing.vanClp) : "Positivo"}</span>
+                </div>
+                <div className="flex justify-between py-1">
+                  <span className="text-slate-500">Costo Nivelado (LCOE):</span>
+                  <span className="font-semibold text-slate-900 font-mono">${sizing.lcoeClpPerKwh || 52} CLP / kWh</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Normativa SEC (04) */}
+            <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 flex flex-col justify-between">
+              <div>
+                <div className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-3 flex items-center gap-1.5">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>04. Garantía & Cumplimiento Normativo SEC</span>
+                </div>
+                <div className="flex flex-wrap gap-1.5 mb-2.5">
+                  <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-semibold border border-emerald-200">
+                    Pliego RIC N°09
+                  </span>
+                  <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-semibold border border-emerald-200">
+                    Pliego RIC N°15 (Anti-Isla)
+                  </span>
+                  <span className="px-2 py-0.5 rounded bg-orange-100 text-orange-800 text-[10px] font-semibold border border-orange-200">
+                    Trámite TE-4 SEC
+                  </span>
+                </div>
+                <p className="text-[11px] text-slate-600 leading-snug">
+                  Proyecto llave en mano diseñado bajo estricta normativa chilena con tramitación formal ante la SEC y medidor bidireccional.
+                </p>
+              </div>
+
+              <div className="pt-2.5 mt-2.5 border-t border-slate-200 text-[10px] text-slate-400 font-mono">
+                Garantía de potencia solar: 25 Años al 84.8%
+              </div>
+            </div>
+          </div>
+
+          {/* Spotlight Ahorro Banner: NUEVA REALIDAD TARIFARIA */}
+          <div className="p-5 bg-gradient-to-r from-slate-900 to-slate-800 text-white rounded-xl mb-5 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
               <div className="text-[11px] font-mono uppercase tracking-widest text-[#ea580c] font-semibold flex items-center gap-1.5">
                 <Sparkles className="w-3.5 h-3.5" />
@@ -194,11 +251,11 @@ export function ExecutiveReportModal({ isOpen, onClose, formData, sizing, leadId
             </div>
           </div>
 
-          {/* Tabla de Balance Energético Mes a Mes */}
+          {/* Tabla de Balance Energético Mes a Mes (05) */}
           <div className="mb-6">
             <div className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2 flex items-center gap-1.5">
               <FileText className="w-3.5 h-3.5 text-[#ea580c]" />
-              <span>03. Balance Energético Mensual TMY ({formData.comuna})</span>
+              <span>05. Balance Energético Mensual TMY ({formData.comuna})</span>
             </div>
             
             <div className="overflow-x-auto">
@@ -233,63 +290,6 @@ export function ExecutiveReportModal({ isOpen, onClose, formData, sizing, leadId
                   })}
                 </tbody>
               </table>
-            </div>
-          </div>
-
-          {/* Grid 2: Finanzas & SEC */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            {/* Finanzas */}
-            <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
-              <div className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-3 flex items-center gap-1.5">
-                <TrendingUp className="w-3.5 h-3.5 text-[#ea580c]" />
-                <span>04. Indicadores Financieros a 25 Años</span>
-              </div>
-              <div className="space-y-1.5 text-xs">
-                <div className="flex justify-between py-1 border-b border-slate-200/60">
-                  <span className="text-slate-500">Ahorro Acumulado (25 años):</span>
-                  <span className="font-bold text-emerald-700 font-mono">{formatCurrency(sizing.estimated25YearSavingsClp)}</span>
-                </div>
-                <div className="flex justify-between py-1 border-b border-slate-200/60">
-                  <span className="text-slate-500">Período de Retorno (Payback):</span>
-                  <span className="font-semibold text-slate-900">{sizing.paybackYears} años</span>
-                </div>
-                <div className="flex justify-between py-1 border-b border-slate-200/60">
-                  <span className="text-slate-500">Valor Actual Neto (VAN):</span>
-                  <span className="font-semibold text-slate-900 font-mono">{sizing.vanClp ? formatCurrency(sizing.vanClp) : "Positivo"}</span>
-                </div>
-                <div className="flex justify-between py-1">
-                  <span className="text-slate-500">Costo Nivelado (LCOE):</span>
-                  <span className="font-semibold text-slate-900 font-mono">${sizing.lcoeClpPerKwh || 52} CLP / kWh</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Normativa SEC */}
-            <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 flex flex-col justify-between">
-              <div>
-                <div className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-3 flex items-center gap-1.5">
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-                  <span>05. Garantía & Cumplimiento Normativo SEC</span>
-                </div>
-                <div className="flex flex-wrap gap-1.5 mb-3">
-                  <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-semibold border border-emerald-200">
-                    Pliego RIC N°09
-                  </span>
-                  <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-semibold border border-emerald-200">
-                    Pliego RIC N°15 (Anti-Isla)
-                  </span>
-                  <span className="px-2 py-0.5 rounded bg-orange-100 text-orange-800 text-[10px] font-semibold border border-orange-200">
-                    Trámite TE-4 SEC
-                  </span>
-                </div>
-                <p className="text-[11px] text-slate-600 leading-snug">
-                  Proyecto llave en mano diseñado bajo estricta normativa chilena con tramitación formal ante la Superintendencia de Electricidad y Combustibles (SEC) y habilitación de medidor bidireccional.
-                </p>
-              </div>
-
-              <div className="pt-3 mt-3 border-t border-slate-200 text-[10px] text-slate-400 font-mono">
-                Garantía de potencia solar: 25 Años al 84.8%
-              </div>
             </div>
           </div>
 

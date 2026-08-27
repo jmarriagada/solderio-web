@@ -41,7 +41,7 @@ export function Attributes() {
     {
       title: "Ingeniería confiable",
       description:
-        "Nuestras celdas monocristalinas, marcos negros en los paneles solares y anclajes antigoteras, entregan seguridad operativa con un aspecto estético superior.",
+        "Nuestras celdas monocristalinas en paneles FV y anclajes antigoteras, entregan seguridad operativa con un aspecto estético superior.",
       image: "/images/solderio-planta-solar-residencial-osorno.png",
     },
     {

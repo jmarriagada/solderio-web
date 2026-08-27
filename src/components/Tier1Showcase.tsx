@@ -35,7 +35,7 @@ export function Tier1Showcase() {
     },
     {
       brand: "MÓDULOS N-TYPE BIFACIALES",
-      model: "Tecnología TOPCon/HJT Bifacial",
+      model: "Tecnología Fotovoltaica",
       highlight: "Alta Ganancia con Nubosidad y Lluvia",
       description:
         "Tecnología fotovoltaica N-Type diseñada para climas nublados. Su coeficiente térmico optimizado y bifacialidad trasera capturan hasta un 15% más en radiación difusa.",
@@ -62,7 +62,7 @@ export function Tier1Showcase() {
           className="text-center max-w-3xl mx-auto mb-16"
         >
           <span className="text-xs md:text-sm font-medium uppercase tracking-widest text-[#FF8300] mb-3 md:mb-4 block">
-            Hardware de Grado Industrial
+            Hardware Certificado SEC
           </span>
           <h2 className="text-3xl md:text-5xl font-light text-[#1F1F1F] tracking-tight mb-4">
             Equipamiento seleccionado para el sur

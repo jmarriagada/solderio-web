@@ -27,7 +27,7 @@ export function SegmentedSolutions() {
             className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6"
           >
             <div>
-              <span className="text-xs md:text-sm font-light uppercase tracking-widest text-[#FF8300] mb-3 md:mb-4 block">
+              <span className="text-xs md:text-sm font-medium uppercase tracking-widest text-[#FF8300] mb-3 md:mb-4 block">
                 Soluciones Segmentadas
               </span>
               <h2 className="text-3xl md:text-5xl font-light text-[#1F1F1F] tracking-tight">
@@ -281,7 +281,7 @@ export function SegmentedSolutions() {
                       <div className="w-11 h-11 rounded-2xl bg-[#FF8300]/10 text-[#FF8300] flex items-center justify-center transition-transform group-hover:scale-110">
                         <Zap className="w-5 h-5 stroke-[1.5]" />
                       </div>
-                      <span className="text-xs font-light uppercase tracking-widest text-[#FF8300]">
+                      <span className="text-xs font-medium uppercase tracking-widest text-[#FF8300]">
                         Pronto
                       </span>
                     </div>
@@ -329,7 +329,7 @@ export function SegmentedSolutions() {
                       <div className="w-11 h-11 rounded-2xl bg-[#FF8300]/10 text-[#FF8300] flex items-center justify-center transition-transform group-hover:scale-110">
                         <Award className="w-5 h-5 stroke-[1.5]" />
                       </div>
-                      <span className="text-xs font-light uppercase tracking-widest text-[#FF8300]">
+                      <span className="text-xs font-medium uppercase tracking-widest text-[#FF8300]">
                         Pronto
                       </span>
                     </div>
@@ -382,6 +382,17 @@ export function SegmentedSolutions() {
           >
             {/* Subtle Orange Glow Ambient */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-[#FF8300]/15 rounded-full blur-3xl pointer-events-none" />
+
+            {/* SoldeRío Official Watermark Icon over orange glow, behind button, cut at the bottom-right corner with 10% opacity */}
+            <div className="absolute -bottom-16 -right-16 md:-bottom-24 md:-right-24 pointer-events-none z-0 opacity-10 flex items-center justify-center select-none">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/icons/icon-solderio.svg"
+                alt=""
+                aria-hidden="true"
+                className="w-[280px] sm:w-[340px] md:w-[440px] h-auto object-contain pointer-events-none"
+              />
+            </div>
 
             <div className="relative z-10">
               <AnimatePresence mode="wait">

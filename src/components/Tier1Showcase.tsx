@@ -61,7 +61,7 @@ export function Tier1Showcase() {
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           className="text-center max-w-3xl mx-auto mb-16"
         >
-          <span className="text-xs md:text-sm font-light uppercase tracking-widest text-[#FF8300] mb-3 md:mb-4 block">
+          <span className="text-xs md:text-sm font-medium uppercase tracking-widest text-[#FF8300] mb-3 md:mb-4 block">
             Hardware de Grado Industrial
           </span>
           <h2 className="text-3xl md:text-5xl font-light text-[#1F1F1F] tracking-tight mb-4">

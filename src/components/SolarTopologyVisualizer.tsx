@@ -375,7 +375,7 @@ export function SolarTopologyVisualizer() {
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           >
             {/* Clean badge without background, border, or icon */}
-            <span className="text-xs font-light uppercase tracking-widest text-[#FF8300] block mb-3">
+            <span className="text-xs md:text-sm font-medium uppercase tracking-widest text-[#FF8300] block mb-3">
               Simulador Interactivo
             </span>
 

@@ -82,7 +82,7 @@ export function Attributes() {
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
             className="max-w-3xl mb-16"
           >
-            <span className="text-xs md:text-sm font-light uppercase tracking-widest text-[#FF8300] mb-3 md:mb-4 block">
+            <span className="text-xs md:text-sm font-medium uppercase tracking-widest text-[#FF8300] mb-3 md:mb-4 block">
               Rendimiento Climático
             </span>
             <h2 className="text-3xl md:text-5xl font-light text-brand-fg mb-6 tracking-tight">

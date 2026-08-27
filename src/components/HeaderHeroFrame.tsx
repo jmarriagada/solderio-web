@@ -72,7 +72,7 @@ export function HeaderHeroFrame() {
                 hidden: { opacity: 0, y: 15 },
                 visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
               }}
-              className="text-[15px] md:text-[17px] text-white/90 font-light max-w-2xl leading-relaxed"
+              className="text-[16px] md:text-[18px] text-white/90 font-light max-w-2xl leading-relaxed"
             >
               Usa el recurso solar para la soberanía energética de tu hogar o empresa. Diseñamos, construimos, operamos y monitoreamos plantas solares
             </motion.p>

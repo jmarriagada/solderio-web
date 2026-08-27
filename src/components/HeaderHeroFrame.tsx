@@ -19,12 +19,12 @@ export function HeaderHeroFrame() {
         {/* Background Image with Black 45% Multiply Overlay */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="/images/planta-solar-residencial-valdivia.jpeg"
-            alt="SoldeRío Planta Solar Residencial Valdivia"
+            src="/images/solar_chile_1787346094806.png"
+            alt="SoldeRío Planta Solar"
             fill
             priority
             sizes="100vw"
-            className="object-cover object-top"
+            className="object-cover object-center"
           />
           <div className="absolute inset-0 bg-black/45 mix-blend-multiply pointer-events-none" />
           
@@ -39,7 +39,7 @@ export function HeaderHeroFrame() {
         {/* Top Wrapper: Header + Title Block anchored to top */}
         <div className="relative z-20 w-full flex flex-col items-center">
           {/* Header Navigation with Descubre MegaMenu */}
-          <HeroHeaderNav activePage="Inicio" locationText="Sur de Chile" />
+          <HeroHeaderNav />
 
           {/* Hero Top Content with Staggered Fade-in */}
           <motion.div
@@ -74,7 +74,7 @@ export function HeaderHeroFrame() {
               }}
               className="text-sm md:text-base text-white/90 font-light max-w-2xl leading-relaxed"
             >
-              Aprovecha el recurso solar para la soberanía energética de tu hogar o empresa. Diseñamos, construimos, operamos y monitoreamos tu planta solar 24/7.
+              Usa el recurso solar para la soberanía energética de tu hogar o empresa. Diseñamos, construimos, operamos y monitoreamos plantas solares
             </motion.p>
           </motion.div>
         </div>
@@ -88,7 +88,7 @@ export function HeaderHeroFrame() {
         >
           <Link
             href="/cotizacion"
-            className="w-full sm:w-auto bg-white text-black font-light text-xs md:text-sm px-8 py-3.5 rounded-full shadow-lg hover:bg-[#FF8300] hover:text-white transition-all duration-300 cursor-pointer flex items-center justify-center hover:shadow-[0_0_30px_rgba(255,131,0,0.4)]"
+            className="w-full sm:w-auto bg-white text-black font-light text-xs md:text-sm px-7 py-2.5 rounded-xl shadow-lg hover:bg-[#FF8300] hover:text-white transition-all duration-300 cursor-pointer flex items-center justify-center hover:shadow-[0_0_30px_rgba(255,131,0,0.4)]"
           >
             Obtener una Cotización Solar
           </Link>
@@ -96,7 +96,7 @@ export function HeaderHeroFrame() {
             href="https://wa.me/56987654321?text=Hola,%20quisiera%20conversar%20con%20un%20ingeniero%20de%20SoldeR%C3%ADo"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full sm:w-auto bg-black/40 border border-white/40 text-white font-light text-xs md:text-sm px-8 py-3.5 rounded-full backdrop-blur-md hover:bg-black/60 hover:border-white transition-all cursor-pointer text-center"
+            className="w-full sm:w-auto bg-black/40 border border-white/40 text-white font-light text-xs md:text-sm px-7 py-2.5 rounded-xl backdrop-blur-md hover:bg-black/60 hover:border-white transition-all cursor-pointer text-center"
           >
             Hablar con un Ingeniero
           </a>

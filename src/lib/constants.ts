@@ -28,7 +28,6 @@ export const BRAND = {
 };
 
 export const NAV_LINKS = [
-  { label: "Inicio", href: "/" },
   { label: "Hogar", href: "/hogar" },
   { label: "Empresas", href: "/empresas" },
   { label: "Carga EV", href: "/carga-ev" },

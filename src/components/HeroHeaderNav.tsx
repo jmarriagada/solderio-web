@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Sun, Zap, User, ArrowRight } from "lucide-react";
@@ -16,11 +16,73 @@ interface HeroHeaderNavProps {
 
 export function HeroHeaderNav({
   activePage,
-  locationText = "Osorno, Los Lagos",
+  locationText,
 }: HeroHeaderNavProps) {
   const [isDescubreOpen, setIsDescubreOpen] = useState(false);
+  const [userLocation, setUserLocation] = useState<string | null>(locationText || null);
   const { openModal } = useVisitaModal();
   const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    // If locationText was provided explicitly as non-empty, use it
+    if (locationText) {
+      setUserLocation(locationText);
+      return;
+    }
+
+    let isMounted = true;
+
+    // Check cached location in sessionStorage
+    try {
+      const cached = sessionStorage.getItem("solderio_user_geo");
+      if (cached) {
+        setUserLocation(cached);
+        return;
+      }
+    } catch {}
+
+    const detectLocation = async () => {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 2500);
+
+        const res = await fetch("https://ipwho.is/", {
+          signal: controller.signal,
+        });
+        clearTimeout(timeoutId);
+
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success && isMounted) {
+            const locParts: string[] = [];
+            if (data.city) locParts.push(data.city);
+            if (data.region) locParts.push(data.region);
+
+            const formatted = locParts.join(", ");
+            if (formatted) {
+              setUserLocation(formatted);
+              try {
+                sessionStorage.setItem("solderio_user_geo", formatted);
+              } catch {}
+              return;
+            }
+          }
+        }
+      } catch {
+        // Silently catch if ad-blocked or offline
+      }
+
+      if (isMounted && !locationText) {
+        setUserLocation(null);
+      }
+    };
+
+    detectLocation();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [locationText]);
 
   const handleMouseEnter = () => {
     if (closeTimeoutRef.current) {
@@ -120,10 +182,12 @@ export function HeroHeaderNav({
           <button className="p-1.5 hover:text-[#FF8300] transition-colors rounded-full hover:bg-white/10 cursor-pointer" title="Usuario">
             <User className="w-4 h-4 stroke-[1.5]" />
           </button>
-          <div className="hidden sm:flex items-center gap-2 text-xs font-light text-white/90 bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/15 shadow-sm">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399,0_0_14px_#34d399]" />
-            <span>{locationText}</span>
-          </div>
+          {userLocation && (
+            <div className="hidden sm:flex items-center gap-2 text-xs font-light text-white/90 bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/15 shadow-sm">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399,0_0_14px_#34d399]" />
+              <span>{userLocation}</span>
+            </div>
+          )}
         </div>
       </header>
 

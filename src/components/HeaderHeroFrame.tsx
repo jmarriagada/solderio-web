@@ -74,7 +74,7 @@ export function HeaderHeroFrame() {
               }}
               className="text-[16px] md:text-[18px] text-white/90 font-light max-w-2xl leading-relaxed"
             >
-              Instala soberanía energética en tu hogar o empresa. En SoldeRío diseñamos, construimos, operamos y monitoreamos plantas solares
+              Gestiona tu soberanía energética en tu hogar o empresa con SoldeRío. Diseñamos, construimos, operamos y monitoreamos plantas solares
             </motion.p>
           </motion.div>
         </div>

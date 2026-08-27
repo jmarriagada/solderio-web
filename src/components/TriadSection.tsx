@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useVisitaModal } from "@/context/VisitaModalContext";
 
 export function TriadSection() {
-  const [activeTab, setActiveTab] = useState<number | null>(null);
+  const [activeTab, setActiveTab] = useState<number>(1);
   const { openModal } = useVisitaModal();
 
   const pillars = [
@@ -70,7 +70,7 @@ export function TriadSection() {
     },
   ];
 
-  const currentPillar = activeTab !== null ? pillars[activeTab] : null;
+  const currentPillar = pillars[activeTab];
 
   return (
     <section className="bg-transparent py-16 md:py-24 relative overflow-hidden">
@@ -92,7 +92,7 @@ export function TriadSection() {
             </p>
           </motion.div>
 
-          {/* Interactive Tabs Header (Starts Inactive / Collapsed until user clicks) */}
+          {/* Interactive Tabs Header */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -106,7 +106,7 @@ export function TriadSection() {
               return (
                 <button
                   key={pillar.id}
-                  onClick={() => setActiveTab((prev) => (prev === index ? null : index))}
+                  onClick={() => setActiveTab(index)}
                   className={`relative text-left p-5 rounded-[16px] transition-all duration-300 cursor-pointer border ${
                     isSelected
                       ? "bg-[#F7F8FA] border-[#FF8300] shadow-[0_8px_30px_rgba(255,131,0,0.12)] ring-1 ring-[#FF8300]/40 scale-[1.01]"
@@ -150,17 +150,16 @@ export function TriadSection() {
             })}
           </motion.div>
 
-          {/* Tab Content Display (Only expands and displays content on click) */}
+          {/* Tab Content Display (Always open, smoothly transitions on switch) */}
           <AnimatePresence mode="wait">
-            {currentPillar && (
-              <motion.div
-                key={currentPillar.id}
-                initial={{ opacity: 0, y: 20, height: 0 }}
-                animate={{ opacity: 1, y: 0, height: "auto" }}
-                exit={{ opacity: 0, y: -20, height: 0 }}
-                transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                className="bg-[#F7F8FA] rounded-[24px] border border-black/10 overflow-hidden shadow-xl"
-              >
+            <motion.div
+              key={currentPillar.id}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              className="bg-[#F7F8FA] rounded-[24px] border border-black/10 overflow-hidden shadow-xl"
+            >
                 <div className="grid grid-cols-1 lg:grid-cols-12 items-stretch">
                   {/* Left Content Column */}
                   <div className="lg:col-span-7 p-8 md:p-12 flex flex-col justify-between">
@@ -213,7 +212,6 @@ export function TriadSection() {
                   </div>
                 </div>
               </motion.div>
-            )}
           </AnimatePresence>
         </div>
       </div>

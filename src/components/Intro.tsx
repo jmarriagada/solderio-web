@@ -14,13 +14,13 @@ export function Intro() {
         transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
         className="w-full px-3 md:px-5 box-border"
       >
-        <div className="relative w-full h-[40vh] min-h-[300px] md:h-[54vh] max-w-[1400px] mx-auto rounded-[24px] md:rounded-[32px] overflow-hidden shadow-2xl border border-black/10 group">
+        <div className="relative w-full h-[40vh] min-h-[300px] md:h-[54vh] rounded-[24px] md:rounded-[32px] overflow-hidden shadow-2xl border border-black/10 group">
           <Image
             src="/images/solar-panels-empresas-sur-chile.jpg"
             alt="SoldeRío Solar Panels Empresas Sur de Chile"
             fill
             priority
-            sizes="(max-width: 768px) 100vw, 1400px"
+            sizes="100vw"
             className="object-cover object-center group-hover:scale-105 transition-transform duration-1000"
           />
         </div>

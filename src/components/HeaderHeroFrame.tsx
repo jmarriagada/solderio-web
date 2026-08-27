@@ -27,7 +27,7 @@ export function HeaderHeroFrame() {
             className="object-cover object-center"
           />
           <div className="absolute inset-0 bg-black/45 mix-blend-multiply pointer-events-none" />
-          
+
           {/* Subtle Ambient Radial Glow (Soft & Slow Breathing) */}
           <motion.div
             animate={{ opacity: [0.08, 0.16, 0.08] }}
@@ -74,7 +74,7 @@ export function HeaderHeroFrame() {
               }}
               className="text-[16px] md:text-[18px] text-white/90 font-light max-w-2xl leading-relaxed"
             >
-              Usa el recurso solar para la soberanía energética de tu hogar o empresa. Diseñamos, construimos, operamos y monitoreamos plantas solares
+              Instala soberanía energética en tu hogar o empresa. Diseñamos, construimos, operamos y monitoreamos plantas solares
             </motion.p>
           </motion.div>
         </div>

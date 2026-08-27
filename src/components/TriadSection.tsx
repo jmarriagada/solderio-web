@@ -35,9 +35,9 @@ export function TriadSection() {
       icon: ShieldCheck,
       iconSrc: null,
       badge: "RIGOR EN TERRENO",
-      title: "Instalación SEC Clase A",
-      subtitle: "Calidad industrial y seguridad eléctrica certificada",
-      displayHeadline: "Calidad industrial y seguridad eléctrica certificada",
+      title: "Instalación Certificada",
+      subtitle: "Seguridad eléctrica y garantías de funcionamiento",
+      displayHeadline: "Instalación Certificada: Seguridad eléctrica y garantías de funcionamiento",
       description:
         "Nuestras cuadrillas están lideradas por ingenieros eléctricos con licencia SEC Clase A. Empleamos fijaciones de aluminio anodizado inoxidable antigoteras, canalizaciones estancas y tableros normalizados bajo pliegos RIC N°01 a N°19.",
       bullets: [
@@ -54,9 +54,9 @@ export function TriadSection() {
       icon: Cpu,
       iconSrc: null,
       badge: "INTELIGENCIA CONTINUA",
-      title: "Software EaaS Propio",
-      subtitle: "Telemetría 24/7, analítica y postventa proactiva",
-      displayHeadline: "Software EaaS Propio: Telemetría 24/7, analítica y postventa proactiva",
+      title: "Software de monitoreo",
+      subtitle: "Telemetría 24/7, análisis y post-venta que genera valor",
+      displayHeadline: "Software de monitoreo: Telemetría 24/7, análisis y post-venta que genera valor",
       description:
         "Convertimos tu planta solar en un activo digital inteligente. Nuestra plataforma Energy-as-a-Service monitorea generación, consumo e inyección en tiempo real, detectando suciedad o anomalías para desplegar mantenimiento proactivo.",
       bullets: [
@@ -85,10 +85,10 @@ export function TriadSection() {
             className="text-center max-w-3xl mx-auto mb-14"
           >
             <h2 className="text-3xl md:text-5xl font-light text-[#1F1F1F] tracking-tight mb-4">
-              Un ecosistema completo de generación solar
+              Ecosistema de generación solar
             </h2>
             <p className="text-brand-muted text-base md:text-lg font-light leading-relaxed">
-              La convergencia exacta entre el rigor de ingeniería en terreno y la inteligencia del software de gestión energética.
+              Ingeniería que asegura tu suministro y la inteligencia que gestiona tu energía.
             </p>
           </motion.div>
 

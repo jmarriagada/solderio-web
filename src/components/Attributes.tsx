@@ -37,36 +37,55 @@ export function Attributes() {
     }
   };
 
-  const attributes = [
+  const steps = [
     {
-      title: "Ingeniería confiable",
+      step: "01 • Consulta Inicial",
+      title: "Cuéntanos sobre tu consumo",
       description:
-        "Nuestras celdas monocristalinas en paneles FV y anclajes antigoteras, entregan seguridad operativa con un aspecto estético superior.",
-      image: "/images/solderio-planta-solar-residencial-osorno.png",
+        "Revisamos tu boleta de luz actual y conversamos sobre tus metas de ahorro y respaldo ante cortes. Sin compromisos ni tecnicismos.",
+      image: "/images/planta-solar-hogar-residencial-solderio.jpeg",
     },
     {
-      title: "Más energía",
+      step: "02 • Prefactibilidad",
+      title: "Estudio solar de tu techo",
       description:
-        "Con 2x más de potencia que paneles solares tradicionales, nuestros sistemas están diseñados para generar más energía en climas de alta nubosidad.",
+        "Analizamos la orientación y el recurso solar de tu casa para entregarte una propuesta técnica y económica con tu ahorro proyectado.",
+      image: "/images/ingenieria-solar-3d-solderio.jpg",
+    },
+    {
+      step: "03 • Pagos y Financiamiento",
+      title: "Opciones de pago a tu medida",
+      description:
+        "Elige pagar al contado, en cuotas o mediante financiamiento bancario verde. Tu ahorro mensual en la cuenta de luz ayuda a pagar el proyecto.",
       image: "/images/solarcell-solderio.png",
     },
     {
-      title: "Excelencia técnica",
+      step: "04 • Diseño de Ingeniería",
+      title: "Planos y selección de equipos",
       description:
-        "Diseño eficiente, con altos estándares de seguridad y calidad en las instalaciones. Ingenieros y técnicos eléctricos certificados por la Superintendencia de Electricidad y Combustibles (SEC).",
+        "Diseñamos la configuración óptima para tu tejado, garantizando máxima captación de energía, estética cuidada y cero filtraciones.",
+      image: "/images/ingenieria-sobre-plantas-solares-techo-solderio.jpeg",
+    },
+    {
+      step: "05 • Instalación en Terreno",
+      title: "Montaje limpio y profesional",
+      description:
+        "Cuadrillas eléctricas autorizadas instalan los paneles, inversores y protecciones en 1 a 3 días con el menor impacto en tu rutina.",
       image: "/images/solderio-ingeniero-electrico.jpg",
     },
     {
-      title: "Puesta en marcha",
+      step: "06 • Certificación & Net Billing",
+      title: "Trámites oficiales y conexión",
       description:
-        "Gestionamos la certificación y conexión para que tu planta funcione correctamente y pueda inyectar los excedentes a la red.",
+        "Tramitamos toda la documentación ante la SEC y tu distribuidora eléctrica para que tus excedentes de energía se descuenten de tu boleta.",
       image: "/images/puesta-en-marcha-planta-solar-residencial.jpeg",
     },
     {
-      title: "Operación y Post-venta",
+      step: "07 • Operación y Mantenimiento",
+      title: "Monitoreo en app y soporte",
       description:
-        "Operamos, mantenemos y monitoreamos las instalaciones, continuidad del suministro eléctrico.",
-      image: "/images/ingenieria-sobre-plantas-solares-techo-solderio.jpeg",
+        "Sigues la generación en tiempo real desde tu teléfono, mientras nosotros cuidamos y mantenemos tu planta para que rinda por más de 25 años.",
+      image: "/images/solderio-app-plantas-solares-residenciales.jpeg",
     },
   ];
 
@@ -83,13 +102,13 @@ export function Attributes() {
             className="max-w-3xl mb-16"
           >
             <span className="text-xs md:text-sm font-medium uppercase tracking-widest text-[#FF8300] mb-3 md:mb-4 block">
-              Rendimiento Climático
+              Paso a Paso
             </span>
             <h2 className="text-3xl md:text-5xl font-light text-brand-fg mb-6 tracking-tight">
-              Diseñadas para el sur.
+              El camino a tu proyecto solar
             </h2>
             <p className="text-brand-muted text-base md:text-lg leading-relaxed font-light">
-              Una versión moderna y adaptada para el clima del sur. Con nuestro sistema de montaje, instalamos en diferentes tipos de techo. Respaldados por 25 años de garantía en paneles, nuestras plantas son duraderas y resistentes a la intemperie.
+              Un proceso transparente y sin fricción. Nos encargamos de cada etapa, desde la primera evaluación de tu boleta hasta el monitoreo y mantenimiento continuo de tu planta.
             </p>
           </motion.div>
 
@@ -127,34 +146,36 @@ export function Attributes() {
               className="flex gap-6 overflow-x-auto scrollbar-none scroll-smooth pb-6 -mr-3 md:-mr-5 lg:-mr-[calc((100vw-1400px)/2+2rem)] pr-12 md:pr-24"
               style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
             >
-              {attributes.map((attr, index) => (
+              {steps.map((item, index) => (
                 <motion.div
                   key={index}
                   whileHover={{ y: -6 }}
                   transition={{ duration: 0.3 }}
-                  className="flex-none w-[320px] sm:w-[400px] md:w-[460px] lg:w-[480px] flex flex-col group cursor-pointer"
+                  className="flex-none w-[320px] sm:w-[380px] md:w-[420px] lg:w-[440px] flex flex-col group cursor-pointer"
                 >
-                  {/* Image Card (8px rounded border) */}
-                  <div className="relative w-full aspect-square mb-6 rounded-[20px] overflow-hidden border border-black/5 shadow-md">
+                  {/* Image Card with step indicator */}
+                  <div className="relative w-full aspect-square mb-5 rounded-[20px] overflow-hidden border border-black/5 shadow-md bg-black/5">
                     <Image
-                      src={attr.image}
-                      alt={attr.title}
+                      src={item.image}
+                      alt={item.title}
                       fill
-                      quality={100}
-                      sizes="(max-width: 768px) 100vw, 800px"
+                      sizes="(max-width: 768px) 100vw, 600px"
                       className="object-cover object-center group-hover:scale-105 transition-transform duration-700"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                    <div className="absolute top-4 left-4 z-10 bg-[#1F1F1F]/80 backdrop-blur-md border border-white/20 px-3 py-1 rounded-full text-white text-[11px] font-medium tracking-wide">
+                      {item.step}
+                    </div>
                   </div>
 
                   {/* Card Title */}
-                  <h3 className="text-[24px] md:text-[30px] font-normal text-brand-fg mb-2 leading-tight">
-                    {attr.title}
+                  <h3 className="text-[20px] md:text-[24px] font-normal text-brand-fg mb-2 leading-tight">
+                    {item.title}
                   </h3>
 
                   {/* Description */}
-                  <p className="text-[#6B7280] text-base leading-relaxed font-light">
-                    {attr.description}
+                  <p className="text-[#6B7280] text-sm md:text-base leading-relaxed font-light">
+                    {item.description}
                   </p>
                 </motion.div>
               ))}

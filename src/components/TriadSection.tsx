@@ -61,7 +61,7 @@ export function TriadSection() {
         "Convertimos tu planta solar en un activo digital inteligente. Nuestra plataforma Energy-as-a-Service monitorea generación, consumo e inyección en tiempo real, detectando suciedad o anomalías para desplegar mantenimiento proactivo.",
       bullets: [
         "App móvil y dashboard web con métricas de ahorro en pesos ($ CLP).",
-        "Detección predictiva de micro-fallas de string y sombreado estacional.",
+        "Detección predictiva de fallas a nivel módulo.",
         "Operación, mantenimiento (O&M) y soporte técnico continuo 24/7.",
       ],
       image: "/images/solderio-app-plantas-solares-residenciales.jpeg",

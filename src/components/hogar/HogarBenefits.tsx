@@ -65,13 +65,13 @@ export function HogarBenefits() {
             className="max-w-3xl mb-14 md:mb-16"
           >
             <span className="text-xs font-light uppercase tracking-widest text-[#FF8300] block mb-3">
-              Eficiencia & Rentabilidad
+              Rentabilidad
             </span>
             <h2 className="text-3xl md:text-5xl font-light text-[#1F1F1F] mb-4 tracking-tight">
               Baja tu costo eléctrico.
             </h2>
             <p className="text-brand-muted text-base md:text-lg leading-relaxed font-light">
-              Genera tu propia energía, almacena tus excedentes y protege la economía de tu hogar con la máxima rentabilidad y respaldo técnico en el sur de Chile.
+              Genera tu propia energía limpia, almacena tus excedentes y protege la economía de tu hogar con la máxima rentabilidad y respaldo técnico.
             </p>
           </motion.div>
 

@@ -371,58 +371,6 @@ export function SegmentedSolutions() {
               </motion.div>
             )}
           </AnimatePresence>
-
-          {/* Bottom CTA Banner with Glow Border */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="mt-16 md:mt-24 lg:mt-28 p-8 md:p-10 rounded-[24px] bg-gradient-to-r from-[#1F1F1F] to-[#2B2B2B] text-white flex flex-col sm:flex-row items-center justify-between gap-6 shadow-2xl border border-white/10 relative overflow-hidden"
-          >
-            {/* Subtle Orange Glow Ambient */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-[#FF8300]/15 rounded-full blur-3xl pointer-events-none" />
-
-            {/* SoldeRío Official Watermark Icon over orange glow, behind button, cut at the bottom-right corner with 10% opacity */}
-            <div className="absolute -bottom-16 -right-16 md:-bottom-24 md:-right-24 pointer-events-none z-0 opacity-10 flex items-center justify-center select-none">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/icons/icon-solderio.svg"
-                alt=""
-                aria-hidden="true"
-                className="w-[280px] sm:w-[340px] md:w-[440px] h-auto object-contain pointer-events-none"
-              />
-            </div>
-
-            <div className="relative z-10">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={segment}
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -6 }}
-                  transition={{ duration: 0.25 }}
-                >
-                  <h4 className="text-xl md:text-2xl font-light mb-1.5">
-                    ¿Listo para dimensionar tu proyecto {segment === "residential" ? "residencial" : "empresarial"}?
-                  </h4>
-                  <p className="text-white/70 text-base font-light">
-                    {segment === "residential"
-                      ? "Nuestros ingenieros calculan tu pre-evaluación solar en menos de 24 horas."
-                      : "Modelamos la reducción de tu OPEX energético y factibilidad PPA sin inversión inicial."}
-                  </p>
-                </motion.div>
-              </AnimatePresence>
-            </div>
-            <button
-              type="button"
-              onClick={() => openModal(segment === "residential" ? "gratuita" : "ingenieria")}
-              className="group relative z-10 whitespace-nowrap px-8 py-3.5 rounded-full bg-white text-black font-light text-xs md:text-sm hover:bg-[#FF8300] hover:text-white transition-all duration-300 shadow-lg hover:shadow-[0_0_30px_rgba(255,131,0,0.4)] cursor-pointer flex items-center justify-center gap-2"
-            >
-              <span>{segment === "residential" ? "Solicitar Evaluación Gratuita" : "Solicitar Evaluación Comercial"}</span>
-              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-            </button>
-          </motion.div>
         </div>
       </div>
     </section>

@@ -13,13 +13,15 @@ export function HogarResilienceImage() {
         transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
         className="w-full px-3 md:px-5 box-border"
       >
-        <div className="relative w-full h-[55vh] min-h-[420px] md:h-[75vh] rounded-[24px] md:rounded-[32px] overflow-hidden shadow-2xl border border-black/10 group">
+        <div className="relative w-full h-[40vh] min-h-[320px] md:h-[54vh] max-h-[600px] rounded-[24px] md:rounded-[32px] overflow-hidden shadow-2xl border border-black/10 group">
           <Image
             src="/images/cortes-electricos-solderio.png"
             alt="SoldeRío Resiliencia Eléctrica en el Sur"
             fill
             priority
-            sizes="(max-width: 768px) 100vw, 1400px"
+            unoptimized
+            quality={100}
+            sizes="(max-width: 1400px) 100vw, 1400px"
             className="object-cover object-center group-hover:scale-105 transition-transform duration-1000"
           />
         </div>

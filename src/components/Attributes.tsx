@@ -45,7 +45,7 @@ export function Attributes() {
       title: "Cuéntanos sobre tu consumo",
       description:
         "Revisamos tu boleta de luz actual y conversamos sobre tus metas de ahorro y respaldo ante cortes. Sin compromisos ni tecnicismos.",
-      image: "/images/planta-solar-hogar-residencial-solderio.jpeg",
+      image: "/images/solderio-planta-solar-residencial-consulta.jpeg",
     },
     {
       step: "02 • Prefactibilidad",

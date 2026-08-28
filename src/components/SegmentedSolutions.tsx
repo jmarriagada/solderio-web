@@ -406,7 +406,7 @@ export function SegmentedSolutions() {
                   <h4 className="text-xl md:text-2xl font-light mb-1.5">
                     ¿Listo para dimensionar tu proyecto {segment === "residential" ? "residencial" : "empresarial"}?
                   </h4>
-                  <p className="text-white/70 text-sm font-light">
+                  <p className="text-white/70 text-base font-light">
                     {segment === "residential"
                       ? "Nuestros ingenieros calculan tu pre-evaluación solar en menos de 24 horas."
                       : "Modelamos la reducción de tu OPEX energético y factibilidad PPA sin inversión inicial."}

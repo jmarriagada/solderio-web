@@ -113,14 +113,14 @@ export function Tier1Showcase() {
                 {item.specs.map((spec, sIdx) => {
                   const Icon = spec.icon;
                   return (
-                    <div key={sIdx} className="text-center flex flex-col items-center justify-between">
-                      <div className="w-7 h-7 mx-auto mb-1.5 rounded-lg bg-black/5 text-[#1F1F1F] flex items-center justify-center transition-colors group-hover:bg-[#FF8300]/15 group-hover:text-[#FF8300]">
+                    <div key={sIdx} className="text-center flex flex-col items-center justify-start gap-1">
+                      <div className="w-7 h-7 mx-auto rounded-lg bg-black/5 text-[#1F1F1F] flex items-center justify-center transition-colors group-hover:bg-[#FF8300]/15 group-hover:text-[#FF8300]">
                         <Icon className="w-3.5 h-3.5" />
                       </div>
-                      <div className="text-[11px] text-[#6B7280] font-light leading-tight mb-1 min-h-[26px] flex items-center justify-center">
+                      <div className="text-[11px] text-[#6B7280] font-light leading-tight">
                         {spec.label}
                       </div>
-                      <div className="text-[12px] font-medium text-brand-fg leading-tight min-h-[24px] flex items-center justify-center">
+                      <div className="text-[12px] font-medium text-brand-fg leading-tight">
                         {spec.value}
                       </div>
                     </div>

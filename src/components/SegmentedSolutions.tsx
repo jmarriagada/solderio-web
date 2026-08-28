@@ -43,6 +43,7 @@ export function SegmentedSolutions() {
                     ? "bg-[#1F1F1F] text-white shadow-lg"
                     : "text-[#6B7280] hover:text-[#1F1F1F]"
                 }`}
+                style={segment === "residential" ? { backgroundColor: "#1F1F1F" } : undefined}
               >
                 <Home className="w-4 h-4 stroke-[1.5]" />
                 <span>Residencial & Parcelas</span>
@@ -56,6 +57,7 @@ export function SegmentedSolutions() {
                     ? "bg-[#1F1F1F] text-white shadow-lg"
                     : "text-[#6B7280] hover:text-[#1F1F1F]"
                 }`}
+                style={segment === "commercial" ? { backgroundColor: "#1F1F1F" } : undefined}
               >
                 <Building2 className="w-4 h-4 stroke-[1.5]" />
                 <span>Comercial e Industrial</span>

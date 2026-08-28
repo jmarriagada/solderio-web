@@ -8,7 +8,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "",
     "/hogar",
     "/empresas",
-    "/carga-ev",
     "/cotizacion",
     "/acerca-de",
     "/garantia",

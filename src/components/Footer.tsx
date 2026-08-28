@@ -33,12 +33,6 @@ export function Footer() {
             >
               Comercial
             </Link>
-            <Link 
-              href="/carga-ev" 
-              className={`hover:text-[#FF8300] transition-colors uppercase ${pathname === "/carga-ev" ? "text-[#FF8300]" : ""}`}
-            >
-              Carga EV
-            </Link>
           </div>
 
           {/* Column 2: Empresa & Recursos */}

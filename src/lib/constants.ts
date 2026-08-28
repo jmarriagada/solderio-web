@@ -30,7 +30,6 @@ export const BRAND = {
 export const NAV_LINKS = [
   { label: "Hogar", href: "/hogar" },
   { label: "Empresas", href: "/empresas" },
-  { label: "Carga EV", href: "/carga-ev" },
   { label: "Descubre", href: "#descubre" },
 ];
 
@@ -49,7 +48,7 @@ export const DESCUBRE_MENU = {
     links: [
       { label: "Porqué Solar", href: "/porque-solar" },
       { label: "O&M", href: "/empresas" },
-      { label: "Tecnología", href: "/carga-ev" },
+      { label: "Tecnología", href: "/porque-solar" },
       { label: "Nuestra garantía", href: "/garantia" },
     ],
   },

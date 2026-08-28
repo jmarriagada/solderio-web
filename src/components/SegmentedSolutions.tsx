@@ -120,7 +120,7 @@ export function SegmentedSolutions() {
                         className="overflow-hidden"
                       >
                         <p className="text-brand-muted text-sm md:text-base leading-relaxed font-light mt-3">
-                          En el sur los temporales y cortes de red son habituales. Nuestros sistemas híbridos con baterías se activan de forma imperceptible, manteniendo energizada tu casa sin interrupciones.
+                          En el sur, los cortes de luz son habituales. Nuestros sistemas híbridos con baterías se activan de forma imperceptible, manteniendo energizado sin interrupciones.
                         </p>
                       </motion.div>
                     )}

@@ -52,7 +52,7 @@ export function HogarAttributes() {
       title: "Estudio solar de tu techo",
       description:
         "Analizamos la orientación y el recurso solar de tu casa para entregarte una propuesta técnica y económica con tu ahorro proyectado.",
-      image: "/images/ingenieria-solar-3d-solderio.jpg",
+      image: "/images/solar-visitor-solderio.jpeg",
     },
     {
       step: "03 • Pagos y Financiamiento",

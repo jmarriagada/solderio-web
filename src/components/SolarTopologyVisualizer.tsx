@@ -386,10 +386,10 @@ export function SolarTopologyVisualizer({
             </span>
 
             <h2 className="text-3xl md:text-5xl font-light text-[#1F1F1F] mb-4 tracking-tight">
-              Tipos de planta y flujo de energía
+              Conoce las plantas solares
             </h2>
             <p className="text-[#6B7280] text-sm md:text-base leading-relaxed font-light max-w-3xl mx-auto">
-              Simula el comportamiento de una planta fotovoltaica a lo largo del día. Selecciona el tipo de planta y ajusta la hora para ver cómo interactúan los equipos.
+              Simula el comportamiento de una planta residencial a lo largo del día. Selecciona el tipo de planta y ajusta la hora para ver cómo interactúan los equipos.
             </p>
           </motion.div>
         </div>

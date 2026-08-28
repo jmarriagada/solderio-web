@@ -135,7 +135,7 @@ export function SegmentedSolutions() {
                         className="overflow-hidden"
                       >
                         <p className="text-brand-muted text-sm md:text-base leading-relaxed font-light mt-3">
-                          Inyecta tu energía sobrante a la red bajo la Ley Net Billing. Tramitamos los certificados para que tus excedentes se abonen directamente en tu boleta mensual.
+                          Generas energía, ahorras. Inyecta los excedentes a la red, abona directo a tu cuenta y acelera la recuperacion de la inversión.
                         </p>
                       </motion.div>
                     )}

@@ -262,7 +262,13 @@ function getFlowBreadcrumbSteps(mode: TopologyKey, hour: number): string[] {
   return ["Generando", "Consumo de casa"];
 }
 
-export function SolarTopologyVisualizer() {
+interface SolarTopologyVisualizerProps {
+  showExplanationDetails?: boolean;
+}
+
+export function SolarTopologyVisualizer({
+  showExplanationDetails = true,
+}: SolarTopologyVisualizerProps = {}) {
   const [activeTab, setActiveTab] = useState<TopologyKey>("hybrid");
   const [selectedHour, setSelectedHour] = useState<number>(13);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
@@ -1013,98 +1019,100 @@ export function SolarTopologyVisualizer() {
       </div>
 
       {/* 4. Technical Summary & Diagnostic Matrix with Dark Footer-like Background (#141414) */}
-      <div className="w-full bg-[#141414] py-14 md:py-20 border-t border-white/10 mt-0">
-        <div className="w-full px-3 md:px-5 box-border">
-          <div className="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-            
-            {/* Left Col: Mode Overview & Narrative (7 cols) */}
-            <div className="lg:col-span-7 bg-[#1F1F1F] p-8 md:p-9 rounded-[24px] border border-white/10 flex flex-col justify-between shadow-xl">
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-xs tracking-wider text-[#FF8300] font-light uppercase flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#FF8300]" />
-                    {currentTopology.badge}
-                  </span>
-                  <span className="text-xs text-white/50 font-light">
-                    Ingeniería SoldeRío
-                  </span>
-                </div>
-
-                <h3 className="text-2xl md:text-3xl font-light text-white mb-3">
-                  {currentTopology.title}
-                </h3>
-                <p className="text-white/70 text-sm md:text-base leading-relaxed font-light mb-6">
-                  {currentTopology.tagline}
-                </p>
-
-                {/* Energy Flow Narrative */}
-                <div className="bg-black/40 p-5 rounded-2xl border border-white/10 mb-6">
-                  <h5 className="text-xs uppercase tracking-wider text-white mb-2 font-light flex items-center gap-1.5">
-                    <Power className="w-3.5 h-3.5 text-[#FF8300]" />
-                    Dinámica de Flujo Energético
-                  </h5>
-                  <p className="text-xs sm:text-sm text-white/70 leading-relaxed font-light">
-                    {currentTopology.flowSummary}
-                  </p>
-                </div>
-
-                {/* Ideal For Box */}
-                <div className="text-xs sm:text-sm text-white font-light flex items-start gap-2.5">
-                  <span className="text-[#FF8300] whitespace-nowrap font-light">Ideal para:</span>
-                  <span className="text-white/70 font-light">{currentTopology.idealFor}</span>
-                </div>
-              </div>
-
-              {/* Bottom Action inside Left Col */}
-              <div className="pt-6 mt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <button
-                  type="button"
-                  onClick={() => openModal()}
-                  className="w-full sm:w-auto px-7 py-3.5 rounded-full bg-[#FF8300] text-white text-xs font-light uppercase tracking-wider hover:bg-[#e07400] transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg hover:shadow-[0_0_25px_rgba(255,131,0,0.5)]"
-                >
-                  <span className="font-light">Solicitar Factibilidad {currentTopology.title}</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-                <span className="text-[11px] text-white/50 font-light">
-                  Pre-evaluación en 24 horas
-                </span>
-              </div>
-            </div>
-
-            {/* Right Col: 4 KPI Cards Matrix (5 cols) */}
-            <div className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
-              {currentTopology.characteristics.map((char, cIdx) => (
-                <div
-                  key={cIdx}
-                  className={`p-5 rounded-2xl border flex flex-col justify-between transition-all ${
-                    char.alert
-                      ? "bg-amber-950/30 border-amber-500/40 text-amber-200"
-                      : "bg-[#1F1F1F] border-white/10 hover:border-[#FF8300]/40"
-                  }`}
-                >
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span className="text-xs text-white/60 font-light">
-                      {char.label}
+      {showExplanationDetails && (
+        <div className="w-full bg-[#141414] py-14 md:py-20 border-t border-white/10 mt-0">
+          <div className="w-full px-3 md:px-5 box-border">
+            <div className="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+              
+              {/* Left Col: Mode Overview & Narrative (7 cols) */}
+              <div className="lg:col-span-7 bg-[#1F1F1F] p-8 md:p-9 rounded-[24px] border border-white/10 flex flex-col justify-between shadow-xl">
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-xs tracking-wider text-[#FF8300] font-light uppercase flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#FF8300]" />
+                      {currentTopology.badge}
                     </span>
-                    {char.alert ? (
-                      <XCircle className="w-4 h-4 text-amber-400" />
-                    ) : (
-                      <CheckCircle2 className="w-4 h-4 text-[#FF8300]" />
-                    )}
+                    <span className="text-xs text-white/50 font-light">
+                      Ingeniería SoldeRío
+                    </span>
                   </div>
-                  <div className="text-base sm:text-lg font-light text-white mb-1">
-                    {char.value}
+
+                  <h3 className="text-2xl md:text-3xl font-light text-white mb-3">
+                    {currentTopology.title}
+                  </h3>
+                  <p className="text-white/70 text-sm md:text-base leading-relaxed font-light mb-6">
+                    {currentTopology.tagline}
+                  </p>
+
+                  {/* Energy Flow Narrative */}
+                  <div className="bg-black/40 p-5 rounded-2xl border border-white/10 mb-6">
+                    <h5 className="text-xs uppercase tracking-wider text-white mb-2 font-light flex items-center gap-1.5">
+                      <Power className="w-3.5 h-3.5 text-[#FF8300]" />
+                      Dinámica de Flujo Energético
+                    </h5>
+                    <p className="text-xs sm:text-sm text-white/70 leading-relaxed font-light">
+                      {currentTopology.flowSummary}
+                    </p>
                   </div>
-                  <div className="text-[11px] text-white/50 font-light">
-                    {char.note}
+
+                  {/* Ideal For Box */}
+                  <div className="text-xs sm:text-sm text-white font-light flex items-start gap-2.5">
+                    <span className="text-[#FF8300] whitespace-nowrap font-light">Ideal para:</span>
+                    <span className="text-white/70 font-light">{currentTopology.idealFor}</span>
                   </div>
                 </div>
-              ))}
-            </div>
 
+                {/* Bottom Action inside Left Col */}
+                <div className="pt-6 mt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+                  <button
+                    type="button"
+                    onClick={() => openModal()}
+                    className="w-full sm:w-auto px-7 py-3.5 rounded-full bg-[#FF8300] text-white text-xs font-light uppercase tracking-wider hover:bg-[#e07400] transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg hover:shadow-[0_0_25px_rgba(255,131,0,0.5)]"
+                  >
+                    <span className="font-light">Solicitar Factibilidad {currentTopology.title}</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                  <span className="text-[11px] text-white/50 font-light">
+                    Pre-evaluación en 24 horas
+                  </span>
+                </div>
+              </div>
+
+              {/* Right Col: 4 KPI Cards Matrix (5 cols) */}
+              <div className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
+                {currentTopology.characteristics.map((char, cIdx) => (
+                  <div
+                    key={cIdx}
+                    className={`p-5 rounded-2xl border flex flex-col justify-between transition-all ${
+                      char.alert
+                        ? "bg-amber-950/30 border-amber-500/40 text-amber-200"
+                        : "bg-[#1F1F1F] border-white/10 hover:border-[#FF8300]/40"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-xs text-white/60 font-light">
+                        {char.label}
+                      </span>
+                      {char.alert ? (
+                        <XCircle className="w-4 h-4 text-amber-400" />
+                      ) : (
+                        <CheckCircle2 className="w-4 h-4 text-[#FF8300]" />
+                      )}
+                    </div>
+                    <div className="text-base sm:text-lg font-light text-white mb-1">
+                      {char.value}
+                    </div>
+                    <div className="text-[11px] text-white/50 font-light">
+                      {char.note}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
     </section>
   );

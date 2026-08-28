@@ -29,7 +29,7 @@ export default function Home() {
       <TriadSection />
 
       {/* 5. Simulador Interactivo de Topologías Solares (Flujo de energía y tipo de planta) */}
-      <SolarTopologyVisualizer />
+      <SolarTopologyVisualizer showExplanationDetails={false} />
 
       {/* 6. Atributos de Ingeniería y Durabilidad en el Sur (Rendimiento Climático / Diseñadas para el sur) */}
       <Attributes />

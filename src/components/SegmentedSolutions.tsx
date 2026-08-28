@@ -214,7 +214,7 @@ export function SegmentedSolutions() {
                         className="overflow-hidden"
                       >
                         <p className="text-brand-muted text-sm md:text-base leading-relaxed font-light mt-3">
-                          Monitorea desde cualquier lugar del mundo tu generación en tiempo real, tu nivel de autoconsumo y el estado de tus baterías. Alertas ante cualquier anomalía y envío de reportes mensuales.
+                          Monitorea desde cualquier lugar del mundo, tu generación, nivel de autoconsumo y el estado de baterías. Alertas ante cualquier anomalía y envío de reportes mensuales.
                         </p>
                       </motion.div>
                     )}

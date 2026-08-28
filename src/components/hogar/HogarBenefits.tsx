@@ -64,7 +64,7 @@ export function HogarBenefits() {
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
             className="max-w-3xl mb-14 md:mb-16"
           >
-            <span className="text-xs font-light uppercase tracking-widest text-[#FF8300] block mb-3">
+            <span className="text-xs md:text-sm font-medium uppercase tracking-widest text-[#FF8300] mb-3 md:mb-4 block">
               Rentabilidad
             </span>
             <h2 className="text-3xl md:text-5xl font-light text-[#1F1F1F] mb-4 tracking-tight">

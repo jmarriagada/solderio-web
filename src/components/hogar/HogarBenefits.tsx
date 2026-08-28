@@ -14,8 +14,8 @@ export function HogarBenefits() {
       heroIcon: TrendingDown,
       accentColor: "#FF8300",
       indicators: [
-        "Blindaje total ante las alzas continuas de tarifas eléctricas",
-        "Venta e inyección de excedentes a la red bajo Ley Net Billing",
+        "Blindaje total ante las alzas de tarifa eléctrica",
+        "Venta de excedentes a la red por Net Billing",
         "Retorno de inversión proyectado entre 4 a 7 años",
       ],
       footerBadge: "Amortización de alta rentabilidad",
@@ -29,9 +29,9 @@ export function HogarBenefits() {
       heroIcon: Sun,
       accentColor: "#FF8300",
       indicators: [
-        "Módulos N-Type optimizados para capturar radiación difusa y nubosidad",
+        "Paneles optimizados para capturar radiación difusa",
         "Baterías de Litio para suministro ininterrumpido",
-        "Respaldo instantáneo (<10ms) ante cortes",
+        "Respaldo instantáneo ante cortes",
       ],
       footerBadge: "Continuidad operativa 24/7",
     },

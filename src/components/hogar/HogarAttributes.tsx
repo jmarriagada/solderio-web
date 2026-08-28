@@ -73,7 +73,7 @@ export function HogarAttributes() {
       title: "Montaje limpio y profesional",
       description:
         "Cuadrillas eléctricas autorizadas instalan los paneles, inversores y protecciones en 1 a 3 días con el menor impacto en tu rutina.",
-      image: "/images/solderio-ingeniero-electrico.jpg",
+      image: "/images/Solderio_instalacion-solar-en-techo.jpeg",
     },
     {
       step: "06 • Certificación & Net Billing",

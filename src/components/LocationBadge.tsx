@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MapPin, Sparkles, ShieldCheck, Sun } from "lucide-react";
+import { ShieldCheck, Sun } from "lucide-react";
 
 interface SolarTip {
   title: string;
@@ -10,79 +10,143 @@ interface SolarTip {
   stat: string;
 }
 
-const SOLAR_TIPS_BY_COMMUNE: Record<string, SolarTip> = {
-  osorno: {
-    title: "Captación con Nubosidad Altocúmulos",
-    description:
-      "Osorno registra 1.180 kWh/m² al año. Los módulos N-Type TOPCon bifaciales capturan hasta un 18% adicional de radiación difusa reflejada por prados y nubosidad baja.",
-    stat: "+18% Rendimiento Difuso",
-  },
-  valdivia: {
-    title: "Resiliencia Térmica & Autolimpieza Lluvia",
-    description:
-      "Los 2.000 mm de lluvia anuales remueven automáticamente el polvo. El coeficiente térmico de -0.30%/°C maximiza la potencia en días fríos e iluminados.",
-    stat: "99.2% Disponibilidad Anual",
-  },
-  "puerto varas": {
-    title: "Efecto Albedo Lago Llanquihue",
-    description:
-      "La orientación Norte a 32° aprovecha el reflejo especular sobre el lago, incrementando la generación en las horas de la mañana y atardecer.",
-    stat: "+15% Albedo Lacustre",
-  },
-  llanquihue: {
-    title: "Efecto Albedo Lago Llanquihue",
-    description:
-      "La orientación Norte a 32° aprovecha el reflejo especular sobre el lago, incrementando la generación en las horas de la mañana y atardecer.",
-    stat: "+15% Albedo Lacustre",
-  },
-  frutillar: {
-    title: "Microclima Lacustre & Vientos Claros",
-    description:
-      "Bajas temperaturas de operación evitan el sobrecalentamiento del silicio, entregando hasta un 8% más de eficiencia pico que en regiones del norte.",
-    stat: "Eficiencia Peak 98.6%",
-  },
-  "puerto montt": {
-    title: "Respaldo BESS ante Cortes por Temporales",
-    description:
-      "Sistemas híbridos con baterías LiFePO4 activan el suministro de respaldo (UPS) en menos de 10ms durante ráfagas de viento y cortes de la red pública.",
-    stat: "Conmutación <10ms",
-  },
-  temuco: {
-    title: "Inyección Estival & Balance Net Billing",
-    description:
-      "Con más de 1.350 kWh/m²/año de radiación, la inyección de excedentes en verano genera un saldo a favor en la boleta que compensa el consumo invernal.",
-    stat: "Ahorro Anual de hasta 90%",
-  },
-  castro: {
-    title: "Protección Marina & Resistencia a Vientos",
-    description:
-      "Paneles con doble vidrio Templado y estructuras anodizadas con certificación anti-corrosión salina SEC para resistir temporales insulares.",
-    stat: "Resistencia Viento 2.400 Pa",
-  },
-  ancud: {
-    title: "Protección Marina & Resistencia a Vientos",
-    description:
-      "Paneles con doble vidrio Templado y estructuras anodizadas con certificación anti-corrosión salina SEC para resistir temporales insulares.",
-    stat: "Resistencia Viento 2.400 Pa",
-  },
-  "la unión": {
-    title: "Alta Eficiencia en Valles Agrícolas",
-    description:
-      "Radiación directa óptima en los valles del Ranco para autoconsumo continuo y desacople de alzas tarifarias de las distribuidoras.",
-    stat: "Retorno Estimado 5-6 Años",
-  },
-  "río bueno": {
-    title: "Alta Eficiencia en Valles Agrícolas",
-    description:
-      "Radiación directa óptima en los valles del Ranco para autoconsumo continuo y desacople de alzas tarifarias de las distribuidoras.",
-    stat: "Retorno Estimado 5-6 Años",
-  },
-};
+interface SolarTipEntry {
+  keys: string[];
+  displayName: string;
+  tip: SolarTip;
+}
 
-const DEFAULT_TIP: SolarTip = {
-  title: "Potencial Solar en la Zona Sur",
+// Database of solar tips matched by commune, city, or region
+const SOLAR_TIPS_DATABASE: SolarTipEntry[] = [
+  // --- COMUNAS Y CIUDADES ---
+  {
+    keys: ["osorno"],
+    displayName: "Osorno",
+    tip: {
+      title: "Captación con Nubosidad Altocúmulos",
+      description:
+        "Osorno registra 1.180 kWh/m² al año. Los módulos N-Type TOPCon bifaciales capturan hasta un 18% adicional de radiación difusa reflejada por prados y nubosidad baja.",
+      stat: "+18% Rendimiento Difuso",
+    },
+  },
+  {
+    keys: ["valdivia"],
+    displayName: "Valdivia",
+    tip: {
+      title: "Resiliencia Térmica & Autolimpieza Lluvia",
+      description:
+        "Los 2.000 mm de lluvia anuales remueven automáticamente el polvo. El coeficiente térmico de -0.30%/°C maximiza la potencia en días fríos e iluminados.",
+      stat: "99.2% Disponibilidad Anual",
+    },
+  },
+  {
+    keys: ["puerto varas", "llanquihue", "frutillar"],
+    displayName: "Puerto Varas / Cuenca del Lago",
+    tip: {
+      title: "Efecto Albedo Lago Llanquihue",
+      description:
+        "La orientación Norte a 32° aprovecha el reflejo especular sobre el lago, incrementando la generación en las horas de la mañana y atardecer.",
+      stat: "+15% Albedo Lacustre",
+    },
+  },
+  {
+    keys: ["puerto montt"],
+    displayName: "Puerto Montt",
+    tip: {
+      title: "Respaldo BESS ante Cortes por Temporales",
+      description:
+        "Sistemas híbridos con baterías LiFePO4 activan el suministro de respaldo (UPS) en menos de 10ms durante ráfagas de viento y cortes de la red pública.",
+      stat: "Conmutación <10ms",
+    },
+  },
+  {
+    keys: ["temuco", "padre las casas"],
+    displayName: "Temuco",
+    tip: {
+      title: "Inyección Estival & Balance Net Billing",
+      description:
+        "Con más de 1.350 kWh/m²/año de radiación, la inyección de excedentes en verano genera un saldo a favor en la boleta que compensa el consumo invernal.",
+      stat: "Ahorro Anual de hasta 90%",
+    },
+  },
+  {
+    keys: ["castro", "ancud", "chiloé", "chiloe"],
+    displayName: "Chiloé",
+    tip: {
+      title: "Protección Marina & Resistencia a Vientos",
+      description:
+        "Paneles con doble vidrio Templado y estructuras anodizadas con certificación anti-corrosión salina SEC para resistir temporales insulares.",
+      stat: "Resistencia Viento 2.400 Pa",
+    },
+  },
+  {
+    keys: ["la unión", "la union", "río bueno", "rio bueno", "ranco"],
+    displayName: "Cuenca del Ranco",
+    tip: {
+      title: "Alta Eficiencia en Valles Agrícolas",
+      description:
+        "Radiación directa óptima en los valles del Ranco para autoconsumo continuo y desacople de alzas tarifarias de las distribuidoras.",
+      stat: "Retorno Estimado 5-6 Años",
+    },
+  },
+
+  // --- REGIONES DEL SUR Y CHILE ---
+  {
+    keys: ["los lagos", "region de los lagos", "región de los lagos"],
+    displayName: "Región de Los Lagos",
+    tip: {
+      title: "Generación en Clima Templado Austral",
+      description:
+        "Las bajas temperaturas térmicas de Los Lagos mejoran la conductividad de las celdas solares, entregando hasta 8% mayor potencia instantánea en días despejados.",
+      stat: "Eficiencia N-Type 22.5%",
+    },
+  },
+  {
+    keys: ["los ríos", "los rios", "region de los ríos", "región de los ríos"],
+    displayName: "Región de Los Ríos",
+    tip: {
+      title: "Eficiencia Fotovoltaica con Nubosidad",
+      description:
+        "En la Región de Los Ríos, la tecnología bifacial aprovecha la alta proporción de luz difusa ambiental incluso en días nublados o lluviosos.",
+      stat: "+15% Captación Difusa",
+    },
+  },
+  {
+    keys: ["araucanía", "araucania", "la araucanía", "la araucania"],
+    displayName: "Región de La Araucanía",
+    tip: {
+      title: "Alto Potencial Solar Residencial",
+      description:
+        "La Araucanía posee una radiación estival promedio de 6.2 kWh/m²/día, ideal para generar excedentes y acumular créditos bajo la Ley Net Billing 21.118.",
+      stat: "Ley 21.118 Net Billing",
+    },
+  },
+  {
+    keys: ["biobío", "biobio", "ñuble", "nuble"],
+    displayName: "Zona Centro-Sur",
+    tip: {
+      title: "Excelente Irradiación Solar Anual",
+      description:
+        "La zona centro-sur cuenta con un factor de planta superior al 19%, permitiendo amortizar la inversión solar en plazos acelerados.",
+      stat: "Payback 4 a 6 Años",
+    },
+  },
+  {
+    keys: ["santiago", "metropolitana", "region metropolitana", "región metropolitana"],
+    displayName: "Región Metropolitana",
+    tip: {
+      title: "Independencia Tarifaria & Autoconsumo",
+      description:
+        "Protege tu presupuesto familiar ante las constantes alzas tarifarias con una planta conectada a red y monitoreo 24/7 en tu smartphone.",
+      stat: "Hasta -90% en Boleta",
+    },
+  },
+];
+
+const GENERAL_CHILE_TIP: SolarTip = {
+  title: "Potencial Solar Regional",
   description:
-    "Las temperaturas templadas-frías del sur evitan pérdidas térmicas en los paneles solares, permitiendo generar energía limpia con alta eficiencia todo el año.",
+    "Las temperaturas templadas-frías optimizan la generación solar fotovoltaica, permitiendo reducir drásticamente el costo de tu boleta eléctrica.",
   stat: "Certificación Oficial SEC",
 };
 
@@ -92,17 +156,12 @@ interface LocationBadgeProps {
 }
 
 export function LocationBadge({ locationText, className = "" }: LocationBadgeProps) {
-  const [userLocation, setUserLocation] = useState<string>(locationText || "Osorno, Los Lagos");
+  const [userLocation, setUserLocation] = useState<string | null>(null);
   const [isHovered, setIsHovered] = useState(false);
   const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    if (locationText) {
-      setUserLocation(locationText);
-      return;
-    }
-
-    // Check cached location in sessionStorage
+    // 1. Check if a location is already cached in sessionStorage for consistency
     try {
       const cached = sessionStorage.getItem("solderio_user_geo");
       if (cached) {
@@ -111,12 +170,22 @@ export function LocationBadge({ locationText, className = "" }: LocationBadgePro
       }
     } catch {}
 
+    // 2. If an explicit location prop was passed, use it
+    if (locationText) {
+      setUserLocation(locationText);
+      try {
+        sessionStorage.setItem("solderio_user_geo", locationText);
+      } catch {}
+      return;
+    }
+
     let isMounted = true;
 
+    // 3. Detect location via IP geocoding
     const detectLocation = async () => {
       try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 2200);
+        const timeoutId = setTimeout(() => controller.abort(), 2500);
 
         const res = await fetch("https://ipwho.is/", {
           signal: controller.signal,
@@ -131,7 +200,8 @@ export function LocationBadge({ locationText, className = "" }: LocationBadgePro
             if (data.region) locParts.push(data.region);
 
             const formatted = locParts.join(", ");
-            if (formatted) {
+            // Only set location if we have at least a region or city
+            if (formatted && (data.region || data.city)) {
               setUserLocation(formatted);
               try {
                 sessionStorage.setItem("solderio_user_geo", formatted);
@@ -141,6 +211,11 @@ export function LocationBadge({ locationText, className = "" }: LocationBadgePro
           }
         }
       } catch {}
+
+      // If location detection fails completely and no region/city could be verified:
+      if (isMounted) {
+        setUserLocation(null);
+      }
     };
 
     detectLocation();
@@ -150,17 +225,21 @@ export function LocationBadge({ locationText, className = "" }: LocationBadgePro
     };
   }, [locationText]);
 
-  // Determine which solar tip applies based on detected location
+  // IF NO LOCATION/REGION CAN BE DETERMINED, DO NOT RENDER THE COMPONENT AT ALL
+  if (!userLocation) {
+    return null;
+  }
+
+  // Find matching solar tip based on location string
   const getSolarTip = (): { tip: SolarTip; communeName: string } => {
     const lowerLoc = userLocation.toLowerCase();
-    for (const [key, tipData] of Object.entries(SOLAR_TIPS_BY_COMMUNE)) {
-      if (lowerLoc.includes(key)) {
-        const capitalizedCity = key.charAt(0).toUpperCase() + key.slice(1);
-        return { tip: tipData, communeName: capitalizedCity };
+    for (const entry of SOLAR_TIPS_DATABASE) {
+      if (entry.keys.some((key) => lowerLoc.includes(key))) {
+        return { tip: entry.tip, communeName: entry.displayName };
       }
     }
-    const cityName = userLocation.split(",")[0] || "Tu Comuna";
-    return { tip: DEFAULT_TIP, communeName: cityName };
+    const cityName = userLocation.split(",")[0] || "Tu Región";
+    return { tip: GENERAL_CHILE_TIP, communeName: cityName };
   };
 
   const { tip, communeName } = getSolarTip();

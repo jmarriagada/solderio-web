@@ -178,7 +178,7 @@ export function HeroHeaderNav({
           <button className="p-1.5 hover:text-[#FF8300] transition-colors rounded-full hover:bg-white/10 cursor-pointer hidden sm:block" title="Usuario">
             <User className="w-4 h-4 stroke-[1.5]" />
           </button>
-          <LocationBadge locationText={userLocation || locationText || undefined} className="hidden sm:inline-block" />
+          <LocationBadge className="hidden sm:inline-block" />
 
           {/* Mobile Burger Button (Visible only on screens < md) */}
           <button
@@ -379,7 +379,7 @@ export function HeroHeaderNav({
               })}
 
               <div className="pt-4 flex flex-col gap-3">
-                <LocationBadge locationText={userLocation || locationText || undefined} className="w-full flex justify-center" />
+                <LocationBadge className="w-full flex justify-center" />
                 <button
                   type="button"
                   onClick={() => {

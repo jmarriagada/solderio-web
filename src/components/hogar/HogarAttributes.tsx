@@ -208,10 +208,10 @@ export function HogarAttributes() {
 
             <div className="relative z-10">
               <h4 className="text-xl md:text-2xl font-light mb-1.5">
-                ¿Listo para dimensionar tu proyecto residencial?
+                ¿Quieres dimensionar tu proyecto solar?
               </h4>
               <p className="text-white/70 text-base font-light">
-                Nuestros ingenieros calculan tu pre-evaluación solar en menos de 24 horas.
+                Realizamos una pre-evaluación en menos de 24 horas.
               </p>
             </div>
             <button

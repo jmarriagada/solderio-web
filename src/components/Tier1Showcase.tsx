@@ -99,7 +99,7 @@ export function Tier1Showcase() {
                 <h3 className="text-xl md:text-2xl font-normal text-brand-fg mb-1.5 leading-snug group-hover:text-black transition-colors min-h-[32px] md:min-h-[36px] flex items-center">
                   {item.model}
                 </h3>
-                <p className="text-xs text-[#FF8300] font-mono mb-4 min-h-[20px] flex items-center">
+                <p className="text-xs text-[#6B7280] font-mono mb-4 min-h-[20px] flex items-center">
                   {item.highlight}
                 </p>
 

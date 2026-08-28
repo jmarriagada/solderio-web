@@ -34,7 +34,7 @@ export function VisitaTecnicaModal() {
     nombre: "",
     telefono: "",
     email: "",
-    comuna: "Puerto Varas",
+    comuna: "Valdivia",
     direccion: "",
     tipoPropiedad: "Parcela",
     montoBoleta: "100.000 - 200.000",
@@ -433,9 +433,16 @@ export function VisitaTecnicaModal() {
                 </div>
 
                 <div>
-                  <label className="text-xs font-light text-white/70 block mb-1.5 flex items-center gap-1.5">
-                    <MapPin className="w-3.5 h-3.5 text-[#FF8300]" />
-                    Comuna en el Sur *
+                  <label className="text-xs font-light text-white/70 mb-1.5 flex items-center justify-between">
+                    <span className="flex items-center gap-1.5">
+                      <MapPin className="w-3.5 h-3.5 text-[#FF8300]" />
+                      Comuna en el Sur *
+                    </span>
+                    {selectedType === "gratuita" && (
+                      <span className="text-[10px] text-[#FF8300] font-mono">
+                        Radio 80km Valdivia / Osorno
+                      </span>
+                    )}
                   </label>
                   <select
                     name="comuna"
@@ -443,21 +450,45 @@ export function VisitaTecnicaModal() {
                     onChange={handleInputChange}
                     className="w-full px-4 py-2.5 rounded-xl border border-white/15 bg-black/40 text-xs text-white focus:outline-none focus:border-[#FF8300] transition-colors"
                   >
-                    <option value="Puerto Varas" className="bg-[#1F1F1F]">Puerto Varas</option>
-                    <option value="Osorno" className="bg-[#1F1F1F]">Osorno</option>
-                    <option value="Valdivia" className="bg-[#1F1F1F]">Valdivia</option>
-                    <option value="Frutillar" className="bg-[#1F1F1F]">Frutillar</option>
-                    <option value="Llanquihue" className="bg-[#1F1F1F]">Llanquihue</option>
-                    <option value="Panguipulli" className="bg-[#1F1F1F]">Panguipulli</option>
-                    <option value="Puerto Montt" className="bg-[#1F1F1F]">Puerto Montt</option>
-                    <option value="La Unión" className="bg-[#1F1F1F]">La Unión</option>
-                    <option value="Río Bueno" className="bg-[#1F1F1F]">Río Bueno</option>
-                    <option value="Villarrica" className="bg-[#1F1F1F]">Villarrica</option>
-                    <option value="Pucón" className="bg-[#1F1F1F]">Pucón</option>
-                    <option value="Temuco" className="bg-[#1F1F1F]">Temuco</option>
-                    <option value="Castro" className="bg-[#1F1F1F]">Castro</option>
-                    <option value="Ancud" className="bg-[#1F1F1F]">Ancud</option>
-                    <option value="Otra Comuna" className="bg-[#1F1F1F]">Otra Comuna del Sur</option>
+                    {(selectedType === "gratuita"
+                      ? [
+                          "Valdivia",
+                          "Osorno",
+                          "La Unión",
+                          "Río Bueno",
+                          "Paillaco",
+                          "Frutillar",
+                          "Llanquihue",
+                          "Purranque",
+                          "Río Negro",
+                          "San Pablo",
+                          "Mariquina",
+                          "Los Lagos",
+                          "Puyehue / Entre Lagos",
+                          "Otra Comuna (Radio 80km)",
+                        ]
+                      : [
+                          "Valdivia",
+                          "Osorno",
+                          "Puerto Varas",
+                          "Frutillar",
+                          "Llanquihue",
+                          "Panguipulli",
+                          "Puerto Montt",
+                          "La Unión",
+                          "Río Bueno",
+                          "Villarrica",
+                          "Pucón",
+                          "Temuco",
+                          "Castro",
+                          "Ancud",
+                          "Otra Comuna del Sur",
+                        ]
+                    ).map((comunaName) => (
+                      <option key={comunaName} value={comunaName} className="bg-[#1F1F1F]">
+                        {comunaName}
+                      </option>
+                    ))}
                   </select>
                 </div>
 

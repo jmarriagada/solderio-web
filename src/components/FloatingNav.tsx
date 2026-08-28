@@ -106,11 +106,6 @@ export function FloatingNav() {
                     }`}
                   >
                     {link.label}
-                    <span
-                      className={`absolute bottom-0 left-0 h-[1.5px] bg-[#FF8300] transition-all ${
-                        isActive ? "w-full" : "w-0 group-hover:w-full"
-                      }`}
-                    />
                   </Link>
                 );
               })}

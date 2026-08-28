@@ -160,12 +160,6 @@ export function HeroHeaderNav({
                 }`}
               >
                 {link.label}
-                {isActive && !isDescubreOpen && (
-                  <motion.span
-                    layoutId="activeNavIndicator"
-                    className="absolute bottom-0 left-0 w-full h-[1.5px] bg-[#FF8300]"
-                  />
-                )}
               </Link>
             );
           })}

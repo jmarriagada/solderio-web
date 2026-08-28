@@ -19,8 +19,8 @@ export function HeaderHeroFrame() {
         {/* Background Image with Black 45% Multiply Overlay */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="/images/solar_chile_1787346094806.png"
-            alt="SoldeRío Planta Solar"
+            src="/images/Family_inside_solar_powered_house1_solderio.jpeg"
+            alt="SoldeRío Planta Solar Hogar"
             fill
             priority
             sizes="100vw"

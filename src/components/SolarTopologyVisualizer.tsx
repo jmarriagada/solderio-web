@@ -389,8 +389,40 @@ export function SolarTopologyVisualizer() {
         </div>
       </div>
 
-      {/* 2. Telemetry Bar (Light Mode Bento Card Style) */}
-      <div className="w-full px-3 md:px-5 box-border mb-10 md:mb-12">
+      {/* Mobile-Only Plant Type Selector (Visible on screens < md) */}
+      <div className="w-full px-4 box-border mb-8 block md:hidden">
+        <div className="max-w-md mx-auto flex items-center gap-1.5 p-1.5 rounded-2xl bg-[#1F1F1F] border border-black/10 shadow-lg">
+          {(["ongrid", "hybrid", "offgrid"] as TopologyKey[]).map((mode) => {
+            const isModeActive = activeTab === mode;
+            const modeLabel = mode === "ongrid" ? "On-Grid" : mode === "hybrid" ? "Híbrida" : "Off-Grid";
+            return (
+              <button
+                key={mode}
+                type="button"
+                onClick={() => {
+                  setActiveTab(mode);
+                  setSelectedNode(null);
+                }}
+                className={`relative flex-1 py-2.5 rounded-xl text-xs font-light transition-all cursor-pointer text-center select-none ${
+                  isModeActive ? "text-white font-medium" : "text-white/60 hover:text-white"
+                }`}
+              >
+                {isModeActive && (
+                  <motion.div
+                    layoutId="activeTabMobilePill"
+                    className="absolute inset-0 bg-[#FF8300] rounded-xl shadow-md -z-10"
+                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                  />
+                )}
+                <span>{modeLabel}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* 2. Telemetry Bar (Desktop Only) */}
+      <div className="w-full px-3 md:px-5 box-border mb-10 md:mb-12 hidden md:block">
         <div className="max-w-[1400px] mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           
           <div className="bg-[#F7F8FA] p-5 rounded-2xl border border-black/5 hover:border-[#FF8300]/40 transition-all flex items-center justify-between shadow-sm hover:shadow-md">
@@ -440,8 +472,8 @@ export function SolarTopologyVisualizer() {
         </div>
       </div>
 
-      {/* 3. FULL-WIDTH ISOMETRIC 3D BLUEPRINT CANVAS WITH TRUE STICKY SCROLLING CONTROLS */}
-      <div className="w-full relative border-b border-white/15 bg-black">
+      {/* 3. FULL-WIDTH ISOMETRIC 3D BLUEPRINT CANVAS WITH TRUE STICKY SCROLLING CONTROLS (Desktop Only) */}
+      <div className="w-full relative border-b border-white/15 bg-black hidden md:block">
         
         {/* Canvas Relative Container */}
         <div className="relative w-full aspect-[16/9] min-h-[540px] sm:min-h-[640px] lg:min-h-[740px]">

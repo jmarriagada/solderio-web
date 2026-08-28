@@ -66,7 +66,7 @@ export function HogarAttributes() {
       title: "Planos y selección de equipos",
       description:
         "Diseñamos la configuración óptima para tu tejado, garantizando máxima captación de energía, estética cuidada y cero filtraciones.",
-      image: "/images/ingenieria-sobre-plantas-solares-techo-solderio.jpeg",
+      image: "/images/ingeniero-diseno-circuito-electrico-autocad.jpeg",
     },
     {
       step: "05 • Instalación en Terreno",

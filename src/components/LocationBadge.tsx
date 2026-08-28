@@ -188,7 +188,7 @@ export function LocationBadge({ locationText, className = "" }: LocationBadgePro
         <span className="group-hover:text-white transition-colors">{userLocation}</span>
       </div>
 
-      {/* Popover / Mini Modal Tooltip on Hover */}
+      {/* Popover / Mini Modal Tooltip on Hover (Desktop Only) */}
       <AnimatePresence>
         {isHovered && (
           <motion.div
@@ -196,18 +196,18 @@ export function LocationBadge({ locationText, className = "" }: LocationBadgePro
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.95 }}
             transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute top-full right-0 sm:right-auto sm:left-1/2 sm:-translate-x-1/2 mt-2 w-72 sm:w-80 bg-[#181818]/95 backdrop-blur-2xl text-white p-4 rounded-2xl border border-white/15 shadow-[0_12px_40px_rgba(0,0,0,0.6)] z-50 pointer-events-auto"
+            className="hidden md:block absolute top-full right-0 mt-2.5 w-80 sm:w-84 bg-[#181818]/98 backdrop-blur-2xl text-white p-4.5 rounded-2xl border border-white/15 shadow-[0_16px_50px_rgba(0,0,0,0.7)] z-50 pointer-events-auto"
           >
             {/* Ambient Arrow Indicator */}
-            <div className="absolute -top-1.5 right-6 sm:left-1/2 sm:-translate-x-1/2 w-3 h-3 bg-[#181818] border-t border-l border-white/15 rotate-45" />
+            <div className="absolute -top-1.5 right-7 w-3 h-3 bg-[#181818] border-t border-l border-white/15 rotate-45" />
 
-            {/* Header with Icon */}
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-[10px] font-mono uppercase tracking-wider text-[#FF8300] font-medium flex items-center gap-1.5">
+            {/* Header with Icon & Stat Badge */}
+            <div className="flex items-center justify-between gap-2 mb-2.5">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-[#FF8300] font-medium flex items-center gap-1.5 flex-shrink-0">
                 <Sun className="w-3.5 h-3.5 text-[#FF8300]" />
                 Tip Solar • {communeName}
               </span>
-              <span className="text-[9px] bg-[#FF8300]/20 text-[#FF8300] px-2 py-0.5 rounded-full font-mono font-medium">
+              <span className="text-[9px] bg-[#FF8300]/20 text-[#FF8300] border border-[#FF8300]/30 px-2 py-0.5 rounded-full font-mono font-medium whitespace-nowrap flex-shrink-0">
                 {tip.stat}
               </span>
             </div>
@@ -218,14 +218,14 @@ export function LocationBadge({ locationText, className = "" }: LocationBadgePro
             </h4>
 
             {/* Tip Description */}
-            <p className="text-white/70 text-xs font-light leading-relaxed mb-3">
+            <p className="text-white/75 text-xs font-light leading-relaxed mb-3">
               {tip.description}
             </p>
 
             {/* Footer Badge */}
-            <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[10px] text-white/50 font-light">
+            <div className="pt-2.5 border-t border-white/10 flex items-center justify-between text-[10px] text-white/50 font-light">
               <span className="flex items-center gap-1">
-                <ShieldCheck className="w-3 h-3 text-emerald-400" />
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
                 Validado técnicamente por SoldeRío
               </span>
             </div>

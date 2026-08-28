@@ -1,14 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Home, Building2, Shield, TrendingUp, Award, Zap, ArrowRight, Plus } from "lucide-react";
+import { Home, Building2, Shield, TrendingUp, Award, Zap } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useVisitaModal } from "@/context/VisitaModalContext";
 
 export function SegmentedSolutions() {
   const [segment, setSegment] = useState<"residential" | "commercial">("residential");
   const [openCards, setOpenCards] = useState<Record<string, boolean>>({});
-  const { openModal } = useVisitaModal();
 
   const toggleCard = (id: string) => {
     setOpenCards((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -30,50 +28,42 @@ export function SegmentedSolutions() {
               <span className="text-xs md:text-sm font-medium uppercase tracking-widest text-[#FF8300] mb-3 md:mb-4 block">
                 Soluciones Segmentadas
               </span>
-              <h2 className="text-3xl md:text-5xl font-light text-[#1F1F1F] tracking-tight">
+              <h2 className="text-3xl md:text-5xl font-light text-brand-fg tracking-tight">
                 A la medida de tu consumo
               </h2>
             </div>
 
-            {/* Switcher Controls with Animated Layout Pill */}
-            <div className="relative inline-flex p-1.5 rounded-full bg-[#F7F8FA] border border-black/10 shadow-inner self-start md:self-auto">
+            {/* Selector de Segmento (Residencial vs Comercial) */}
+            <div className="inline-flex p-1.5 rounded-full bg-[#E5E7EB]/60 backdrop-blur-md border border-black/5 self-start md:self-auto">
               <button
+                type="button"
                 onClick={() => setSegment("residential")}
-                className={`relative z-10 flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-light transition-colors cursor-pointer ${
-                  segment === "residential" ? "text-white" : "text-[#6B7280] hover:text-black"
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-xs md:text-sm font-medium transition-all duration-300 cursor-pointer ${
+                  segment === "residential"
+                    ? "bg-[#1F1F1F] text-white shadow-lg"
+                    : "text-[#6B7280] hover:text-[#1F1F1F]"
                 }`}
               >
-                {segment === "residential" && (
-                  <motion.div
-                    layoutId="activeSegmentPill"
-                    className="absolute inset-0 bg-[#FF8300] rounded-full shadow-md -z-10"
-                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                  />
-                )}
-                <Home className="w-4 h-4" />
+                <Home className="w-4 h-4 stroke-[1.5]" />
                 <span>Residencial & Parcelas</span>
               </button>
 
               <button
+                type="button"
                 onClick={() => setSegment("commercial")}
-                className={`relative z-10 flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-light transition-colors cursor-pointer ${
-                  segment === "commercial" ? "text-white" : "text-[#6B7280] hover:text-black"
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-xs md:text-sm font-medium transition-all duration-300 cursor-pointer ${
+                  segment === "commercial"
+                    ? "bg-[#1F1F1F] text-white shadow-lg"
+                    : "text-[#6B7280] hover:text-[#1F1F1F]"
                 }`}
               >
-                {segment === "commercial" && (
-                  <motion.div
-                    layoutId="activeSegmentPill"
-                    className="absolute inset-0 bg-[#FF8300] rounded-full shadow-md -z-10"
-                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                  />
-                )}
-                <Building2 className="w-4 h-4" />
-                <span>Comercial & Industrial (C&I)</span>
+                <Building2 className="w-4 h-4 stroke-[1.5]" />
+                <span>Comercial e Industrial</span>
               </button>
             </div>
           </motion.div>
 
-          {/* Dynamic Content Grid with Staggered Entrance */}
+          {/* Cards Grid */}
           <AnimatePresence mode="wait">
             {segment === "residential" ? (
               <motion.div
@@ -85,25 +75,15 @@ export function SegmentedSolutions() {
                 className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start"
               >
                 {/* Card 1: Respaldo Anti-Cortes */}
-                <div className="bg-[#F7F8FA] p-6 md:p-7 rounded-[20px] border border-black/5 flex flex-col hover:shadow-xl hover:border-[#FF8300]/30 transition-all duration-300 group">
-                  {/* Top Row: Icon + Top-Right Plus Button */}
+                <button
+                  type="button"
+                  onClick={() => toggleCard("res-1")}
+                  className="w-full text-left bg-[#F7F8FA] p-6 md:p-7 rounded-[20px] border border-black/5 flex flex-col hover:shadow-xl hover:border-[#FF8300]/30 transition-all duration-300 group cursor-pointer focus:outline-none"
+                >
                   <div className="flex items-center justify-between mb-4">
                     <div className="w-11 h-11 rounded-2xl bg-[#FF8300]/10 text-[#FF8300] flex items-center justify-center transition-transform group-hover:scale-110">
                       <Shield className="w-5 h-5 stroke-[1.5]" />
                     </div>
-
-                    <button
-                      type="button"
-                      onClick={() => toggleCard("res-1")}
-                      aria-label={openCards["res-1"] ? "Ver menos detalles" : "Ver más detalles"}
-                      className={`w-7 h-7 rounded-full flex items-center justify-center transition-all duration-300 cursor-pointer shadow-sm ${
-                        openCards["res-1"]
-                          ? "bg-[#FF8300] text-white rotate-45"
-                          : "bg-black/5 hover:bg-[#FF8300] text-[#6B7280] hover:text-white"
-                      }`}
-                    >
-                      <Plus className="w-3.5 h-3.5 stroke-[2]" />
-                    </button>
                   </div>
 
                   <h3 className="text-xl md:text-2xl font-normal text-brand-fg mb-1">
@@ -125,28 +105,18 @@ export function SegmentedSolutions() {
                       </motion.div>
                     )}
                   </AnimatePresence>
-                </div>
+                </button>
 
                 {/* Card 2: Ahorro y abono de excedentes */}
-                <div className="bg-[#F7F8FA] p-6 md:p-7 rounded-[20px] border border-black/5 flex flex-col hover:shadow-xl hover:border-[#FF8300]/30 transition-all duration-300 group">
-                  {/* Top Row: Icon + Top-Right Plus Button */}
+                <button
+                  type="button"
+                  onClick={() => toggleCard("res-2")}
+                  className="w-full text-left bg-[#F7F8FA] p-6 md:p-7 rounded-[20px] border border-black/5 flex flex-col hover:shadow-xl hover:border-[#FF8300]/30 transition-all duration-300 group cursor-pointer focus:outline-none"
+                >
                   <div className="flex items-center justify-between mb-4">
                     <div className="w-11 h-11 rounded-2xl bg-[#FF8300]/10 text-[#FF8300] flex items-center justify-center transition-transform group-hover:scale-110">
                       <TrendingUp className="w-5 h-5 stroke-[1.5]" />
                     </div>
-
-                    <button
-                      type="button"
-                      onClick={() => toggleCard("res-2")}
-                      aria-label={openCards["res-2"] ? "Ver menos detalles" : "Ver más detalles"}
-                      className={`w-7 h-7 rounded-full flex items-center justify-center transition-all duration-300 cursor-pointer shadow-sm ${
-                        openCards["res-2"]
-                          ? "bg-[#FF8300] text-white rotate-45"
-                          : "bg-black/5 hover:bg-[#FF8300] text-[#6B7280] hover:text-white"
-                      }`}
-                    >
-                      <Plus className="w-3.5 h-3.5 stroke-[2]" />
-                    </button>
                   </div>
 
                   <h3 className="text-xl md:text-2xl font-normal text-brand-fg mb-1">
@@ -168,11 +138,14 @@ export function SegmentedSolutions() {
                       </motion.div>
                     )}
                   </AnimatePresence>
-                </div>
+                </button>
 
                 {/* Card 3: Control Total en tu Smartphone */}
-                <div className="bg-[#F7F8FA] p-6 md:p-7 rounded-[20px] border border-black/5 flex flex-col hover:shadow-xl hover:border-[#FF8300]/30 transition-all duration-300 group">
-                  {/* Top Row: Icon + Top-Right Plus Button */}
+                <button
+                  type="button"
+                  onClick={() => toggleCard("res-3")}
+                  className="w-full text-left bg-[#F7F8FA] p-6 md:p-7 rounded-[20px] border border-black/5 flex flex-col hover:shadow-xl hover:border-[#FF8300]/30 transition-all duration-300 group cursor-pointer focus:outline-none"
+                >
                   <div className="flex items-center justify-between mb-4">
                     <div className="w-11 h-11 rounded-2xl bg-[#FF8300]/10 text-[#FF8300] flex items-center justify-center transition-transform group-hover:scale-110">
                       <svg
@@ -185,19 +158,6 @@ export function SegmentedSolutions() {
                         <path d="M9.74,47.21h2.68c.44,0,.8-.36.8-.8s-.36-.8-.8-.8h-2.68c-.44,0-.8.36-.8.8s.36.8.8.8Z"/>
                       </svg>
                     </div>
-
-                    <button
-                      type="button"
-                      onClick={() => toggleCard("res-3")}
-                      aria-label={openCards["res-3"] ? "Ver menos detalles" : "Ver más detalles"}
-                      className={`w-7 h-7 rounded-full flex items-center justify-center transition-all duration-300 cursor-pointer shadow-sm ${
-                        openCards["res-3"]
-                          ? "bg-[#FF8300] text-white rotate-45"
-                          : "bg-black/5 hover:bg-[#FF8300] text-[#6B7280] hover:text-white"
-                      }`}
-                    >
-                      <Plus className="w-3.5 h-3.5 stroke-[2]" />
-                    </button>
                   </div>
 
                   <h3 className="text-xl md:text-2xl font-normal text-brand-fg mb-1">
@@ -219,7 +179,7 @@ export function SegmentedSolutions() {
                       </motion.div>
                     )}
                   </AnimatePresence>
-                </div>
+                </button>
               </motion.div>
             ) : (
               <motion.div
@@ -231,25 +191,15 @@ export function SegmentedSolutions() {
                 className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start"
               >
                 {/* C&I Card 1: Reducción LCOE */}
-                <div className="bg-[#F7F8FA] p-6 md:p-7 rounded-[20px] border border-black/5 flex flex-col hover:shadow-xl hover:border-[#FF8300]/30 transition-all duration-300 group">
-                  {/* Top Row: Icon + Top-Right Plus Button */}
+                <button
+                  type="button"
+                  onClick={() => toggleCard("com-1")}
+                  className="w-full text-left bg-[#F7F8FA] p-6 md:p-7 rounded-[20px] border border-black/5 flex flex-col hover:shadow-xl hover:border-[#FF8300]/30 transition-all duration-300 group cursor-pointer focus:outline-none"
+                >
                   <div className="flex items-center justify-between mb-4">
                     <div className="w-11 h-11 rounded-2xl bg-[#FF8300]/10 text-[#FF8300] flex items-center justify-center transition-transform group-hover:scale-110">
                       <TrendingUp className="w-5 h-5 stroke-[1.5]" />
                     </div>
-
-                    <button
-                      type="button"
-                      onClick={() => toggleCard("com-1")}
-                      aria-label={openCards["com-1"] ? "Ver menos detalles" : "Ver más detalles"}
-                      className={`w-7 h-7 rounded-full flex items-center justify-center transition-all duration-300 cursor-pointer shadow-sm ${
-                        openCards["com-1"]
-                          ? "bg-[#FF8300] text-white rotate-45"
-                          : "bg-black/5 hover:bg-[#FF8300] text-[#6B7280] hover:text-white"
-                      }`}
-                    >
-                      <Plus className="w-3.5 h-3.5 stroke-[2]" />
-                    </button>
                   </div>
 
                   <h3 className="text-xl md:text-2xl font-normal text-brand-fg mb-1">
@@ -271,11 +221,14 @@ export function SegmentedSolutions() {
                       </motion.div>
                     )}
                   </AnimatePresence>
-                </div>
+                </button>
 
                 {/* C&I Card 2: Modelos PPA / EaaS Capex Cero */}
-                <div className="bg-[#F7F8FA] p-6 md:p-7 rounded-[20px] border border-black/5 flex flex-col hover:shadow-xl hover:border-[#FF8300]/30 transition-all duration-300 group">
-                  {/* Top Row: Icon + "Pronto" Label + Top-Right Plus Button */}
+                <button
+                  type="button"
+                  onClick={() => toggleCard("com-2")}
+                  className="w-full text-left bg-[#F7F8FA] p-6 md:p-7 rounded-[20px] border border-black/5 flex flex-col hover:shadow-xl hover:border-[#FF8300]/30 transition-all duration-300 group cursor-pointer focus:outline-none"
+                >
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
                       <div className="w-11 h-11 rounded-2xl bg-[#FF8300]/10 text-[#FF8300] flex items-center justify-center transition-transform group-hover:scale-110">
@@ -285,19 +238,6 @@ export function SegmentedSolutions() {
                         Pronto
                       </span>
                     </div>
-
-                    <button
-                      type="button"
-                      onClick={() => toggleCard("com-2")}
-                      aria-label={openCards["com-2"] ? "Ver menos detalles" : "Ver más detalles"}
-                      className={`w-7 h-7 rounded-full flex items-center justify-center transition-all duration-300 cursor-pointer shadow-sm ${
-                        openCards["com-2"]
-                          ? "bg-[#FF8300] text-white rotate-45"
-                          : "bg-black/5 hover:bg-[#FF8300] text-[#6B7280] hover:text-white"
-                      }`}
-                    >
-                      <Plus className="w-3.5 h-3.5 stroke-[2]" />
-                    </button>
                   </div>
 
                   <h3 className="text-xl md:text-2xl font-normal text-brand-fg mb-1">
@@ -319,11 +259,14 @@ export function SegmentedSolutions() {
                       </motion.div>
                     )}
                   </AnimatePresence>
-                </div>
+                </button>
 
                 {/* C&I Card 3: ESG & Sostenibilidad */}
-                <div className="bg-[#F7F8FA] p-6 md:p-7 rounded-[20px] border border-black/5 flex flex-col hover:shadow-xl hover:border-[#FF8300]/30 transition-all duration-300 group">
-                  {/* Top Row: Icon + "Pronto" Label + Top-Right Plus Button */}
+                <button
+                  type="button"
+                  onClick={() => toggleCard("com-3")}
+                  className="w-full text-left bg-[#F7F8FA] p-6 md:p-7 rounded-[20px] border border-black/5 flex flex-col hover:shadow-xl hover:border-[#FF8300]/30 transition-all duration-300 group cursor-pointer focus:outline-none"
+                >
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
                       <div className="w-11 h-11 rounded-2xl bg-[#FF8300]/10 text-[#FF8300] flex items-center justify-center transition-transform group-hover:scale-110">
@@ -333,19 +276,6 @@ export function SegmentedSolutions() {
                         Pronto
                       </span>
                     </div>
-
-                    <button
-                      type="button"
-                      onClick={() => toggleCard("com-3")}
-                      aria-label={openCards["com-3"] ? "Ver menos detalles" : "Ver más detalles"}
-                      className={`w-7 h-7 rounded-full flex items-center justify-center transition-all duration-300 cursor-pointer shadow-sm ${
-                        openCards["com-3"]
-                          ? "bg-[#FF8300] text-white rotate-45"
-                          : "bg-black/5 hover:bg-[#FF8300] text-[#6B7280] hover:text-white"
-                      }`}
-                    >
-                      <Plus className="w-3.5 h-3.5 stroke-[2]" />
-                    </button>
                   </div>
 
                   <h3 className="text-xl md:text-2xl font-normal text-brand-fg mb-1">
@@ -367,7 +297,7 @@ export function SegmentedSolutions() {
                       </motion.div>
                     )}
                   </AnimatePresence>
-                </div>
+                </button>
               </motion.div>
             )}
           </AnimatePresence>

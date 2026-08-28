@@ -1,86 +1,186 @@
 "use client";
 
+import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { ArrowRight, ArrowLeft } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export function HogarAttributes() {
-  const attributes = [
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+
+  const checkScrollPosition = () => {
+    if (scrollRef.current) {
+      const { scrollLeft } = scrollRef.current;
+      setCanScrollLeft(scrollLeft > 20);
+    }
+  };
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (el) {
+      el.scrollLeft = 0;
+      checkScrollPosition();
+      el.addEventListener("scroll", checkScrollPosition, { passive: true });
+      return () => el.removeEventListener("scroll", checkScrollPosition);
+    }
+  }, []);
+
+  const scroll = (direction: "left" | "right") => {
+    if (scrollRef.current) {
+      const scrollAmount = 480;
+      scrollRef.current.scrollBy({
+        left: direction === "right" ? scrollAmount : -scrollAmount,
+        behavior: "smooth",
+      });
+      setTimeout(checkScrollPosition, 350);
+    }
+  };
+
+  const steps = [
     {
-      title: "Estética de paneles",
+      step: "01 • Consulta Inicial",
+      title: "Cuéntanos sobre tu consumo",
       description:
-        "Nuestras celdas monocristalinas y marcos negros en los paneles solares, crean un aspecto uniforme y monocromático. Bases estructurales ocultas.",
-      image: "/images/solderio-planta-solar-residencial-sur.png",
+        "Revisamos tu boleta de luz actual y conversamos sobre tus metas de ahorro y respaldo ante cortes. Sin compromisos ni tecnicismos.",
+      image: "/images/planta-solar-hogar-residencial-solderio.jpeg",
     },
     {
-      title: "Más energía",
+      step: "02 • Prefactibilidad",
+      title: "Estudio solar de tu techo",
       description:
-        "Con 2x veces más de potencia que los paneles solares tradicionales, nuestros paneles están fabricados para generar más energía en climas de alta nubosidad.",
+        "Analizamos la orientación y el recurso solar de tu casa para entregarte una propuesta técnica y económica con tu ahorro proyectado.",
+      image: "/images/ingenieria-solar-3d-solderio.jpg",
+    },
+    {
+      step: "03 • Pagos y Financiamiento",
+      title: "Opciones de pago a tu medida",
+      description:
+        "Elige pagar al contado, en cuotas o mediante financiamiento bancario verde. Tu ahorro mensual en la cuenta de luz ayuda a pagar el proyecto.",
       image: "/images/solarcell-solderio.png",
     },
     {
-      title: "Ingeniería confiable",
+      step: "04 • Diseño de Ingeniería",
+      title: "Planos y selección de equipos",
       description:
-        "Diseño técnico e instalación con altos estándares de seguridad y bajo normativas vigentes. Nuestro equipo eléctrico está certificado por la Superintendencia de Electricidad y Combustibles (SEC).",
-      image: "/images/solderio-electrico.png",
+        "Diseñamos la configuración óptima para tu tejado, garantizando máxima captación de energía, estética cuidada y cero filtraciones.",
+      image: "/images/ingenieria-sobre-plantas-solares-techo-solderio.jpeg",
+    },
+    {
+      step: "05 • Instalación en Terreno",
+      title: "Montaje limpio y profesional",
+      description:
+        "Cuadrillas eléctricas autorizadas instalan los paneles, inversores y protecciones en 1 a 3 días con el menor impacto en tu rutina.",
+      image: "/images/solderio-ingeniero-electrico.jpg",
+    },
+    {
+      step: "06 • Certificación & Net Billing",
+      title: "Trámites oficiales y conexión",
+      description:
+        "Tramitamos toda la documentación ante la SEC y tu distribuidora eléctrica para que tus excedentes de energía se descuenten de tu boleta.",
+      image: "/images/puesta-en-marcha-planta-solar-residencial.jpeg",
+    },
+    {
+      step: "07 • Operación y Mantenimiento",
+      title: "Monitoreo en app y soporte",
+      description:
+        "Sigues la generación en tiempo real desde tu teléfono, mientras nosotros cuidamos y mantenemos tu planta para que rinda por más de 25 años.",
+      image: "/images/solderio-app-plantas-solares-residenciales.jpeg",
     },
   ];
 
   return (
-    <section className="bg-transparent py-20 md:py-28 relative overflow-hidden">
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="max-w-3xl mb-16"
-        >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/5 text-[#6B7280] text-xs font-medium uppercase tracking-wider mb-3">
-            <span>Rendimiento Climático</span>
-          </div>
-          <h2 className="text-3xl md:text-5xl font-light text-brand-fg mb-6 tracking-tight">
-            Diseñadas para el sur.
-          </h2>
-          <p className="text-brand-muted text-base md:text-lg leading-relaxed font-light">
-            Una versión moderna y adaptada para el clima del sur. Con nuestro sistema de montaje, instalamos en diferentes tipos de techo. Respaldados por 25 años de garantía en paneles, nuestras plantas son duraderas y resistentes a la intemperie.
-          </p>
-        </motion.div>
+    <section className="bg-transparent pt-24 md:pt-36 pb-16 md:pb-24 relative overflow-hidden">
+      <div className="w-full px-3 md:px-5 box-border">
+        <div className="max-w-[1400px] mx-auto">
+          {/* Header Title & Paragraph with Scroll Animation */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            className="max-w-3xl mb-16"
+          >
+            <span className="text-xs md:text-sm font-medium uppercase tracking-widest text-[#FF8300] mb-3 md:mb-4 block">
+              Paso a Paso
+            </span>
+            <h2 className="text-3xl md:text-5xl font-light text-brand-fg mb-6 tracking-tight">
+              El camino a tu proyecto solar
+            </h2>
+            <p className="text-brand-muted text-base md:text-lg leading-relaxed font-light">
+              Un proceso transparente y sin fricción. Nos encargamos de cada etapa, desde la primera evaluación de tu boleta hasta el monitoreo y mantenimiento continuo de tu planta.
+            </p>
+          </motion.div>
 
-        {/* 3 Grid Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-          {attributes.map((attr, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-40px" }}
-              transition={{ duration: 0.6, delay: index * 0.15, ease: [0.16, 1, 0.3, 1] }}
-              whileHover={{ y: -6 }}
-              className="flex flex-col group cursor-pointer"
+          {/* Carousel Wrapper */}
+          <div className="relative">
+            {/* Left Arrow - appears only when scrolled past first card */}
+            <AnimatePresence>
+              {canScrollLeft && (
+                <motion.button
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  transition={{ duration: 0.2 }}
+                  onClick={() => scroll("left")}
+                  className="absolute left-2 md:left-4 top-[160px] sm:top-[200px] md:top-[230px] lg:top-[240px] -translate-y-1/2 bg-white/90 backdrop-blur-md border border-white/60 text-black p-3.5 md:p-4 rounded-2xl shadow-xl hover:bg-white hover:scale-105 transition-all z-30 cursor-pointer"
+                  title="Volver"
+                >
+                  <ArrowLeft className="w-5 h-5 md:w-6 md:h-6 stroke-[1.5]" />
+                </motion.button>
+              )}
+            </AnimatePresence>
+
+            {/* Right Arrow */}
+            <button
+              onClick={() => scroll("right")}
+              className="absolute right-2 md:right-4 lg:right-6 top-[160px] sm:top-[200px] md:top-[230px] lg:top-[240px] -translate-y-1/2 bg-white/90 backdrop-blur-md border border-white/60 text-black p-3.5 md:p-4 rounded-2xl shadow-xl hover:bg-white hover:scale-105 transition-all z-30 cursor-pointer"
+              title="Ver más"
             >
-              {/* Image Card (20px rounded border) */}
-              <div className="relative w-full aspect-square mb-6 rounded-[20px] overflow-hidden border border-black/5 shadow-md">
-                <Image
-                  src={attr.image}
-                  alt={attr.title}
-                  fill
-                  className="object-cover object-center group-hover:scale-105 transition-transform duration-700"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-              </div>
+              <ArrowRight className="w-5 h-5 md:w-6 md:h-6 stroke-[1.5]" />
+            </button>
 
-              {/* Card Title */}
-              <h3 className="text-[24px] md:text-[30px] font-normal text-brand-fg mb-2 leading-tight group-hover:text-[#FF8300] transition-colors">
-                {attr.title}
-              </h3>
+            {/* Scrollable Container */}
+            <div
+              ref={scrollRef}
+              className="flex gap-6 overflow-x-auto scrollbar-none scroll-smooth pb-6 -mr-3 md:-mr-5 lg:-mr-[calc((100vw-1400px)/2+2rem)] pr-12 md:pr-24"
+              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            >
+              {steps.map((item, index) => (
+                <motion.div
+                  key={index}
+                  whileHover={{ y: -6 }}
+                  transition={{ duration: 0.3 }}
+                  className="flex-none w-[320px] sm:w-[380px] md:w-[420px] lg:w-[440px] flex flex-col group cursor-pointer"
+                >
+                  {/* Image Card with step indicator */}
+                  <div className="relative w-full aspect-square mb-5 rounded-[20px] overflow-hidden border border-black/5 shadow-md bg-black/5">
+                    <Image
+                      src={item.image}
+                      alt={item.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 600px"
+                      className="object-cover object-center group-hover:scale-105 transition-transform duration-700"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                    <div className="absolute top-4 left-4 z-10 bg-[#1F1F1F]/80 backdrop-blur-md border border-white/20 px-3 py-1 rounded-full text-white text-[11px] font-medium tracking-wide">
+                      {item.step}
+                    </div>
+                  </div>
 
-              {/* Description */}
-              <p className="text-[#6B7280] text-sm md:text-base leading-relaxed font-light">
-                {attr.description}
-              </p>
-            </motion.div>
-          ))}
+                  {/* Card Title */}
+                  <h3 className="text-[20px] md:text-[24px] font-normal text-brand-fg mb-2 leading-tight">
+                    {item.title}
+                  </h3>
+
+                  {/* Description */}
+                  <p className="text-[#6B7280] text-sm md:text-base leading-relaxed font-light">
+                    {item.description}
+                  </p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </section>

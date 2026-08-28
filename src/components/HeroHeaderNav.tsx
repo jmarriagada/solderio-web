@@ -3,9 +3,10 @@
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Sun, Zap, User, ArrowRight } from "lucide-react";
+import { Sun, Zap, User, ArrowRight, Menu, X, ChevronDown } from "lucide-react";
 import { NAV_LINKS, DESCUBRE_MENU } from "@/lib/constants";
 import { motion, AnimatePresence } from "framer-motion";
+import { useVisitaModal } from "@/context/VisitaModalContext";
 
 import { LocationBadge } from "@/components/LocationBadge";
 
@@ -19,6 +20,7 @@ export function HeroHeaderNav({
   locationText,
 }: HeroHeaderNavProps) {
   const [isDescubreOpen, setIsDescubreOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [userLocation, setUserLocation] = useState<string | null>(locationText || null);
   const { openModal } = useVisitaModal();
   const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -165,18 +167,32 @@ export function HeroHeaderNav({
           })}
         </nav>
 
-        {/* Right: Icons & Location */}
-        <div className="flex items-center gap-3 md:gap-4 text-white/90">
-          <button className="p-1.5 hover:text-[#FF8300] transition-colors rounded-full hover:bg-white/10 cursor-pointer" title="Modo">
+        {/* Right: Icons, Location & Mobile Burger Button */}
+        <div className="flex items-center gap-2.5 md:gap-4 text-white/90">
+          <button className="p-1.5 hover:text-[#FF8300] transition-colors rounded-full hover:bg-white/10 cursor-pointer hidden sm:block" title="Modo">
             <Sun className="w-4 h-4 stroke-[1.5]" />
           </button>
-          <button className="p-1.5 hover:text-[#FF8300] transition-colors rounded-full hover:bg-white/10 cursor-pointer" title="Energía">
+          <button className="p-1.5 hover:text-[#FF8300] transition-colors rounded-full hover:bg-white/10 cursor-pointer hidden sm:block" title="Energía">
             <Zap className="w-4 h-4 stroke-[1.5]" />
           </button>
-          <button className="p-1.5 hover:text-[#FF8300] transition-colors rounded-full hover:bg-white/10 cursor-pointer" title="Usuario">
+          <button className="p-1.5 hover:text-[#FF8300] transition-colors rounded-full hover:bg-white/10 cursor-pointer hidden sm:block" title="Usuario">
             <User className="w-4 h-4 stroke-[1.5]" />
           </button>
           <LocationBadge locationText={userLocation || locationText || undefined} className="hidden sm:inline-block" />
+
+          {/* Mobile Burger Button (Visible only on screens < md) */}
+          <button
+            type="button"
+            onClick={() => setIsMobileMenuOpen((prev) => !prev)}
+            className="md:hidden p-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-white focus:outline-none transition-colors cursor-pointer flex items-center justify-center"
+            aria-label={isMobileMenuOpen ? "Cerrar menú" : "Abrir menú de navegación"}
+          >
+            {isMobileMenuOpen ? (
+              <X className="w-5 h-5 text-[#FF8300]" />
+            ) : (
+              <Menu className="w-5 h-5 text-white" />
+            )}
+          </button>
         </div>
       </header>
 
@@ -266,6 +282,115 @@ export function HeroHeaderNav({
                     </li>
                   ))}
                 </ul>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Mobile Drawer Menu */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            className="md:hidden absolute top-full left-0 right-0 z-50 bg-[#141414]/98 backdrop-blur-2xl border-b border-white/15 px-6 py-6 text-white shadow-2xl overflow-hidden"
+          >
+            <div className="flex flex-col space-y-4">
+              {NAV_LINKS.map((link) => {
+                const isActive = activePage === link.label;
+                const isDescubre = link.label === "Descubre";
+
+                if (isDescubre) {
+                  return (
+                    <div key={link.label} className="border-b border-white/10 pb-3">
+                      <button
+                        type="button"
+                        onClick={() => setIsDescubreOpen((prev) => !prev)}
+                        className="w-full flex items-center justify-between text-base font-light py-2 text-white/90 hover:text-[#FF8300] cursor-pointer"
+                      >
+                        <span>Descubre</span>
+                        <ChevronDown className={`w-4 h-4 transition-transform ${isDescubreOpen ? "rotate-180 text-[#FF8300]" : "text-white/60"}`} />
+                      </button>
+
+                      <AnimatePresence>
+                        {isDescubreOpen && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            className="pl-4 space-y-3 pt-2 text-sm font-light text-white/70"
+                          >
+                            <div className="font-medium text-xs text-[#FF8300] uppercase tracking-wider">Empresa</div>
+                            <ul className="space-y-2">
+                              {DESCUBRE_MENU.empresa.links.map((sub) => (
+                                <li key={sub.label}>
+                                  {sub.label === "Agendar consulta" ? (
+                                    <button
+                                      onClick={() => {
+                                        setIsMobileMenuOpen(false);
+                                        openModal();
+                                      }}
+                                      className="hover:text-white transition-colors cursor-pointer text-left"
+                                    >
+                                      {sub.label}
+                                    </button>
+                                  ) : (
+                                    <Link href={sub.href} onClick={() => setIsMobileMenuOpen(false)} className="hover:text-white transition-colors">
+                                      {sub.label}
+                                    </Link>
+                                  )}
+                                </li>
+                              ))}
+                            </ul>
+
+                            <div className="font-medium text-xs text-[#FF8300] uppercase tracking-wider pt-2">Solar</div>
+                            <ul className="space-y-2">
+                              {DESCUBRE_MENU.solar.links.map((sub) => (
+                                <li key={sub.label}>
+                                  <Link href={sub.href} onClick={() => setIsMobileMenuOpen(false)} className="hover:text-white transition-colors">
+                                    {sub.label}
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  );
+                }
+
+                return (
+                  <Link
+                    key={link.label}
+                    href={link.href}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`text-base font-light py-2 border-b border-white/10 transition-colors flex items-center justify-between ${
+                      isActive ? "text-[#FF8300] font-normal" : "text-white/90 hover:text-[#FF8300]"
+                    }`}
+                  >
+                    <span>{link.label}</span>
+                    {isActive && <span className="w-2 h-2 rounded-full bg-[#FF8300]" />}
+                  </Link>
+                );
+              })}
+
+              <div className="pt-4 flex flex-col gap-3">
+                <LocationBadge locationText={userLocation || locationText || undefined} className="w-full flex justify-center" />
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    openModal();
+                  }}
+                  className="w-full py-3.5 rounded-full bg-[#FF8300] text-white text-xs font-light uppercase tracking-wider hover:bg-[#e07400] transition-all flex items-center justify-center gap-2 shadow-lg cursor-pointer"
+                >
+                  <span className="font-light">Solicitar Pre-Evaluación ($0 CLP)</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
               </div>
             </div>
           </motion.div>

@@ -135,7 +135,7 @@ export function SegmentedSolutions() {
                         className="overflow-hidden"
                       >
                         <p className="text-brand-muted text-sm md:text-base leading-relaxed font-light mt-3">
-                          Generas energía, ahorras. Inyecta los excedentes a la red, abona directo a tu cuenta y acelera la recuperacion de la inversión.
+                          Genera tu energía limpia, ahorra hasta el 90% en tu cuenta de luz, inyectas y abonas los excedentes entregados a la red, acelerando la recuperacion de la inversión.
                         </p>
                       </motion.div>
                     )}

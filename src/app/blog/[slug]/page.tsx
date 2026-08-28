@@ -36,7 +36,7 @@ export default async function BlogPostPage({ params }: Props) {
   }
 
   return (
-    <main className="w-full min-h-screen relative bg-[#F1F1F1]">
+    <main className="w-full min-h-screen relative bg-[#F7F8FA]">
       <FloatingNav />
 
       {/* Article Header Container */}

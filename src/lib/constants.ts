@@ -18,7 +18,7 @@ export const BRAND = {
     whatsapp: "https://wa.me/56987654321",
   },
   colors: {
-    background: "#F1F1F1", // White
+    background: "#F7F8FA", // White
     foreground: "#1F1F1F", // Charcoal
     accent: "#FF8300",     // Solar Orange
     surface: "#F7F8FA",    // Mist

@@ -12,7 +12,7 @@ import { Footer } from "@/components/Footer";
 
 export default function Home() {
   return (
-    <main className="w-full min-h-screen relative">
+    <main className="w-full min-h-screen relative bg-[#F7F8FA]">
       {/* 0. Floating Glassmorphism Navbar on Scroll */}
       <FloatingNav />
 

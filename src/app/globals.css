@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-brand-bg: #F1F1F1;
+  --color-brand-bg: #F7F8FA;
   --color-brand-fg: #1F1F1F;
   --color-brand-accent: #FF8300;
   --color-brand-surface: #F7F8FA;
@@ -33,7 +33,7 @@
 }
 
 :root {
-  --background: #ffffff;
+  --background: #F7F8FA;
   --foreground: #1F1F1F;
   --card: #ffffff;
   --card-foreground: #1F1F1F;

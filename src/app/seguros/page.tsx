@@ -13,7 +13,7 @@ export const metadata = {
 
 export default function SegurosPage() {
   return (
-    <main className="w-full min-h-screen relative bg-[#F1F1F1]">
+    <main className="w-full min-h-screen relative bg-[#F7F8FA]">
       {/* 0. Floating Glassmorphism Navbar */}
       <FloatingNav />
 

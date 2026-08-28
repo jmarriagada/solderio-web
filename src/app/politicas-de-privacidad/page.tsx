@@ -11,7 +11,7 @@ export const metadata = {
 
 export default function PoliticasPrivacidadPage() {
   return (
-    <main className="w-full min-h-screen relative bg-[#F1F1F1]">
+    <main className="w-full min-h-screen relative bg-[#F7F8FA]">
       <FloatingNav />
 
       <article className="pt-28 md:pt-36 pb-20">

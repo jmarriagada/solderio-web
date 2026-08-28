@@ -18,7 +18,7 @@ export function HogarHeroFrame() {
         {/* Background Image with Black Multiply Overlay */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="/images/planta-solar-residencial-sur-chile-solderio2.jpeg"
+            src="/images/planta-solar-en-dia-nublado-residencial-sur-chile-solderio.jpeg"
             alt="SoldeRío Plantas Solares Hogar"
             fill
             priority

@@ -1010,7 +1010,7 @@ export function SolarTopologyVisualizer({
         </div>
 
         {/* Full-width Helper Footer Bar */}
-        <div className="bg-[#1F1F1F] px-6 py-3 border-t border-white/10 flex items-center justify-between text-xs text-white/60 font-light">
+        <div className="bg-[#1F1F1F] px-6 py-3 border-t border-white/10 flex items-center justify-between text-[13px] text-white/60 font-light">
           <div className="flex items-center gap-2">
             <Info className="w-4 h-4 text-[#FF8300]" />
             <span className="font-light">Haz clic en los pines sobre la imagen para inspeccionar cada componente en tiempo real.</span>

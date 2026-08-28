@@ -153,26 +153,31 @@ export function HogarAttributes() {
                   key={index}
                   whileHover={{ y: -6 }}
                   transition={{ duration: 0.3 }}
+                  onClick={() => openModal("gratuita")}
                   className="flex-none w-[320px] sm:w-[380px] md:w-[420px] lg:w-[440px] flex flex-col group cursor-pointer"
                 >
-                  {/* Image Card with step indicator */}
-                  <div className="relative w-full aspect-square mb-5 rounded-[20px] overflow-hidden border border-black/5 shadow-md bg-black/5">
+                  {/* Image Card with glowing step badge & smooth zoom */}
+                  <div className="relative w-full aspect-square mb-5 rounded-[24px] overflow-hidden border border-black/10 shadow-md group-hover:shadow-2xl group-hover:border-[#FF8300]/30 transition-all duration-500 bg-black/5">
                     <Image
                       src={item.image}
                       alt={item.title}
                       fill
                       sizes="(max-width: 768px) 100vw, 600px"
-                      className="object-cover object-center group-hover:scale-105 transition-transform duration-700"
+                      className="object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-                    <div className="absolute top-4 left-4 z-10 bg-[#1F1F1F]/80 backdrop-blur-md border border-white/20 px-3 py-1 rounded-full text-white text-[11px] font-medium tracking-wide">
-                      {item.step}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent opacity-40 group-hover:opacity-60 transition-opacity duration-300 pointer-events-none" />
+                    
+                    {/* Glowing Translucent Step Badge */}
+                    <div className="absolute top-4 left-4 z-10 flex items-center gap-2 bg-[#181818]/90 backdrop-blur-xl border border-white/20 px-3.5 py-1.5 rounded-full text-white text-[12px] font-medium tracking-wide shadow-lg">
+                      <span className="w-2 h-2 rounded-full bg-[#FF8300] shadow-[0_0_8px_#FF8300]" />
+                      <span>{item.step}</span>
                     </div>
                   </div>
 
-                  {/* Card Title */}
-                  <h3 className="text-[20px] md:text-[24px] font-normal text-brand-fg mb-2 leading-tight">
-                    {item.title}
+                  {/* Card Title with Slide Arrow on Hover */}
+                  <h3 className="text-[20px] md:text-[24px] font-normal text-brand-fg mb-2 leading-tight flex items-center justify-between group-hover:text-[#FF8300] transition-colors duration-300">
+                    <span>{item.title}</span>
+                    <ArrowRight className="w-5 h-5 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-[#FF8300] flex-shrink-0 ml-2" />
                   </h3>
 
                   {/* Description */}

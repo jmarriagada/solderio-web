@@ -6,6 +6,8 @@ import Link from "next/link";
 import { User, Search, MapPin } from "lucide-react";
 import { NAV_LINKS } from "@/lib/constants";
 
+import { LocationBadge } from "@/components/LocationBadge";
+
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -59,14 +61,7 @@ export function Header() {
 
         {/* Right Icons */}
         <div className="flex items-center gap-6">
-          <div
-            className={`flex items-center gap-2 text-sm font-medium ${
-              isScrolled ? "text-brand-muted" : "text-white/80"
-            }`}
-          >
-            <MapPin className="w-4 h-4" />
-            <span className="hidden sm:inline">Osorno, Los Lagos</span>
-          </div>
+          <LocationBadge className="hidden sm:inline-block" />
           <button
             className={`p-2 rounded-full transition-colors ${
               isScrolled

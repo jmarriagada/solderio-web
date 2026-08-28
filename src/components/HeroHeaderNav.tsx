@@ -7,7 +7,7 @@ import { Sun, Zap, User, ArrowRight } from "lucide-react";
 import { NAV_LINKS, DESCUBRE_MENU } from "@/lib/constants";
 import { motion, AnimatePresence } from "framer-motion";
 
-import { useVisitaModal } from "@/context/VisitaModalContext";
+import { LocationBadge } from "@/components/LocationBadge";
 
 interface HeroHeaderNavProps {
   activePage?: "Inicio" | "Hogar" | "Empresas" | "Carga EV" | "Descubre";
@@ -182,12 +182,7 @@ export function HeroHeaderNav({
           <button className="p-1.5 hover:text-[#FF8300] transition-colors rounded-full hover:bg-white/10 cursor-pointer" title="Usuario">
             <User className="w-4 h-4 stroke-[1.5]" />
           </button>
-          {userLocation && (
-            <div className="hidden sm:flex items-center gap-2 text-xs font-light text-white/90 bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/15 shadow-sm">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399,0_0_14px_#34d399]" />
-              <span>{userLocation}</span>
-            </div>
-          )}
+          <LocationBadge locationText={userLocation || locationText || undefined} className="hidden sm:inline-block" />
         </div>
       </header>
 

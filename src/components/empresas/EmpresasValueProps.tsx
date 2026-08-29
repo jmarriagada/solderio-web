@@ -138,17 +138,11 @@ export function EmpresasValueProps() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="max-w-3xl mb-12 md:mb-16"
+          className="max-w-4xl mb-10 md:mb-12"
         >
-          <span className="text-xs md:text-sm font-mono uppercase tracking-widest text-[#FF8300] mb-3 block">
-            Evaluación para Tomadores de Decisión
-          </span>
-          <h2 className="text-3xl md:text-5xl font-light text-[#1F1F1F] tracking-tight leading-[1.1] mb-6">
+          <h2 className="text-3xl md:text-5xl font-light text-[#1F1F1F] tracking-tight leading-[1.1]">
             Por qué la energía solar es una decisión financiera estratégica
           </h2>
-          <p className="text-brand-muted text-base md:text-lg font-light leading-relaxed">
-            Analizamos los indicadores de retorno, estructuración tributaria y opciones de financiamiento verde que maximizan el valor patrimonial de tu empresa.
-          </p>
         </motion.div>
 
         {/* Financial ROI Standalone Card */}

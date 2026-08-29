@@ -84,11 +84,14 @@ export function TriadSection() {
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
             className="text-center max-w-3xl mx-auto mb-14"
           >
+            <span className="text-xs md:text-sm font-medium uppercase tracking-widest text-[#FF8300] block mb-3">
+              Diseño e implementación
+            </span>
             <h2 className="text-3xl md:text-5xl font-light text-[#1F1F1F] tracking-tight mb-4">
-              Ecosistema de generación solar
+              Ecosistemas de generación solar
             </h2>
             <p className="text-brand-muted text-base md:text-lg font-light leading-relaxed">
-              Ingeniería que asegura tu suministro y la inteligencia que gestiona tu energía.
+              Ingeniería que asegura tu suministro eléctrico y la inteligencia que gestiona tu consumo.
             </p>
           </motion.div>
 

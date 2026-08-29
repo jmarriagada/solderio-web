@@ -6,8 +6,9 @@ import { TrendingUp, Landmark, ShieldCheck, Award, ArrowUpRight } from "lucide-r
 
 function CashflowChart() {
   return (
-    <div className="w-full bg-[#F7F8FA] p-4 md:p-5 rounded-2xl border border-black/5 my-5">
-      <div className="flex items-center justify-between mb-3">
+    <div className="w-full bg-[#F7F8FA] p-5 rounded-2xl border border-black/5 my-5">
+      {/* Header & Legend */}
+      <div className="flex items-center justify-between mb-4">
         <div>
           <span className="text-[10px] font-mono uppercase tracking-wider text-[#FF8300] block mb-0.5">
             Retorno Proyectado
@@ -17,73 +18,83 @@ function CashflowChart() {
           </h4>
         </div>
         <div className="flex items-center gap-3 text-[10px] font-mono text-black/60">
-          <span className="flex items-center gap-1">
+          <span className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-[#FF8300]" />
             Payback (~Año 4)
           </span>
-          <span className="flex items-center gap-1">
+          <span className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-emerald-500" />
             Flujo Positivo
           </span>
         </div>
       </div>
 
-      <div className="relative w-full h-28">
+      {/* Responsive SVG Chart with un-distorted vector curve */}
+      <div className="relative w-full h-32 my-1">
+        {/* Zero baseline label HTML overlay */}
+        <div className="absolute top-[52%] left-1 -translate-y-1/2 pointer-events-none z-10">
+          <span className="text-[10px] font-mono text-black/40 bg-[#F7F8FA]/80 px-1 rounded">
+            $0 (Punto de Equilibrio)
+          </span>
+        </div>
+
         <svg
-          viewBox="0 0 400 120"
+          viewBox="0 0 500 120"
           className="w-full h-full overflow-visible"
-          preserveAspectRatio="none"
         >
           <defs>
             <linearGradient id="cashflowGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#10B981" stopOpacity="0.2" />
-              <stop offset="100%" stopColor="#10B981" stopOpacity="0" />
+              <stop offset="0%" stopColor="#10B981" stopOpacity="0.25" />
+              <stop offset="60%" stopColor="#10B981" stopOpacity="0.05" />
+              <stop offset="100%" stopColor="#FF8300" stopOpacity="0.0" />
             </linearGradient>
           </defs>
 
           {/* Dash Zero Line */}
           <line
             x1="0"
-            y1="75"
-            x2="400"
-            y2="75"
+            y1="62"
+            x2="500"
+            y2="62"
             stroke="#D1D5DB"
-            strokeWidth="1.5"
+            strokeWidth="1"
             strokeDasharray="4 4"
+            vectorEffect="non-scaling-stroke"
           />
-          <text x="5" y="70" fill="#9CA3AF" fontSize="9" fontFamily="monospace">
-            $0 (Punto de Equilibrio)
-          </text>
 
-          {/* Area Fill under curve */}
+          {/* Area Fill */}
           <path
-            d="M 15 105 Q 80 95 140 75 T 390 15 L 390 75 L 15 75 Z"
+            d="M 15 95 Q 110 82 180 62 T 485 12 L 485 62 L 15 62 Z"
             fill="url(#cashflowGrad)"
           />
 
           {/* Main Curve Line */}
           <path
-            d="M 15 105 Q 80 95 140 75 T 390 15"
+            d="M 15 95 Q 110 82 180 62 T 485 12"
             fill="none"
             stroke="#FF8300"
-            strokeWidth="3"
+            strokeWidth="3.5"
             strokeLinecap="round"
+            vectorEffect="non-scaling-stroke"
           />
 
-          {/* Break-even point */}
-          <circle cx="140" cy="75" r="5" fill="#FF8300" stroke="#FFFFFF" strokeWidth="2" />
-
-          {/* Year Labels */}
-          <text x="15" y="116" fill="#6B7280" fontSize="9" textAnchor="middle">Año 0</text>
-          <text x="80" y="116" fill="#6B7280" fontSize="9" textAnchor="middle">Año 2</text>
-          <text x="140" y="116" fill="#FF8300" fontSize="9" fontWeight="bold" textAnchor="middle">Año 4 (★ Flujo +)</text>
-          <text x="260" y="116" fill="#10B981" fontSize="9" textAnchor="middle">Año 10</text>
-          <text x="385" y="116" fill="#10B981" fontSize="9" textAnchor="middle">Año 25</text>
+          {/* Break-even point circle */}
+          <circle cx="180" cy="62" r="5" fill="#FF8300" stroke="#FFFFFF" strokeWidth="2" />
         </svg>
       </div>
 
-      <div className="mt-2 pt-2 border-t border-black/5 flex items-center justify-between text-[11px] text-black/50 font-light">
-        <span>CAPEX / Cuota Leasing</span>
+      {/* HTML Year Markers - Crisp typography with 0% distortion */}
+      <div className="grid grid-cols-5 text-center text-[10px] font-mono mt-1 pt-2 border-t border-black/5">
+        <span className="text-black/50">Año 0</span>
+        <span className="text-black/50">Año 2</span>
+        <span className="text-[#FF8300] font-semibold">Año 4 (★ Flujo +)</span>
+        <span className="text-emerald-600">Año 10</span>
+        <span className="text-emerald-600 font-medium">Año 25</span>
+      </div>
+
+      {/* Footer hint */}
+      <div className="mt-3 flex items-center justify-between text-[11px] text-black/50 font-light">
+        <span>Inversión CAPEX / Leasing</span>
         <span className="font-normal text-emerald-600">★ Flujo Neto Positivo & Ganancia Neta</span>
       </div>
     </div>

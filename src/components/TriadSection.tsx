@@ -18,13 +18,13 @@ export function TriadSection() {
       badge: "PRECISIÓN PREVIA",
       title: "Diseño de Ingeniería",
       subtitle: "Modelado 3D y simulación climática real",
-      displayHeadline: "Diseño de Ingeniería: Modelado 3D y simulación climática real",
-      description:
-        "No usamos fórmulas genéricas. Cada proyecto se simula con software calibrado para la radiación y microclima de tu zona, optimizamos la inclinación, orientación y pérdidas por sombreado para garantizar la máxima generación por cada kW instalado.",
+      displayHeadline: "Aseguramos la captura solar óptima",
+      description: "",
       bullets: [
         "Simulación de generación estacional.",
-        "Cálculo de sombreado arbóreo y topográfico 3D.",
-        "Estudio de factibilidad de inyección a red bajo Ley Net Billing 21.118.",
+        "Cálculo de sombreado real con modelamiento 3D dron-based.",
+        "Uso de optimizadores según entorno real.",
+        "Estudio de factibilidad de inyección bajo Ley Net Billing 21.118.",
       ],
       image: "/images/ingenieria-solar-3d-solderio.jpg",
       imagePosition: "object-right",

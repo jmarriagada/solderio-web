@@ -85,8 +85,8 @@ export function HogarBenefits() {
                 viewport={{ once: true, margin: "-40px" }}
                 transition={{ duration: 0.6, delay: index * 0.15, ease: [0.16, 1, 0.3, 1] }}
                 whileHover={{ y: -6 }}
-                className="bg-[#F7F8FA] p-8 md:p-9 rounded-[24px] border border-black/10 flex flex-col justify-between shadow-sm hover:shadow-[0_12px_40px_rgba(255,131,0,0.12)] hover:border-[#FF8300]/30 transition-all duration-300 relative group h-full"
-                style={{ backgroundColor: "#F7F8FA" }}
+                className="bg-[#f1f1f1] p-8 md:p-9 rounded-[24px] border border-black/10 flex flex-col justify-between shadow-sm hover:shadow-[0_12px_40px_rgba(255,131,0,0.12)] hover:border-[#FF8300]/30 transition-all duration-300 relative group h-full"
+                style={{ backgroundColor: "#f1f1f1" }}
               >
                 <div>
                   {/* Top Row: Step Tag + SVG Icon */}

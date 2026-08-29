@@ -32,7 +32,7 @@ export function HogarEquipmentShowcase() {
       title: "Inversor híbrido inteligente",
       tagline: "Gestión y Respaldo Continuo",
       description:
-        "El inversor híbrido inteligente prioriza el consumo del hogar. El excedente solar carga el banco de baterías. Una vez cargadas al 100%, el sobrante se inyecta a la red. Si se corta la red pública, el sistema conmuta en menos de 10ms para mantener tu hogar 100% operativo.",
+        "Invierte la corriente (DC to AC) que generan los paneles a una para energizar tu casa. Cuando ya se cubre el consumo, envía la energía a las baterías. Una vez cargadas al 100% el exceso se inyecta a la red. Si se corta la red pública mantiene tu suministro activo.",
       caption: "Conmutación STS <10ms • Eficiencia >98.6%",
     },
     {

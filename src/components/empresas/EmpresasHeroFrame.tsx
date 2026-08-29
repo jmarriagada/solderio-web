@@ -60,7 +60,7 @@ export function EmpresasHeroFrame() {
               }}
               className="text-sm md:text-lg text-white/90 font-light tracking-widest uppercase mb-4"
             >
-              Soberanía energética
+              Proyectos solares
             </motion.p>
 
             <motion.h1

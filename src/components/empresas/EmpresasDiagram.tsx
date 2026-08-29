@@ -109,31 +109,31 @@ export function EmpresasDiagram() {
 
   return (
     <section className="w-full py-16 md:py-24 px-3 md:px-5 box-border bg-white overflow-hidden">
-      <div className="max-w-[1400px] mx-auto flex flex-col items-center">
+      <div className="w-full flex flex-col items-center">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="text-center mb-12 md:mb-16"
+          className="text-center mb-12 md:mb-16 max-w-4xl px-4"
         >
-          <h2 className="text-3xl md:text-5xl font-light text-[#1F1F1F] tracking-tight leading-[1.1] max-w-4xl mx-auto">
+          <h2 className="text-3xl md:text-5xl font-light text-[#1F1F1F] tracking-tight leading-[1.1]">
             Solar, baterías y la red sincronizadas, minimizando el costo eléctrico.
           </h2>
         </motion.div>
 
-        {/* Diagram Area - Spans full width matching Hero global margins */}
+        {/* Diagram Area - Extends to cover full section width */}
         <motion.div
           initial={{ opacity: 0, scale: 0.98 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          className="relative w-full aspect-[16/9] md:aspect-[21/9] min-h-[380px] md:min-h-[520px] rounded-[24px] md:rounded-[32px] overflow-hidden bg-[#F7F8FA] border border-black/10 shadow-xl"
+          className="relative w-full aspect-[16/9] md:aspect-[21/9] min-h-[400px] md:min-h-[580px] rounded-[24px] md:rounded-[32px] overflow-hidden bg-[#F7F8FA] border border-black/10 shadow-xl"
         >
           {/* Base Isometric Diagram Image */}
           <Image
-            src="/images/planta-solar-empresas-solderio.jpeg"
+            src="/images/diagrama-planta-solar-empresas-solderio.jpeg"
             alt="Diagrama Planta Solar Comercial e Industrial SoldeRío"
             fill
             priority

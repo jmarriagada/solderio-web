@@ -125,7 +125,7 @@ export function Attributes() {
                   exit={{ opacity: 0, scale: 0.8 }}
                   transition={{ duration: 0.2 }}
                   onClick={() => scroll("left")}
-                  className="absolute left-2 md:left-4 top-[160px] sm:top-[200px] md:top-[230px] lg:top-[240px] -translate-y-1/2 bg-white/90 backdrop-blur-md border border-white/60 text-black p-3.5 md:p-4 rounded-2xl shadow-xl hover:bg-white hover:scale-105 transition-all z-30 cursor-pointer"
+                  className="absolute left-2 md:left-4 top-[125px] sm:top-[145px] md:top-[155px] lg:top-[160px] -translate-y-1/2 bg-white/90 backdrop-blur-md border border-white/60 text-black p-3.5 md:p-4 rounded-2xl shadow-xl hover:bg-white hover:scale-105 transition-all z-30 cursor-pointer"
                   title="Volver"
                 >
                   <ArrowLeft className="w-5 h-5 md:w-6 md:h-6 stroke-[1.5]" />
@@ -136,7 +136,7 @@ export function Attributes() {
             {/* Right Arrow */}
             <button
               onClick={() => scroll("right")}
-              className="absolute right-2 md:right-4 lg:right-6 top-[160px] sm:top-[200px] md:top-[230px] lg:top-[240px] -translate-y-1/2 bg-white/90 backdrop-blur-md border border-white/60 text-black p-3.5 md:p-4 rounded-2xl shadow-xl hover:bg-white hover:scale-105 transition-all z-30 cursor-pointer"
+              className="absolute right-2 md:right-4 lg:right-6 top-[125px] sm:top-[145px] md:top-[155px] lg:top-[160px] -translate-y-1/2 bg-white/90 backdrop-blur-md border border-white/60 text-black p-3.5 md:p-4 rounded-2xl shadow-xl hover:bg-white hover:scale-105 transition-all z-30 cursor-pointer"
               title="Ver más"
             >
               <ArrowRight className="w-5 h-5 md:w-6 md:h-6 stroke-[1.5]" />
@@ -145,7 +145,7 @@ export function Attributes() {
             {/* Scrollable Container */}
             <div
               ref={scrollRef}
-              className="flex gap-6 overflow-x-auto scrollbar-none scroll-smooth pb-6 -mr-3 md:-mr-5 lg:-mr-[calc((100vw-1400px)/2+2rem)] pr-12 md:pr-24"
+              className="flex gap-8 md:gap-9 overflow-x-auto scrollbar-none scroll-smooth pb-6 -mr-3 md:-mr-5 lg:-mr-[calc((100vw-1400px)/2+2rem)] pr-12 md:pr-24"
               style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
             >
               {steps.map((item, index) => {
@@ -165,7 +165,7 @@ export function Attributes() {
                     whileHover={isInteractive ? { y: -6 } : undefined}
                     transition={{ duration: 0.3 }}
                     onClick={isInteractive ? handleCardClick : undefined}
-                    className={`flex-none w-[320px] sm:w-[380px] md:w-[420px] lg:w-[440px] flex flex-col group ${
+                    className={`flex-none w-[240px] sm:w-[280px] md:w-[310px] lg:w-[320px] flex flex-col group ${
                       isInteractive ? "cursor-pointer" : "cursor-default"
                     }`}
                   >

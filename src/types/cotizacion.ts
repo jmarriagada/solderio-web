@@ -80,6 +80,7 @@ export interface SolarSizingResult {
   co2TonsAvoidedPerYear: number;
   equivalentTreesPlanted: number;
   autoconsumoPct: number;
+  averageMonthlyDemandKwh?: number;
   secNorms: string[];
 
   // Advanced High-Fidelity Physical & Financial Metrics

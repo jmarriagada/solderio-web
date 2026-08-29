@@ -19,13 +19,12 @@ import {
   Sparkles, 
   Sliders, 
   Layers, 
-  Building, 
+  Building2, 
   Battery, 
   UploadCloud, 
   FileUp, 
   CheckCircle2, 
-  AlertCircle,
-  FileCheck2,
+  AlertCircle, 
   Lock,
   Activity,
   Calculator,
@@ -34,7 +33,9 @@ import {
   Wind,
   DollarSign,
   Package,
-  Wrench
+  Wrench,
+  Eye,
+  Box
 } from 'lucide-react'
 import { 
   PvOperationModel, 
@@ -47,13 +48,16 @@ import {
 } from '@/lib/solar/minenergia-models'
 import { getSolarDataset } from '@/lib/solar/weather-engine'
 import { InteractiveLocationMap } from './InteractiveLocationMap'
+import { Scanifly3DStudio } from './Scanifly3DStudio'
 import { EquipmentCapexTab } from './EquipmentCapexTab'
 import { EconomicSavingsReport } from './reports/EconomicSavingsReport'
 import { PvGenerationReport } from './reports/PvGenerationReport'
 import { ExecutiveCommercialReport } from './reports/ExecutiveCommercialReport'
+import { ScaniflyShadingReport } from './reports/ScaniflyShadingReport'
 import { SecComplianceChecklist } from './SecComplianceChecklist'
 import { updateProjectLocationAction, updateProjectConsumptionAction } from '@/app/dashboard/project-actions'
 import { EquipmentItem, PRECONFIGURED_CAPEX_TEMPLATES, calculateTotalCapex } from '@/lib/solar/capex-templates'
+import { StringConfiguration, validateStringing, DEFAULT_MODULE_SPEC, DEFAULT_INVERTER_SPEC } from '@/lib/solar/stringing-validator'
 
 interface Props {
   project: {
@@ -84,7 +88,7 @@ interface Props {
 const DEFAULT_MONTHS = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
 
 export function SolarDesignWizard({ project }: Props) {
-  const [currentStep, setCurrentStep] = useState<1 | 2 | 3 | 4 | 5 | 6>(1)
+  const [currentStep, setCurrentStep] = useState<1 | 2 | 3 | 4 | 5 | 6 | 7>(1)
   const [isPending, startTransition] = useTransition()
 
   // ================= PASO 1: CLIENTE Y EMPLAZAMIENTO CON MAPA GPS =================
@@ -101,8 +105,8 @@ export function SolarDesignWizard({ project }: Props) {
 
   // ================= PASO 2: CONSUMO ELÉCTRICO Y TARIFA MANUAL =================
   const [tariffType, setTariffType] = useState(project.consumption?.tariffType || 'BT1')
-  const [gridTariffClpKwh, setGridTariffClpKwh] = useState(175) // Tarifa manual $/kWh
-  const [injectionTariffClpKwh, setInjectionTariffClpKwh] = useState(95) // Precio nudo de inyección
+  const [gridTariffClpKwh, setGridTariffClpKwh] = useState(175)
+  const [injectionTariffClpKwh, setInjectionTariffClpKwh] = useState(95)
   const [connectedPowerKw, setConnectedPowerKw] = useState(Number(project.consumption?.connectedPowerKw) || 10)
   const [monthlyKwh, setMonthlyKwh] = useState<number[]>(() => {
     if (project.consumption?.monthlyData && Array.isArray(project.consumption.monthlyData)) {
@@ -113,26 +117,35 @@ export function SolarDesignWizard({ project }: Props) {
   const [isScrapingBill, setIsScrapingBill] = useState(false)
   const [billScrapedSuccess, setBillScrapedSuccess] = useState(false)
 
-  // ================= PASO 3: MODELOS FÍSICOS Y GENERACIÓN FV =================
+  // ================= PASO 3: ESTUDIO 3D SCANIFLY (SOMBRAS, LAYOUT & STRINGS) =================
+  const [installedCapacityKwp, setInstalledCapacityKwp] = useState(6.6)
+  const [totalModules, setTotalModules] = useState(12)
+  const [shadingLossPct, setShadingLossPct] = useState(3.5)
+  const [solarAccessPct, setSolarAccessPct] = useState(96.5)
+  const [tiltDeg, setTiltDeg] = useState(30)
+  const [azimuthDeg, setAzimuthDeg] = useState(0)
+  const [strings, setStrings] = useState<StringConfiguration[]>([
+    { id: 'STRING_1', name: 'String 1 (MPPT 1)', mpptIndex: 1, colorHex: '#2563eb', moduleCount: 6, moduleIndices: [] },
+    { id: 'STRING_2', name: 'String 2 (MPPT 2)', mpptIndex: 2, colorHex: '#f97316', moduleCount: 6, moduleIndices: [] },
+  ])
+
+  // ================= PASO 4: MODELOS FÍSICOS MINENERGÍA =================
   const [operationModel, setOperationModel] = useState<PvOperationModel>('BIFACIAL')
-  const [installedCapacityKwp, setInstalledCapacityKwp] = useState(5.0)
   const [tempCoefficientPctPerC, setTempCoefficientPctPerC] = useState(-0.29)
   const [bifacialityFactor, setBifacialityFactor] = useState(0.80)
   const [albedoType, setAlbedoType] = useState<AlbedoType>('GRASS')
   const [trackingType, setTrackingType] = useState<TrackingType>('FIXED')
-  const [tiltDeg, setTiltDeg] = useState(30)
-  const [azimuthDeg, setAzimuthDeg] = useState(0) // 0 = North
   const [inverterEfficiencyPct, setInverterEfficiencyPct] = useState(98)
   const [systemLossesPct, setSystemLossesPct] = useState(18)
   const [mismatchLossesPct, setMismatchLossesPct] = useState(6)
 
-  // ================= PASO 4: EQUIPAMIENTO, SERVICIOS Y CAPEX =================
+  // ================= PASO 5: EQUIPAMIENTO & CAPEX =================
   const [selectedTemplateName, setSelectedTemplateName] = useState<string>('Residencial Híbrida_PV[4kWp]_ESS[14kWh]_Coplanar_Zinc')
   const [equipmentList, setEquipmentList] = useState<EquipmentItem[]>(PRECONFIGURED_CAPEX_TEMPLATES[0].items)
   const [capexClp, setCapexClp] = useState(calculateTotalCapex(PRECONFIGURED_CAPEX_TEMPLATES[0].items).totalClp)
 
-  // ================= PASO 5: SELECTOR DE REPORTES =================
-  const [activeReportTab, setActiveReportTab] = useState<'SAVINGS' | 'PV_GENERATION' | 'COMMERCIAL'>('SAVINGS')
+  // ================= PASO 6: SELECTOR DE REPORTES =================
+  const [activeReportTab, setActiveReportTab] = useState<'SHADING_3D' | 'SAVINGS' | 'PV_GENERATION' | 'COMMERCIAL'>('SHADING_3D')
 
   // Obtener recurso meteorológico
   const weatherDataset = getSolarDataset(comunaName)
@@ -151,7 +164,7 @@ export function SolarDesignWizard({ project }: Props) {
     roofType,
     roofAngleDeg,
     inverterEfficiencyPct,
-    systemLossesPct,
+    systemLossesPct: Math.min(30, systemLossesPct + shadingLossPct), // Includes 3D shading
     mismatchLossesPct,
     annualGhiKwhM2: weatherDataset.annualGhiKwhM2,
     annualDniKwhM2: 1480,
@@ -162,19 +175,22 @@ export function SolarDesignWizard({ project }: Props) {
   const annualConsumptionKwh = monthlyKwh.reduce((a, b) => a + b, 0)
   const averageMonthlyKwh = Math.round(annualConsumptionKwh / 12)
 
-  // Manejo de cambio de tarifa manual y recálculo automático de inyección
+  // Stringing Validation Result
+  const stringingValidation = validateStringing(strings, DEFAULT_MODULE_SPEC, DEFAULT_INVERTER_SPEC, -5, 65)
+
+  // Manejo de cambio de tarifa manual
   const handleGridTariffChange = (value: number) => {
     const val = Math.max(0, value)
     setGridTariffClpKwh(val)
-    // Precio de nudo de inyección estimado ~54% del valor de suministro sin distribución
     setInjectionTariffClpKwh(Math.round(val * 0.54))
   }
 
-  // ================= VALIDACIONES ESTRICTAS POR PASO =================
+  // ================= VALIDACIONES ESTRICTAS =================
   const isStep1Valid = clientName.trim().length > 0 && roofAngleDeg >= 0 && comunaName.length > 0
   const isStep2Valid = annualConsumptionKwh > 0 && connectedPowerKw > 0 && gridTariffClpKwh > 0
-  const isStep3Valid = installedCapacityKwp > 0 && inverterEfficiencyPct > 0
-  const isStep4Valid = capexClp > 0 && equipmentList.length > 0
+  const isStep3Valid = installedCapacityKwp > 0 && totalModules > 0
+  const isStep4Valid = inverterEfficiencyPct > 0
+  const isStep5Valid = capexClp > 0 && equipmentList.length > 0
 
   // Simulación de Scrapping de Boleta SAESA
   const handleScrapeSaesaBill = () => {
@@ -220,8 +236,10 @@ export function SolarDesignWizard({ project }: Props) {
       setCurrentStep(4)
     } else if (currentStep === 4 && isStep4Valid) {
       setCurrentStep(5)
-    } else if (currentStep === 5) {
+    } else if (currentStep === 5 && isStep5Valid) {
       setCurrentStep(6)
+    } else if (currentStep === 6) {
+      setCurrentStep(7)
     }
   }
 
@@ -233,16 +251,17 @@ export function SolarDesignWizard({ project }: Props) {
 
   return (
     <div className="space-y-6">
-      {/* Wizard Header Stepper con 6 Pasos */}
+      {/* Wizard Header Stepper con 7 Pasos */}
       <div className="bg-white rounded-[24px] border border-gray-100 p-4 shadow-sm">
         <div className="flex items-center justify-between overflow-x-auto pb-2 sm:pb-0 gap-2">
           {[
-            { step: 1, label: '1. Cliente & Mapa GPS', icon: MapPin, valid: isStep1Valid },
+            { step: 1, label: '1. Cliente & GPS', icon: MapPin, valid: isStep1Valid },
             { step: 2, label: '2. Consumo & Tarifa', icon: Zap, valid: isStep2Valid },
-            { step: 3, label: '3. Generación FV (MinEnergía)', icon: Sun, valid: isStep3Valid },
-            { step: 4, label: '4. Equipamiento & CAPEX', icon: Package, valid: isStep4Valid },
-            { step: 5, label: '5. Informes & Ahorro', icon: FileText, valid: true },
-            { step: 6, label: '6. Tramitación SEC', icon: ShieldCheck, valid: true },
+            { step: 3, label: '3. Estudio 3D Scanifly', icon: Box, valid: isStep3Valid },
+            { step: 4, label: '4. Motor MinEnergía', icon: Sun, valid: isStep4Valid },
+            { step: 5, label: '5. Equipamiento & CAPEX', icon: Package, valid: isStep5Valid },
+            { step: 6, label: '6. Informes & Reportes', icon: FileText, valid: true },
+            { step: 7, label: '7. Tramitación SEC', icon: ShieldCheck, valid: true },
           ].map((s) => {
             const isActive = currentStep === s.step
             const isCompleted = currentStep > s.step
@@ -304,7 +323,6 @@ export function SolarDesignWizard({ project }: Props) {
           </CardHeader>
 
           <CardContent className="p-6 space-y-6">
-            {/* Mapa Interactivo con Búsqueda y Coordenadas */}
             <div className="space-y-2">
               <Label className="text-xs font-bold uppercase tracking-wider text-gray-700 flex items-center gap-1.5">
                 <Compass className="h-4 w-4 text-[#FF8300]" /> Ubicación Geográfica & Coordenadas de Muestreo (1 km²)
@@ -321,7 +339,6 @@ export function SolarDesignWizard({ project }: Props) {
               />
             </div>
 
-            {/* Datos del Cliente y Estructura */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
               <div className="space-y-1.5">
                 <Label className="text-xs font-semibold text-gray-700">Nombre del Cliente *</Label>
@@ -369,33 +386,6 @@ export function SolarDesignWizard({ project }: Props) {
                   <option value="FIBROCEMENT">Fibrocemento / Pizarreño</option>
                   <option value="GROUND_MOUNT">Montaje en Suelo / Parque</option>
                 </select>
-              </div>
-
-              <div className="space-y-1.5">
-                <Label className="text-xs font-semibold text-gray-700">Tipo de Arreglo</Label>
-                <select
-                  value={isCoplanar ? 'COPLANAR' : 'INCLINADO'}
-                  onChange={(e) => setIsCoplanar(e.target.value === 'COPLANAR')}
-                  className="w-full h-10 rounded-xl border border-gray-200 bg-gray-50/50 px-3 text-xs focus:ring-[#FF8300]"
-                >
-                  <option value="COPLANAR">Coplanar (Paralelo a la cubierta)</option>
-                  <option value="INCLINADO">Inclinado con Estructura Triangular</option>
-                </select>
-              </div>
-
-              <div className="space-y-1.5 bg-orange-50/30 p-4 rounded-xl border border-orange-100">
-                <div className="flex justify-between items-center text-xs mb-1">
-                  <span className="font-semibold text-gray-700">Inclinación de la Cubierta (Ángulo Techo) *</span>
-                  <span className="font-bold text-[#FF8300]">{roofAngleDeg}°</span>
-                </div>
-                <input
-                  type="range"
-                  min="0"
-                  max="60"
-                  value={roofAngleDeg}
-                  onChange={(e) => setRoofAngleDeg(Number(e.target.value))}
-                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#FF8300]"
-                />
               </div>
             </div>
           </CardContent>
@@ -459,7 +449,6 @@ export function SolarDesignWizard({ project }: Props) {
           </CardHeader>
 
           <CardContent className="p-6 space-y-6">
-            {/* Controles de Tarifa Manual y Recálculo de Inyección */}
             <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 bg-orange-50/30 p-4 rounded-2xl border border-orange-100">
               <div className="space-y-1">
                 <Label className="text-xs font-bold text-gray-800">Distribuidora</Label>
@@ -516,7 +505,7 @@ export function SolarDesignWizard({ project }: Props) {
               </div>
             </div>
 
-            {/* Matriz 12 Meses con Costos Calculados en Vivo */}
+            {/* Matriz 12 Meses */}
             <div className="space-y-2">
               <div className="flex justify-between items-center">
                 <Label className="text-xs font-bold uppercase tracking-wider text-gray-500">
@@ -567,7 +556,7 @@ export function SolarDesignWizard({ project }: Props) {
               disabled={!isStep2Valid || isPending}
               className="rounded-xl bg-[#FF8300] hover:bg-[#E67600] text-white font-semibold text-xs h-10 px-6 cursor-pointer"
             >
-              Continuar al Paso 3 (Generación FV)
+              Continuar al Paso 3 (Estudio 3D Scanifly)
               <ArrowRight className="h-4 w-4 ml-1.5" />
             </Button>
           </CardFooter>
@@ -575,9 +564,70 @@ export function SolarDesignWizard({ project }: Props) {
       )}
 
       {/* ========================================================================= */}
-      {/* PASO 3: FORMULARIO DE GENERACIÓN FV (MODELOS MINENERGÍA / NREL)           */}
+      {/* PASO 3: ESTUDIO 3D SCANIFLY (TECHUMBRE, SOMBRAS, LAYOUT & STRINGS)        */}
       {/* ========================================================================= */}
       {currentStep === 3 && (
+        <Card className="rounded-[24px] border-gray-100 shadow-sm bg-white overflow-hidden animate-in fade-in-50 duration-200">
+          <CardHeader className="border-b border-gray-50 pb-4">
+            <div className="flex items-center gap-2.5">
+              <div className="h-9 w-9 rounded-xl bg-orange-50 flex items-center justify-center text-[#FF8300]">
+                <Box className="h-5 w-5" />
+              </div>
+              <div>
+                <CardTitle className="text-lg font-bold text-[#1F1F1F]">
+                  Paso 3: Estudio 3D Scanifly - Techumbre, Sombras & Stringing Eléctrico
+                </CardTitle>
+                <CardDescription className="text-xs text-gray-500 mt-0.5">
+                  Modela la techumbre en 3D, agrega obstáculos con sombras dinámicas en tiempo real y asigna strings eléctricos
+                </CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+
+          <CardContent className="p-6 space-y-6">
+            <Scanifly3DStudio
+              latitude={latitude}
+              longitude={longitude}
+              initialTiltDeg={roofAngleDeg}
+              initialAzimuthDeg={0}
+              roofType={roofType}
+              isCoplanar={isCoplanar}
+              onDesignChange={(res) => {
+                setInstalledCapacityKwp(res.installedCapacityKwp)
+                setTotalModules(res.totalModules)
+                setShadingLossPct(res.shadingFactorPct)
+                setSolarAccessPct(res.solarAccessPct)
+                setTiltDeg(res.tiltDeg)
+                setAzimuthDeg(res.azimuthDeg)
+                setStrings(res.strings)
+              }}
+            />
+          </CardContent>
+
+          <CardFooter className="border-t border-gray-50 p-4 flex justify-between">
+            <Button
+              variant="outline"
+              onClick={handlePrev}
+              className="rounded-xl text-xs h-10 px-5"
+            >
+              <ArrowLeft className="h-4 w-4 mr-1.5" /> Volver
+            </Button>
+            <Button
+              onClick={handleNext}
+              disabled={!isStep3Valid || isPending}
+              className="rounded-xl bg-[#FF8300] hover:bg-[#E67600] text-white font-semibold text-xs h-10 px-6 cursor-pointer"
+            >
+              Continuar al Paso 4 (Motor MinEnergía)
+              <ArrowRight className="h-4 w-4 ml-1.5" />
+            </Button>
+          </CardFooter>
+        </Card>
+      )}
+
+      {/* ========================================================================= */}
+      {/* PASO 4: FORMULARIO DE GENERACIÓN FV (MODELOS MINENERGÍA / NREL)           */}
+      {/* ========================================================================= */}
+      {currentStep === 4 && (
         <Card className="rounded-[24px] border-gray-100 shadow-sm bg-white overflow-hidden animate-in fade-in-50 duration-200">
           <CardHeader className="border-b border-gray-50 pb-4">
             <div className="flex items-center gap-2.5">
@@ -586,10 +636,10 @@ export function SolarDesignWizard({ project }: Props) {
               </div>
               <div>
                 <CardTitle className="text-lg font-bold text-[#1F1F1F]">
-                  Paso 3: Formulario de Generación FV & Modelos Físicos (MinEnergía / NREL)
+                  Paso 4: Simulación de Rendimiento Físico (MinEnergía / NREL / Sandia)
                 </CardTitle>
                 <CardDescription className="text-xs text-gray-500 mt-0.5">
-                  Selecciona el modelo de operación y calibra las pérdidas, albedo y bifacialidad del arreglo
+                  El motor físico integra la potencia real ({installedCapacityKwp} kWp) y las pérdidas por sombreado 3D ({shadingLossPct}%)
                 </CardDescription>
               </div>
             </div>
@@ -650,30 +700,22 @@ export function SolarDesignWizard({ project }: Props) {
             {/* 2. Características del Arreglo Fotovoltaico */}
             <div className="space-y-3 bg-gray-50/70 p-4 rounded-xl border border-gray-100">
               <Label className="text-xs font-bold uppercase tracking-wider text-gray-700">
-                2. Características del Arreglo & Entorno
+                2. Calibración de Albedo & Coeficientes Térmicos
               </Label>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div className="space-y-1">
-                  <Label className="text-xs text-gray-600">Capacidad Instalada (kWp)</Label>
-                  <Input
-                    type="number"
-                    step="0.5"
-                    value={installedCapacityKwp}
-                    onChange={(e) => setInstalledCapacityKwp(Number(e.target.value))}
-                    className="h-9 rounded-xl bg-white text-xs font-bold"
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <Label className="text-xs text-gray-600">Coeficiente Temp. Panel (%/°C)</Label>
-                  <Input
-                    type="number"
-                    step="0.01"
-                    value={tempCoefficientPctPerC}
-                    onChange={(e) => setTempCoefficientPctPerC(Number(e.target.value))}
-                    className="h-9 rounded-xl bg-white text-xs"
-                  />
-                  <span className="text-[10px] text-gray-400">Estándar TOPCon: -0.29 %/°C</span>
+                  <Label className="text-xs text-gray-600">Tipo de Albedo del Suelo</Label>
+                  <select
+                    value={albedoType}
+                    onChange={(e) => setAlbedoType(e.target.value as any)}
+                    className="w-full h-9 rounded-xl border border-gray-200 bg-white px-3 text-xs"
+                  >
+                    {Object.entries(ALBEDO_VALUES).map(([k, v]) => (
+                      <option key={k} value={k}>
+                        {v.name} (Albedo = {v.value})
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
                 <div className="space-y-1">
@@ -691,94 +733,13 @@ export function SolarDesignWizard({ project }: Props) {
                 </div>
 
                 <div className="space-y-1">
-                  <Label className="text-xs text-gray-600">Tipo de Albedo del Suelo</Label>
-                  <select
-                    value={albedoType}
-                    onChange={(e) => setAlbedoType(e.target.value as any)}
-                    className="w-full h-9 rounded-xl border border-gray-200 bg-white px-3 text-xs"
-                  >
-                    {Object.entries(ALBEDO_VALUES).map(([k, v]) => (
-                      <option key={k} value={k}>
-                        {v.name} (Albedo = {v.value})
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="space-y-1">
-                  <Label className="text-xs text-gray-600">Tipo de Arreglo / Seguimiento</Label>
-                  <select
-                    value={trackingType}
-                    onChange={(e) => setTrackingType(e.target.value as any)}
-                    className="w-full h-9 rounded-xl border border-gray-200 bg-white px-3 text-xs"
-                  >
-                    <option value="FIXED">Fijo Inclinado / Coplanar</option>
-                    <option value="HSAT">HSAT (Seguimiento 1-Eje Horizontal E-O)</option>
-                    <option value="HTSAT">HTSAT (Seguimiento con Inclinación)</option>
-                    <option value="VSAT">VSAT (Seguimiento 1-Eje Vertical)</option>
-                    <option value="TSAT">TSAT (Seguimiento 2 Ejes)</option>
-                  </select>
-                </div>
-
-                <div className="space-y-1">
-                  <Label className="text-xs text-gray-600">Inclinación (Tilt °) / Azimut (°)</Label>
-                  <div className="flex gap-2">
-                    <Input
-                      type="number"
-                      value={tiltDeg}
-                      onChange={(e) => setTiltDeg(Number(e.target.value))}
-                      className="h-9 rounded-xl bg-white text-xs w-1/2"
-                      placeholder="Tilt"
-                    />
-                    <Input
-                      type="number"
-                      value={azimuthDeg}
-                      onChange={(e) => setAzimuthDeg(Number(e.target.value))}
-                      className="h-9 rounded-xl bg-white text-xs w-1/2"
-                      placeholder="Azimut (0°=N)"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* 3. Pérdidas del Sistema */}
-            <div className="space-y-3 bg-gray-50/70 p-4 rounded-xl border border-gray-100">
-              <Label className="text-xs font-bold uppercase tracking-wider text-gray-700">
-                3. Pérdidas del Sistema Fotovoltaico
-              </Label>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div className="space-y-1">
-                  <Label className="text-xs text-gray-600">Eficiencia Inversor (%)</Label>
+                  <Label className="text-xs text-gray-600">Pérdidas Totales (Con Sombreado 3D)</Label>
                   <Input
-                    type="number"
-                    value={inverterEfficiencyPct}
-                    onChange={(e) => setInverterEfficiencyPct(Number(e.target.value))}
-                    className="h-9 rounded-xl bg-white text-xs font-semibold"
+                    type="text"
+                    disabled
+                    value={`${(systemLossesPct + shadingLossPct).toFixed(1)}% (18% BOS + ${shadingLossPct}% Sombras 3D)`}
+                    className="h-9 rounded-xl bg-gray-100 text-xs font-bold text-gray-700"
                   />
-                  <span className="text-[10px] text-gray-400">Estándar: 98%</span>
-                </div>
-
-                <div className="space-y-1">
-                  <Label className="text-xs text-gray-600">Pérdidas del Sistema (%)</Label>
-                  <Input
-                    type="number"
-                    value={systemLossesPct}
-                    onChange={(e) => setSystemLossesPct(Number(e.target.value))}
-                    className="h-9 rounded-xl bg-white text-xs font-semibold"
-                  />
-                  <span className="text-[10px] text-gray-400">Cableado, suciedad, soiling (18%)</span>
-                </div>
-
-                <div className="space-y-1">
-                  <Label className="text-xs text-gray-600">Pérdidas por Mismatch (%)</Label>
-                  <Input
-                    type="number"
-                    value={mismatchLossesPct}
-                    onChange={(e) => setMismatchLossesPct(Number(e.target.value))}
-                    className="h-9 rounded-xl bg-white text-xs font-semibold"
-                  />
-                  <span className="text-[10px] text-gray-400">Desajuste de módulos (6%)</span>
                 </div>
               </div>
             </div>
@@ -787,10 +748,10 @@ export function SolarDesignWizard({ project }: Props) {
             <div className="p-4 bg-orange-50/40 rounded-2xl border border-orange-100 flex flex-col sm:flex-row justify-between items-center gap-4">
               <div className="space-y-0.5">
                 <span className="text-xs font-bold text-gray-800 flex items-center gap-1.5">
-                  <Activity className="h-4 w-4 text-[#FF8300]" /> Generación Estimada (MinEnergía):
+                  <Activity className="h-4 w-4 text-[#FF8300]" /> Generación Estimada Neta (MinEnergía):
                 </span>
                 <p className="text-xs text-gray-600">
-                  Rendimiento Específico: <strong>{simResults.specificYieldKwhKwp} kWh/kWp/año</strong> • Factor de Planta: <strong>{simResults.capacityFactorPct}%</strong>
+                  Rendimiento Específico: <strong>{simResults.specificYieldKwhKwp} kWh/kWp/año</strong> • Factor de Planta: <strong>{simResults.capacityFactorPct}%</strong> • Solar Access: <strong>{solarAccessPct}%</strong>
                 </p>
               </div>
 
@@ -812,10 +773,10 @@ export function SolarDesignWizard({ project }: Props) {
             </Button>
             <Button
               onClick={handleNext}
-              disabled={!isStep3Valid || isPending}
+              disabled={!isStep4Valid || isPending}
               className="rounded-xl bg-[#FF8300] hover:bg-[#E67600] text-white font-semibold text-xs h-10 px-6 cursor-pointer"
             >
-              Continuar al Paso 4 (Equipamiento & CAPEX)
+              Continuar al Paso 5 (Equipamiento & CAPEX)
               <ArrowRight className="h-4 w-4 ml-1.5" />
             </Button>
           </CardFooter>
@@ -823,9 +784,9 @@ export function SolarDesignWizard({ project }: Props) {
       )}
 
       {/* ========================================================================= */}
-      {/* PASO 4: EQUIPAMIENTO, SERVICIOS & CAPEX A MEDIDA (TEMPLATES)              */}
+      {/* PASO 5: EQUIPAMIENTO, SERVICIOS & CAPEX A MEDIDA (TEMPLATES)              */}
       {/* ========================================================================= */}
-      {currentStep === 4 && (
+      {currentStep === 5 && (
         <Card className="rounded-[24px] border-gray-100 shadow-sm bg-white overflow-hidden animate-in fade-in-50 duration-200">
           <CardHeader className="border-b border-gray-50 pb-4">
             <div className="flex items-center gap-2.5">
@@ -834,7 +795,7 @@ export function SolarDesignWizard({ project }: Props) {
               </div>
               <div>
                 <CardTitle className="text-lg font-bold text-[#1F1F1F]">
-                  Paso 4: Selección de Equipamiento, Servicios & Presupuesto CAPEX
+                  Paso 5: Selección de Equipamiento, Servicios & Presupuesto CAPEX
                 </CardTitle>
                 <CardDescription className="text-xs text-gray-500 mt-0.5">
                   Elige una plantilla preconfigurada SoldeRío o personaliza las partidas de módulos, inversores, baterías y montaje
@@ -866,10 +827,10 @@ export function SolarDesignWizard({ project }: Props) {
             </Button>
             <Button
               onClick={handleNext}
-              disabled={!isStep4Valid || isPending}
+              disabled={!isStep5Valid || isPending}
               className="rounded-xl bg-[#FF8300] hover:bg-[#E67600] text-white font-semibold text-xs h-10 px-6 cursor-pointer"
             >
-              Continuar al Paso 5 (Informes & Reportes)
+              Continuar al Paso 6 (Informes & Reportes)
               <ArrowRight className="h-4 w-4 ml-1.5" />
             </Button>
           </CardFooter>
@@ -877,13 +838,25 @@ export function SolarDesignWizard({ project }: Props) {
       )}
 
       {/* ========================================================================= */}
-      {/* PASO 5: GENERADOR DE INFORMES (3 INFORMES MINENERGÍA / SOLDERÍO)          */}
+      {/* PASO 6: GENERADOR DE INFORMES (4 INFORMES: SCANIFLY 3D, AHORRO, PV, EPC)  */}
       {/* ========================================================================= */}
-      {currentStep === 5 && (
+      {currentStep === 6 && (
         <div className="space-y-6 animate-in fade-in-50 duration-200">
-          {/* Header de Navegación de Reportes */}
           <div className="flex flex-col sm:flex-row justify-between items-center gap-3 bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-wrap">
+              <Button
+                size="sm"
+                onClick={() => setActiveReportTab('SHADING_3D')}
+                className={`rounded-xl text-xs font-semibold cursor-pointer ${
+                  activeReportTab === 'SHADING_3D'
+                    ? 'bg-[#FF8300] hover:bg-[#E67600] text-white'
+                    : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                }`}
+              >
+                <Box className="h-3.5 w-3.5 mr-1.5" />
+                1. Sombreado 3D & Strings (Scanifly)
+              </Button>
+
               <Button
                 size="sm"
                 onClick={() => setActiveReportTab('SAVINGS')}
@@ -894,7 +867,7 @@ export function SolarDesignWizard({ project }: Props) {
                 }`}
               >
                 <DollarSign className="h-3.5 w-3.5 mr-1.5" />
-                1. Reporte Ahorro en Boleta
+                2. Ahorro en Boleta (MinEnergía)
               </Button>
 
               <Button
@@ -907,7 +880,7 @@ export function SolarDesignWizard({ project }: Props) {
                 }`}
               >
                 <Sun className="h-3.5 w-3.5 mr-1.5" />
-                2. Reporte Generación FV
+                3. Generación FV (Explorador)
               </Button>
 
               <Button
@@ -920,7 +893,7 @@ export function SolarDesignWizard({ project }: Props) {
                 }`}
               >
                 <Sparkles className="h-3.5 w-3.5 mr-1.5" />
-                3. Propuesta Ejecutiva SoldeRío
+                4. Propuesta Llave en Mano EPC
               </Button>
             </div>
 
@@ -938,13 +911,31 @@ export function SolarDesignWizard({ project }: Props) {
                 onClick={handleNext}
                 className="rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold"
               >
-                Ir a Tramitación SEC (Paso 6)
+                Ir a Tramitación SEC (Paso 7)
                 <ArrowRight className="h-3.5 w-3.5 ml-1.5" />
               </Button>
             </div>
           </div>
 
           {/* Renderizado de Reporte Seleccionado */}
+          {activeReportTab === 'SHADING_3D' && (
+            <ScaniflyShadingReport
+              clientName={clientName}
+              clientRut={clientRut}
+              comunaName={comunaName}
+              latitude={latitude}
+              longitude={longitude}
+              installedCapacityKwp={installedCapacityKwp}
+              totalModules={totalModules}
+              tiltDeg={tiltDeg}
+              azimuthDeg={azimuthDeg}
+              shadingLossPct={shadingLossPct}
+              solarAccessPct={solarAccessPct}
+              strings={strings}
+              stringingValidation={stringingValidation}
+            />
+          )}
+
           {activeReportTab === 'SAVINGS' && (
             <EconomicSavingsReport
               clientName={clientName}
@@ -987,14 +978,14 @@ export function SolarDesignWizard({ project }: Props) {
       )}
 
       {/* ========================================================================= */}
-      {/* PASO 6: TRAMITACIÓN SEC & DISTRIBUIDORA (LEY 20.571 / 21.118)             */}
+      {/* PASO 7: TRAMITACIÓN SEC & DISTRIBUIDORA (LEY 20.571 / 21.118)             */}
       {/* ========================================================================= */}
-      {currentStep === 6 && (
+      {currentStep === 7 && (
         <div className="space-y-6 animate-in fade-in-50 duration-200">
           <div className="flex justify-between items-center bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
             <div>
               <Badge className="bg-orange-50 text-[#FF8300] border-orange-200 text-xs">
-                Paso 6: Cumplimiento Regulatorio & Trámites SEC (Ley 20.571 / 21.118)
+                Paso 7: Cumplimiento Regulatorio & Trámites SEC (Ley 20.571 / 21.118)
               </Badge>
               <p className="text-xs text-gray-500 mt-1">
                 Sube la documentación de respaldo y genera los antecedentes para el e-Declarador SEC (TE4)
@@ -1004,7 +995,7 @@ export function SolarDesignWizard({ project }: Props) {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setCurrentStep(5)}
+              onClick={() => setCurrentStep(6)}
               className="rounded-xl text-xs"
             >
               <ArrowLeft className="h-3.5 w-3.5 mr-1.5" /> Volver a Informes

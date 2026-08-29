@@ -169,7 +169,9 @@ export function TriadSection() {
                       <div className="inline-block px-3 py-1 rounded-full bg-[#1F1F1F] text-white text-xs font-light tracking-wide mb-4 shadow-sm">
                         {currentPillar.highlight}
                       </div>
-                      <h3 className="text-2xl md:text-3xl font-light text-brand-fg mb-2 leading-tight">
+                      <h3 className={`text-2xl md:text-3xl font-light text-brand-fg leading-tight ${
+                        currentPillar.description ? "mb-2 md:mb-3" : "mb-6 md:mb-8"
+                      }`}>
                         {currentPillar.displayHeadline}
                       </h3>
                       {currentPillar.description && (

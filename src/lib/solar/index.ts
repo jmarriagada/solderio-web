@@ -177,6 +177,7 @@ export function calculateSolarSizing(data: Partial<QuoteFormData>): SolarSizingR
     co2TonsAvoidedPerYear,
     equivalentTreesPlanted,
     autoconsumoPct: financials.autoconsumoRatioPercent,
+    averageMonthlyDemandKwh: Math.round(totalAnnualDemandKwh / 12),
     secNorms: secNormsList,
 
     // Turnkey Pricing & Cashflow Milestones (Huawei + Jinko + BOS + Flete Sur)

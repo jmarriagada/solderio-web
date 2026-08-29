@@ -34,6 +34,14 @@ import { VisitaTecnicaModal } from "@/components/modal/VisitaTecnicaModal";
 export const metadata: Metadata = {
   title: "SoldeRío | Soberanía Energética",
   description: "Energía inteligente, ingeniería confiable en el sur de Chile.",
+  icons: {
+    icon: [
+      { url: "/icon-solderio.svg", type: "image/svg+xml" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+    shortcut: "/icon-solderio.svg",
+    apple: "/icon-solderio.svg",
+  },
 };
 
 export default function RootLayout({

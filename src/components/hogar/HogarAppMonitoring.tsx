@@ -174,10 +174,6 @@ export function HogarAppMonitoring() {
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           className="text-center max-w-3xl mx-auto mb-12 md:mb-16"
         >
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/15 text-[#FF8300] text-xs font-mono uppercase tracking-wider mb-4 shadow-sm">
-            <Smartphone className="w-3.5 h-3.5" />
-            <span>Telemetría & Control Móvil 24/7</span>
-          </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-light text-white tracking-tight mb-4">
             Monitorea y controla por app
           </h2>

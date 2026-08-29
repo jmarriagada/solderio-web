@@ -19,7 +19,7 @@ export function EmpresasHeroFrame() {
         {/* Background Image with Black Multiply Overlay */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="/images/planta-solar-techo-comercial-solderio.jpeg"
+            src="/images/solar-panels-empresas-sur-chile.jpg"
             alt="SoldeRío Plantas Solares Comercial e Industrial"
             fill
             priority

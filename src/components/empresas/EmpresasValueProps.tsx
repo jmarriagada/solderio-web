@@ -3,11 +3,95 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { TrendingUp, Landmark, ShieldCheck, Award, ArrowUpRight } from "lucide-react";
-import { useVisitaModal } from "@/context/VisitaModalContext";
+
+function CashflowChart() {
+  return (
+    <div className="w-full bg-[#F7F8FA] p-4 md:p-5 rounded-2xl border border-black/5 my-5">
+      <div className="flex items-center justify-between mb-3">
+        <div>
+          <span className="text-[10px] font-mono uppercase tracking-wider text-[#FF8300] block mb-0.5">
+            Retorno Proyectado
+          </span>
+          <h4 className="text-xs font-medium text-[#1F1F1F]">
+            Flujo de Caja Acumulado ($)
+          </h4>
+        </div>
+        <div className="flex items-center gap-3 text-[10px] font-mono text-black/60">
+          <span className="flex items-center gap-1">
+            <span className="w-2 h-2 rounded-full bg-[#FF8300]" />
+            Payback (~Año 4)
+          </span>
+          <span className="flex items-center gap-1">
+            <span className="w-2 h-2 rounded-full bg-emerald-500" />
+            Flujo Positivo
+          </span>
+        </div>
+      </div>
+
+      <div className="relative w-full h-28">
+        <svg
+          viewBox="0 0 400 120"
+          className="w-full h-full overflow-visible"
+          preserveAspectRatio="none"
+        >
+          <defs>
+            <linearGradient id="cashflowGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#10B981" stopOpacity="0.2" />
+              <stop offset="100%" stopColor="#10B981" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+
+          {/* Dash Zero Line */}
+          <line
+            x1="0"
+            y1="75"
+            x2="400"
+            y2="75"
+            stroke="#D1D5DB"
+            strokeWidth="1.5"
+            strokeDasharray="4 4"
+          />
+          <text x="5" y="70" fill="#9CA3AF" fontSize="9" fontFamily="monospace">
+            $0 (Punto de Equilibrio)
+          </text>
+
+          {/* Area Fill under curve */}
+          <path
+            d="M 15 105 Q 80 95 140 75 T 390 15 L 390 75 L 15 75 Z"
+            fill="url(#cashflowGrad)"
+          />
+
+          {/* Main Curve Line */}
+          <path
+            d="M 15 105 Q 80 95 140 75 T 390 15"
+            fill="none"
+            stroke="#FF8300"
+            strokeWidth="3"
+            strokeLinecap="round"
+          />
+
+          {/* Break-even point */}
+          <circle cx="140" cy="75" r="5" fill="#FF8300" stroke="#FFFFFF" strokeWidth="2" />
+
+          {/* Year Labels */}
+          <text x="15" y="116" fill="#6B7280" fontSize="9" textAnchor="middle">Año 0</text>
+          <text x="80" y="116" fill="#6B7280" fontSize="9" textAnchor="middle">Año 2</text>
+          <text x="140" y="116" fill="#FF8300" fontSize="9" fontWeight="bold" textAnchor="middle">Año 4 (★ Flujo +)</text>
+          <text x="260" y="116" fill="#10B981" fontSize="9" textAnchor="middle">Año 10</text>
+          <text x="385" y="116" fill="#10B981" fontSize="9" textAnchor="middle">Año 25</text>
+        </svg>
+      </div>
+
+      <div className="mt-2 pt-2 border-t border-black/5 flex items-center justify-between text-[11px] text-black/50 font-light">
+        <span>CAPEX / Cuota Leasing</span>
+        <span className="font-normal text-emerald-600">★ Flujo Neto Positivo & Ganancia Neta</span>
+      </div>
+    </div>
+  );
+}
 
 export function EmpresasValueProps() {
   const [activeTab, setActiveTab] = useState(0);
-  const { openModal } = useVisitaModal();
 
   const drivers = [
     {
@@ -225,11 +309,10 @@ export function EmpresasValueProps() {
                     {drivers[activeTab].title}
                   </h3>
 
-                  <p className="text-brand-muted text-base leading-relaxed font-light mb-8">
-                    {drivers[activeTab].description}
-                  </p>
+                  {/* Cashflow Curve Chart */}
+                  <CashflowChart />
 
-                  <div className="space-y-3 mb-8">
+                  <div className="space-y-3">
                     {drivers[activeTab].points.map((pt, i) => (
                       <div key={i} className="flex items-start gap-3">
                         <div className="w-5 h-5 rounded-full bg-[#FF8300]/10 text-[#FF8300] flex items-center justify-center shrink-0 mt-0.5">
@@ -241,16 +324,6 @@ export function EmpresasValueProps() {
                       </div>
                     ))}
                   </div>
-                </div>
-
-                <div className="pt-6 border-t border-black/5 flex items-center justify-between">
-                  <button
-                    onClick={() => openModal("gratuita")}
-                    className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#1F1F1F] text-white text-xs md:text-sm font-light hover:bg-[#FF8300] transition-all cursor-pointer group"
-                  >
-                    <span>Solicitar Estudio de Factibilidad Financiera</span>
-                    <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                  </button>
                 </div>
               </div>
 

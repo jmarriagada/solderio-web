@@ -37,13 +37,12 @@ export function TriadSection() {
       badge: "RIGOR EN TERRENO",
       title: "Instalación Certificada",
       subtitle: "Seguridad eléctrica y garantías de funcionamiento",
-      displayHeadline: "Instalación Certificada: Seguridad eléctrica y garantías de funcionamiento",
-      description:
-        "Nuestras cuadrillas están lideradas por ingenieros eléctricos con licencia SEC Clase A. Empleamos fijaciones de aluminio anodizado inoxidable antigoteras, canalizaciones estancas y tableros normalizados bajo pliegos RIC N°01 a N°19.",
+      displayHeadline: "Plantas listas para netbilling",
+      description: "",
       bullets: [
-        "Gestión de trámites eléctricos TE-1, TE-4 y TE-6.",
-        "Protección contra arcos eléctricos (AFCI) y descargas atmosféricas.",
+        "Gestión técnica de trámites eléctricos TE-1 (eléctrico), TE-4 (solar) y TE-6 (EV).",
         "Medición de puesta a tierra y aislamiento antes de energizar.",
+        "Protección contra arcos eléctricos (AFCI) y descargas atmosféricas.",
       ],
       image: "/images/solderio-ingeniero-electrico.jpg",
       imagePosition: "object-center",
@@ -173,9 +172,11 @@ export function TriadSection() {
                       <h3 className="text-2xl md:text-3xl font-light text-brand-fg mb-2 leading-tight">
                         {currentPillar.displayHeadline}
                       </h3>
-                      <p className="text-brand-muted text-base leading-relaxed font-light mb-8">
-                        {currentPillar.description}
-                      </p>
+                      {currentPillar.description && (
+                        <p className="text-brand-muted text-base leading-relaxed font-light mb-8">
+                          {currentPillar.description}
+                        </p>
+                      )}
 
                       <div className="space-y-3.5 mb-8">
                         {currentPillar.bullets.map((bullet, idx) => (

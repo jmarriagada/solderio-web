@@ -1,42 +1,40 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef } from "react";
 import Image from "next/image";
-import { ArrowRight, ArrowLeft } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { ArrowRight } from "lucide-react";
+import { motion } from "framer-motion";
 import { useVisitaModal } from "@/context/VisitaModalContext";
 
 export function Attributes() {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
   const { openModal } = useVisitaModal();
 
-  const checkScrollPosition = () => {
-    if (scrollRef.current) {
-      const { scrollLeft } = scrollRef.current;
-      setCanScrollLeft(scrollLeft > 20);
-    }
+  const isMouseDownRef = useRef(false);
+  const startXRef = useRef(0);
+  const scrollLeftStartRef = useRef(0);
+  const isDraggingRef = useRef(false);
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!scrollRef.current) return;
+    isMouseDownRef.current = true;
+    isDraggingRef.current = false;
+    startXRef.current = e.pageX - scrollRef.current.offsetLeft;
+    scrollLeftStartRef.current = scrollRef.current.scrollLeft;
   };
 
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (el) {
-      el.scrollLeft = 0;
-      checkScrollPosition();
-      el.addEventListener("scroll", checkScrollPosition, { passive: true });
-      return () => el.removeEventListener("scroll", checkScrollPosition);
-    }
-  }, []);
+  const handleMouseLeaveOrUp = () => {
+    isMouseDownRef.current = false;
+  };
 
-  const scroll = (direction: "left" | "right") => {
-    if (scrollRef.current) {
-      const scrollAmount = 480;
-      scrollRef.current.scrollBy({
-        left: direction === "right" ? scrollAmount : -scrollAmount,
-        behavior: "smooth",
-      });
-      setTimeout(checkScrollPosition, 350);
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isMouseDownRef.current || !scrollRef.current) return;
+    const x = e.pageX - scrollRef.current.offsetLeft;
+    const walk = (x - startXRef.current) * 1.5;
+    if (Math.abs(walk) > 5) {
+      isDraggingRef.current = true;
     }
+    scrollRef.current.scrollLeft = scrollLeftStartRef.current - walk;
   };
 
   const steps = [
@@ -114,44 +112,23 @@ export function Attributes() {
             </p>
           </motion.div>
 
-          {/* Carousel Wrapper */}
+          {/* Carousel Wrapper (Drag & Move Scroll) */}
           <div className="relative">
-            {/* Left Arrow - appears only when scrolled past first card */}
-            <AnimatePresence>
-              {canScrollLeft && (
-                <motion.button
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.8 }}
-                  transition={{ duration: 0.2 }}
-                  onClick={() => scroll("left")}
-                  className="absolute left-2 md:left-4 top-[125px] sm:top-[145px] md:top-[155px] lg:top-[160px] -translate-y-1/2 bg-white/90 backdrop-blur-md border border-white/60 text-black p-3.5 md:p-4 rounded-2xl shadow-xl hover:bg-white hover:scale-105 transition-all z-30 cursor-pointer"
-                  title="Volver"
-                >
-                  <ArrowLeft className="w-5 h-5 md:w-6 md:h-6 stroke-[1.5]" />
-                </motion.button>
-              )}
-            </AnimatePresence>
-
-            {/* Right Arrow */}
-            <button
-              onClick={() => scroll("right")}
-              className="absolute right-2 md:right-4 lg:right-6 top-[125px] sm:top-[145px] md:top-[155px] lg:top-[160px] -translate-y-1/2 bg-white/90 backdrop-blur-md border border-white/60 text-black p-3.5 md:p-4 rounded-2xl shadow-xl hover:bg-white hover:scale-105 transition-all z-30 cursor-pointer"
-              title="Ver más"
-            >
-              <ArrowRight className="w-5 h-5 md:w-6 md:h-6 stroke-[1.5]" />
-            </button>
-
-            {/* Scrollable Container */}
+            {/* Scrollable Container with Drag Support */}
             <div
               ref={scrollRef}
-              className="flex gap-8 md:gap-9 overflow-x-auto scrollbar-none scroll-smooth pb-6 -mr-3 md:-mr-5 lg:-mr-[calc((100vw-1400px)/2+2rem)] pr-12 md:pr-24"
+              onMouseDown={handleMouseDown}
+              onMouseLeave={handleMouseLeaveOrUp}
+              onMouseUp={handleMouseLeaveOrUp}
+              onMouseMove={handleMouseMove}
+              className="flex gap-8 md:gap-9 overflow-x-auto scrollbar-none pb-6 -mr-3 md:-mr-5 lg:-mr-[calc((100vw-1400px)/2+2rem)] pr-12 md:pr-24 cursor-grab active:cursor-grabbing select-none"
               style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
             >
               {steps.map((item, index) => {
                 const isInteractive = index === 0 || index === 1;
 
                 const handleCardClick = () => {
+                  if (isDraggingRef.current) return;
                   if (index === 0) {
                     window.open("/cotizacion", "_blank");
                   } else if (index === 1) {

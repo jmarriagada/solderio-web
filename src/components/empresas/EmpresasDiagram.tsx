@@ -1,155 +1,250 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import { Info, X, Zap, Sun, Battery, Cpu, ShieldCheck, Activity } from "lucide-react";
+
+interface HotspotData {
+  id: string;
+  badgeTitle: string;
+  badgeType: "primary" | "secondary";
+  topPosition: string;
+  leftPosition: string;
+  title: string;
+  category: string;
+  icon: any;
+  description: string;
+  spec: string;
+  hasTag?: string;
+  hasDot?: boolean;
+}
+
+const HOTSPOTS: HotspotData[] = [
+  {
+    id: "solar",
+    badgeTitle: "Generación Solar",
+    badgeType: "primary",
+    topPosition: "top-[22%] md:top-[26%]",
+    leftPosition: "left-[14%] md:left-[28%]",
+    title: "Generación Solar FV",
+    category: "Captación Limpia",
+    icon: Sun,
+    description:
+      "Arreglo de módulos fotovoltaicos N-Type TOPCon de alta eficiencia instalados en techos comerciales e industriales. Capturan radiación directa y difusa propia del sur de Chile.",
+    spec: "Módulos N-Type TOPCon 580W • Eficiencia >22.5%",
+  },
+  {
+    id: "optimizer",
+    badgeTitle: "Optimizador de Panel",
+    badgeType: "secondary",
+    topPosition: "top-[32%] md:top-[30%]",
+    leftPosition: "left-[45%] md:left-[58%]",
+    title: "Optimizador de Panel",
+    category: "Rendimiento a Nivel Módulo",
+    icon: Cpu,
+    description:
+      "Dispositivos de electrónica de potencia (MPPT individual) que liberan el máximo potencial de cada panel independientemente, eliminando pérdidas por sombras parciales o inclinaciones complejas.",
+    spec: "Monitoreo en tiempo real por módulo • Apagado rápido de seguridad",
+    hasDot: true,
+  },
+  {
+    id: "electrical_room",
+    badgeTitle: "Sala Eléctrica",
+    badgeType: "secondary",
+    topPosition: "top-[48%] md:top-[48%]",
+    leftPosition: "left-[8%] md:left-[14%]",
+    title: "Sala Eléctrica Normalizada",
+    category: "Control & Protecciones",
+    icon: ShieldCheck,
+    description:
+      "Tableros de potencia, protecciones AC/DC y conmutación automática construidos bajo pliegos técnicos RIC N°01 a N°19 de la SEC para resguardar la infraestructura.",
+    spec: "Protecciones AFCI + SPD • Pliegos RIC SEC Clase A",
+  },
+  {
+    id: "ess",
+    badgeTitle: "Energy Storage System - ESS",
+    badgeType: "secondary",
+    topPosition: "top-[62%] md:top-[58%]",
+    leftPosition: "left-[14%] md:left-[24%]",
+    title: "Energy Storage System (ESS)",
+    category: "Almacenamiento BESS",
+    icon: Battery,
+    description:
+      "Banco de baterías industriales LiFePO4 de alta densidad. Permite almacenar excedentes solares para abastecer picos de consumo nocturnos o respaldar ante cortes de la red pública.",
+    spec: "Química LiFePO4 • +6.000 ciclos • Autonomía industrial",
+  },
+  {
+    id: "ev_chargers",
+    badgeTitle: "Cargadores Rápidos",
+    badgeType: "secondary",
+    topPosition: "top-[74%] md:top-[68%]",
+    leftPosition: "left-[38%] md:left-[48%]",
+    title: "Cargadores Rápidos para Flotas EV",
+    category: "Electromovilidad Empresarial",
+    icon: Zap,
+    description:
+      "Estaciones de carga electromóvil alimentadas directamente por la generación solar, optimizando la recarga de vehículos corporativos y logística empresarial.",
+    spec: "Carga Inteligente AC/DC • Protocolo OCPI / ISO 15118",
+    hasTag: "EV",
+  },
+  {
+    id: "grid",
+    badgeTitle: "Red",
+    badgeType: "secondary",
+    topPosition: "top-[82%] md:top-[78%]",
+    leftPosition: "left-[70%] md:left-[78%]",
+    title: "Interconexión a Red Pública",
+    category: "Net Billing Ley 21.118",
+    icon: Activity,
+    description:
+      "Enlace bidireccional certificado ante distribuidoras (Saesa, Crell, CGE) que inyecta excedentes valorizados y suministra respaldo complementario cuando la demanda lo requiere.",
+    spec: "Inyección Net Billing • Trámite SEC TE-4 • Medición Bidireccional",
+    hasDot: true,
+  },
+];
 
 export function EmpresasDiagram() {
+  const [activeModal, setActiveModal] = useState<HotspotData | null>(null);
+
   return (
-    <section className="w-full py-20 px-6 md:px-12 lg:px-24 bg-white overflow-hidden">
-      <div className="max-w-7xl mx-auto flex flex-col items-center">
+    <section className="w-full py-16 md:py-24 px-3 md:px-5 box-border bg-white overflow-hidden">
+      <div className="max-w-[1400px] mx-auto flex flex-col items-center">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="text-center mb-16"
+          className="text-center mb-12 md:mb-16"
         >
-          <h2 className="text-3xl md:text-5xl font-light text-[#1F1F1F] tracking-tight leading-[1.1] max-w-3xl mx-auto">
-            Solar, ESS y la red sincronizadas, minimizan el costo eléctrico.
+          <h2 className="text-3xl md:text-5xl font-light text-[#1F1F1F] tracking-tight leading-[1.1] max-w-4xl mx-auto">
+            Solar, baterías y la red sincronizadas, minimizando el costo eléctrico.
           </h2>
         </motion.div>
 
-        {/* Diagram Area */}
+        {/* Diagram Area - Spans full width matching Hero global margins */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
+          initial={{ opacity: 0, scale: 0.98 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          className="relative w-full aspect-[16/9] md:aspect-[21/9] rounded-[24px] overflow-hidden bg-[#F7F8FA] border border-black/5 shadow-sm"
+          className="relative w-full aspect-[16/9] md:aspect-[21/9] min-h-[380px] md:min-h-[520px] rounded-[24px] md:rounded-[32px] overflow-hidden bg-[#F7F8FA] border border-black/10 shadow-xl"
         >
-          {/* We use the commercial building image as a base for the diagram */}
+          {/* Base Isometric Diagram Image */}
           <Image
             src="/images/planta-solar-empresas-solderio.jpeg"
-            alt="Diagrama Planta Solar Comercial"
+            alt="Diagrama Planta Solar Comercial e Industrial SoldeRío"
             fill
-            className="object-cover opacity-90"
+            priority
+            className="object-cover opacity-95"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none" />
 
-          {/* Hotspots / Labels (Approximated positions based on generic commercial layout) */}
-          
-          {/* Generación Solar */}
-          <div className="absolute top-[20%] left-[20%] md:top-[25%] md:left-[30%]">
-            <motion.div 
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.5 }}
-              className="bg-[#FF8300] text-white text-xs md:text-sm font-medium px-4 py-2 rounded-full shadow-lg whitespace-nowrap"
-            >
-              Generación Solar
-            </motion.div>
-          </div>
+          {/* Interactive Infobutton Hotspots */}
+          {HOTSPOTS.map((hotspot) => {
+            const isPrimary = hotspot.badgeType === "primary";
 
-          {/* Optimizador de Panel (With Tooltip info) */}
-          <div className="absolute top-[35%] left-[50%] md:top-[30%] md:left-[60%] group">
-            <motion.div 
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.6 }}
-              className="bg-white text-black text-xs md:text-sm font-medium px-4 py-2 rounded-full shadow-lg border border-black/5 whitespace-nowrap cursor-pointer flex items-center gap-2"
-            >
-              <span className="w-2 h-2 rounded-full bg-[#FF8300]" />
-              Optimizador de Panel
-            </motion.div>
-            
-            {/* Tooltip Content */}
-            <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-64 md:w-80 bg-white rounded-xl shadow-xl border border-black/10 p-4 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
-              <h4 className="text-[10px] uppercase tracking-wider text-black/50 font-bold mb-2">Libera la máxima generación solar</h4>
-              <p className="text-xs text-black/70 mb-3 leading-relaxed">
-                Optimizamos la generación a nivel módulo para sacar el máximo potencial de techos comerciales e industriales. Así es el comportamiento con y sin optimizadores.
-              </p>
-              <div className="flex items-end justify-between gap-2 text-[10px] text-black/50 text-center">
-                <div className="flex-1">
-                  <div className="h-12 bg-[#F7F8FA] rounded mb-1 flex items-end justify-around pb-1">
-                    <div className="w-2 bg-black/20 h-[85%]" />
-                    <div className="w-2 bg-black/20 h-[90%]" />
-                    <div className="w-2 bg-black/20 h-[90%]" />
-                    <div className="w-2 bg-black/20 h-[90%]" />
+            return (
+              <div
+                key={hotspot.id}
+                className={`absolute ${hotspot.topPosition} ${hotspot.leftPosition} z-20`}
+              >
+                <motion.button
+                  onClick={() => setActiveModal(hotspot)}
+                  whileHover={{ scale: 1.06 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`group relative flex items-center gap-2 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full shadow-xl transition-all duration-300 cursor-pointer select-none ${
+                    isPrimary
+                      ? "bg-[#FF8300] text-white hover:bg-[#e07300] shadow-[0_4px_20px_rgba(255,131,0,0.4)]"
+                      : "bg-white/95 backdrop-blur-md text-[#1F1F1F] hover:bg-white border border-black/10 hover:border-[#FF8300]/40 shadow-lg"
+                  }`}
+                >
+                  {hotspot.hasDot && (
+                    <span className="w-2 h-2 rounded-full bg-[#FF8300] shadow-[0_0_8px_#FF8300]" />
+                  )}
+
+                  <span className="text-xs sm:text-sm font-medium tracking-tight whitespace-nowrap">
+                    {hotspot.badgeTitle}
+                  </span>
+
+                  {hotspot.hasTag && (
+                    <span className="text-[10px] bg-black/5 text-[#6B7280] px-1.5 py-0.5 rounded-full uppercase font-mono">
+                      {hotspot.hasTag}
+                    </span>
+                  )}
+
+                  <div className={`w-5 h-5 rounded-full flex items-center justify-center transition-transform group-hover:rotate-12 ${
+                    isPrimary ? "bg-white/20 text-white" : "bg-black/5 text-[#6B7280] group-hover:text-[#FF8300]"
+                  }`}>
+                    <Info className="w-3 h-3" />
                   </div>
-                  <span>Sin Optimizador</span>
-                </div>
-                <div className="flex-1">
-                  <div className="h-12 bg-[#F7F8FA] rounded mb-1 flex items-end justify-around pb-1">
-                    <div className="w-2 bg-[#FF8300] h-[85%]" />
-                    <div className="w-2 bg-[#FF8300] h-[100%]" />
-                    <div className="w-2 bg-[#FF8300] h-[100%]" />
-                    <div className="w-2 bg-[#FF8300] h-[100%]" />
-                  </div>
-                  <span className="text-[#FF8300] font-medium">Con Optimizador</span>
-                </div>
+                </motion.button>
               </div>
-            </div>
-          </div>
-
-          {/* Sala Eléctrica */}
-          <div className="absolute top-[50%] left-[10%] md:top-[50%] md:left-[15%]">
-            <motion.div 
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.7 }}
-              className="bg-white text-black text-xs md:text-sm font-medium px-4 py-2 rounded-full shadow-lg border border-black/5 whitespace-nowrap"
-            >
-              Sala Eléctrica
-            </motion.div>
-          </div>
-
-          {/* ESS */}
-          <div className="absolute top-[65%] left-[20%] md:top-[60%] md:left-[25%]">
-            <motion.div 
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.8 }}
-              className="bg-white text-black text-xs md:text-sm font-medium px-4 py-2 rounded-full shadow-lg border border-black/5 whitespace-nowrap"
-            >
-              Energy Storage System - ESS
-            </motion.div>
-          </div>
-
-          {/* Cargadores Rápidos */}
-          <div className="absolute top-[75%] left-[45%] md:top-[70%] md:left-[50%]">
-            <motion.div 
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.9 }}
-              className="bg-white text-black text-xs md:text-sm font-medium px-4 py-2 rounded-full shadow-lg border border-black/5 whitespace-nowrap flex items-center gap-2"
-            >
-              Cargadores Rápidos
-              <span className="w-4 h-4 rounded-full bg-black/5 flex items-center justify-center text-[10px]">EV</span>
-            </motion.div>
-          </div>
-
-          {/* Red */}
-          <div className="absolute bottom-[10%] right-[10%] md:bottom-[15%] md:right-[20%]">
-            <motion.div 
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 1.0 }}
-              className="bg-white text-black text-xs md:text-sm font-medium px-4 py-2 rounded-full shadow-lg border border-black/5 whitespace-nowrap flex items-center gap-2"
-            >
-              Red
-              <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]" />
-            </motion.div>
-          </div>
-
+            );
+          })}
         </motion.div>
       </div>
+
+      {/* Informative Modal Dialog on Hotspot Click */}
+      <AnimatePresence>
+        {activeModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              className="relative w-full max-w-lg bg-[#1F1F1F] text-white p-6 sm:p-8 rounded-[28px] border border-white/15 shadow-2xl overflow-hidden"
+            >
+              {/* Subtle Ambient Orange Radial Glow */}
+              <div className="absolute -top-20 -right-20 w-48 h-48 bg-[#FF8300]/20 rounded-full blur-3xl pointer-events-none" />
+
+              {/* Modal Top Bar */}
+              <div className="flex items-center justify-between mb-6 relative z-10">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-2xl bg-[#FF8300]/15 border border-[#FF8300]/30 flex items-center justify-center text-[#FF8300]">
+                    <activeModal.icon className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <span className="text-[11px] font-mono uppercase tracking-wider text-[#FF8300]">
+                      {activeModal.category}
+                    </span>
+                    <h3 className="text-xl sm:text-2xl font-light text-white leading-tight">
+                      {activeModal.title}
+                    </h3>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setActiveModal(null)}
+                  className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white/80 hover:text-white transition-colors cursor-pointer"
+                  title="Cerrar"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Description Body */}
+              <p className="text-white/80 text-sm sm:text-base leading-relaxed font-light mb-6 relative z-10">
+                {activeModal.description}
+              </p>
+
+              {/* Spec Badge Footer */}
+              <div className="pt-4 border-t border-white/10 flex items-center justify-between relative z-10">
+                <span className="text-xs text-white/60 font-mono">
+                  {activeModal.spec}
+                </span>
+                <button
+                  onClick={() => setActiveModal(null)}
+                  className="text-xs text-[#FF8300] font-medium hover:underline cursor-pointer"
+                >
+                  Entendido
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }

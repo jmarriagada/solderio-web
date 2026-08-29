@@ -431,7 +431,7 @@ export function SolarTopologyVisualizer({
       <div className="w-full px-3 md:px-5 box-border mb-10 md:mb-12 hidden md:block">
         <div className="max-w-[1400px] mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           
-          <div className="bg-[#F7F8FA] p-5 rounded-2xl border border-black/5 hover:border-[#FF8300]/40 transition-all flex items-center justify-between shadow-sm hover:shadow-md">
+          <div className="bg-[#F7F8FA] p-5 rounded-2xl border border-black/10 hover:border-[#FF8300]/40 transition-all flex items-center justify-between shadow-sm hover:shadow-md" style={{ backgroundColor: "#F7F8FA" }}>
             <div>
               <div className="text-[13px] text-[#6B7280] font-light mb-1">Generación Solar</div>
               <div className="text-base sm:text-lg font-normal text-[#1F1F1F]">
@@ -445,7 +445,7 @@ export function SolarTopologyVisualizer({
             <Sun className={`w-5 h-5 ${currentSolarKW > 0 ? "text-[#FF8300] animate-spin" : "text-black/25"}`} style={{ animationDuration: "16s" }} />
           </div>
 
-          <div className="bg-[#F7F8FA] p-5 rounded-2xl border border-black/5 hover:border-[#FF8300]/40 transition-all flex items-center justify-between shadow-sm hover:shadow-md">
+          <div className="bg-[#F7F8FA] p-5 rounded-2xl border border-black/10 hover:border-[#FF8300]/40 transition-all flex items-center justify-between shadow-sm hover:shadow-md" style={{ backgroundColor: "#F7F8FA" }}>
             <div>
               <div className="text-[13px] text-[#6B7280] font-light mb-1">Consumo Hogar</div>
               <div className="text-base sm:text-lg font-normal text-[#1F1F1F]">
@@ -455,7 +455,7 @@ export function SolarTopologyVisualizer({
             <Activity className="w-5 h-5 text-emerald-500" />
           </div>
 
-          <div className="bg-[#F7F8FA] p-5 rounded-2xl border border-black/5 hover:border-[#FF8300]/40 transition-all flex items-center justify-between shadow-sm hover:shadow-md">
+          <div className="bg-[#F7F8FA] p-5 rounded-2xl border border-black/10 hover:border-[#FF8300]/40 transition-all flex items-center justify-between shadow-sm hover:shadow-md" style={{ backgroundColor: "#F7F8FA" }}>
             <div>
               <div className="text-[13px] text-[#6B7280] font-light mb-1">Estado Batería (BESS)</div>
               <div className="text-base sm:text-lg font-normal text-[#1F1F1F]">
@@ -465,7 +465,7 @@ export function SolarTopologyVisualizer({
             <Zap className={`w-5 h-5 ${activeTab === "ongrid" ? "text-black/25" : "text-[#FF8300]"}`} />
           </div>
 
-          <div className="bg-[#F7F8FA] p-5 rounded-2xl border border-black/5 hover:border-[#FF8300]/40 transition-all flex items-center justify-between shadow-sm hover:shadow-md">
+          <div className="bg-[#F7F8FA] p-5 rounded-2xl border border-black/10 hover:border-[#FF8300]/40 transition-all flex items-center justify-between shadow-sm hover:shadow-md" style={{ backgroundColor: "#F7F8FA" }}>
             <div>
               <div className="text-[13px] text-[#6B7280] font-light mb-1">Red Eléctrica</div>
               <div className="text-base sm:text-lg font-normal text-[#1F1F1F]">

@@ -1,6 +1,7 @@
 import { FloatingNav } from "@/components/FloatingNav";
 import { EmpresasHeroFrame } from "@/components/empresas/EmpresasHeroFrame";
 import { EmpresasDiagram } from "@/components/empresas/EmpresasDiagram";
+import { EmpresasValueProps } from "@/components/empresas/EmpresasValueProps";
 import { EmpresasSolutions } from "@/components/empresas/EmpresasSolutions";
 import { EmpresasHardware } from "@/components/empresas/EmpresasHardware";
 import { EmpresasInstallations } from "@/components/empresas/EmpresasInstallations";
@@ -25,7 +26,10 @@ export default function EmpresasPage() {
       {/* 2. Diagrama (Solar, ESS y la red sincronizadas) */}
       <EmpresasDiagram />
 
-      {/* 3. Solucion integral en la operación (Acordeón de Etapas) */}
+      {/* 3. Ventajas Estratégicas & Indicadores Financieros para Decision Makers */}
+      <EmpresasValueProps />
+
+      {/* 4. Solucion integral en la operación (Acordeón de Etapas) */}
       <EmpresasSolutions />
 
       {/* 4. Gestión inteligente de energía (Showcase Hardware C&I) */}

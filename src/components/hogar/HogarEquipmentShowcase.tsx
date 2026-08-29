@@ -1,6 +1,6 @@
 "use client";
 
-import { Zap, Cpu, Battery, ArrowRight, ArrowLeft } from "lucide-react";
+import { Zap, Cpu, Battery, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useRef } from "react";
@@ -57,33 +57,15 @@ export function HogarEquipmentShowcase() {
           className="text-center max-w-3xl mx-auto mb-6 md:mb-8"
         >
           <h2 className="text-3xl md:text-5xl font-light text-[#1F1F1F] tracking-tight mb-3">
-            Respaldo confiable en cortes
+            Respaldo confiable ante cortes
           </h2>
           <p className="text-brand-muted text-base md:text-lg font-light leading-relaxed">
             Una selección de equipos que te soportan durante cortes y maximizan la generación solar con nubosidad.
           </p>
         </motion.div>
 
-        {/* Carousel / 3-Card Grid with Arrow Navigation */}
+        {/* 3-Card Grid */}
         <div className="relative">
-          {/* Navigation Controls */}
-          <div className="hidden lg:flex justify-end gap-2 mb-4">
-            <button
-              onClick={() => scroll("left")}
-              className="p-2.5 rounded-full bg-[#F7F8FA] border border-black/10 text-[#1F1F1F] hover:bg-white hover:shadow-md transition-all cursor-pointer"
-              title="Anterior"
-            >
-              <ArrowLeft className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => scroll("right")}
-              className="p-2.5 rounded-full bg-[#F7F8FA] border border-black/10 text-[#1F1F1F] hover:bg-white hover:shadow-md transition-all cursor-pointer"
-              title="Siguiente"
-            >
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
-
           <div
             ref={scrollRef}
             className="grid grid-cols-1 md:grid-cols-3 gap-6"
@@ -98,7 +80,8 @@ export function HogarEquipmentShowcase() {
                   viewport={{ once: true, margin: "-40px" }}
                   transition={{ duration: 0.6, delay: index * 0.15, ease: [0.16, 1, 0.3, 1] }}
                   whileHover={{ y: -6 }}
-                  className="bg-[#F7F8FA] p-8 md:p-9 rounded-[24px] border border-black/10 flex flex-col justify-between shadow-sm hover:shadow-[0_12px_40px_rgba(255,131,0,0.12)] hover:border-[#FF8300]/30 transition-all duration-300 group"
+                  className="bg-[#f1f1f1] p-8 md:p-9 rounded-[24px] border border-black/10 flex flex-col justify-between shadow-sm hover:shadow-[0_12px_40px_rgba(255,131,0,0.12)] hover:border-[#FF8300]/30 transition-all duration-300 group"
+                  style={{ backgroundColor: "#f1f1f1" }}
                 >
                   <div>
                     {/* Visual Icon Header */}
@@ -134,7 +117,7 @@ export function HogarEquipmentShowcase() {
         <div className="text-center mt-12">
           <Link
             href="/cotizacion"
-            className="inline-flex items-center gap-2 px-9 py-3.5 rounded-full bg-[#1F1F1F] text-white font-light text-xs md:text-sm hover:bg-[#FF8300] hover:text-white transition-all duration-300 shadow-xl hover:shadow-[0_0_30px_rgba(255,131,0,0.5)] cursor-pointer group"
+            className="inline-flex items-center gap-2 px-9 py-3.5 rounded-full bg-[#FF8300] text-white font-light text-xs md:text-sm hover:bg-[#e07300] transition-all duration-300 shadow-xl hover:shadow-[0_0_30px_rgba(255,131,0,0.5)] cursor-pointer group"
           >
             <span>Cotizar A Medida</span>
             <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />

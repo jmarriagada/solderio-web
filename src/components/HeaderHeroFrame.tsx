@@ -1,14 +1,46 @@
 "use client";
 
+import { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { HeroHeaderNav } from "@/components/HeroHeaderNav";
 
 export function HeaderHeroFrame() {
+  const containerRef = useRef<HTMLElement>(null);
+
+  // Track scroll position of the hero section relative to viewport
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"],
+  });
+
+  // Dark overcast multiply overlay reduces from 45% to 5% as user scrolls
+  const darkOverlayOpacity = useTransform(scrollYProgress, [0, 0.7], [0.45, 0.05]);
+
+  // Golden sunny warmth overlay transitions in
+  const sunnyOverlayOpacity = useTransform(scrollYProgress, [0, 0.45, 0.95], [0, 0.55, 0.85]);
+
+  // Radiant sun flare in sky grows brighter and expands
+  const sunFlareOpacity = useTransform(scrollYProgress, [0, 0.35, 0.9], [0.08, 0.75, 1]);
+  const sunFlareScale = useTransform(scrollYProgress, [0, 1], [0.85, 1.35]);
+  const sunFlareY = useTransform(scrollYProgress, [0, 1], [-80, 30]);
+
+  // Image brightness, warmth & subtle parallax zoom
+  const imageScale = useTransform(scrollYProgress, [0, 1], [1, 1.06]);
+  const imageFilter = useTransform(
+    scrollYProgress,
+    [0, 0.4, 0.85, 1],
+    [
+      "brightness(0.88) contrast(1.02) saturate(0.95) sepia(0)",
+      "brightness(1.05) contrast(1.06) saturate(1.12) sepia(0.05)",
+      "brightness(1.22) contrast(1.12) saturate(1.28) sepia(0.12)",
+      "brightness(1.28) contrast(1.15) saturate(1.35) sepia(0.15)",
+    ]
+  );
+
   return (
-    <section className="w-full h-screen p-3 md:p-5 flex flex-col box-border">
+    <section ref={containerRef} className="w-full h-screen p-3 md:p-5 flex flex-col box-border">
       {/* Mother Container */}
       <motion.div
         initial={{ opacity: 0, scale: 0.98 }}
@@ -16,23 +48,46 @@ export function HeaderHeroFrame() {
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         className="relative w-full h-full rounded-[24px] md:rounded-[32px] overflow-hidden flex flex-col justify-between shadow-2xl border border-black/10"
       >
-        {/* Background Image with Black 45% Multiply Overlay */}
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="/images/Family_inside_solar_powered_house1_solderio.jpeg"
-            alt="SoldeRío Planta Solar Hogar"
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover object-center"
-          />
-          <div className="absolute inset-0 bg-black/45 mix-blend-multiply pointer-events-none" />
-
-          {/* Subtle Ambient Radial Glow (Soft & Slow Breathing) */}
+        {/* Background Image Container with Dynamic Sunny Scroll Transition */}
+        <div className="absolute inset-0 z-0 overflow-hidden">
+          {/* Base Photo with Scroll-Driven Sunlight Lighting Filter */}
           <motion.div
-            animate={{ opacity: [0.08, 0.16, 0.08] }}
-            transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute -top-40 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[#FF8300] rounded-full blur-[160px] pointer-events-none"
+            style={{
+              filter: imageFilter,
+              scale: imageScale,
+            }}
+            className="absolute inset-0 w-full h-full"
+          >
+            <Image
+              src="/images/Family_inside_solar_powered_house1_solderio.jpeg"
+              alt="SoldeRío Planta Solar Hogar"
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover object-center"
+            />
+          </motion.div>
+
+          {/* 1. Dark Overcast Multiply Overlay (Fades out on scroll) */}
+          <motion.div
+            style={{ opacity: darkOverlayOpacity }}
+            className="absolute inset-0 bg-black mix-blend-multiply pointer-events-none"
+          />
+
+          {/* 2. Golden Sunlit Warmth Gradient (Fades in on scroll to create golden hour sunshine) */}
+          <motion.div
+            style={{ opacity: sunnyOverlayOpacity }}
+            className="absolute inset-0 bg-gradient-to-tr from-amber-500/20 via-orange-400/25 to-yellow-300/35 mix-blend-soft-light pointer-events-none"
+          />
+
+          {/* 3. Radiant Sun Ray Burst Flare in the Sky (Emerges and shines from top as you scroll) */}
+          <motion.div
+            style={{
+              opacity: sunFlareOpacity,
+              scale: sunFlareScale,
+              y: sunFlareY,
+            }}
+            className="absolute -top-32 left-1/2 -translate-x-1/2 w-[750px] h-[650px] bg-gradient-radial from-amber-300/60 via-orange-400/30 to-transparent rounded-full blur-[110px] pointer-events-none mix-blend-screen"
           />
         </div>
 

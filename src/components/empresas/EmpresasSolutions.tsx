@@ -115,13 +115,20 @@ export function EmpresasSolutions() {
                     </h3>
                     <div className="flex items-center gap-3 flex-shrink-0">
                       {isOpen && (
-                        <Link
-                          href="/cotizacion"
-                          onClick={(e) => e.stopPropagation()}
-                          className="px-4 py-1.5 rounded-full bg-[#1F1F1F] hover:bg-[#FF8300] text-white text-xs sm:text-sm font-medium tracking-tight shadow-sm transition-all duration-300"
+                        <motion.div
+                          initial={{ opacity: 0, scale: 0.9 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.9 }}
+                          transition={{ duration: 0.2 }}
                         >
-                          Comenzar
-                        </Link>
+                          <Link
+                            href="/cotizacion"
+                            onClick={(e) => e.stopPropagation()}
+                            className="px-4 py-1.5 rounded-full bg-[#FF8300] hover:bg-[#e07400] text-white text-xs sm:text-sm font-medium tracking-tight shadow-md hover:shadow-lg transition-all duration-300 inline-flex items-center justify-center cursor-pointer"
+                          >
+                            Comenzar
+                          </Link>
+                        </motion.div>
                       )}
                       <span
                         className={`w-6 h-6 rounded-full flex items-center justify-center text-xs transition-transform ${

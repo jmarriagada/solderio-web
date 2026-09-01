@@ -37,7 +37,14 @@ export interface QuoteFormData {
     dataUrl?: string;
   } | null;
 
-  // Step 5: Contact Info
+  // Step 5: Financing (Crédito Verde)
+  rut?: string;
+  financingSplit?: "100_cash" | "50_50" | "100_credit" | "custom";
+  creditAmountClp?: number;
+  creditInstallments?: number; // e.g., 24, 36, 48, 60
+  creditInsurance?: "con_seguro" | "sin_seguro";
+
+  // Step 6: Contact Info
   fullName: string;
   whatsapp: string;
   email: string;

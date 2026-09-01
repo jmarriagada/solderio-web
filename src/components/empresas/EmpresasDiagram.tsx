@@ -101,7 +101,7 @@ const HOTSPOTS: HotspotData[] = [
     badgeTitle: "Energy Storage System - ESS",
     topPosition: "top-[58%] md:top-[60%]",
     leftPosition: "left-[24%] md:left-[30%]",
-    title: "Smart String ESS Huawei LUNA2000 C&I",
+    title: "Smart String ESS C&I",
     category: "Almacenamiento & Grid-Forming",
     icon: Battery,
     description:

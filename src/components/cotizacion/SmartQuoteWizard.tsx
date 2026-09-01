@@ -255,20 +255,21 @@ export function SmartQuoteWizard() {
       <div className="mb-8 bg-[#1A1A1A] p-4 rounded-2xl border border-white/10 flex items-center justify-between shadow-lg">
         <div className="flex items-center gap-3">
           <span className="text-xs font-mono uppercase tracking-wider text-[#FF8300] font-semibold">
-            Paso {currentStep} de 5
+            Paso {currentStep} de 6
           </span>
           <span className="text-xs text-white/50 hidden sm:inline font-light">
             {currentStep === 1 && "• Tipo de Inmueble & Comuna"}
             {currentStep === 2 && "• Gasto Mensual & Distribuidora"}
             {currentStep === 3 && "• Objetivo & Topología Solar"}
             {currentStep === 4 && "• Boleta Eléctrica"}
-            {currentStep === 5 && "• Datos de Contacto"}
+            {currentStep === 5 && "• Financiamiento Crédito Verde"}
+            {currentStep === 6 && "• Datos de Contacto"}
           </span>
         </div>
 
-        {/* 5-Step Indicators */}
+        {/* 6-Step Indicators */}
         <div className="flex items-center gap-1.5">
-          {[1, 2, 3, 4, 5].map((s) => (
+          {[1, 2, 3, 4, 5, 6].map((s) => (
             <div
               key={s}
               className={`h-1.5 rounded-full transition-all duration-300 ${
@@ -985,14 +986,14 @@ export function SmartQuoteWizard() {
                   onClick={() => setCurrentStep(5)}
                   className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-[#FF8300] text-white font-light text-xs md:text-sm uppercase tracking-wider hover:bg-[#e07400] transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer group"
                 >
-                  <span>{formData.billFile ? "Continuar con Boleta" : "Omitir y Continuar"}</span>
+                  <span>{formData.billFile ? "Siguiente: Financiamiento" : "Omitir y Siguiente"}</span>
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </button>
               </div>
             </motion.div>
           )}
 
-          {/* STEP 5: CONTACT INFO & SUBMISSION */}
+          {/* STEP 5: FINANCING */}
           {currentStep === 5 && (
             <motion.div
               key="step5"
@@ -1004,7 +1005,108 @@ export function SmartQuoteWizard() {
             >
               <div>
                 <span className="text-xs font-mono uppercase tracking-wider text-[#FF8300] block mb-2">
-                  05. Generación del Pre-Informe
+                  05. Financiamiento Crédito Verde
+                </span>
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-light tracking-tight text-white mb-2">
+                  ¿Cómo planeas financiar tu proyecto solar?
+                </h2>
+                <p className="text-white/60 text-xs md:text-sm font-light">
+                  Simula condiciones preferenciales con el Crédito Verde de BancoEstado. Ingresa tu RUT para la pre-evaluación en el reporte final.
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <label className="text-xs text-white/70 font-light block">Estructura de Financiamiento</label>
+                <select
+                  value={formData.financingSplit || "100_cash"}
+                  onChange={(e) => setFormData({ ...formData, financingSplit: e.target.value as any })}
+                  className="w-full px-4 py-3 sm:py-3.5 rounded-xl bg-black/40 border border-white/15 text-white text-xs sm:text-sm font-light focus:outline-none focus:border-[#FF8300]"
+                >
+                  <option value="100_cash">100% Contado / Transferencia</option>
+                  <option value="50_50">50% Contado / 50% Crédito Verde</option>
+                  <option value="100_credit">100% Crédito Verde BancoEstado</option>
+                </select>
+              </div>
+
+              {(formData.financingSplit === "50_50" || formData.financingSplit === "100_credit") && (
+                <div className="p-5 sm:p-6 rounded-[24px] bg-black/30 border border-emerald-500/30 space-y-4">
+                  <div>
+                    <label className="text-xs text-emerald-400 font-light block mb-2">
+                      RUT (Para simulación BancoEstado)
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="18.131.877-K"
+                      value={formData.rut || ""}
+                      onChange={(e) => setFormData({ ...formData, rut: e.target.value })}
+                      className="w-full px-4 py-3 sm:py-3.5 rounded-xl bg-black/40 border border-white/15 text-white placeholder:text-white/30 text-xs sm:text-sm font-light focus:outline-none focus:border-emerald-500"
+                    />
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-xs text-white/70 font-light block mb-2">Número de Cuotas</label>
+                      <select
+                        value={formData.creditInstallments || 60}
+                        onChange={(e) => setFormData({ ...formData, creditInstallments: Number(e.target.value) })}
+                        className="w-full px-4 py-3 sm:py-3.5 rounded-xl bg-black/40 border border-white/15 text-white text-xs sm:text-sm font-light focus:outline-none focus:border-emerald-500"
+                      >
+                        <option value={24}>24 meses</option>
+                        <option value={36}>36 meses</option>
+                        <option value={48}>48 meses</option>
+                        <option value={60}>60 meses</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-xs text-white/70 font-light block mb-2">Seguro Desgravamen</label>
+                      <select
+                        value={formData.creditInsurance || "con_seguro"}
+                        onChange={(e) => setFormData({ ...formData, creditInsurance: e.target.value as any })}
+                        className="w-full px-4 py-3 sm:py-3.5 rounded-xl bg-black/40 border border-white/15 text-white text-xs sm:text-sm font-light focus:outline-none focus:border-emerald-500"
+                      >
+                        <option value="con_seguro">Con Seguro Desgravamen</option>
+                        <option value="sin_seguro">Sin Seguro</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Navigation Actions */}
+              <div className="pt-6 border-t border-white/10 flex flex-col-reverse sm:flex-row items-center justify-between gap-3">
+                <button
+                  type="button"
+                  onClick={() => setCurrentStep(4)}
+                  className="w-full sm:w-auto px-6 py-3 rounded-full bg-white/10 hover:bg-white/20 text-white font-light text-xs uppercase tracking-wider transition-colors cursor-pointer flex items-center justify-center gap-2"
+                >
+                  <ArrowLeft className="w-3.5 h-3.5" />
+                  <span>Atrás</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setCurrentStep(6)}
+                  className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-[#FF8300] text-white font-light text-xs md:text-sm uppercase tracking-wider hover:bg-[#e07400] transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer group"
+                >
+                  <span>Siguiente: Datos de Contacto</span>
+                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                </button>
+              </div>
+            </motion.div>
+          )}
+
+          {/* STEP 6: CONTACT INFO & SUBMISSION */}
+          {currentStep === 6 && (
+            <motion.div
+              key="step6"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.35 }}
+              className="space-y-6 sm:space-y-8"
+            >
+              <div>
+                <span className="text-xs font-mono uppercase tracking-wider text-[#FF8300] block mb-2">
+                  06. Generación del Pre-Informe
                 </span>
                 <h2 className="text-xl sm:text-2xl md:text-3xl font-light tracking-tight text-white mb-2">
                   ¿A dónde enviamos tu propuesta solar?
@@ -1078,7 +1180,7 @@ export function SmartQuoteWizard() {
                 <div className="pt-6 border-t border-white/10 flex flex-col-reverse sm:flex-row items-center justify-between gap-3">
                   <button
                     type="button"
-                    onClick={() => setCurrentStep(4)}
+                    onClick={() => setCurrentStep(5)}
                     className="w-full sm:w-auto px-6 py-3 rounded-full bg-white/10 hover:bg-white/20 text-white font-light text-xs uppercase tracking-wider transition-colors cursor-pointer flex items-center justify-center gap-2"
                   >
                     <ArrowLeft className="w-3.5 h-3.5" />

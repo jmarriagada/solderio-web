@@ -122,6 +122,19 @@ export interface SolarSizingResult {
     description: string;
     icon: string;
   }>;
+
+  // Financiamiento Crédito Verde (BancoEstado)
+  financingSimulation?: {
+    valorCuota: number;
+    montoLiquido: number;
+    numeroCuotas: number;
+    tasaInteresMensual: number;
+    tasaInteresAnual: number;
+    cae: number;
+    montoTotalCredito: number;
+    costoTotalCredito: number;
+    pdfBase64?: string; // If we can fetch the PDF
+  };
 }
 
 export interface LeadSubmission {

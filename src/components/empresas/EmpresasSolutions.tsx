@@ -3,8 +3,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import Link from "next/link";
-import { ChevronRight } from "lucide-react";
 
 const SOLUTIONS_LIST = [
   {
@@ -49,7 +47,7 @@ export function EmpresasSolutions() {
   const [activeTab, setActiveTab] = useState("consulta");
 
   return (
-    <section className="w-full py-20 px-6 md:px-12 lg:px-24 bg-[#F7F8FA] overflow-hidden border-t border-b border-black/5">
+    <section className="w-full py-20 px-6 md:px-12 lg:px-24 bg-[#F7F8FA] overflow-hidden">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <motion.div
@@ -57,23 +55,14 @@ export function EmpresasSolutions() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6"
+          className="mb-16 max-w-3xl"
         >
-          <div className="max-w-3xl">
-            <h2 className="text-3xl md:text-5xl font-light text-[#1F1F1F] tracking-tight leading-[1.1] mb-6">
-              Solucion integral en la operación
-            </h2>
-            <p className="text-base md:text-lg text-black/60 font-light leading-relaxed">
-              Tus aliados en la gestión eléctrica, diseñamos soluciones para diferentes escenarios, comerciales e industriales: agrícola, ganadero, aserraderos, lecherías, forestal, salmoneras, mecanizado, producción.
-            </p>
-          </div>
-          <Link
-            href="/cotizacion"
-            className="text-xs uppercase tracking-widest font-medium text-black/50 hover:text-[#FF8300] transition-colors flex items-center gap-1 group whitespace-nowrap self-start md:self-end mb-2"
-          >
-            <span>SABER MÁS</span>
-            <ChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-          </Link>
+          <h2 className="text-3xl md:text-5xl font-light text-[#1F1F1F] tracking-tight leading-[1.1] mb-6">
+            Solucion integral en la operación
+          </h2>
+          <p className="text-base md:text-lg text-black/60 font-light leading-relaxed">
+            Tus aliados en la gestión eléctrica, diseñamos soluciones para diferentes escenarios, comerciales e industriales: agrícola, ganadero, aserraderos, lecherías, forestal, salmoneras, mecanizado, producción.
+          </p>
         </motion.div>
 
         {/* Interactive Content Grid */}

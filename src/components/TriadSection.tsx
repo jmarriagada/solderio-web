@@ -55,12 +55,12 @@ export function TriadSection() {
       badge: "INTELIGENCIA CONTINUA",
       title: "Software de monitoreo",
       subtitle: "Telemetría 24/7, análisis y post-venta que genera valor",
-      displayHeadline: "Software de monitoreo: Telemetría 24/7, análisis y post-venta que genera valor",
-      description:
-        "Convertimos tu planta solar en un activo digital inteligente. Nuestra plataforma Energy-as-a-Service monitorea generación, consumo e inyección en tiempo real, detectando suciedad o anomalías para desplegar mantenimiento proactivo.",
+      displayHeadline: "Aseguramos la vida útil de tu planta solar",
+      description: "",
       bullets: [
-        "App móvil y dashboard web con métricas de ahorro en pesos ($ CLP).",
-        "Detección predictiva de fallas a nivel módulo.",
+        "App móvil y dashboard web con métricas de generación.",
+        "Ahorro y payback en $CLP.",
+        "Detección predictiva y correctiva de fallas.",
         "Operación, mantenimiento (O&M) y soporte técnico continuo 24/7.",
       ],
       image: "/images/solderio-app-plantas-solares-residenciales.jpeg",

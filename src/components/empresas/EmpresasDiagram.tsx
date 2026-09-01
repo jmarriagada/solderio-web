@@ -376,10 +376,12 @@ export function EmpresasDiagram() {
                   </div>
                 )}
 
-                <div className="bg-black/30 px-3 py-2 rounded-xl border border-white/10 flex items-center justify-between text-[11px] text-white/70">
-                  <span className="font-light text-[#FF8300]">Norma SEC:</span>
-                  <span className="font-light">{activeHotspot.secNorm}</span>
-                </div>
+                {activeHotspot.id !== "optimizer" && (
+                  <div className="bg-black/30 px-3 py-2 rounded-xl border border-white/10 flex items-center justify-between text-[11px] text-white/70">
+                    <span className="font-light text-[#FF8300]">Norma SEC:</span>
+                    <span className="font-light">{activeHotspot.secNorm}</span>
+                  </div>
+                )}
               </motion.div>
             )}
           </AnimatePresence>

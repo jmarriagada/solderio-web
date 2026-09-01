@@ -3,8 +3,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, ChevronRight } from "lucide-react";
-import { useState } from "react";
+import { ChevronRight } from "lucide-react";
 
 const HARDWARE_ITEMS = [
   {
@@ -16,14 +15,14 @@ const HARDWARE_ITEMS = [
   },
   {
     id: "inversor",
-    title: "Inversor de energía",
+    title: "Smart PV Controller",
     description: "Alta eficiencia en la conversión eléctrica de generación al consumo.",
     footnote: "Convierte la corriente DC en AC de forma sincronizada.",
     image: "/images/inverter-sun2000-5-6-8-10-12k-map0.png",
   },
   {
     id: "bateria",
-    title: "Banco de baterías",
+    title: "C&I Grid Forming ESS",
     description: "Almacena y entrega su energía de forma inteligente para la noche y ante cortes de suministro.",
     footnote: "Carga, entrega y respalda sincronizada.",
     image: "/images/bateria-luna2000-7-14-21-s1.png",
@@ -31,16 +30,6 @@ const HARDWARE_ITEMS = [
 ];
 
 export function EmpresasHardware() {
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  const handleNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % HARDWARE_ITEMS.length);
-  };
-
-  const handlePrev = () => {
-    setCurrentIndex((prev) => (prev - 1 + HARDWARE_ITEMS.length) % HARDWARE_ITEMS.length);
-  };
-
   return (
     <section className="w-full py-20 px-6 md:px-12 lg:px-24 bg-[#F7F8FA] overflow-hidden">
       <div className="max-w-7xl mx-auto flex flex-col items-center">
@@ -56,28 +45,12 @@ export function EmpresasHardware() {
             Gestión inteligente de energía
           </h2>
           <p className="text-base md:text-lg text-black/60 font-light leading-relaxed">
-            Descubre la ingeniería detrás de un sistema SoldeRío. Una selección que maximiza la generación solar en nubosidad, que prioriza el autoconsumo solar y que mantiene encendida tu empresa durante cortes.
+            Ingeniería robusta, detrás de un sistema Comercial/Industrial de SoldeRío. Una selección de equipos que maximiza el autoconsumo, aprovecha los limites de invierno (Peak shaving) y baja tu OpEx eléctrico
           </p>
         </motion.div>
 
         {/* Hardware Showcase Carousel */}
         <div className="relative w-full mb-12">
-          {/* Controls */}
-          <div className="flex items-center justify-between absolute top-1/2 -translate-y-1/2 left-0 right-0 z-10 pointer-events-none px-2">
-            <button
-              onClick={handlePrev}
-              className="w-10 h-10 rounded-full bg-white/80 border border-black/10 backdrop-blur-md flex items-center justify-center text-black/70 hover:text-black hover:bg-white transition-all shadow-md pointer-events-auto"
-            >
-              <ArrowLeft className="w-4 h-4" />
-            </button>
-            <button
-              onClick={handleNext}
-              className="w-10 h-10 rounded-full bg-white/80 border border-black/10 backdrop-blur-md flex items-center justify-center text-black/70 hover:text-black hover:bg-white transition-all shadow-md pointer-events-auto"
-            >
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
-
           {/* Cards Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {HARDWARE_ITEMS.map((item, idx) => (
@@ -87,7 +60,7 @@ export function EmpresasHardware() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: idx * 0.15 }}
-                className="bg-[#F7F8FA] rounded-[24px] p-8 border border-black/5 flex flex-col items-center text-center group hover:shadow-lg transition-all"
+                className="bg-[#F7F8FA] rounded-[24px] p-8 flex flex-col items-center text-center group hover:shadow-lg transition-all"
               >
                 <div className="relative w-full h-48 mb-6 flex items-center justify-center">
                   <Image

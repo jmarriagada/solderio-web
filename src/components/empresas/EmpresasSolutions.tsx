@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 
 const SOLUTIONS_LIST = [
   {
@@ -104,7 +105,7 @@ export function EmpresasSolutions() {
                       : "bg-transparent border-transparent hover:bg-black/5"
                   }`}
                 >
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between gap-4">
                     <h3
                       className={`text-xl md:text-2xl font-light tracking-tight transition-colors ${
                         isOpen ? "text-[#1F1F1F] font-normal" : "text-black/50"
@@ -112,13 +113,24 @@ export function EmpresasSolutions() {
                     >
                       {item.title}
                     </h3>
-                    <span
-                      className={`w-6 h-6 rounded-full flex items-center justify-center text-xs transition-transform ${
-                        isOpen ? "bg-[#FF8300] text-white rotate-90" : "bg-black/5 text-black/40"
-                      }`}
-                    >
-                      →
-                    </span>
+                    <div className="flex items-center gap-3 flex-shrink-0">
+                      {isOpen && (
+                        <Link
+                          href="/cotizacion"
+                          onClick={(e) => e.stopPropagation()}
+                          className="px-4 py-1.5 rounded-full bg-[#1F1F1F] hover:bg-[#FF8300] text-white text-xs sm:text-sm font-medium tracking-tight shadow-sm transition-all duration-300"
+                        >
+                          Comenzar
+                        </Link>
+                      )}
+                      <span
+                        className={`w-6 h-6 rounded-full flex items-center justify-center text-xs transition-transform ${
+                          isOpen ? "bg-[#FF8300] text-white rotate-90" : "bg-black/5 text-black/40"
+                        }`}
+                      >
+                        →
+                      </span>
+                    </div>
                   </div>
 
                   <AnimatePresence>

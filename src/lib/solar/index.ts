@@ -163,6 +163,40 @@ export function calculateSolarSizing(data: Partial<QuoteFormData>): SolarSizingR
 
   const selectedOm = OM_PACKAGES[data.omPackage || "basic"] || OM_PACKAGES.basic;
 
+  // Simulación Crédito Verde BancoEstado (Matemática Mock basada en API de referencia)
+  let financingSimulation = undefined;
+  if (data.financingSplit === "50_50" || data.financingSplit === "100_credit") {
+    let principal = financials.estimatedSystemCostIvaClp;
+    if (data.financingSplit === "50_50") {
+      principal = principal / 2;
+    }
+    
+    const r = 0.0089; // 0.89% tasa mensual
+    const n = data.creditInstallments || 60;
+    
+    // Aprox impuestos (0.8065% sobre el monto líquido)
+    const principalReal = principal * 1.008065;
+    
+    // Seguro de desgravamen aprox
+    const seguroMensual = data.creditInsurance === "sin_seguro" ? 0 : 3500;
+    
+    const rawCuota = principalReal * (r / (1 - Math.pow(1 + r, -n)));
+    const valorCuota = Math.round(rawCuota + seguroMensual);
+    
+    const montoTotalCredito = valorCuota * n;
+    
+    financingSimulation = {
+      valorCuota,
+      montoLiquido: Math.round(principal),
+      numeroCuotas: n,
+      tasaInteresMensual: 0.89,
+      tasaInteresAnual: 10.68,
+      cae: 10.73, // Promedio 
+      montoTotalCredito,
+      costoTotalCredito: Math.round(montoTotalCredito - principal),
+    };
+  }
+
   return {
     recommendedKwp: physicalSim.installedKwp,
     panelsCount: physicalSim.panelsCount,
@@ -208,5 +242,8 @@ export function calculateSolarSizing(data: Partial<QuoteFormData>): SolarSizingR
     winterLimitSavingsClp: financials.winterLimitSavingsClp,
     coberturaTotalAnualPct,
     applianceEquivalencies,
+    
+    // Simulación Crédito
+    financingSimulation,
   };
 }

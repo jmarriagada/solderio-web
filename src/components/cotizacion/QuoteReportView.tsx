@@ -620,6 +620,47 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
         </div>
       </div>
 
+      {/* Crédito Verde BancoEstado (If user selected credit) */}
+      {sizing.financingSimulation && (
+        <div className="p-5 sm:p-8 rounded-[24px] sm:rounded-[28px] bg-gradient-to-r from-emerald-950/40 via-emerald-900/20 to-black border border-emerald-500/40 shadow-xl relative overflow-hidden">
+          <div className="absolute -top-10 -right-10 w-40 h-40 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+          
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
+            <div className="space-y-3 flex-1 text-center md:text-left">
+              <span className="text-xs font-mono uppercase tracking-wider text-emerald-400 font-semibold flex items-center justify-center md:justify-start gap-1.5">
+                <Leaf className="w-4 h-4" />
+                <span>Simulación Crédito Verde BancoEstado</span>
+              </span>
+              <h3 className="text-xl sm:text-2xl font-light text-white">
+                Cuota Mensual Estimada: <strong className="text-emerald-400 font-mono text-2xl sm:text-3xl font-medium">{formatCurrency(sizing.financingSimulation.valorCuota)}</strong>
+              </h3>
+              <div className="flex flex-wrap items-center justify-center md:justify-start gap-x-4 gap-y-2 text-xs text-white/70 font-light">
+                <span>RUT: {formData.rut}</span>
+                <span className="hidden sm:inline text-white/30">•</span>
+                <span>Monto Líquido: {formatCurrency(sizing.financingSimulation.montoLiquido)}</span>
+                <span className="hidden sm:inline text-white/30">•</span>
+                <span>{sizing.financingSimulation.numeroCuotas} Cuotas</span>
+                <span className="hidden sm:inline text-white/30">•</span>
+                <span>Tasa Mensual: {sizing.financingSimulation.tasaInteresMensual}%</span>
+                <span className="hidden sm:inline text-white/30">•</span>
+                <span>CAE: {sizing.financingSimulation.cae}%</span>
+              </div>
+            </div>
+
+            <div className="w-full md:w-auto flex flex-col gap-3 flex-shrink-0 no-print">
+              <button
+                type="button"
+                className="w-full px-5 py-3 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white font-light text-xs uppercase tracking-wide shadow-lg hover:shadow-[0_0_20px_rgba(16,185,129,0.4)] transition-all flex items-center justify-center gap-2 cursor-pointer"
+                onClick={() => alert("El PDF oficial de simulación se encuentra en proceso de extracción por parte de nuestros sistemas (RPA) y se adjuntará pronto a su portal.")}
+              >
+                <Download className="w-4 h-4" />
+                <span>Descargar Simulación Oficial (PDF)</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* SEC Normative Compliance & Technical Visit CTA */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-stretch">
         

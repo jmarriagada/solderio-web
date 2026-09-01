@@ -607,327 +607,234 @@ export function EmpresasDiagram() {
               </linearGradient>
             </defs>
 
-            {/* PATH 1: Optimizadores -> Solar Principal */}
+            {/* PATH 1: Optimizadores -> Generación Solar (90° Orthogonal) */}
             {/* Base Conduit */}
             <path
-              d="M 645 140 L 490 85 L 440 95"
+              d="M 600 140 L 600 90 L 400 90"
               fill="none"
               stroke="#FF8300"
-              strokeWidth="2.5"
+              strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
-              strokeOpacity={currentScenario.paths.solarOpt ? 0.45 : 0.1}
+              strokeOpacity={currentScenario.paths.solarOpt ? 0.4 : 0.1}
             />
             {currentScenario.paths.solarOpt && (
-              <>
-                {/* Glowing Active Trace */}
-                <path
-                  d="M 645 140 L 490 85 L 440 95"
-                  fill="none"
-                  stroke="#FF8300"
-                  strokeWidth="3"
-                  strokeDasharray="16 180"
-                  filter="url(#neonGlowOrange)"
-                >
-                  <animate
-                    attributeName="stroke-dashoffset"
-                    from="0"
-                    to="-196"
-                    dur="3.2s"
-                    repeatCount="indefinite"
-                  />
-                </path>
-                {/* Particle Dots with cubic easing */}
-                <circle r="3.5" fill="#FFFFFF" filter="url(#dotGlow)">
-                  <animateMotion
-                    path="M 645 140 L 490 85 L 440 95"
-                    dur="3.2s"
-                    repeatCount="indefinite"
-                    keyPoints="0;0.5;1"
-                    keyTimes="0;0.5;1"
-                    calcMode="spline"
-                    keySplines="0.4 0 0.2 1; 0.4 0 0.2 1"
-                  />
-                </circle>
-              </>
+              <path
+                d="M 600 140 L 600 90 L 400 90"
+                fill="none"
+                stroke="#FF8300"
+                strokeWidth="3.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeDasharray="40 250"
+                filter="url(#neonGlowOrange)"
+              >
+                <animate
+                  attributeName="stroke-dashoffset"
+                  from="0"
+                  to="-250"
+                  dur="2.8s"
+                  repeatCount="indefinite"
+                />
+              </path>
             )}
 
-            {/* PATH 2: Solar Principal -> Sala Eléctrica */}
+            {/* PATH 2: Generación Solar -> Sala Eléctrica (90° Orthogonal) */}
             {/* Base Conduit */}
             <path
-              d="M 440 95 L 380 150 L 330 190 L 310 210"
+              d="M 400 90 L 310 90 L 310 190"
               fill="none"
               stroke="#FF8300"
-              strokeWidth="2.5"
+              strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
-              strokeOpacity={currentScenario.paths.solarMain ? 0.5 : 0.1}
+              strokeOpacity={currentScenario.paths.solarMain ? 0.45 : 0.1}
             />
             {currentScenario.paths.solarMain && (
-              <>
-                <path
-                  d="M 440 95 L 380 150 L 330 190 L 310 210"
-                  fill="none"
-                  stroke="#FF8300"
-                  strokeWidth="3"
-                  strokeDasharray="24 220"
-                  filter="url(#neonGlowOrange)"
-                >
-                  <animate
-                    attributeName="stroke-dashoffset"
-                    from="0"
-                    to="-244"
-                    dur="3.0s"
-                    repeatCount="indefinite"
-                  />
-                </path>
-                {/* Flow Dot 1 */}
-                <circle r="4" fill="#FFFFFF" filter="url(#dotGlow)">
-                  <animateMotion
-                    path="M 440 95 L 380 150 L 330 190 L 310 210"
-                    dur="3.0s"
-                    repeatCount="indefinite"
-                    keyPoints="0;0.5;1"
-                    keyTimes="0;0.5;1"
-                    calcMode="spline"
-                    keySplines="0.4 0 0.2 1; 0.4 0 0.2 1"
-                  />
-                </circle>
-                {/* Flow Dot 2 (Offset) */}
-                <circle r="3" fill="#FFE2C2" filter="url(#dotGlow)">
-                  <animateMotion
-                    path="M 440 95 L 380 150 L 330 190 L 310 210"
-                    dur="3.0s"
-                    begin="1.5s"
-                    repeatCount="indefinite"
-                    keyPoints="0;0.5;1"
-                    keyTimes="0;0.5;1"
-                    calcMode="spline"
-                    keySplines="0.4 0 0.2 1; 0.4 0 0.2 1"
-                  />
-                </circle>
-              </>
+              <path
+                d="M 400 90 L 310 90 L 310 190"
+                fill="none"
+                stroke="#FF8300"
+                strokeWidth="3.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeDasharray="35 190"
+                filter="url(#neonGlowOrange)"
+              >
+                <animate
+                  attributeName="stroke-dashoffset"
+                  from="0"
+                  to="-190"
+                  dur="2.4s"
+                  repeatCount="indefinite"
+                />
+              </path>
             )}
 
-            {/* PATH 3: Sala Eléctrica <-> ESS Baterías (Huawei LUNA2000 C&I) */}
+            {/* PATH 3: Sala Eléctrica <-> ESS Baterías (90° Orthogonal Vertical) */}
             {/* Base Conduit */}
             <path
-              d="M 310 210 L 330 275 L 380 345"
+              d="M 310 190 L 310 300"
               fill="none"
               stroke="#10B981"
-              strokeWidth="2.5"
+              strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeOpacity={
                 currentScenario.paths.essCharging || currentScenario.paths.essDischarging
-                  ? 0.5
+                  ? 0.45
                   : 0.1
               }
             />
             {/* Charging ESS: Sala Eléctrica -> ESS */}
             {currentScenario.paths.essCharging && (
-              <>
-                <path
-                  d="M 310 210 L 330 275 L 380 345"
-                  fill="none"
-                  stroke="#10B981"
-                  strokeWidth="3"
-                  strokeDasharray="20 180"
-                  filter="url(#neonGlowGreen)"
-                >
-                  <animate
-                    attributeName="stroke-dashoffset"
-                    from="0"
-                    to="-200"
-                    dur="2.8s"
-                    repeatCount="indefinite"
-                  />
-                </path>
-                <circle r="4" fill="#FFFFFF" filter="url(#dotGlow)">
-                  <animateMotion
-                    path="M 310 210 L 330 275 L 380 345"
-                    dur="2.8s"
-                    repeatCount="indefinite"
-                    keyPoints="0;0.5;1"
-                    keyTimes="0;0.5;1"
-                    calcMode="spline"
-                    keySplines="0.4 0 0.2 1; 0.4 0 0.2 1"
-                  />
-                </circle>
-              </>
+              <path
+                d="M 310 190 L 310 300"
+                fill="none"
+                stroke="#10B981"
+                strokeWidth="3.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeDasharray="30 110"
+                filter="url(#neonGlowGreen)"
+              >
+                <animate
+                  attributeName="stroke-dashoffset"
+                  from="0"
+                  to="-110"
+                  dur="1.8s"
+                  repeatCount="indefinite"
+                />
+              </path>
             )}
             {/* Discharging ESS (Peak Shaving / Off-Grid): ESS -> Sala Eléctrica */}
             {currentScenario.paths.essDischarging && (
-              <>
-                <path
-                  d="M 380 345 L 330 275 L 310 210"
-                  fill="none"
-                  stroke="#10B981"
-                  strokeWidth="3"
-                  strokeDasharray="20 180"
-                  filter="url(#neonGlowGreen)"
-                >
-                  <animate
-                    attributeName="stroke-dashoffset"
-                    from="0"
-                    to="-200"
-                    dur="2.5s"
-                    repeatCount="indefinite"
-                  />
-                </path>
-                <circle r="4" fill="#FFFFFF" filter="url(#dotGlow)">
-                  <animateMotion
-                    path="M 380 345 L 330 275 L 310 210"
-                    dur="2.5s"
-                    repeatCount="indefinite"
-                    keyPoints="0;0.5;1"
-                    keyTimes="0;0.5;1"
-                    calcMode="spline"
-                    keySplines="0.4 0 0.2 1; 0.4 0 0.2 1"
-                  />
-                </circle>
-              </>
+              <path
+                d="M 310 300 L 310 190"
+                fill="none"
+                stroke="#10B981"
+                strokeWidth="3.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeDasharray="30 110"
+                filter="url(#neonGlowGreen)"
+              >
+                <animate
+                  attributeName="stroke-dashoffset"
+                  from="0"
+                  to="-110"
+                  dur="1.8s"
+                  repeatCount="indefinite"
+                />
+              </path>
             )}
 
-            {/* PATH 4: Red Eléctrica <-> Sala Eléctrica */}
+            {/* PATH 4: Red Eléctrica <-> Sala Eléctrica (90° Orthogonal) */}
             {/* Base Conduit */}
             <path
-              d="M 180 180 L 240 230 L 310 210"
+              d="M 165 100 L 165 190 L 310 190"
               fill="none"
               stroke={
                 currentScenario.paths.gridDisconnected
                   ? "#EF4444"
                   : "#3B82F6"
               }
-              strokeWidth="2.5"
+              strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeDasharray={currentScenario.paths.gridDisconnected ? "6 6" : "none"}
               strokeOpacity={
                 currentScenario.paths.gridImport || currentScenario.paths.gridExport
-                  ? 0.5
+                  ? 0.45
                   : currentScenario.paths.gridDisconnected
-                  ? 0.7
-                  : 0.15
+                  ? 0.75
+                  : 0.12
               }
             />
             {/* Importing from Grid -> Sala Eléctrica */}
             {currentScenario.paths.gridImport && (
-              <>
-                <path
-                  d="M 180 180 L 240 230 L 310 210"
-                  fill="none"
-                  stroke="#3B82F6"
-                  strokeWidth="3"
-                  strokeDasharray="20 180"
-                  filter="url(#neonGlowBlue)"
-                >
-                  <animate
-                    attributeName="stroke-dashoffset"
-                    from="0"
-                    to="-200"
-                    dur="3.2s"
-                    repeatCount="indefinite"
-                  />
-                </path>
-                <circle r="4" fill="#FFFFFF" filter="url(#dotGlow)">
-                  <animateMotion
-                    path="M 180 180 L 240 230 L 310 210"
-                    dur="3.2s"
-                    repeatCount="indefinite"
-                    keyPoints="0;0.5;1"
-                    keyTimes="0;0.5;1"
-                    calcMode="spline"
-                    keySplines="0.4 0 0.2 1; 0.4 0 0.2 1"
-                  />
-                </circle>
-              </>
+              <path
+                d="M 165 100 L 165 190 L 310 190"
+                fill="none"
+                stroke="#3B82F6"
+                strokeWidth="3.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeDasharray="35 235"
+                filter="url(#neonGlowBlue)"
+              >
+                <animate
+                  attributeName="stroke-dashoffset"
+                  from="0"
+                  to="-235"
+                  dur="2.8s"
+                  repeatCount="indefinite"
+                />
+              </path>
             )}
 
-            {/* PATH 5: Sala Eléctrica -> Cargadores Rápidos EV (Carport) */}
+            {/* PATH 5: Sala Eléctrica -> Cargadores Rápidos EV (90° Orthogonal) */}
             {/* Base Conduit */}
             <path
-              d="M 310 210 L 420 290 L 500 350 L 560 400"
+              d="M 310 190 L 310 360 L 520 360"
               fill="none"
               stroke="#10B981"
-              strokeWidth="2.5"
+              strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
-              strokeOpacity={currentScenario.paths.evActive ? 0.5 : 0.1}
+              strokeOpacity={currentScenario.paths.evActive ? 0.45 : 0.1}
             />
             {currentScenario.paths.evActive && (
-              <>
-                <path
-                  d="M 310 210 L 420 290 L 500 350 L 560 400"
-                  fill="none"
-                  stroke="#10B981"
-                  strokeWidth="3"
-                  strokeDasharray="24 240"
-                  filter="url(#neonGlowGreen)"
-                >
-                  <animate
-                    attributeName="stroke-dashoffset"
-                    from="0"
-                    to="-264"
-                    dur="3.0s"
-                    repeatCount="indefinite"
-                  />
-                </path>
-                <circle r="4" fill="#FFFFFF" filter="url(#dotGlow)">
-                  <animateMotion
-                    path="M 310 210 L 420 290 L 500 350 L 560 400"
-                    dur="3.0s"
-                    repeatCount="indefinite"
-                    keyPoints="0;0.5;1"
-                    keyTimes="0;0.5;1"
-                    calcMode="spline"
-                    keySplines="0.4 0 0.2 1; 0.4 0 0.2 1"
-                  />
-                </circle>
-              </>
+              <path
+                d="M 310 190 L 310 360 L 520 360"
+                fill="none"
+                stroke="#10B981"
+                strokeWidth="3.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeDasharray="45 380"
+                filter="url(#neonGlowGreen)"
+              >
+                <animate
+                  attributeName="stroke-dashoffset"
+                  from="0"
+                  to="-380"
+                  dur="3.0s"
+                  repeatCount="indefinite"
+                />
+              </path>
             )}
 
-            {/* PATH 6: Sala Eléctrica -> Consumo Fábrica / Maquinaria */}
+            {/* PATH 6: Sala Eléctrica -> Consumo Fábrica / Maquinaria (90° Orthogonal) */}
             {/* Base Conduit */}
             <path
-              d="M 310 210 L 520 250 L 720 310"
+              d="M 310 190 L 720 190 L 720 260"
               fill="none"
               stroke="#10B981"
-              strokeWidth="2.5"
+              strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
-              strokeOpacity={currentScenario.paths.loadActive ? 0.5 : 0.1}
+              strokeOpacity={currentScenario.paths.loadActive ? 0.45 : 0.1}
             />
             {currentScenario.paths.loadActive && (
-              <>
-                <path
-                  d="M 310 210 L 520 250 L 720 310"
-                  fill="none"
-                  stroke="#10B981"
-                  strokeWidth="3"
-                  strokeDasharray="26 260"
-                  filter="url(#neonGlowGreen)"
-                >
-                  <animate
-                    attributeName="stroke-dashoffset"
-                    from="0"
-                    to="-286"
-                    dur="3.2s"
-                    repeatCount="indefinite"
-                  />
-                </path>
-                <circle r="4" fill="#FFFFFF" filter="url(#dotGlow)">
-                  <animateMotion
-                    path="M 310 210 L 520 250 L 720 310"
-                    dur="3.2s"
-                    repeatCount="indefinite"
-                    keyPoints="0;0.5;1"
-                    keyTimes="0;0.5;1"
-                    calcMode="spline"
-                    keySplines="0.4 0 0.2 1; 0.4 0 0.2 1"
-                  />
-                </circle>
-              </>
+              <path
+                d="M 310 190 L 720 190 L 720 260"
+                fill="none"
+                stroke="#10B981"
+                strokeWidth="3.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeDasharray="50 480"
+                filter="url(#neonGlowGreen)"
+              >
+                <animate
+                  attributeName="stroke-dashoffset"
+                  from="0"
+                  to="-480"
+                  dur="3.2s"
+                  repeatCount="indefinite"
+                />
+              </path>
             )}
           </svg>
 

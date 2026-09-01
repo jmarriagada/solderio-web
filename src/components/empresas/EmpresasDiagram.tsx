@@ -38,13 +38,13 @@ const HOTSPOTS: HotspotData[] = [
     category: "Captación Limpia",
     icon: Sun,
     description:
-      "Arreglo de módulos fotovoltaicos N-Type TOPCon de alta eficiencia instalados en cubiertas industriales. Diseñados para maximizar la captación tanto en radiación directa como difusa en el clima del sur de Chile.",
+      "Arreglo de módulos fotovoltaicos de alta eficiencia instalados en cubiertas industriales. Diseñados para maximizar la captación tanto en radiación directa como difusa en el clima del sur de Chile.",
     specs: [
       "Módulos N-Type TOPCon 580W+",
       "Eficiencia de celda >22.5%",
       "Bifacialidad con ganancia difusa +15%",
     ],
-    secNorm: "Pliego Técnico RIC N°09 (Instalaciones Fotovoltaicas)",
+    secNorm: "",
   },
   {
     id: "optimizer",

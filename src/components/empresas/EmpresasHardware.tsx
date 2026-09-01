@@ -18,14 +18,14 @@ const HARDWARE_ITEMS = [
     title: "Smart PV Controller",
     description: "Alta eficiencia en la conversión eléctrica de generación al consumo.",
     footnote: "Convierte la corriente DC en AC de forma sincronizada.",
-    image: "/images/inverter-sun2000-5-6-8-10-12k-map0.png",
+    image: "/images/smart-controller-comercialindustrial-solderio.png",
   },
   {
     id: "bateria",
     title: "C&I Grid Forming ESS",
     description: "Almacena y entrega su energía de forma inteligente para la noche y ante cortes de suministro.",
     footnote: "Carga, entrega y respalda sincronizada.",
-    image: "/images/bateria-luna2000-7-14-21-s1.png",
+    image: "/images/bess-comercial-industrial-solderio.png",
   },
 ];
 
@@ -60,7 +60,7 @@ export function EmpresasHardware() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: idx * 0.15 }}
-                className="bg-[#F7F8FA] rounded-[24px] p-8 flex flex-col items-center text-center group hover:shadow-lg transition-all"
+                className="bg-transparent rounded-[24px] p-8 flex flex-col items-center text-center group"
               >
                 <div className="relative w-full h-48 mb-6 flex items-center justify-center">
                   <Image

@@ -15,27 +15,27 @@ export function HeaderHeroFrame() {
     offset: ["start start", "end start"],
   });
 
-  // Dark overcast multiply overlay reduces from 45% to 5% as user scrolls
-  const darkOverlayOpacity = useTransform(scrollYProgress, [0, 0.7], [0.45, 0.05]);
+  // Dark overcast multiply overlay reduces from 45% to 0% rapidly (within first 25% of scroll)
+  const darkOverlayOpacity = useTransform(scrollYProgress, [0, 0.25], [0.45, 0.0]);
 
-  // Golden sunny warmth overlay transitions in
-  const sunnyOverlayOpacity = useTransform(scrollYProgress, [0, 0.45, 0.95], [0, 0.55, 0.85]);
+  // Golden sunny warmth overlay transitions in quickly and remains bright
+  const sunnyOverlayOpacity = useTransform(scrollYProgress, [0, 0.12, 0.28, 1], [0, 0.45, 0.85, 0.85]);
 
-  // Radiant sun flare in sky grows brighter and expands
-  const sunFlareOpacity = useTransform(scrollYProgress, [0, 0.35, 0.9], [0.08, 0.75, 1]);
-  const sunFlareScale = useTransform(scrollYProgress, [0, 1], [0.85, 1.35]);
-  const sunFlareY = useTransform(scrollYProgress, [0, 1], [-80, 30]);
+  // Radiant sun flare in sky bursts out quickly
+  const sunFlareOpacity = useTransform(scrollYProgress, [0, 0.1, 0.25, 1], [0.08, 0.65, 1, 1]);
+  const sunFlareScale = useTransform(scrollYProgress, [0, 0.3, 1], [0.85, 1.25, 1.35]);
+  const sunFlareY = useTransform(scrollYProgress, [0, 0.3, 1], [-70, 0, 25]);
 
-  // Image brightness, warmth & subtle parallax zoom
+  // Image brightness, warmth & subtle parallax zoom - peaking by 28% scroll
   const imageScale = useTransform(scrollYProgress, [0, 1], [1, 1.06]);
   const imageFilter = useTransform(
     scrollYProgress,
-    [0, 0.4, 0.85, 1],
+    [0, 0.12, 0.28, 1],
     [
       "brightness(0.88) contrast(1.02) saturate(0.95) sepia(0)",
-      "brightness(1.05) contrast(1.06) saturate(1.12) sepia(0.05)",
-      "brightness(1.22) contrast(1.12) saturate(1.28) sepia(0.12)",
-      "brightness(1.28) contrast(1.15) saturate(1.35) sepia(0.15)",
+      "brightness(1.12) contrast(1.08) saturate(1.18) sepia(0.06)",
+      "brightness(1.28) contrast(1.14) saturate(1.32) sepia(0.12)",
+      "brightness(1.28) contrast(1.14) saturate(1.32) sepia(0.12)",
     ]
   );
 

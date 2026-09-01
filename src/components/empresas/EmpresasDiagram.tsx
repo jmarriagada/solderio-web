@@ -128,6 +128,124 @@ const HOTSPOTS: HotspotData[] = [
   },
 ];
 
+function SolarPanelItem({
+  hasShade = false,
+  percentage,
+  isOptimized = false,
+}: {
+  hasShade?: boolean;
+  percentage: string;
+  isOptimized?: boolean;
+}) {
+  const isHundred = percentage === "100%";
+  return (
+    <div className="flex flex-col items-center flex-1">
+      {/* Solar Panel Box */}
+      <div className="relative w-full aspect-[9/16] max-w-[48px] bg-gradient-to-b from-[#1c2438] to-[#0d1322] rounded-[4px] border border-white/25 overflow-hidden shadow-inner p-[1px] flex flex-col justify-between">
+        {/* PV Grid Lines */}
+        <div className="w-full h-full grid grid-cols-2 grid-rows-5 gap-[1px] opacity-75">
+          {Array.from({ length: 10 }).map((_, i) => (
+            <div key={i} className="border border-white/10 bg-[#162032]/80" />
+          ))}
+        </div>
+
+        {/* Leaves / Shade Overlay for Panel 1 */}
+        {hasShade && (
+          <div className="absolute inset-0 pointer-events-none">
+            {/* Subtle shadow tint */}
+            <div className="absolute inset-0 bg-black/45" />
+            {/* Foliage / Leaves Vector */}
+            <svg
+              viewBox="0 0 48 64"
+              className="absolute -top-1 -left-1 w-[85%] h-auto text-[#10B981] drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]"
+              fill="currentColor"
+            >
+              {/* Leaf 1 */}
+              <path
+                d="M4 8 C12 2, 22 8, 20 18 C10 22, 2 16, 4 8 Z"
+                fill="#10B981"
+                opacity="0.95"
+              />
+              {/* Leaf 2 */}
+              <path
+                d="M14 14 C26 10, 32 20, 24 30 C16 32, 10 24, 14 14 Z"
+                fill="#059669"
+                opacity="0.95"
+              />
+              {/* Leaf 3 */}
+              <path
+                d="M2 22 C10 18, 18 24, 14 34 C6 36, 0 30, 2 22 Z"
+                fill="#34D399"
+                opacity="0.9"
+              />
+              {/* Stem / Vine */}
+              <path
+                d="M0 2 Q 14 16, 18 36"
+                stroke="#047857"
+                strokeWidth="1.5"
+                fill="none"
+              />
+            </svg>
+          </div>
+        )}
+      </div>
+
+      {/* Percentage Value */}
+      <span
+        className={`text-[11px] sm:text-xs font-mono font-medium mt-1.5 tracking-tight ${
+          isHundred
+            ? "text-[#2DD4BF]"
+            : hasShade
+            ? "text-white/70"
+            : isOptimized
+            ? "text-white/90"
+            : "text-white/60"
+        }`}
+      >
+        {percentage}
+      </span>
+    </div>
+  );
+}
+
+function OptimizerComparisonIllustration() {
+  return (
+    <div className="w-full bg-black/40 border border-white/10 rounded-xl p-3 sm:p-4 mb-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-6">
+        {/* Grupo 1: Sin Optimizador */}
+        <div className="flex flex-col">
+          <div className="text-center mb-2 pb-1 border-b border-white/10">
+            <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-wider text-white/70 font-semibold block">
+              Sin Optimizador
+            </span>
+          </div>
+          <div className="flex items-center gap-1 sm:gap-1.5 justify-between">
+            <SolarPanelItem hasShade={true} percentage="85%" />
+            <SolarPanelItem percentage="90%" />
+            <SolarPanelItem percentage="90%" />
+            <SolarPanelItem percentage="90%" />
+          </div>
+        </div>
+
+        {/* Grupo 2: Con Optimizador */}
+        <div className="flex flex-col">
+          <div className="text-center mb-2 pb-1 border-b border-[#2DD4BF]/30">
+            <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-wider text-[#2DD4BF] font-semibold block">
+              Con Optimizador
+            </span>
+          </div>
+          <div className="flex items-center gap-1 sm:gap-1.5 justify-between">
+            <SolarPanelItem hasShade={true} percentage="85%" isOptimized={true} />
+            <SolarPanelItem percentage="100%" isOptimized={true} />
+            <SolarPanelItem percentage="100%" isOptimized={true} />
+            <SolarPanelItem percentage="100%" isOptimized={true} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function EmpresasDiagram() {
   const [activeHotspot, setActiveHotspot] = useState<HotspotData | null>(null);
 
@@ -218,7 +336,7 @@ export function EmpresasDiagram() {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 15, scale: 0.96 }}
                 transition={{ duration: 0.25 }}
-                className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-auto sm:right-8 sm:max-w-md bg-[#1F1F1F]/95 backdrop-blur-2xl text-white p-5 sm:p-6 rounded-2xl border border-white/15 shadow-2xl z-30"
+                className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-auto sm:right-8 sm:max-w-lg bg-[#1F1F1F]/95 backdrop-blur-2xl text-white p-5 sm:p-6 rounded-2xl border border-white/15 shadow-2xl z-30"
               >
                 <div className="flex items-start justify-between mb-3">
                   <div>
@@ -244,14 +362,19 @@ export function EmpresasDiagram() {
                   {activeHotspot.description}
                 </p>
 
-                <div className="space-y-1.5 mb-4 border-t border-white/10 pt-3">
-                  {activeHotspot.specs.map((spec, sIdx) => (
-                    <div key={sIdx} className="flex items-center gap-2 text-xs text-white/90 font-light">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-[#FF8300] flex-shrink-0" />
-                      <span className="font-light">{spec}</span>
-                    </div>
-                  ))}
-                </div>
+                {/* Bullets OR Optimizer Comparison Illustration */}
+                {activeHotspot.id === "optimizer" ? (
+                  <OptimizerComparisonIllustration />
+                ) : (
+                  <div className="space-y-1.5 mb-4 border-t border-white/10 pt-3">
+                    {activeHotspot.specs.map((spec, sIdx) => (
+                      <div key={sIdx} className="flex items-center gap-2 text-xs text-white/90 font-light">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-[#FF8300] flex-shrink-0" />
+                        <span className="font-light">{spec}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
 
                 <div className="bg-black/30 px-3 py-2 rounded-xl border border-white/10 flex items-center justify-between text-[11px] text-white/70">
                   <span className="font-light text-[#FF8300]">Norma SEC:</span>

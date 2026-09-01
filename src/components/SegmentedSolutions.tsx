@@ -80,8 +80,8 @@ export function SegmentedSolutions() {
                 <button
                   type="button"
                   onClick={() => toggleCard("res-1")}
-                  className="w-full text-left bg-[#ffffff] p-6 md:p-7 rounded-[20px] border border-black/5 flex flex-col hover:shadow-xl hover:border-[#FF8300]/30 transition-all duration-300 group cursor-pointer focus:outline-none"
-                  style={{ backgroundColor: "#ffffff" }}
+                  className="w-full text-left bg-[#FDFFFE] p-6 md:p-7 rounded-[20px] border border-black/5 flex flex-col hover:shadow-xl hover:border-[#FF8300]/30 transition-all duration-300 group cursor-pointer focus:outline-none"
+                  style={{ backgroundColor: "#FDFFFE" }}
                 >
                   <div className="flex items-center justify-between mb-4">
                     <div className="w-11 h-11 rounded-2xl bg-[#FF8300]/10 text-[#FF8300] flex items-center justify-center transition-transform group-hover:scale-110">
@@ -114,8 +114,8 @@ export function SegmentedSolutions() {
                 <button
                   type="button"
                   onClick={() => toggleCard("res-2")}
-                  className="w-full text-left bg-[#ffffff] p-6 md:p-7 rounded-[20px] border border-black/5 flex flex-col hover:shadow-xl hover:border-[#FF8300]/30 transition-all duration-300 group cursor-pointer focus:outline-none"
-                  style={{ backgroundColor: "#ffffff" }}
+                  className="w-full text-left bg-[#FDFFFE] p-6 md:p-7 rounded-[20px] border border-black/5 flex flex-col hover:shadow-xl hover:border-[#FF8300]/30 transition-all duration-300 group cursor-pointer focus:outline-none"
+                  style={{ backgroundColor: "#FDFFFE" }}
                 >
                   <div className="flex items-center justify-between mb-4">
                     <div className="w-11 h-11 rounded-2xl bg-[#FF8300]/10 text-[#FF8300] flex items-center justify-center transition-transform group-hover:scale-110">
@@ -148,8 +148,8 @@ export function SegmentedSolutions() {
                 <button
                   type="button"
                   onClick={() => toggleCard("res-3")}
-                  className="w-full text-left bg-[#ffffff] p-6 md:p-7 rounded-[20px] border border-black/5 flex flex-col hover:shadow-xl hover:border-[#FF8300]/30 transition-all duration-300 group cursor-pointer focus:outline-none"
-                  style={{ backgroundColor: "#ffffff" }}
+                  className="w-full text-left bg-[#FDFFFE] p-6 md:p-7 rounded-[20px] border border-black/5 flex flex-col hover:shadow-xl hover:border-[#FF8300]/30 transition-all duration-300 group cursor-pointer focus:outline-none"
+                  style={{ backgroundColor: "#FDFFFE" }}
                 >
                   <div className="flex items-center justify-between mb-4">
                     <div className="w-11 h-11 rounded-2xl bg-[#FF8300]/10 text-[#FF8300] flex items-center justify-center transition-transform group-hover:scale-110">
@@ -199,8 +199,8 @@ export function SegmentedSolutions() {
                 <button
                   type="button"
                   onClick={() => toggleCard("com-1")}
-                  className="w-full text-left bg-[#ffffff] p-6 md:p-7 rounded-[20px] border border-black/5 flex flex-col hover:shadow-xl hover:border-[#FF8300]/30 transition-all duration-300 group cursor-pointer focus:outline-none"
-                  style={{ backgroundColor: "#ffffff" }}
+                  className="w-full text-left bg-[#FDFFFE] p-6 md:p-7 rounded-[20px] border border-black/5 flex flex-col hover:shadow-xl hover:border-[#FF8300]/30 transition-all duration-300 group cursor-pointer focus:outline-none"
+                  style={{ backgroundColor: "#FDFFFE" }}
                 >
                   <div className="flex items-center justify-between mb-4">
                     <div className="w-11 h-11 rounded-2xl bg-[#FF8300]/10 text-[#FF8300] flex items-center justify-center transition-transform group-hover:scale-110">
@@ -233,8 +233,8 @@ export function SegmentedSolutions() {
                 <button
                   type="button"
                   onClick={() => toggleCard("com-2")}
-                  className="w-full text-left bg-[#ffffff] p-6 md:p-7 rounded-[20px] border border-black/5 flex flex-col hover:shadow-xl hover:border-[#FF8300]/30 transition-all duration-300 group cursor-pointer focus:outline-none"
-                  style={{ backgroundColor: "#ffffff" }}
+                  className="w-full text-left bg-[#FDFFFE] p-6 md:p-7 rounded-[20px] border border-black/5 flex flex-col hover:shadow-xl hover:border-[#FF8300]/30 transition-all duration-300 group cursor-pointer focus:outline-none"
+                  style={{ backgroundColor: "#FDFFFE" }}
                 >
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
@@ -272,8 +272,8 @@ export function SegmentedSolutions() {
                 <button
                   type="button"
                   onClick={() => toggleCard("com-3")}
-                  className="w-full text-left bg-[#ffffff] p-6 md:p-7 rounded-[20px] border border-black/5 flex flex-col hover:shadow-xl hover:border-[#FF8300]/30 transition-all duration-300 group cursor-pointer focus:outline-none"
-                  style={{ backgroundColor: "#ffffff" }}
+                  className="w-full text-left bg-[#FDFFFE] p-6 md:p-7 rounded-[20px] border border-black/5 flex flex-col hover:shadow-xl hover:border-[#FF8300]/30 transition-all duration-300 group cursor-pointer focus:outline-none"
+                  style={{ backgroundColor: "#FDFFFE" }}
                 >
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import {
@@ -13,204 +13,7 @@ import {
   ShieldCheck,
   Activity,
   CheckCircle2,
-  Clock,
-  Car,
-  Play,
-  Pause,
-  AlertTriangle,
-  TrendingDown,
-  Sparkles,
 } from "lucide-react";
-
-export type ScenarioId =
-  | "self_consumption"
-  | "peak_shaving"
-  | "time_of_use"
-  | "off_grid"
-  | "ev_fleet";
-
-interface ScenarioConfig {
-  id: ScenarioId;
-  label: string;
-  badge: string;
-  tagline: string;
-  icon: any;
-  description: string;
-  metrics: {
-    solarPower: string;
-    essPower: string;
-    essSoc: string;
-    loadPower: string;
-    evPower: string;
-    gridPower: string;
-    gridStatus: "neutral" | "exporting" | "importing" | "disconnected";
-    gridLabel: string;
-  };
-  paths: {
-    solarMain: boolean;
-    solarOpt: boolean;
-    essCharging: boolean;
-    essDischarging: boolean;
-    gridImport: boolean;
-    gridExport: boolean;
-    gridDisconnected: boolean;
-    loadActive: boolean;
-    evActive: boolean;
-  };
-}
-
-const SCENARIOS: ScenarioConfig[] = [
-  {
-    id: "self_consumption",
-    label: "Máximo Autoconsumo",
-    badge: "Generación Solar Diurna",
-    tagline: "Prioridad Solar & Autonomía",
-    icon: Sparkles,
-    description:
-      "La generación solar fotovoltaica abastece el 100% de la fábrica y cargadores EV. El excedente se almacena en el BESS Huawei LUNA2000. Cero costo de la red pública.",
-    metrics: {
-      solarPower: "145 kW",
-      essPower: "+45 kW",
-      essSoc: "78%",
-      loadPower: "75 kW",
-      evPower: "25 kW",
-      gridPower: "0 kW",
-      gridStatus: "neutral",
-      gridLabel: "Standby (100% Solar)",
-    },
-    paths: {
-      solarMain: true,
-      solarOpt: true,
-      essCharging: true,
-      essDischarging: false,
-      gridImport: false,
-      gridExport: false,
-      gridDisconnected: false,
-      loadActive: true,
-      evActive: true,
-    },
-  },
-  {
-    id: "peak_shaving",
-    label: "Peak Shaving",
-    badge: "Límites de Invierno / Punta",
-    tagline: "Recorte de Potencia Contratada",
-    icon: TrendingDown,
-    description:
-      "En horario de alta demanda y tarifa punta (18h a 22h), el BESS descarga 95 kW para alimentar la planta y recortar el pico de la red, evitando multas y recargos por potencia punta.",
-    metrics: {
-      solarPower: "5 kW",
-      essPower: "-95 kW",
-      essSoc: "62%",
-      loadPower: "105 kW",
-      evPower: "0 kW",
-      gridPower: "10 kW",
-      gridStatus: "importing",
-      gridLabel: "Base Mínima (Afeitado)",
-    },
-    paths: {
-      solarMain: false,
-      solarOpt: false,
-      essCharging: false,
-      essDischarging: true,
-      gridImport: true,
-      gridExport: false,
-      gridDisconnected: false,
-      loadActive: true,
-      evActive: false,
-    },
-  },
-  {
-    id: "time_of_use",
-    label: "Tiempo de Uso",
-    badge: "Arbitraje Tarifario",
-    tagline: "Carga Inteligente Horas Valle",
-    icon: Clock,
-    description:
-      "Carga programada del banco BESS y de la flota de camiones durante horas de tarifa eléctrica económica (valle) para abastecer las operaciones en las horas más caras.",
-    metrics: {
-      solarPower: "0 kW",
-      essPower: "+80 kW",
-      essSoc: "48%",
-      loadPower: "35 kW",
-      evPower: "45 kW",
-      gridPower: "160 kW",
-      gridStatus: "importing",
-      gridLabel: "Tarifa Valle Económica",
-    },
-    paths: {
-      solarMain: false,
-      solarOpt: false,
-      essCharging: true,
-      essDischarging: false,
-      gridImport: true,
-      gridExport: false,
-      gridDisconnected: false,
-      loadActive: true,
-      evActive: true,
-    },
-  },
-  {
-    id: "off_grid",
-    label: "Suministro Anti-Corte",
-    badge: "Blackout / Grid-Forming",
-    tagline: "Respaldo Ininterrumpido <5ms",
-    icon: ShieldCheck,
-    description:
-      "Corte intencional o falla en la red pública de Saesa/Crell/CGE. Conmutación STS instantánea (<5ms): la planta opera en isla 100% segura alimentada por Solar + BESS.",
-    metrics: {
-      solarPower: "90 kW",
-      essPower: "-30 kW",
-      essSoc: "85%",
-      loadPower: "85 kW",
-      evPower: "35 kW",
-      gridPower: "0 kW",
-      gridStatus: "disconnected",
-      gridLabel: "Red Desconectada (Blackout)",
-    },
-    paths: {
-      solarMain: true,
-      solarOpt: true,
-      essCharging: false,
-      essDischarging: true,
-      gridImport: false,
-      gridExport: false,
-      gridDisconnected: true,
-      loadActive: true,
-      evActive: true,
-    },
-  },
-  {
-    id: "ev_fleet",
-    label: "Carga Flotas EV",
-    badge: "Electromovilidad Corporativa",
-    tagline: "Potencia Rápida sin Sobrecarga",
-    icon: Car,
-    description:
-      "Descarga de alta potencia coordinada entre paneles solares y BESS para abastecer simultáneamente cargadores rápidos de furgones y camiones sin saturar el empalme.",
-    metrics: {
-      solarPower: "115 kW",
-      essPower: "-40 kW",
-      essSoc: "68%",
-      loadPower: "65 kW",
-      evPower: "90 kW",
-      gridPower: "0 kW",
-      gridStatus: "neutral",
-      gridLabel: "Solar + BESS Pura",
-    },
-    paths: {
-      solarMain: true,
-      solarOpt: true,
-      essCharging: false,
-      essDischarging: true,
-      gridImport: false,
-      gridExport: false,
-      gridDisconnected: false,
-      loadActive: true,
-      evActive: true,
-    },
-  },
-];
 
 interface HotspotData {
   id: string;
@@ -223,8 +26,6 @@ interface HotspotData {
   description: string;
   specs: string[];
   secNorm: string;
-  hasTag?: string;
-  hasDot?: boolean;
 }
 
 const HOTSPOTS: HotspotData[] = [
@@ -261,7 +62,6 @@ const HOTSPOTS: HotspotData[] = [
       "Telemetría celda a celda 24/7",
     ],
     secNorm: "RIC N°09 & Protocolos de Seguridad AFCI",
-    hasDot: true,
   },
   {
     id: "grid",
@@ -279,7 +79,6 @@ const HOTSPOTS: HotspotData[] = [
       "Trámite oficial SEC TE-4",
     ],
     secNorm: "Pliego Técnico RIC N°15 & NTSyCS (Coordinador Eléctrico)",
-    hasDot: true,
   },
   {
     id: "electrical_room",
@@ -331,7 +130,6 @@ const HOTSPOTS: HotspotData[] = [
       "Protocolo de interoperabilidad OCPP 1.6J",
     ],
     secNorm: "Declaración Oficial SEC TE-6 (Electromovilidad)",
-    hasTag: "EV",
   },
 ];
 
@@ -454,20 +252,7 @@ function OptimizerComparisonIllustration() {
 }
 
 export function EmpresasDiagram() {
-  const [selectedScenarioIndex, setSelectedScenarioIndex] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(true);
   const [activeHotspot, setActiveHotspot] = useState<HotspotData | null>(null);
-
-  const currentScenario = SCENARIOS[selectedScenarioIndex];
-
-  // Auto-play timer (cycles every 6.5 seconds if playing)
-  useEffect(() => {
-    if (!isPlaying) return;
-    const interval = setInterval(() => {
-      setSelectedScenarioIndex((prev) => (prev + 1) % SCENARIOS.length);
-    }, 6500);
-    return () => clearInterval(interval);
-  }, [isPlaying]);
 
   return (
     <section className="w-full py-16 md:py-24 px-3 md:px-5 box-border bg-transparent overflow-hidden">
@@ -478,54 +263,20 @@ export function EmpresasDiagram() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="text-center mb-8 md:mb-10 max-w-4xl px-4"
+          className="text-center mb-10 md:mb-14 max-w-4xl px-4"
         >
-          <span className="text-xs font-mono uppercase tracking-widest text-[#FF8300] bg-[#FF8300]/10 px-3.5 py-1 rounded-full inline-block mb-3">
-            Simulador de Gestión Energética C&I
-          </span>
-          <h2 className="text-3xl md:text-5xl font-light text-[#1F1F1F] tracking-tight leading-[1.1] mb-3">
+          <h2 className="text-3xl md:text-5xl font-light text-[#1F1F1F] tracking-tight leading-[1.1]">
             Solar, baterías y la red sincronizadas, minimizando el costo eléctrico.
           </h2>
-          <p className="text-sm md:text-base text-black/60 font-light max-w-2xl mx-auto">
-            Explora cómo interactúan la generación solar, el almacenamiento BESS y las cargas industriales según el escenario operacional de tu empresa.
-          </p>
         </motion.div>
 
-        {/* 1. SCENARIO SELECTOR BAR (Tesla Home / Apple style pill selector) */}
-        <div className="w-full flex items-center justify-center mb-6 overflow-x-auto no-scrollbar py-1 px-2">
-          <div className="flex items-center gap-1.5 sm:gap-2 bg-[#1F1F1F]/90 backdrop-blur-xl p-1.5 rounded-full border border-black/10 shadow-lg">
-            {SCENARIOS.map((sc, idx) => {
-              const Icon = sc.icon;
-              const isActive = selectedScenarioIndex === idx;
-
-              return (
-                <button
-                  key={sc.id}
-                  onClick={() => {
-                    setSelectedScenarioIndex(idx);
-                    setIsPlaying(false);
-                  }}
-                  className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-light transition-all duration-300 cursor-pointer select-none whitespace-nowrap ${
-                    isActive
-                      ? "bg-[#FF8300] text-white font-medium shadow-[0_2px_15px_rgba(255,131,0,0.5)] scale-100"
-                      : "text-white/70 hover:text-white hover:bg-white/10"
-                  }`}
-                >
-                  <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[2]" />
-                  <span>{sc.label}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* 2. MAIN SIMULATOR CANVAS CONTAINER */}
+        {/* Diagram Area */}
         <motion.div
           initial={{ opacity: 0, scale: 0.98 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          className="relative w-full aspect-[16/9] md:aspect-[21/9] min-h-[420px] md:min-h-[600px] rounded-[24px] md:rounded-[32px] overflow-hidden bg-[#0F141C] border border-black/10 shadow-2xl"
+          className="relative w-full aspect-[16/9] md:aspect-[21/9] min-h-[420px] md:min-h-[580px] rounded-[24px] md:rounded-[32px] overflow-hidden bg-[#F7F8FA] border border-black/10 shadow-xl"
         >
           {/* Base Isometric Diagram Image */}
           <Image
@@ -533,312 +284,11 @@ export function EmpresasDiagram() {
             alt="Diagrama Planta Solar Comercial e Industrial SoldeRío"
             fill
             priority
-            className="object-cover opacity-90 transition-opacity duration-700"
+            className="object-cover opacity-95"
           />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent pointer-events-none" />
 
-          {/* Ambient Lighting Gradients */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 pointer-events-none" />
-
-          {/* 3. SVG ANIMATED ENERGY CONDUITS & GLOWING FLOW PARTICLES */}
-          <svg
-            viewBox="0 0 1000 500"
-            className="absolute inset-0 w-full h-full pointer-events-none z-10"
-            preserveAspectRatio="none"
-          >
-            <defs>
-              {/* Glow Filters */}
-              <filter id="neonGlowOrange" x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur stdDeviation="3.5" result="blur1" />
-                <feGaussianBlur stdDeviation="8" result="blur2" />
-                <feMerge>
-                  <feMergeNode in="blur2" />
-                  <feMergeNode in="blur1" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-
-              <filter id="neonGlowGreen" x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur stdDeviation="3.5" result="blur1" />
-                <feGaussianBlur stdDeviation="7" result="blur2" />
-                <feMerge>
-                  <feMergeNode in="blur2" />
-                  <feMergeNode in="blur1" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-
-              <filter id="neonGlowBlue" x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur stdDeviation="3" result="blur1" />
-                <feGaussianBlur stdDeviation="7" result="blur2" />
-                <feMerge>
-                  <feMergeNode in="blur2" />
-                  <feMergeNode in="blur1" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-
-              <filter id="dotGlow" x="-100%" y="-100%" width="300%" height="300%">
-                <feGaussianBlur stdDeviation="2.5" result="glow" />
-                <feMerge>
-                  <feMergeNode in="glow" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-
-              {/* Gradients */}
-              <linearGradient id="gradSolar" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#FFA033" />
-                <stop offset="100%" stopColor="#FF8300" />
-              </linearGradient>
-
-              <linearGradient id="gradGreen" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#34D399" />
-                <stop offset="100%" stopColor="#10B981" />
-              </linearGradient>
-
-              <linearGradient id="gradBlue" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#60A5FA" />
-                <stop offset="100%" stopColor="#3B82F6" />
-              </linearGradient>
-
-              <linearGradient id="gradRed" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#F87171" />
-                <stop offset="100%" stopColor="#EF4444" />
-              </linearGradient>
-            </defs>
-
-            {/* PATH 1: Optimizadores -> Generación Solar (90° Orthogonal) */}
-            {/* Base Conduit */}
-            <path
-              d="M 600 140 L 600 90 L 400 90"
-              fill="none"
-              stroke="#FF8300"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeOpacity={currentScenario.paths.solarOpt ? 0.4 : 0.1}
-            />
-            {currentScenario.paths.solarOpt && (
-              <path
-                d="M 600 140 L 600 90 L 400 90"
-                fill="none"
-                stroke="#FF8300"
-                strokeWidth="3.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeDasharray="40 250"
-                filter="url(#neonGlowOrange)"
-              >
-                <animate
-                  attributeName="stroke-dashoffset"
-                  from="0"
-                  to="-250"
-                  dur="2.8s"
-                  repeatCount="indefinite"
-                />
-              </path>
-            )}
-
-            {/* PATH 2: Generación Solar -> Sala Eléctrica (90° Orthogonal) */}
-            {/* Base Conduit */}
-            <path
-              d="M 400 90 L 310 90 L 310 190"
-              fill="none"
-              stroke="#FF8300"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeOpacity={currentScenario.paths.solarMain ? 0.45 : 0.1}
-            />
-            {currentScenario.paths.solarMain && (
-              <path
-                d="M 400 90 L 310 90 L 310 190"
-                fill="none"
-                stroke="#FF8300"
-                strokeWidth="3.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeDasharray="35 190"
-                filter="url(#neonGlowOrange)"
-              >
-                <animate
-                  attributeName="stroke-dashoffset"
-                  from="0"
-                  to="-190"
-                  dur="2.4s"
-                  repeatCount="indefinite"
-                />
-              </path>
-            )}
-
-            {/* PATH 3: Sala Eléctrica <-> ESS Baterías (90° Orthogonal Vertical) */}
-            {/* Base Conduit */}
-            <path
-              d="M 310 190 L 310 300"
-              fill="none"
-              stroke="#10B981"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeOpacity={
-                currentScenario.paths.essCharging || currentScenario.paths.essDischarging
-                  ? 0.45
-                  : 0.1
-              }
-            />
-            {/* Charging ESS: Sala Eléctrica -> ESS */}
-            {currentScenario.paths.essCharging && (
-              <path
-                d="M 310 190 L 310 300"
-                fill="none"
-                stroke="#10B981"
-                strokeWidth="3.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeDasharray="30 110"
-                filter="url(#neonGlowGreen)"
-              >
-                <animate
-                  attributeName="stroke-dashoffset"
-                  from="0"
-                  to="-110"
-                  dur="1.8s"
-                  repeatCount="indefinite"
-                />
-              </path>
-            )}
-            {/* Discharging ESS (Peak Shaving / Off-Grid): ESS -> Sala Eléctrica */}
-            {currentScenario.paths.essDischarging && (
-              <path
-                d="M 310 300 L 310 190"
-                fill="none"
-                stroke="#10B981"
-                strokeWidth="3.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeDasharray="30 110"
-                filter="url(#neonGlowGreen)"
-              >
-                <animate
-                  attributeName="stroke-dashoffset"
-                  from="0"
-                  to="-110"
-                  dur="1.8s"
-                  repeatCount="indefinite"
-                />
-              </path>
-            )}
-
-            {/* PATH 4: Red Eléctrica <-> Sala Eléctrica (90° Orthogonal) */}
-            {/* Base Conduit */}
-            <path
-              d="M 165 100 L 165 190 L 310 190"
-              fill="none"
-              stroke={
-                currentScenario.paths.gridDisconnected
-                  ? "#EF4444"
-                  : "#3B82F6"
-              }
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeDasharray={currentScenario.paths.gridDisconnected ? "6 6" : "none"}
-              strokeOpacity={
-                currentScenario.paths.gridImport || currentScenario.paths.gridExport
-                  ? 0.45
-                  : currentScenario.paths.gridDisconnected
-                  ? 0.75
-                  : 0.12
-              }
-            />
-            {/* Importing from Grid -> Sala Eléctrica */}
-            {currentScenario.paths.gridImport && (
-              <path
-                d="M 165 100 L 165 190 L 310 190"
-                fill="none"
-                stroke="#3B82F6"
-                strokeWidth="3.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeDasharray="35 235"
-                filter="url(#neonGlowBlue)"
-              >
-                <animate
-                  attributeName="stroke-dashoffset"
-                  from="0"
-                  to="-235"
-                  dur="2.8s"
-                  repeatCount="indefinite"
-                />
-              </path>
-            )}
-
-            {/* PATH 5: Sala Eléctrica -> Cargadores Rápidos EV (90° Orthogonal) */}
-            {/* Base Conduit */}
-            <path
-              d="M 310 190 L 310 360 L 520 360"
-              fill="none"
-              stroke="#10B981"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeOpacity={currentScenario.paths.evActive ? 0.45 : 0.1}
-            />
-            {currentScenario.paths.evActive && (
-              <path
-                d="M 310 190 L 310 360 L 520 360"
-                fill="none"
-                stroke="#10B981"
-                strokeWidth="3.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeDasharray="45 380"
-                filter="url(#neonGlowGreen)"
-              >
-                <animate
-                  attributeName="stroke-dashoffset"
-                  from="0"
-                  to="-380"
-                  dur="3.0s"
-                  repeatCount="indefinite"
-                />
-              </path>
-            )}
-
-            {/* PATH 6: Sala Eléctrica -> Consumo Fábrica / Maquinaria (90° Orthogonal) */}
-            {/* Base Conduit */}
-            <path
-              d="M 310 190 L 720 190 L 720 260"
-              fill="none"
-              stroke="#10B981"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeOpacity={currentScenario.paths.loadActive ? 0.45 : 0.1}
-            />
-            {currentScenario.paths.loadActive && (
-              <path
-                d="M 310 190 L 720 190 L 720 260"
-                fill="none"
-                stroke="#10B981"
-                strokeWidth="3.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeDasharray="50 480"
-                filter="url(#neonGlowGreen)"
-              >
-                <animate
-                  attributeName="stroke-dashoffset"
-                  from="0"
-                  to="-480"
-                  dur="3.2s"
-                  repeatCount="indefinite"
-                />
-              </path>
-            )}
-          </svg>
-
-          {/* 4. INTERACTIVE INFOBUTTON HOTSPOT PINS */}
+          {/* Interactive Uniform Pin Boxes */}
           {HOTSPOTS.map((hotspot) => {
             const isSelected = activeHotspot?.id === hotspot.id;
 
@@ -849,31 +299,17 @@ export function EmpresasDiagram() {
               >
                 <motion.button
                   onClick={() => setActiveHotspot(isSelected ? null : hotspot)}
-                  whileHover={{ scale: 1.06 }}
+                  whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className={`group relative flex items-center gap-2 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full shadow-xl transition-all duration-300 cursor-pointer select-none ${
+                  className={`group relative flex items-center gap-2 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full shadow-lg transition-all duration-300 cursor-pointer select-none ${
                     isSelected
                       ? "bg-[#FF8300] text-white ring-4 ring-[#FF8300]/40 scale-105 shadow-[0_0_25px_rgba(255,131,0,0.5)]"
-                      : "bg-white/95 hover:bg-white text-[#1F1F1F] border border-black/10 hover:border-[#FF8300]/40 shadow-lg backdrop-blur-md"
+                      : "bg-white/95 hover:bg-white text-[#1F1F1F] border border-black/10 hover:border-[#FF8300]/40 backdrop-blur-md"
                   }`}
                 >
-                  {hotspot.hasDot && !isSelected && (
-                    <span className="w-2 h-2 rounded-full bg-[#FF8300] shadow-[0_0_8px_#FF8300]" />
-                  )}
-
                   <span className="text-xs sm:text-sm font-medium tracking-tight whitespace-nowrap">
                     {hotspot.badgeTitle}
                   </span>
-
-                  {hotspot.hasTag && (
-                    <span
-                      className={`text-[10px] px-1.5 py-0.5 rounded-full uppercase font-mono ${
-                        isSelected ? "bg-white/20 text-white" : "bg-black/5 text-[#6B7280]"
-                      }`}
-                    >
-                      {hotspot.hasTag}
-                    </span>
-                  )}
 
                   <div
                     className={`w-5 h-5 rounded-full flex items-center justify-center transition-transform group-hover:rotate-12 ${
@@ -889,127 +325,7 @@ export function EmpresasDiagram() {
             );
           })}
 
-          {/* 5. TOP-LEFT SCENARIO DESCRIPTION OVERLAY */}
-          <div className="absolute top-4 left-4 z-20 max-w-xs sm:max-w-md bg-black/65 backdrop-blur-xl border border-white/15 p-3.5 sm:p-4 rounded-2xl text-white shadow-2xl pointer-events-none">
-            <div className="flex items-center gap-2 mb-1">
-              <span className="w-2 h-2 rounded-full bg-[#FF8300] animate-pulse" />
-              <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-widest text-[#FF8300] font-semibold">
-                {currentScenario.badge}
-              </span>
-            </div>
-            <h4 className="text-sm sm:text-base font-medium text-white mb-1">
-              {currentScenario.tagline}
-            </h4>
-            <p className="text-xs text-white/80 font-light leading-relaxed hidden sm:block">
-              {currentScenario.description}
-            </p>
-          </div>
-
-          {/* 6. BOTTOM-LEFT PLAY/PAUSE DEMO BUTTON (Tesla Home style) */}
-          <div className="absolute bottom-4 left-4 z-20">
-            <button
-              onClick={() => setIsPlaying(!isPlaying)}
-              className="flex items-center gap-2 px-3 py-2 rounded-xl bg-black/70 hover:bg-black/90 backdrop-blur-xl border border-white/20 text-white text-xs font-light shadow-xl transition-all duration-300 cursor-pointer"
-              title={isPlaying ? "Pausar simulación automática" : "Iniciar simulación automática"}
-            >
-              {isPlaying ? (
-                <>
-                  <Pause className="w-3.5 h-3.5 text-[#FF8300] fill-[#FF8300]" />
-                  <span className="hidden sm:inline font-mono text-[11px]">Pausar Auto</span>
-                </>
-              ) : (
-                <>
-                  <Play className="w-3.5 h-3.5 text-[#10B981] fill-[#10B981]" />
-                  <span className="hidden sm:inline font-mono text-[11px]">Reproducir</span>
-                </>
-              )}
-            </button>
-          </div>
-
-          {/* 7. FLOATING LIVE TELEMETRY DASHBOARD (Tesla Home style metrics) */}
-          <div className="absolute top-4 right-4 z-20 flex flex-col gap-2">
-            <div className="bg-black/70 backdrop-blur-xl border border-white/15 p-3 sm:p-4 rounded-2xl text-white shadow-2xl min-w-[170px] sm:min-w-[210px]">
-              <span className="text-[9px] sm:text-[10px] font-mono uppercase tracking-wider text-white/50 block mb-2">
-                Telemetría en Tiempo Real
-              </span>
-
-              <div className="space-y-2 text-xs">
-                {/* Solar */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5 text-white/75">
-                    <Sun className="w-3.5 h-3.5 text-[#FF8300]" />
-                    <span>Solar FV</span>
-                  </div>
-                  <span className="font-mono font-medium text-[#FF8300]">
-                    {currentScenario.metrics.solarPower}
-                  </span>
-                </div>
-
-                {/* ESS BESS */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5 text-white/75">
-                    <Battery className="w-3.5 h-3.5 text-[#10B981]" />
-                    <span>BESS LUNA</span>
-                  </div>
-                  <div className="text-right font-mono">
-                    <span className="font-medium text-[#10B981] block">
-                      {currentScenario.metrics.essPower}
-                    </span>
-                    <span className="text-[9px] text-white/50">
-                      SOC {currentScenario.metrics.essSoc}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Planta / Fábrica */}
-                <div className="flex items-center justify-between border-t border-white/10 pt-1.5">
-                  <div className="flex items-center gap-1.5 text-white/75">
-                    <Zap className="w-3.5 h-3.5 text-[#38BDF8]" />
-                    <span>Planta Industrial</span>
-                  </div>
-                  <span className="font-mono font-medium text-white/90">
-                    {currentScenario.metrics.loadPower}
-                  </span>
-                </div>
-
-                {/* Cargadores EV */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5 text-white/75">
-                    <Car className="w-3.5 h-3.5 text-[#34D399]" />
-                    <span>Cargadores EV</span>
-                  </div>
-                  <span className="font-mono font-medium text-[#34D399]">
-                    {currentScenario.metrics.evPower}
-                  </span>
-                </div>
-
-                {/* Red Pública */}
-                <div className="flex items-center justify-between border-t border-white/10 pt-1.5">
-                  <div className="flex items-center gap-1.5 text-white/75">
-                    <Activity
-                      className={`w-3.5 h-3.5 ${
-                        currentScenario.metrics.gridStatus === "disconnected"
-                          ? "text-[#EF4444]"
-                          : "text-[#60A5FA]"
-                      }`}
-                    />
-                    <span>Red Saesa/Crell</span>
-                  </div>
-                  <span
-                    className={`font-mono font-medium text-[11px] ${
-                      currentScenario.metrics.gridStatus === "disconnected"
-                        ? "text-[#EF4444] font-bold"
-                        : "text-[#60A5FA]"
-                    }`}
-                  >
-                    {currentScenario.metrics.gridPower}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* 8. FLOATING DETAILS HUD CARD (on Hotspot Pin Click) */}
+          {/* Floating Details HUD Card on Hotspot Click */}
           <AnimatePresence>
             {activeHotspot && (
               <motion.div

@@ -5,20 +5,20 @@ import { ArrowUpRight } from "lucide-react";
 
 function CashflowChart() {
   return (
-    <div className="w-full bg-['#F7F8FA'] p-5 rounded-2xl border border-black/5 my-5">
-      { /* Header & Legend */ }
+    <div className="w-full bg-[#F7F8FA] p-5 rounded-2xl border border-black/5 my-5">
+      {/* Header & Legend */}
       <div className="flex items-center justify-between mb-4">
         <div>
-          <span className="text-[10px] font-mono uppercase tracking-wider text-['&FF8300'] block mb-0.5">
+          <span className="text-[10px] font-mono uppercase tracking-wider text-[#FF8300] block mb-0.5">
             Retorno Proyectado
           </span>
-          <h4 className="text-xs font-medium text-['&1F1F1F']">
+          <h4 className="text-xs font-medium text-[#1F1F1F]">
             Flujo de Caja Acumulado ($)
           </h4>
         </div>
         <div className="flex items-center gap-3 text-[10px] font-mono text-black/60">
           <span className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-['&FF8300']" />
+            <span className="w-2 h-2 rounded-full bg-[#FF8300]" />
             Payback (~Año 4)
           </span>
           <span className="flex items-center gap-1.5">
@@ -28,11 +28,11 @@ function CashflowChart() {
         </div>
       </div>
 
-      { /* Responsive SVG Chart with un-distorted vector curve */ }
+      {/* Responsive SVG Chart with un-distorted vector curve */}
       <div className="relative w-full h-32 my-1">
-        { /* Zero baseline label HTML overlay */ }
+        {/* Zero baseline label HTML overlay */}
         <div className="absolute top-[52%] left-1 -translate-y-1/2 pointer-events-none z-10">
-          <span className="text-[10px] font-mono text-black/40 bg-['&F7F8FA']/80 px-1 rounded">
+          <span className="text-[10px] font-mono text-black/40 bg-[#F7F8FA]/90 px-1 rounded">
             $0 (Punto de Equilibrio)
           </span>
         </div>

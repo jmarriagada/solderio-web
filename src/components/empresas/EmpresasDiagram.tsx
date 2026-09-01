@@ -94,7 +94,7 @@ const HOTSPOTS: HotspotData[] = [
       "Protección AFCI integrada con IA",
       "Monitoreo SCADA y telemetría industrial",
     ],
-    secNorm: "Pliegos Técnicos RIC N°02 (Tableros) y RIC N°03",
+    secNorm: "",
   },
   {
     id: "ess",

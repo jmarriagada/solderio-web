@@ -71,8 +71,7 @@ const HOTSPOTS: HotspotData[] = [
     title: "Interconexión y Empalme a Red Pública",
     category: "Net Billing Ley 21.118",
     icon: Activity,
-    description:
-      "Enlace bidireccional certificado ante la distribuidora eléctrica (Saesa, Crell o CGE). Inyecta y valoriza los excedentes generados y asegura suministro de respaldo de red ante demandas punta.",
+    description: "",
     specs: [
       "Inyección bajo Ley Net Billing 21.118",
       "Medición Inteligente Bidireccional",
@@ -256,7 +255,7 @@ export function EmpresasDiagram() {
 
   return (
     <section className="w-full py-16 md:py-24 px-3 md:px-5 box-border bg-transparent overflow-hidden">
-      <div className="w-full max-w-[1440px] mx-auto flex flex-col items-center">
+      <div className="w-full flex flex-col items-center">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -355,9 +354,11 @@ export function EmpresasDiagram() {
                   </button>
                 </div>
 
-                <p className="text-white/80 text-xs sm:text-sm font-light leading-relaxed mb-4">
-                  {activeHotspot.description}
-                </p>
+                {activeHotspot.description && (
+                  <p className="text-white/80 text-xs sm:text-sm font-light leading-relaxed mb-4">
+                    {activeHotspot.description}
+                  </p>
+                )}
 
                 {/* Bullets OR Optimizer Comparison Illustration */}
                 {activeHotspot.id === "optimizer" ? (

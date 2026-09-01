@@ -42,7 +42,7 @@ export function EmpresasHardware() {
   };
 
   return (
-    <section className="w-full py-20 px-6 md:px-12 lg:px-24 bg-white overflow-hidden">
+    <section className="w-full py-20 px-6 md:px-12 lg:px-24 bg-[#F7F8FA] overflow-hidden">
       <div className="max-w-7xl mx-auto flex flex-col items-center">
         {/* Header */}
         <motion.div

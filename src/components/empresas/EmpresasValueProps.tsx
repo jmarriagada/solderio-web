@@ -151,7 +151,7 @@ export function EmpresasValueProps() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="bg-white rounded-[28px] border border-black/5 p-6 md:p-10 shadow-sm"
+          className="bg-[#FDFFFE] rounded-[28px] border border-black/5 p-6 md:p-10 shadow-sm"
         >
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             {/* Left Column: Context & Bullet points (7 cols) */}
@@ -198,7 +198,7 @@ export function EmpresasValueProps() {
                 {financialData.yields.map((hl, idx) => (
                   <div
                     key={idx}
-                    className="bg-white p-4 md:p-5 rounded-2xl border border-black/5 shadow-xs flex flex-col"
+                    className="bg-[#FDFFFE] p-4 md:p-5 rounded-2xl border border-black/5 shadow-xs flex flex-col"
                   >
                     <span className="text-xs text-brand-muted font-light mb-1">
                       {hl.label}

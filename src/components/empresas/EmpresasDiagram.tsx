@@ -250,7 +250,7 @@ export function EmpresasDiagram() {
   const [activeHotspot, setActiveHotspot] = useState<HotspotData | null>(null);
 
   return (
-    <section className="w-full py-16 md:py-24 px-3 md:px-5 box-border bg-white overflow-hidden">
+    <section className="w-full py-16 md:py-24 px-3 md:px-5 box-border bg-transparent overflow-hidden">
       <div className="w-full flex flex-col items-center">
         {/* Header */}
         <motion.div

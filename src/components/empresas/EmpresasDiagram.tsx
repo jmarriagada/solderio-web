@@ -106,12 +106,8 @@ const HOTSPOTS: HotspotData[] = [
     icon: Battery,
     description:
       "Sistema de almacenamiento C&I con arquitectura de refrigeración híbrida (líquida + aire) y seguridad dual C2C (Cell-to-Consumption). Almacena excedentes solares para descarga en horas punta (Peak Shaving), elimina desbalances de celda e integra capacidad Grid-Forming para respaldo ininterrumpido.",
-    specs: [
-      "Seguridad C2C en 5 niveles y desconexión ultrarrápida en <5ms",
-      "Refrigeración híbrida inteligente con eficiencia RTE >91.3%",
-      "Optimizador por pack: +2% energía usable y balanceo activo 24/7",
-    ],
-    secNorm: "Pliego RIC N°09 BESS & Certificación IEC 62619 / UL 9540A",
+    specs: [],
+    secNorm: "",
   },
   {
     id: "ev_chargers",
@@ -363,7 +359,7 @@ export function EmpresasDiagram() {
                 {/* Bullets OR Optimizer Comparison Illustration */}
                 {activeHotspot.id === "optimizer" ? (
                   <OptimizerComparisonIllustration />
-                ) : (
+                ) : activeHotspot.specs && activeHotspot.specs.length > 0 ? (
                   <div className="space-y-1.5 mb-4 border-t border-white/10 pt-3">
                     {activeHotspot.specs.map((spec, sIdx) => (
                       <div key={sIdx} className="flex items-center gap-2 text-xs text-white/90 font-light">
@@ -372,9 +368,9 @@ export function EmpresasDiagram() {
                       </div>
                     ))}
                   </div>
-                )}
+                ) : null}
 
-                {activeHotspot.id !== "optimizer" && (
+                {activeHotspot.id !== "optimizer" && activeHotspot.secNorm && (
                   <div className="bg-black/30 px-3 py-2 rounded-xl border border-white/10 flex items-center justify-between text-[11px] text-white/70">
                     <span className="font-light text-[#FF8300]">Norma SEC:</span>
                     <span className="font-light">{activeHotspot.secNorm}</span>

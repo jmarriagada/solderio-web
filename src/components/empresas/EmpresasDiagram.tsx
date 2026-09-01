@@ -260,14 +260,6 @@ export function EmpresasDiagram() {
               </motion.div>
             )}
           </AnimatePresence>
-
-          {/* Helper Footer Bar inside Diagram */}
-          <div className="absolute bottom-0 left-0 right-0 bg-[#1F1F1F]/90 backdrop-blur-md px-6 py-2.5 border-t border-white/10 flex items-center justify-between text-[12px] sm:text-[13px] text-white/60 font-light z-10">
-            <div className="flex items-center gap-2">
-              <Info className="w-4 h-4 text-[#FF8300]" />
-              <span className="font-light">Haz clic en los pines sobre la imagen para inspeccionar cada componente industrial.</span>
-            </div>
-          </div>
         </motion.div>
       </div>
     </section>

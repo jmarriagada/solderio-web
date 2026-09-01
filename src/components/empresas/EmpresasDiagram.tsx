@@ -119,12 +119,8 @@ const HOTSPOTS: HotspotData[] = [
     icon: Zap,
     description:
       "Estaciones de carga rápida y semirápida inteligentes alimentadas directamente con energía solar, optimizando la recarga de flotas comerciales, camionetas operativas y vehículos corporativos.",
-    specs: [
-      "Cargadores rápidos DC / Wallbox AC",
-      "Gestión dinámica de potencia (DLB)",
-      "Protocolo de interoperabilidad OCPP 1.6J",
-    ],
-    secNorm: "Declaración Oficial SEC TE-6 (Electromovilidad)",
+    specs: [],
+    secNorm: "",
   },
 ];
 

@@ -257,7 +257,7 @@ export function EmpresasDiagram() {
           className="text-center mb-10 md:mb-14 max-w-4xl px-4"
         >
           <h2 className="text-3xl md:text-5xl font-light text-[#1F1F1F] tracking-tight leading-[1.1]">
-            Solar, baterías y la red sincronizadas, minimizando el costo eléctrico.
+            Solar, baterías y la red sincronizadas, minimizando el costo eléctrico operacional de tu empresa.
           </h2>
         </motion.div>
 

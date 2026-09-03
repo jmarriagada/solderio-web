@@ -124,7 +124,7 @@ export function EmpresasSolutions() {
                           <Link
                             href="/cotizacion"
                             onClick={(e) => e.stopPropagation()}
-                            className="px-4 py-1.5 rounded-full bg-[#FF8300] hover:bg-[#e07400] text-white text-xs sm:text-sm font-medium tracking-tight shadow-md hover:shadow-lg transition-all duration-300 inline-flex items-center justify-center cursor-pointer"
+                            className="text-xs md:text-sm font-medium uppercase tracking-widest text-[#FF8300] hover:text-[#e07400] transition-colors cursor-pointer inline-flex items-center py-1"
                           >
                             Comenzar
                           </Link>

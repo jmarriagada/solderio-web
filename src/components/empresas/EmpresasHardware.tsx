@@ -45,7 +45,7 @@ export function EmpresasHardware() {
             Gestión inteligente de energía
           </h2>
           <p className="text-base md:text-lg text-black/60 font-light leading-relaxed">
-            Ingeniería robusta, detrás de un sistema Comercial/Industrial de SoldeRío. Una selección de equipos que maximiza el autoconsumo, aprovecha los limites de invierno (Peak shaving) y baja tu OpEx eléctrico
+            Eficiencia energética para tu empresa, con ingeniería robusta y duradera. Genera, carga baterías y descargalas en horario punta, pagando un menor precio por cada kWh.
           </p>
         </motion.div>
 

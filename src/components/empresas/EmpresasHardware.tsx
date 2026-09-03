@@ -23,8 +23,8 @@ const HARDWARE_ITEMS = [
   {
     id: "bateria",
     title: "C&I Grid Forming ESS",
-    description: "Almacena y entrega su energía de forma inteligente para la noche y ante cortes de suministro.",
-    footnote: "Carga, entrega y respalda sincronizada.",
+    description: "Maximiza el autoconsumo y el ahorro reduciendo cargos por potencia en horas punta (peak shaving) y respaldando la operación ante cortes.",
+    footnote: "Autoconsumo, peak shaving y continuidad operativa ante cortes.",
     image: "/images/bess-comercial-industrial-solderio.png",
   },
 ];

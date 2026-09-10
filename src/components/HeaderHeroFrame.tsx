@@ -148,7 +148,7 @@ export function HeaderHeroFrame() {
             Obtener una Cotización Solar
           </Link>
           <a
-            href="https://wa.me/56987654321?text=Hola,%20quisiera%20conversar%20con%20un%20ingeniero%20de%20SoldeR%C3%ADo"
+            href="https://wa.me/56966186667?text=Hola,%20quisiera%20conversar%20con%20un%20ingeniero%20de%20SoldeR%C3%ADo"
             target="_blank"
             rel="noopener noreferrer"
             className="w-full sm:w-auto bg-black/40 border border-white/40 text-white font-light text-xs md:text-sm px-7 py-2.5 rounded-xl backdrop-blur-md hover:bg-black/60 hover:border-white transition-all cursor-pointer text-center"

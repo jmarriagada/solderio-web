@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { FloatingNav } from "@/components/FloatingNav";
 import { SmartQuoteWizard } from "@/components/cotizacion/SmartQuoteWizard";
 import { Footer } from "@/components/Footer";
@@ -33,7 +34,15 @@ export default function CotizacionPage() {
 
       {/* Main Interactive Wizard */}
       <div className="px-4 sm:px-6 md:px-8 pb-20 relative z-10">
-        <SmartQuoteWizard />
+        <Suspense
+          fallback={
+            <div className="w-full max-w-4xl mx-auto py-16 text-center text-white/50 font-light">
+              Cargando cotizador solar inteligente...
+            </div>
+          }
+        >
+          <SmartQuoteWizard />
+        </Suspense>
       </div>
 
       {/* Official Footer */}

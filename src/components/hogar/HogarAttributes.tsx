@@ -184,7 +184,7 @@ export function HogarAttributes() {
             className="flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-16 gap-6"
           >
             <div className="max-w-3xl">
-              <span className="text-xs md:text-sm font-medium uppercase tracking-widest text-[#FF8300] mb-3 md:mb-4 block">
+              <span className="text-xs md:text-sm font-light uppercase tracking-widest text-[#FF8300] mb-3 md:mb-4 block">
                 Paso a Paso
               </span>
               <h2 className="text-3xl md:text-5xl font-light text-brand-fg mb-4 md:mb-6 tracking-tight">
@@ -322,7 +322,7 @@ export function HogarAttributes() {
                 ¿Quieres dimensionar tu proyecto solar?
               </h4>
               <p className="text-white/70 text-base font-light">
-                Realizamos una pre-evaluación en menos de 24 horas.
+                Realizamos una pre-evaluación in situ en menos de 24 horas.
               </p>
             </div>
             <button

@@ -3,7 +3,8 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { ChevronRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import { CtaButton } from "@/components/ui/cta-button";
 
 const HARDWARE_ITEMS = [
   {
@@ -77,26 +78,25 @@ export function EmpresasHardware() {
                 <span className="mt-auto text-xs text-black/40 font-light italic">
                   {item.footnote}
                 </span>
+                {item.id === "bateria" && (
+                  <Link
+                    href="/empresas/bess-industrial"
+                    className="mt-3 inline-flex items-center gap-1.5 text-xs font-mono text-[#FF8300] hover:text-[#e07300] transition-colors font-medium group/link"
+                  >
+                    <span>Especificaciones BESS Industrial</span>
+                    <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover/link:translate-x-1" />
+                  </Link>
+                )}
               </motion.div>
             ))}
           </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex flex-col items-center gap-4">
-          <Link
-            href="/cotizacion"
-            className="bg-white border border-black/15 text-black font-medium text-xs md:text-sm px-10 py-3.5 rounded-full shadow-sm hover:bg-black hover:text-white transition-all cursor-pointer"
-          >
-            Cotizar A Medida
-          </Link>
-          <Link
-            href="/cotizacion"
-            className="text-xs uppercase tracking-widest font-medium text-black/50 hover:text-[#FF8300] transition-colors flex items-center gap-1 group"
-          >
-            <span>SABER MÁS</span>
-            <ChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-          </Link>
+        {/* Action Button */}
+        <div className="flex justify-center">
+          <CtaButton href="/cotizacion">
+            Cotizar a Medida
+          </CtaButton>
         </div>
       </div>
     </section>

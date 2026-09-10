@@ -1,12 +1,14 @@
 "use client";
 
-import { Zap, Cpu, Battery, ArrowRight } from "lucide-react";
-import Link from "next/link";
+import { Zap, Cpu, Battery } from "lucide-react";
 import { motion } from "framer-motion";
 import { useRef } from "react";
+import { CtaButton } from "@/components/ui/cta-button";
+import { useVisitaModal } from "@/context/VisitaModalContext";
 
 export function HogarEquipmentShowcase() {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const { openModal } = useVisitaModal();
 
   const scroll = (direction: "left" | "right") => {
     if (scrollRef.current) {
@@ -115,13 +117,9 @@ export function HogarEquipmentShowcase() {
 
         {/* Center CTA Button */}
         <div className="text-center mt-12">
-          <Link
-            href="/cotizacion"
-            className="inline-flex items-center gap-2 px-9 py-3.5 rounded-full bg-[#FF8300] text-white font-light text-xs md:text-sm hover:bg-[#e07300] transition-all duration-300 shadow-xl hover:shadow-[0_0_30px_rgba(255,131,0,0.5)] cursor-pointer group"
-          >
-            <span>Cotizar A Medida</span>
-            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-          </Link>
+          <CtaButton onClick={() => openModal("gratuita")}>
+            Agenda Una Visita Gratis
+          </CtaButton>
         </div>
       </div>
     </section>

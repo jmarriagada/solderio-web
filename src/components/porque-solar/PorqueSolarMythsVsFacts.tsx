@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { PORQUE_SOLAR_DATA } from "@/lib/constants";
-import { AlertCircle, CheckCircle2, HelpCircle } from "lucide-react";
+import { AlertCircle, CheckCircle2 } from "lucide-react";
 
 export function PorqueSolarMythsVsFacts() {
   const { mythsVsFacts } = PORQUE_SOLAR_DATA;
@@ -11,13 +11,10 @@ export function PorqueSolarMythsVsFacts() {
     <section className="py-20 md:py-28 px-4 md:px-8 max-w-7xl mx-auto">
       {/* Section Header */}
       <div className="text-center max-w-3xl mx-auto mb-16">
-        <span className="text-xs md:text-sm font-semibold uppercase tracking-widest text-[#FF8300] mb-2 block">
-          Claridad & Transparencia
-        </span>
-        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-brand-fg tracking-tight">
+        <h2 className="text-3xl md:text-4xl lg:text-5xl font-light text-brand-fg tracking-tight">
           Mitos vs Realidades de la Energía Solar en el Sur
         </h2>
-        <p className="mt-4 text-sm md:text-base text-[#4A4A4A]">
+        <p className="mt-4 text-sm md:text-base text-[#4A4A4A] font-light leading-relaxed">
           Separamos las dudas comunes de los hechos técnicos comprobados por nuestros ingenieros en terreno.
         </p>
       </div>

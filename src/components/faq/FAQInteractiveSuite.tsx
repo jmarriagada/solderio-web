@@ -182,7 +182,7 @@ export function FAQInteractiveSuite() {
                 No encontramos respuestas para "{searchQuery}".
               </p>
               <a
-                href="https://wa.me/56987654321"
+                href="https://wa.me/56966186667?text=Hola,%20tengo%20una%20consulta%20sobre%20un%20proyecto%20solar"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#FF8300] text-white text-xs font-light hover:bg-[#e07400] transition-all shadow-sm"

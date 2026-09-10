@@ -117,7 +117,7 @@ export function FloatingNav() {
             <div className="flex items-center gap-2.5 sm:gap-3">
               <Link
                 href="/cotizacion"
-                className="flex items-center gap-1.5 text-[13px] font-medium bg-[#FF8300] text-white px-4 py-2 rounded-full hover:bg-[#e07400] transition-all shadow-sm hover:shadow-[0_0_15px_rgba(255,131,0,0.4)]"
+                className="flex items-center gap-1.5 text-[13px] font-normal bg-[#FF8300] text-white px-4 py-2 rounded-full hover:bg-[#e07400] transition-all shadow-sm hover:shadow-[0_0_15px_rgba(255,131,0,0.4)]"
               >
                 <span>Cotizar</span>
                 <ArrowRight className="w-3.5 h-3.5" />

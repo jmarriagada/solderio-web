@@ -36,16 +36,13 @@ export function PorqueSolarTechEcosystem() {
   ];
 
   return (
-    <section className="py-20 md:py-28 px-4 md:px-8 max-w-7xl mx-auto">
+    <section className="pt-20 md:pt-28 pb-6 md:pb-8 px-4 md:px-8 max-w-7xl mx-auto">
       {/* Header */}
       <div className="text-center max-w-3xl mx-auto mb-16">
-        <span className="text-xs md:text-sm font-semibold uppercase tracking-widest text-[#FF8300] mb-2 block">
-          Arquitectura del Sistema
-        </span>
-        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-brand-fg tracking-tight">
+        <h2 className="text-3xl md:text-4xl lg:text-5xl font-light text-brand-fg tracking-tight">
           El Ecosistema Solar de SoldeRío
         </h2>
-        <p className="mt-4 text-sm md:text-base text-[#4A4A4A]">
+        <p className="mt-4 text-sm md:text-base text-[#4A4A4A] font-light leading-relaxed">
           Cuatro componentes de alta ingeniería perfectamente sincronizados para garantizarte energía ininterrumpida.
         </p>
       </div>

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
@@ -51,19 +52,126 @@ const MONTH_LABELS = [
   { short: "Dic", full: "Diciembre" },
 ];
 
+interface ParsedQuoteParams {
+  propertyType?: PropertyType;
+  systemType?: TopologyType;
+  includeEvCharger?: boolean;
+  comuna?: string;
+  region?: string;
+  step?: number;
+}
+
+function parseQuoteUrlParams(params: URLSearchParams | null): ParsedQuoteParams {
+  if (!params) return {};
+
+  const propRaw = (
+    params.get("propiedad") ||
+    params.get("propertyType") ||
+    params.get("tipo") ||
+    ""
+  )
+    .toLowerCase()
+    .trim();
+
+  let propertyType: PropertyType | undefined;
+  if (
+    propRaw.includes("parcela") ||
+    propRaw.includes("rural") ||
+    propRaw.includes("campo")
+  ) {
+    propertyType = "parcela";
+  } else if (
+    propRaw.includes("comercial") ||
+    propRaw.includes("pyme") ||
+    propRaw.includes("empresa") ||
+    propRaw.includes("bodega") ||
+    propRaw.includes("hotel")
+  ) {
+    propertyType = "comercial";
+  } else if (
+    propRaw.includes("agricola") ||
+    propRaw.includes("agrícola") ||
+    propRaw.includes("fundo") ||
+    propRaw.includes("riego") ||
+    propRaw.includes("lecheria")
+  ) {
+    propertyType = "agricola";
+  } else if (
+    propRaw.includes("residencial") ||
+    propRaw.includes("urbana") ||
+    propRaw.includes("casa") ||
+    propRaw.includes("hogar") ||
+    propRaw.includes("ciudad")
+  ) {
+    propertyType = "residencial";
+  }
+
+  const sysRaw = (
+    params.get("sistema") ||
+    params.get("systemType") ||
+    ""
+  )
+    .toLowerCase()
+    .trim();
+
+  let systemType: TopologyType | undefined;
+  if (
+    sysRaw.includes("offgrid") ||
+    sysRaw.includes("off-grid") ||
+    sysRaw.includes("aislada") ||
+    sysRaw.includes("autonoma") ||
+    sysRaw.includes("autónoma")
+  ) {
+    systemType = "offgrid";
+  } else if (
+    sysRaw.includes("ongrid") ||
+    sysRaw.includes("on-grid") ||
+    sysRaw.includes("red") ||
+    sysRaw.includes("conectada")
+  ) {
+    systemType = "ongrid";
+  } else if (
+    sysRaw.includes("hibrida") ||
+    sysRaw.includes("híbrida") ||
+    sysRaw.includes("bateria") ||
+    sysRaw.includes("batería") ||
+    sysRaw.includes("respaldo")
+  ) {
+    systemType = "hibrida";
+  }
+
+  const evRaw = params.get("ev") || params.get("cargador");
+  const includeEvCharger =
+    evRaw === "true" || evRaw === "1" || evRaw === "si" ? true : undefined;
+
+  const comuna = params.get("comuna") || undefined;
+  const region = params.get("region") || undefined;
+
+  const stepRaw = params.get("paso") || params.get("step");
+  const step =
+    stepRaw && !isNaN(Number(stepRaw))
+      ? Math.min(6, Math.max(1, Number(stepRaw)))
+      : undefined;
+
+  return { propertyType, systemType, includeEvCharger, comuna, region, step };
+}
+
 export function SmartQuoteWizard() {
-  const [currentStep, setCurrentStep] = useState<number>(1);
+  const searchParams = useSearchParams();
+  const initialParams = parseQuoteUrlParams(searchParams);
+
+  const [currentStep, setCurrentStep] = useState<number>(initialParams.step || 1);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [selectedRegion, setSelectedRegion] = useState<string>(DEFAULT_REGION);
+  const [selectedRegion, setSelectedRegion] = useState<string>(initialParams.region || DEFAULT_REGION);
   const [submissionResult, setSubmissionResult] = useState<{
     sizing: SolarSizingResult;
     leadId: string;
   } | null>(null);
 
   const [formData, setFormData] = useState<QuoteFormData>({
-    propertyType: "residencial",
-    region: DEFAULT_REGION,
-    comuna: "Puerto Varas",
+    propertyType: initialParams.propertyType || "residencial",
+    region: initialParams.region || DEFAULT_REGION,
+    comuna: initialParams.comuna || "Puerto Varas",
     address: "",
     consumptionMode: "monthly_bill_clp",
     monthlyBillClp: 120000,
@@ -71,8 +179,8 @@ export function SmartQuoteWizard() {
     monthlyKwhBreakdown: DEFAULT_MONTHLY_KWH,
     distributor: "saesa",
     hasPhases: "monofasico",
-    systemType: "hibrida",
-    includeEvCharger: false,
+    systemType: initialParams.systemType || "hibrida",
+    includeEvCharger: initialParams.includeEvCharger ?? false,
     backupPriority: "cargas_criticas",
     omPackage: "basic",
     billFile: null,
@@ -81,6 +189,45 @@ export function SmartQuoteWizard() {
     email: "",
     acceptTerms: true,
   });
+
+  // Re-sync if URL search params change dynamically
+  useEffect(() => {
+    if (!searchParams) return;
+    const parsed = parseQuoteUrlParams(searchParams);
+
+    setFormData((prev) => {
+      const updated = { ...prev };
+      let changed = false;
+      if (parsed.propertyType && parsed.propertyType !== prev.propertyType) {
+        updated.propertyType = parsed.propertyType;
+        changed = true;
+      }
+      if (parsed.systemType && parsed.systemType !== prev.systemType) {
+        updated.systemType = parsed.systemType;
+        changed = true;
+      }
+      if (parsed.includeEvCharger !== undefined && parsed.includeEvCharger !== prev.includeEvCharger) {
+        updated.includeEvCharger = parsed.includeEvCharger;
+        changed = true;
+      }
+      if (parsed.comuna && parsed.comuna !== prev.comuna) {
+        updated.comuna = parsed.comuna;
+        changed = true;
+      }
+      if (parsed.region && parsed.region !== prev.region) {
+        updated.region = parsed.region;
+        changed = true;
+      }
+      return changed ? updated : prev;
+    });
+
+    if (parsed.region) {
+      setSelectedRegion(parsed.region);
+    }
+    if (parsed.step) {
+      setCurrentStep(parsed.step);
+    }
+  }, [searchParams]);
 
   const propertyTypes: { id: PropertyType; title: string; desc: string; icon: any }[] = [
     { id: "residencial", title: "Casa Urbana", desc: "Residencia en ciudad o condominio", icon: Home },

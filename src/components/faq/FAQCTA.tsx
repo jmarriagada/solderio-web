@@ -43,7 +43,7 @@ export function FAQCTA() {
             <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
           </Link>
           <a
-            href="https://wa.me/56987654321"
+            href="https://wa.me/56966186667?text=Hola,%20tengo%20una%20consulta%20espec%C3%ADfica%20sobre%20mi%20propiedad"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white font-light text-xs md:text-sm hover:bg-white/20 transition-all duration-300 shadow-xl cursor-pointer"

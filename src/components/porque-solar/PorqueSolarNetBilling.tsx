@@ -2,23 +2,20 @@
 
 import { motion } from "framer-motion";
 import { PORQUE_SOLAR_DATA } from "@/lib/constants";
-import { Sun, ArrowRight, DollarSign, FileCheck2, Cpu } from "lucide-react";
+import { Sun, DollarSign, FileCheck2, Cpu } from "lucide-react";
 
 export function PorqueSolarNetBilling() {
   const { netBilling } = PORQUE_SOLAR_DATA;
   const stepIcons = [Sun, Cpu, DollarSign, FileCheck2];
 
   return (
-    <section className="py-20 md:py-28 px-4 md:px-8 max-w-7xl mx-auto">
+    <section className="pt-20 md:pt-28 pb-10 md:pb-14 px-4 md:px-8 max-w-7xl mx-auto">
       {/* Header */}
       <div className="text-center max-w-3xl mx-auto mb-16">
-        <span className="text-xs md:text-sm font-semibold uppercase tracking-widest text-[#FF8300] mb-2 block">
-          Marco Regulatorio & Ley 21.118
-        </span>
-        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-brand-fg tracking-tight">
+        <h2 className="text-3xl md:text-4xl lg:text-5xl font-light text-brand-fg tracking-tight">
           {netBilling.title}
         </h2>
-        <p className="mt-4 text-sm md:text-base text-[#4A4A4A]">
+        <p className="mt-4 text-sm md:text-base text-[#4A4A4A] font-light leading-relaxed">
           {netBilling.subtitle}
         </p>
       </div>
@@ -41,48 +38,25 @@ export function PorqueSolarNetBilling() {
                   <div className="p-3 rounded-2xl bg-[#FF8300]/10 text-[#FF8300]">
                     <Icon className="w-6 h-6" />
                   </div>
-                  <span className="text-2xl font-bold text-black/15 group-hover:text-[#FF8300]/30 transition-colors">
+                  <span className="text-2xl font-light text-black/15 group-hover:text-[#FF8300]/30 transition-colors">
                     {step.number}
                   </span>
                 </div>
 
-                <h3 className="text-lg font-bold text-brand-fg mb-3">
+                <h3 className="text-lg font-light text-brand-fg mb-3">
                   {step.title}
                 </h3>
-                <p className="text-xs md:text-sm text-[#4A4A4A] leading-relaxed">
+                <p className="text-xs md:text-sm text-[#4A4A4A] font-light leading-relaxed">
                   {step.description}
                 </p>
               </div>
 
-              <div className="mt-6 pt-4 border-t border-black/5 flex items-center gap-1.5 text-[11px] font-semibold text-[#FF8300]">
+              <div className="mt-6 pt-4 border-t border-black/5 flex items-center gap-1.5 text-[11px] font-light text-[#FF8300]">
                 <span>Paso {idx + 1} del Proceso</span>
               </div>
             </motion.div>
           );
         })}
-      </div>
-
-      {/* Info Callout */}
-      <div className="mt-12 p-6 md:p-8 rounded-3xl bg-[#F7F8FA] border border-black/5 flex flex-col md:flex-row items-center justify-between gap-6">
-        <div className="flex items-center gap-4">
-          <div className="p-3 rounded-2xl bg-emerald-500/10 text-emerald-600 flex-shrink-0">
-            <FileCheck2 className="w-6 h-6" />
-          </div>
-          <div>
-            <h4 className="text-sm md:text-base font-bold text-brand-fg">
-              100% Tramitación Incluida ante Distribuidoras
-            </h4>
-            <p className="text-xs text-[#6B7280]">
-              Coordinamos directamente con Saesa, Crell, Frontel, CGE y la SEC para el cambio de medidor bidireccional y la vigencia del contrato Net Billing.
-            </p>
-          </div>
-        </div>
-        <a
-          href="/cotizacion"
-          className="text-xs font-semibold text-[#FF8300] hover:text-[#e07400] whitespace-nowrap bg-white px-5 py-2.5 rounded-full border border-black/10 shadow-xs"
-        >
-          Consultar por mi sector &rarr;
-        </a>
       </div>
     </section>
   );

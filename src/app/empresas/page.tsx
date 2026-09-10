@@ -1,10 +1,13 @@
 import { FloatingNav } from "@/components/FloatingNav";
 import { EmpresasHeroFrame } from "@/components/empresas/EmpresasHeroFrame";
 import { EmpresasDiagram } from "@/components/empresas/EmpresasDiagram";
-import { EmpresasValueProps } from "@/components/empresas/EmpresasValueProps";
 import { EmpresasSolutions } from "@/components/empresas/EmpresasSolutions";
+import { EmpresasIndustries } from "@/components/empresas/EmpresasIndustries";
+import { EmpresasValueProps } from "@/components/empresas/EmpresasValueProps";
+import { EmpresasPaybackDeepDive } from "@/components/empresas/EmpresasPaybackDeepDive";
 import { EmpresasHardware } from "@/components/empresas/EmpresasHardware";
 import { EmpresasInstallations } from "@/components/empresas/EmpresasInstallations";
+import { EmpresasFAQ } from "@/components/empresas/EmpresasFAQ";
 import { EmpresasCTA } from "@/components/empresas/EmpresasCTA";
 import { Footer } from "@/components/Footer";
 
@@ -29,19 +32,28 @@ export default function EmpresasPage() {
       {/* 3. Solucion integral en la operación (Acordeón de Etapas) */}
       <EmpresasSolutions />
 
-      {/* 4. Ventajas Estratégicas & Indicadores Financieros para Decision Makers */}
+      {/* 4. Sectores e Industrias Específicas en el Sur de Chile */}
+      <EmpresasIndustries />
+
+      {/* 5. Ventajas Estratégicas & Indicadores Financieros para Decision Makers */}
       <EmpresasValueProps />
 
-      {/* 4. Gestión inteligente de energía (Showcase Hardware C&I) */}
+      {/* 6. ¿Cuánto tiempo se tarda una empresa en recuperar su inversión? (4 Factores + Beneficio Tributario SII) */}
+      <EmpresasPaybackDeepDive />
+
+      {/* 7. Gestión inteligente de energía (Showcase Hardware C&I) */}
       <EmpresasHardware />
 
-      {/* 5. Tipo de Instalaciones (Techo / Suelo Slider) */}
+      {/* 8. Tipo de Instalaciones (Techo / Suelo Slider) */}
       <EmpresasInstallations />
 
-      {/* 6. Maximiza rentabilidad (CTA Final) */}
+      {/* 9. Preguntas Frecuentes Empresas (BESS, Tarifas, Continuidad y Financiamiento) */}
+      <EmpresasFAQ />
+
+      {/* 10. Maximiza rentabilidad / Transición Solar (CTA Final) */}
       <EmpresasCTA />
 
-      {/* 7. Footer Oficial */}
+      {/* 11. Footer Oficial */}
       <Footer />
     </main>
   );

@@ -271,7 +271,7 @@ export function SolarTopologyVisualizer({
 }: SolarTopologyVisualizerProps = {}) {
   const [activeTab, setActiveTab] = useState<TopologyKey>("hybrid");
   const [selectedHour, setSelectedHour] = useState<number>(13);
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [isPlaying, setIsPlaying] = useState<boolean>(true);
   const [selectedNode, setSelectedNode] = useState<ComponentNode | null>(null);
   const { openModal } = useVisitaModal();
 
@@ -324,6 +324,7 @@ export function SolarTopologyVisualizer({
     ongrid: {
       badge: "CONECTADA A LA RED",
       title: "Planta Solar On-Grid",
+      ctaText: "Solicitar Pre-Factibilidad On-Grid",
       tagline: "Autoconsumo directo y venta de excedentes a la distribuidora (Ley Net Billing 21.118).",
       characteristics: [
         { label: "Respaldo ante Cortes", value: "Sin Respaldo (Anti-Isla)", note: "Se apaga por seguridad de la red", alert: true },
@@ -337,6 +338,7 @@ export function SolarTopologyVisualizer({
     hybrid: {
       badge: "MÁS POPULAR & RESILIENTE",
       title: "Planta Solar Híbrida",
+      ctaText: "Solicitar Pre-Factibilidad Híbrida",
       tagline: "Ecosistema integral: Genera, consume, almacena en baterías LiFePO4, inyecta y respalda ante cortes.",
       characteristics: [
         { label: "Respaldo ante Cortes", value: "Continuidad <10ms (UPS)", note: "Tus luces y equipos no se apagan", alert: false },
@@ -350,6 +352,7 @@ export function SolarTopologyVisualizer({
     offgrid: {
       badge: "100% AUTÓNOMA & SOBERANA",
       title: "Planta Solar Off-Grid",
+      ctaText: "Solicitar Pre-Factibilidad Off-Grid",
       tagline: "Suministro eléctrico total e independiente para parcelas, islas o zonas rurales sin red eléctrica.",
       characteristics: [
         { label: "Dependencia de Red", value: "0% Dependencia", note: "Sin boletas ni cobros mensuales", alert: false },
@@ -381,7 +384,7 @@ export function SolarTopologyVisualizer({
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           >
             {/* Clean badge without background, border, or icon */}
-            <span className="text-xs md:text-sm font-medium uppercase tracking-widest text-[#FF8300] block mb-3">
+            <span className="text-xs md:text-sm font-light uppercase tracking-widest text-[#FF8300] block mb-3 md:mb-4">
               Simulador Interactivo
             </span>
 
@@ -1069,7 +1072,7 @@ export function SolarTopologyVisualizer({
                     onClick={() => openModal()}
                     className="w-full sm:w-auto px-7 py-3.5 rounded-full bg-[#FF8300] text-white text-xs font-light uppercase tracking-wider hover:bg-[#e07400] transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg hover:shadow-[0_0_25px_rgba(255,131,0,0.5)]"
                   >
-                    <span className="font-light">Solicitar Factibilidad {currentTopology.title}</span>
+                    <span className="font-light">{currentTopology.ctaText}</span>
                     <ArrowRight className="w-4 h-4" />
                   </button>
                   <span className="text-[11px] text-white/50 font-light">

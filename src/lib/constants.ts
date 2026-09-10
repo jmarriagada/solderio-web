@@ -15,7 +15,7 @@ export const BRAND = {
   social: {
     linkedin: "https://linkedin.com/company/solderio",
     instagram: "https://instagram.com/solderio.cl",
-    whatsapp: "https://wa.me/56987654321",
+    whatsapp: "https://wa.me/56966186667",
   },
   colors: {
     background: "#F7F8FA", // White
@@ -47,8 +47,7 @@ export const DESCUBRE_MENU = {
     title: "SOLAR",
     links: [
       { label: "Porqué Solar", href: "/porque-solar" },
-      { label: "O&M", href: "/empresas" },
-      { label: "Tecnología", href: "/porque-solar" },
+      { label: "BESS Industrial", href: "/empresas/bess-industrial" },
       { label: "Nuestra garantía", href: "/garantia" },
     ],
   },
@@ -384,17 +383,17 @@ export const ACERCA_DE_DATA = {
   manifesto: {
     motto: "Energía inteligente, ingeniería confiable.",
     mission:
-      "Democratizar el acceso a la energía solar fotovoltaica y almacenamiento inteligente en el sur de Chile, entregando proyectos llave en mano con el más alto rigor de ingeniería SEC Clase A y transparencia total en los datos.",
+      "Democratizar el acceso a la energía solar y almacenamiento inteligente en el sur de Chile, entregando proyectos llave en mano con el más alto rigor de ingeniería, acompañamiento y transparencia total en los datos.",
     vision:
       "Ser el partner tecnológico y energético de referencia en el sur del país, liderando la descentralización de la matriz energética con sistemas seguros, resilientes y diseñados para perdurar por décadas.",
     pillars: [
       {
         title: "Rigor Técnico Innegociable",
-        description: "Cada planta es calculada con simulaciones 3D (OpenSolar/SAM) y supervisada por ingenieros eléctricos SEC Clase A.",
+        description: "Cada planta es modelada y supervisada por ingenieros eléctricos SEC Clase A.",
       },
       {
         title: "Transparencia de Datos",
-        description: "Evaluamos tu potencial solar real desde tu boleta de luz, sin falsas promesas ni sobrestimaciones de ahorro.",
+        description: "Evaluamos tu potencial solar real desde tu ubicación y boleta de luz, sin falsas promesas ni sobrestimaciones.",
       },
       {
         title: "ADN del Sur de Chile",
@@ -409,7 +408,7 @@ export const ACERCA_DE_DATA = {
   whyUsComparison: [
     {
       feature: "Diseño e Ingeniería de Planta",
-      solderio: "Simulación 3D personalizada (OpenSolar/SAM) según sombras e inclinación real de tu techo.",
+      solderio: "Simulación 3D y modelamiento físico personalizado según irradiancia real, sombras e inclinaciones.",
       traditional: "Kits fotovoltaicos genéricos sin análisis fotométrico ni dimensionamiento de conductores.",
     },
     {
@@ -424,7 +423,7 @@ export const ACERCA_DE_DATA = {
     },
     {
       feature: "Equipamiento y Garantías",
-      solderio: "Módulos Tier 1 Monocristalinos N-Type e inversores Huawei con garantía de generación por 25 años.",
+      solderio: "Módulos Tier 1 Monocristalinos N-Type e inversores de gamma alta. Garantías de generación por 25 años.",
       traditional: "Paneles de marcas no reconocidas o sin representación técnica oficial en Chile.",
     },
     {
@@ -438,14 +437,14 @@ export const ACERCA_DE_DATA = {
       name: "Jorge Arriagada",
       role: "Co-Fundador & CEO",
       tagline: "Estrategia, EaaS & Software Solar",
-      bio: "Ingeniero Comercial con más de 10 años de liderazgo en la industria de energías renovables. Ex-CMO/CCO en SUNAI (software de monitoreo y O&M para plantas solares en 7 países de Latinoamérica y Europa). Especialista en modelos Energy-as-a-Service, experiencia de usuario y digitalización energética.",
+      bio: "Ingeniero Comercial con más de 10 años en la industria solar fotovoltaica. Ex Co-founder de SUNAI (software de monitoreo y O&M para plantas solares en 7 países). Especialista en modelos Energy-as-a-Service, experiencia de usuario y digitalización energética.",
       image: "/images/planta-solar-residencial-valdivia.png",
     },
     {
       name: "Marcos Rojas",
       role: "Co-Fundador & CTO/COO",
       tagline: "Ingeniería de Potencia & Certificación SEC Clase A",
-      bio: "Ingeniero Eléctrico con Certificación SEC Clase A y más de 30 años de trayectoria en el sector eléctrico. Fundador de MR Ingeniería Eléctrica, ha diseñado y ejecutado proyectos de media y baja tensión, subestaciones, tableros industriales y plantas de generación de alta complejidad en Chile.",
+      bio: "Ingeniero Eléctrico con Certificación SEC Clase A y más de 30 años de trayectoria en el sector eléctrico. Fundador de MR Ingeniería Eléctrica, ha diseñado y ejecutado proyectos de media y baja tensión, subestaciones, tableros industriales y plantas de generación de alta complejidad en el Sur de Chile.",
       image: "/images/planta-solar-empresas-solderio.jpeg",
     },
   ],
@@ -458,7 +457,7 @@ export const ACERCA_DE_DATA = {
     {
       question: "¿Qué pasa con mis garantías si una empresa instaladora quiebra?",
       answer:
-        "En SoldeRío trabajamos exclusivamente con marcas Tier 1 globales (como Huawei, Canadian Solar, LONGi) cuyas garantías de producto (12-15 años) y generación (25 años) son respaldadas directamente por el fabricante y sus representantes oficiales en Chile. Además, entregamos memoria técnica y certificados SEC TE-1/TE-4 para que cualquier técnico certificado pueda operar tu planta sin perder garantías.",
+        "En SoldeRío trabajamos exclusivamente con marcas Tier 1 globales cuyas garantías de producto (12-15 años) y generación (25 años) son respaldadas directamente por el fabricante y sus representantes oficiales en Chile. Además, entregamos memoria técnica y certificados SEC TE-1/TE-4 para que cualquier técnico certificado pueda operar tu planta sin perder garantías.",
     },
     {
       question: "¿Es realmente rentable la energía solar en el sur de Chile con tanta lluvia?",

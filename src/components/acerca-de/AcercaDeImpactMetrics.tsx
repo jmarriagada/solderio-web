@@ -39,10 +39,7 @@ export function AcercaDeImpactMetrics() {
     <section className="py-20 md:py-28 px-4 md:px-8 max-w-7xl mx-auto">
       <div className="bg-[#F7F8FA] rounded-3xl md:rounded-[36px] p-8 md:p-14 border border-black/5">
         <div className="text-center max-w-2xl mx-auto mb-14">
-          <span className="text-xs md:text-sm font-semibold uppercase tracking-widest text-[#FF8300] mb-2 block">
-            Impacto & Confianza
-          </span>
-          <h2 className="text-3xl md:text-4xl font-bold text-brand-fg tracking-tight">
+          <h2 className="text-3xl md:text-4xl font-light text-brand-fg tracking-tight">
             Nuestros Números Hablan de Compromiso
           </h2>
         </div>
@@ -74,7 +71,7 @@ export function AcercaDeImpactMetrics() {
                   <h3 className="text-sm font-bold text-brand-fg mb-2">
                     {m.label}
                   </h3>
-                  <p className="text-xs text-[#6B7280] leading-relaxed">
+                  <p className="text-xs text-[#6B7280] font-light leading-relaxed">
                     {m.description}
                   </p>
                 </div>

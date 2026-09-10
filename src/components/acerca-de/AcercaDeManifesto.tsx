@@ -12,14 +12,11 @@ export function AcercaDeManifesto() {
     <section id="manifiesto" className="py-20 md:py-28 px-4 md:px-8 max-w-7xl mx-auto scroll-mt-20">
       {/* Header */}
       <div className="text-center max-w-3xl mx-auto mb-16">
-        <span className="text-xs md:text-sm font-semibold uppercase tracking-widest text-[#FF8300] mb-2 block">
-          Nuestra Identidad
-        </span>
-        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-brand-fg tracking-tight">
-          Manifiesto & Propósito
+        <h2 className="text-3xl md:text-4xl lg:text-5xl font-light text-brand-fg tracking-tight">
+          Energía inteligente, ingeniería confiable
         </h2>
-        <p className="mt-4 text-sm md:text-base text-[#4A4A4A] leading-relaxed">
-          &ldquo;{manifesto.motto}&rdquo; &mdash; No somos una empresa de marketing que vende paneles; somos una compañía de ingeniería y software creada para dar certidumbre a tu inversión.
+        <p className="mt-4 text-sm md:text-base text-[#4A4A4A] leading-relaxed font-light">
+          No somos una empresa de marketing que vende paneles solares; somos una compañía de ingeniería y software creada para dar certidumbre a la inversión energética.
         </p>
       </div>
 
@@ -36,13 +33,13 @@ export function AcercaDeManifesto() {
           <div className="p-3 rounded-2xl bg-[#FF8300]/10 text-[#FF8300] w-fit mb-6">
             <Target className="w-7 h-7" />
           </div>
-          <span className="text-xs font-semibold text-[#FF8300] uppercase tracking-wider block mb-1">
+          <span className="text-xs font-light text-[#FF8300] uppercase tracking-wider block mb-1">
             Nuestra Misión
           </span>
-          <h3 className="text-2xl font-bold text-brand-fg mb-4">
+          <h3 className="text-2xl font-light text-brand-fg mb-4">
             Democratizar la energía solar con rigor técnico
           </h3>
-          <p className="text-sm md:text-base text-[#4A4A4A] leading-relaxed">
+          <p className="text-sm md:text-base text-[#4A4A4A] leading-relaxed font-light">
             {manifesto.mission}
           </p>
         </motion.div>
@@ -58,13 +55,13 @@ export function AcercaDeManifesto() {
           <div className="p-3 rounded-2xl bg-black/5 text-brand-fg w-fit mb-6">
             <Compass className="w-7 h-7" />
           </div>
-          <span className="text-xs font-semibold text-[#FF8300] uppercase tracking-wider block mb-1">
+          <span className="text-xs font-light text-[#FF8300] uppercase tracking-wider block mb-1">
             Nuestra Visión
           </span>
-          <h3 className="text-2xl font-bold text-brand-fg mb-4">
+          <h3 className="text-2xl font-light text-brand-fg mb-4">
             Liderar la transición energética en el sur
           </h3>
-          <p className="text-sm md:text-base text-[#4A4A4A] leading-relaxed">
+          <p className="text-sm md:text-base text-[#4A4A4A] leading-relaxed font-light">
             {manifesto.vision}
           </p>
         </motion.div>
@@ -87,10 +84,10 @@ export function AcercaDeManifesto() {
                 <div className="p-2.5 rounded-xl bg-white shadow-xs text-[#FF8300] w-fit mb-4">
                   <Icon className="w-5 h-5" />
                 </div>
-                <h4 className="text-base font-bold text-brand-fg mb-2">
+                <h4 className="text-base font-light text-brand-fg mb-2">
                   {pillar.title}
                 </h4>
-                <p className="text-xs text-[#6B7280] leading-relaxed">
+                <p className="text-xs text-[#6B7280] leading-relaxed font-light">
                   {pillar.description}
                 </p>
               </div>

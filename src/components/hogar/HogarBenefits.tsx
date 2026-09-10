@@ -11,6 +11,7 @@ export function HogarBenefits() {
       metric: "Hasta -90%",
       metricLabel: "Reducción en tu cuenta eléctrica",
       icon: "/icons/ahorro-planta-solar-solderio.svg",
+      iconClass: "h-7 sm:h-8 lg:h-9",
       heroIcon: TrendingDown,
       accentColor: "#FF8300",
       indicators: [
@@ -18,7 +19,7 @@ export function HogarBenefits() {
         "Venta de excedentes a la red por Net Billing",
         "Retorno de inversión proyectado entre 4 a 7 años",
       ],
-      footerBadge: "Amortización de alta rentabilidad",
+      footerBadge: "Alta rentabilidad",
     },
     {
       step: "02",
@@ -26,6 +27,7 @@ export function HogarBenefits() {
       metric: "100% Limpia",
       metricLabel: "Energía solar autónoma y continua",
       icon: "/icons/energia-planta-solar-solderio.svg",
+      iconClass: "h-10 sm:h-12 lg:h-14",
       heroIcon: Sun,
       accentColor: "#FF8300",
       indicators: [
@@ -39,8 +41,9 @@ export function HogarBenefits() {
       step: "03",
       category: "INGENIERÍA & GARANTÍA",
       metric: "25 Años",
-      metricLabel: "Garantía de potencia y respaldo local",
+      metricLabel: "Garantía de generación de paneles",
       icon: "/icons/garantia-planta-solar-solderio.svg",
+      iconClass: "h-9 sm:h-11 lg:h-13",
       heroIcon: ShieldCheck,
       accentColor: "#FF8300",
       indicators: [
@@ -62,16 +65,13 @@ export function HogarBenefits() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="max-w-3xl mb-14 md:mb-16"
+            className="max-w-4xl mx-auto text-center mb-14 md:mb-16"
           >
-            <span className="text-xs md:text-sm font-medium uppercase tracking-widest text-[#FF8300] mb-3 md:mb-4 block">
-              Rentabilidad
-            </span>
             <h2 className="text-3xl md:text-5xl font-light text-[#1F1F1F] mb-4 tracking-tight">
-              Baja tu costo eléctrico.
+              Genera tu propia energía limpia y baja tu costo eléctrico.
             </h2>
-            <p className="text-brand-muted text-base md:text-lg leading-relaxed font-light">
-              Genera tu propia energía limpia, almacena tus excedentes y protege la economía de tu hogar con la máxima rentabilidad y respaldo técnico.
+            <p className="text-brand-muted text-base md:text-lg leading-relaxed font-light max-w-none mx-auto whitespace-nowrap">
+              Protege la economía de tu hogar con la máxima rentabilidad y respaldo técnico a largo plazo.
             </p>
           </motion.div>
 
@@ -89,34 +89,23 @@ export function HogarBenefits() {
                 style={{ backgroundColor: "#FDFFFE" }}
               >
                 <div>
-                  {/* Top Row: Step Tag + SVG Icon */}
-                  <div className="flex items-center justify-between mb-6">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-mono font-semibold text-[#FF8300]">
-                        {card.step}
-                      </span>
-                      <span className="text-white/20 text-xs">•</span>
-                      <span className="text-[11px] font-mono tracking-wider text-[#6B7280] font-semibold uppercase">
-                        {card.category}
-                      </span>
+                  {/* Top Header Row: Metric Title + Subtitle on Left, Icon on Right (Vertically Centered) */}
+                  <div className="flex items-center justify-between gap-4 mb-6 pb-6 border-b border-black/5">
+                    <div>
+                      <div className="text-3xl sm:text-4xl lg:text-5xl font-light text-[#1F1F1F] tracking-tight mb-1 group-hover:text-[#FF8300] transition-colors">
+                        {card.metric}
+                      </div>
+                      <div className="text-xs sm:text-sm text-[#6B7280] font-light">
+                        {card.metricLabel}
+                      </div>
                     </div>
-                    <div className="w-11 h-11 rounded-2xl bg-white p-2 border border-black/5 shadow-sm flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+                    <div className={`${card.iconClass} flex items-center justify-end shrink-0 transition-transform duration-300 group-hover:scale-105`}>
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={card.icon}
-                        alt={card.category}
-                        className="w-7 h-7 object-contain"
+                        alt={card.metricLabel}
+                        className="h-full w-auto object-contain"
                       />
-                    </div>
-                  </div>
-
-                  {/* Main KPI Metric Display */}
-                  <div className="mb-6 pb-6 border-b border-black/5">
-                    <div className="text-4xl sm:text-5xl font-light text-[#1F1F1F] tracking-tight mb-1.5 group-hover:text-[#FF8300] transition-colors">
-                      {card.metric}
-                    </div>
-                    <div className="text-xs sm:text-sm text-[#6B7280] font-light">
-                      {card.metricLabel}
                     </div>
                   </div>
 

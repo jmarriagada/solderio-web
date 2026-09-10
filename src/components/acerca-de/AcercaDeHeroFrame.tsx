@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, ShieldCheck, Award, Sparkles } from "lucide-react";
+import { ShieldCheck, Award } from "lucide-react";
 import { motion } from "framer-motion";
 import { HeroHeaderNav } from "@/components/HeroHeaderNav";
 
@@ -19,8 +19,8 @@ export function AcercaDeHeroFrame() {
         {/* Background Image with Black Multiply Overlay */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="/images/planta-solar-residencial-selva-valdiviana.jpg"
-            alt="SoldeRío Naturaleza e Ingeniería Solar"
+            src="/images/Instaladores_solares_solderio.jpg"
+            alt="SoldeRío Instaladores Solares e Ingeniería"
             fill
             priority
             className="object-cover object-center scale-105"
@@ -53,17 +53,6 @@ export function AcercaDeHeroFrame() {
             }}
             className="text-center px-6 pt-10 md:pt-14 flex flex-col items-center max-w-4xl mx-auto"
           >
-            <motion.div
-              variants={{
-                hidden: { opacity: 0, y: 15 },
-                visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } },
-              }}
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white/90 text-xs font-light tracking-wider uppercase mb-4"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-[#FF8300]" />
-              <span>Nuestra Historia & Propósito • SoldeRío</span>
-            </motion.div>
-
             <motion.h1
               variants={{
                 hidden: { opacity: 0, y: 20 },
@@ -81,7 +70,7 @@ export function AcercaDeHeroFrame() {
               }}
               className="text-sm md:text-lg text-white/95 font-light max-w-2xl leading-relaxed tracking-wide"
             >
-              Ingeniería eléctrica senior y tecnología digital nacida en el sur de Chile para transformar la radiación solar en soberanía energética confiable.
+              Ingeniería eléctrica y tecnología digital nacida en el sur de Chile para transformar la radiación solar en soberanía energética confiable.
             </motion.p>
           </motion.div>
         </div>
@@ -102,7 +91,7 @@ export function AcercaDeHeroFrame() {
             <span className="text-white/30">•</span>
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-              <span>100% Tramitación SEC TE-1 / TE-4 / TE-6</span>
+              <span>Tramitación SEC Completa</span>
             </div>
             <span className="text-white/30">•</span>
             <div className="flex items-center gap-2">
@@ -120,14 +109,13 @@ export function AcercaDeHeroFrame() {
           >
             <a
               href="#manifiesto"
-              className="group w-full sm:w-auto bg-white text-black font-medium text-xs md:text-sm px-9 py-3.5 rounded-full shadow-lg hover:bg-[#FF8300] hover:text-white transition-all duration-300 cursor-pointer flex items-center justify-center gap-2 hover:shadow-[0_0_30px_rgba(255,131,0,0.4)]"
+              className="w-full sm:w-auto bg-white text-black font-light text-xs md:text-sm px-7 py-2.5 rounded-xl shadow-lg hover:bg-[#FF8300] hover:text-white transition-all duration-300 cursor-pointer flex items-center justify-center hover:shadow-[0_0_30px_rgba(255,131,0,0.4)]"
             >
-              <span>Conoce Nuestra Historia</span>
-              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+              Conoce Nuestra Historia
             </a>
             <Link
               href="/cotizacion"
-              className="w-full sm:w-auto bg-black/40 border border-white/40 text-white font-light text-xs md:text-sm px-9 py-3.5 rounded-full backdrop-blur-md hover:bg-black/60 hover:border-white transition-all cursor-pointer text-center"
+              className="w-full sm:w-auto bg-black/40 border border-white/40 text-white font-light text-xs md:text-sm px-7 py-2.5 rounded-xl backdrop-blur-md hover:bg-black/60 hover:border-white transition-all cursor-pointer text-center flex items-center justify-center"
             >
               Obtener Cotización Solar
             </Link>

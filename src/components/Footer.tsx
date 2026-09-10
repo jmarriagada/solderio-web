@@ -8,7 +8,7 @@ export function Footer() {
   const pathname = usePathname();
 
   return (
-    <footer className="bg-[#141414] text-white pt-16 md:pt-24 pb-16">
+    <footer className="bg-[#141414] text-white border-t border-white/10 pt-16 md:pt-24 pb-16">
       <div className="max-w-[1400px] mx-auto px-6 lg:px-8">
         {/* Navigation Columns */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-8 pb-16 border-b border-white/10 text-xs font-light tracking-wider">
@@ -32,6 +32,12 @@ export function Footer() {
               className={`hover:text-[#FF8300] transition-colors uppercase ${pathname === "/empresas" ? "text-[#FF8300]" : ""}`}
             >
               Comercial
+            </Link>
+            <Link 
+              href="/empresas/bess-industrial" 
+              className={`hover:text-[#FF8300] transition-colors uppercase ${pathname === "/empresas/bess-industrial" ? "text-[#FF8300]" : ""}`}
+            >
+              BESS Industrial
             </Link>
           </div>
 

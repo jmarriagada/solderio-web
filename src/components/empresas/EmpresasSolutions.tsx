@@ -8,21 +8,21 @@ import Link from "next/link";
 const SOLUTIONS_LIST = [
   {
     id: "consulta",
-    title: "Consulta técnica/comercial",
+    title: "Consulta técnico-comercial",
     description:
       "Nuestro equipo especialista analiza tu perfil empresarial y de consumo para validar instalación solar para tu empresa.",
+  },
+  {
+    id: "financiera",
+    title: "Consultoría de financiamiento",
+    description:
+      "Evaluamos opciones de financiamiento, modelos ESCO / PPA o leasing solar para acelerar el retorno de inversión y optimizar el flujo de caja.",
   },
   {
     id: "diseno",
     title: "Diseño de ingeniería",
     description:
       "Desarrollamos ingeniería de detalle SEC Clase A, dimensionando la planta fotovoltaica según el perfil de carga real y protecciones de tu planta o edificio.",
-  },
-  {
-    id: "financiera",
-    title: "Consulta financiera",
-    description:
-      "Evaluamos opciones de financiamiento, modelos ESCO / PPA o leasing solar para acelerar el retorno de inversión y optimizar el flujo de caja.",
   },
   {
     id: "construccion",
@@ -48,26 +48,29 @@ export function EmpresasSolutions() {
   const [activeTab, setActiveTab] = useState("consulta");
 
   return (
-    <section className="w-full py-20 px-6 md:px-12 lg:px-24 bg-[#F7F8FA] overflow-hidden">
-      <div className="max-w-7xl mx-auto">
+    <section className="w-full py-20 md:py-28 px-3 md:px-5 box-border bg-[#F7F8FA] overflow-hidden">
+      <div className="max-w-[1400px] mx-auto">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-16 max-w-3xl"
+          className="max-w-3xl mb-12"
         >
+          <span className="text-xs md:text-sm font-light uppercase tracking-widest text-[#FF8300] mb-3 md:mb-4 block">
+            Ciclo de Proyecto y Operación
+          </span>
           <h2 className="text-3xl md:text-5xl font-light text-[#1F1F1F] tracking-tight leading-[1.1] mb-6">
-            Solucion integral en la operación
+            Solución integral: de la consulta técnica al monitoreo y reportería
           </h2>
           <p className="text-base md:text-lg text-black/60 font-light leading-relaxed">
-            Tus aliados en la gestión eléctrica, diseñamos soluciones para diferentes escenarios, comerciales e industriales: agrícola, ganadero, aserraderos, lecherías, forestal, salmoneras, mecanizado, producción.
+            Acompañamos a tu empresa en cada etapa del ciclo de vida de tu proyecto solar: desde el levantamiento técnico y diseño de ingeniería, pasando por la evaluación financiera y construcción en terreno, hasta la operación continua, mantenimiento preventivo y telemetría con reportería ejecutiva de ahorros.
           </p>
         </motion.div>
 
         {/* Interactive Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           {/* Left Column: Image */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}

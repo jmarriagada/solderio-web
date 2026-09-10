@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { HeroHeaderNav } from "@/components/HeroHeaderNav";
 
@@ -14,18 +13,22 @@ export function EmpresasHeroFrame() {
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="relative w-full h-full rounded-[24px] md:rounded-[32px] overflow-hidden flex flex-col justify-between shadow-2xl border border-black/10"
+        className="relative w-full h-full rounded-[24px] md:rounded-[32px] overflow-hidden flex flex-col justify-between shadow-2xl border border-black/10 bg-[#141414]"
       >
-        {/* Background Image with Black Multiply Overlay */}
-        <div className="absolute inset-0 z-0">
+        {/* Background Image Container */}
+        <div className="absolute inset-0 z-0 overflow-hidden">
           <Image
             src="/images/solar-panels-empresas-sur-chile.jpg"
             alt="SoldeRío Plantas Solares Comercial e Industrial"
             fill
             priority
+            unoptimized
+            sizes="100vw"
             className="object-cover object-center scale-105"
           />
-          <div className="absolute inset-0 bg-black/50 mix-blend-multiply pointer-events-none" />
+          {/* Elegant Dark Vignette Overlay for Crisp Text Readability */}
+          <div className="absolute inset-0 bg-black/35 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/65 via-transparent to-black/75 pointer-events-none" />
           
           {/* Subtle Ambient Radial Glow (Soft & Slow Breathing) */}
           <motion.div
@@ -84,14 +87,18 @@ export function EmpresasHeroFrame() {
         >
           <Link
             href="/cotizacion"
-            className="group w-full sm:w-auto bg-white text-black font-medium text-xs md:text-sm px-9 py-3 rounded-full shadow-lg hover:bg-[#FF8300] hover:text-white transition-all duration-300 cursor-pointer flex items-center justify-center gap-2 hover:shadow-[0_0_30px_rgba(255,131,0,0.4)]"
+            className="w-full sm:w-auto bg-white text-black font-light text-xs md:text-sm px-7 py-2.5 rounded-xl shadow-lg hover:bg-[#FF8300] hover:text-white transition-all duration-300 cursor-pointer flex items-center justify-center hover:shadow-[0_0_30px_rgba(255,131,0,0.4)]"
           >
-            <span>Iniciar Cotización Solar</span>
-            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+            Iniciar Cotización Solar
           </Link>
-          <button className="w-full sm:w-auto bg-black/40 border border-white/40 text-white font-light text-xs md:text-sm px-9 py-3 rounded-full backdrop-blur-md hover:bg-black/60 hover:border-white transition-all cursor-pointer">
+          <a
+            href="https://wa.me/56966186667?text=Hola,%20quisiera%20contacto%20t%C3%A9cnico-comercial%20por%20un%20proyecto%20solar%20para%20mi%20empresa"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full sm:w-auto bg-black/40 border border-white/40 text-white font-light text-xs md:text-sm px-7 py-2.5 rounded-xl backdrop-blur-md hover:bg-black/60 hover:border-white transition-all cursor-pointer text-center flex items-center justify-center"
+          >
             Contacto técnico-comercial
-          </button>
+          </a>
         </motion.div>
       </motion.div>
     </section>

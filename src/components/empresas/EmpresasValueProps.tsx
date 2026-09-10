@@ -108,7 +108,7 @@ export function EmpresasValueProps() {
     yields: [
       {
         label: "Payback Promedio",
-        value: "3.5 - 4.5 años",
+        value: "3.2 - 4.5 años",
         desc: "Vida útil del sistema de 25+ años",
       },
       {
@@ -125,7 +125,7 @@ export function EmpresasValueProps() {
     points: [
       "Protección contra la inflación tarifaria eléctrica en horas punta (BT-4.3 / AT).",
       "Depreciación acelerada instantánea reconocida por el SII.",
-      "Reducción del costo nivelado de energéa (LCOE) por debajo de $65/kwh.",
+      "Reducción del costo nivelado de energía (LCOE) por debajo de $65/kWh.",
     ],
   };
 
@@ -191,7 +191,7 @@ export function EmpresasValueProps() {
             {/* Right Column: Key Financial / Performance Metrics (5 cols) */}
             <div className="lg:col-span-5 bg-[#F7F8FA] p-6 md:p-8 rounded-[24px] border border-black/5 flex flex-col justify-between space-y-4">
               <span className="text-xs font-mono uppercase tracking-wider text-black/50 block mb-2">
-                Indicadores Clave del Proyecto
+                Indicadores Clave
               </span>
 
               <div className="space-y-4">

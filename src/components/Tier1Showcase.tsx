@@ -61,7 +61,7 @@ export function Tier1Showcase() {
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           className="text-center max-w-3xl mx-auto mb-16"
         >
-          <span className="text-xs md:text-sm font-medium uppercase tracking-widest text-[#FF8300] mb-3 md:mb-4 block">
+          <span className="text-xs md:text-sm font-light uppercase tracking-widest text-[#FF8300] mb-3 md:mb-4 block">
             Hardware Certificado SEC
           </span>
           <h2 className="text-3xl md:text-5xl font-light text-[#1F1F1F] tracking-tight mb-4">
@@ -84,26 +84,12 @@ export function Tier1Showcase() {
               whileHover={{ y: -6 }}
               className="bg-[#F7F8FA] p-8 md:p-9 rounded-[24px] border border-black/10 flex flex-col justify-between shadow-sm hover:shadow-[0_12px_40px_rgba(255,131,0,0.12)] transition-all duration-300 relative group h-full"
             >
-              <div className="flex flex-col flex-grow">
-                {/* Top Badge */}
-                <div className="flex items-center justify-between mb-4 min-h-[24px]">
-                  <span className="text-[11px] font-mono tracking-wider text-[#FF8300] font-semibold uppercase flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#FF8300]" />
-                    {item.brand}
-                  </span>
-                  <span className="text-[10px] bg-black/5 text-[#6B7280] px-2.5 py-1 rounded-full uppercase font-medium">
-                    {item.tag}
-                  </span>
-                </div>
-
-                <h3 className="text-xl md:text-2xl font-normal text-brand-fg mb-1.5 leading-snug group-hover:text-black transition-colors min-h-[32px] md:min-h-[36px] flex items-center">
+              <div className="flex flex-col flex-grow justify-center items-center text-center mb-6">
+                <h3 className="text-xl md:text-2xl font-normal text-brand-fg mb-3 leading-snug group-hover:text-black transition-colors min-h-[32px] md:min-h-[36px] flex items-center justify-center text-center">
                   {item.model}
                 </h3>
-                <p className="text-xs text-[#6B7280] font-mono mb-4 min-h-[20px] flex items-center">
-                  {item.highlight}
-                </p>
 
-                <p className="text-brand-muted text-sm leading-relaxed font-light mb-6 min-h-[72px] md:min-h-[80px]">
+                <p className="text-brand-muted text-sm leading-relaxed font-light text-center max-w-sm">
                   {item.description}
                 </p>
               </div>

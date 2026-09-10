@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Calculator, ArrowRight, DollarSign, Zap, Clock, Leaf } from "lucide-react";
+import { ArrowRight, DollarSign, Zap, Clock, Leaf } from "lucide-react";
 import Link from "next/link";
 
 export function PorqueSolarCalculator() {
@@ -41,21 +41,17 @@ export function PorqueSolarCalculator() {
   };
 
   return (
-    <section id="calculadora" className="py-20 md:py-28 px-4 md:px-8 max-w-7xl mx-auto scroll-mt-20">
-      <div className="bg-[#1F1F1F] text-white rounded-3xl md:rounded-[36px] p-8 md:p-14 border border-white/10 relative overflow-hidden shadow-2xl">
+    <section id="calculadora" className="pt-8 md:pt-12 pb-20 md:pb-28 px-4 md:px-8 max-w-7xl mx-auto scroll-mt-20">
+      <div className="bg-white text-brand-fg rounded-3xl md:rounded-[36px] p-8 md:p-14 border border-black/10 relative overflow-hidden shadow-[0_10px_35px_rgba(0,0,0,0.04)]">
         {/* Background Ambient Glow */}
-        <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-[#FF8300]/15 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-[#FF8300]/5 rounded-full blur-[120px] pointer-events-none" />
 
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-12">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/10 text-[#FF8300] text-xs font-semibold uppercase tracking-wider mb-3">
-            <Calculator className="w-3.5 h-3.5" />
-            <span>Simulador de Rentabilidad Energética</span>
-          </div>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-light text-brand-fg tracking-tight">
             ¿Cuánto Puedes Ahorrar con SoldeRío?
           </h2>
-          <p className="mt-3 text-xs md:text-sm text-white/70">
+          <p className="mt-3 text-xs md:text-sm text-[#4A4A4A] font-light">
             Ajusta tu gasto promedio mensual en la boleta de luz para calcular tu ahorro proyectado.
           </p>
         </div>
@@ -63,14 +59,14 @@ export function PorqueSolarCalculator() {
         {/* Simulator Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
           {/* Left Column: Interactive Slider (6 cols) */}
-          <div className="lg:col-span-6 bg-white/5 p-6 md:p-8 rounded-3xl border border-white/10">
+          <div className="lg:col-span-6 bg-[#F7F8FA] p-6 md:p-8 rounded-3xl border border-black/10">
             <div className="flex items-center justify-between mb-4">
-              <span className="text-xs text-white/60 uppercase tracking-wider">
+              <span className="text-xs text-[#6B7280] uppercase tracking-wider font-light">
                 Gasto Mensual Actual
               </span>
-              <span className="text-2xl md:text-3xl font-bold text-[#FF8300]">
+              <span className="text-2xl md:text-3xl font-light text-[#FF8300]">
                 {formatCLP(monthlyBill)}
-                <span className="text-xs font-light text-white/60"> /mes</span>
+                <span className="text-xs font-light text-[#6B7280]"> /mes</span>
               </span>
             </div>
 
@@ -82,10 +78,10 @@ export function PorqueSolarCalculator() {
               step={10000}
               value={monthlyBill}
               onChange={(e) => setMonthlyBill(Number(e.target.value))}
-              className="w-full h-3 bg-white/20 rounded-lg appearance-none cursor-pointer accent-[#FF8300] mb-4"
+              className="w-full h-3 bg-black/10 rounded-lg appearance-none cursor-pointer accent-[#FF8300] mb-4"
             />
 
-            <div className="flex justify-between text-[11px] text-white/40 mb-6">
+            <div className="flex justify-between text-[11px] text-[#8C929D] font-light mb-6">
               <span>$50.000 CLP</span>
               <span>$400.000 CLP</span>
               <span>$800.000 CLP+</span>
@@ -97,10 +93,10 @@ export function PorqueSolarCalculator() {
                 <button
                   key={preset}
                   onClick={() => setMonthlyBill(preset)}
-                  className={`py-2 text-xs rounded-xl border transition-all cursor-pointer ${
+                  className={`py-2 text-xs rounded-xl border transition-all cursor-pointer font-light ${
                     monthlyBill === preset
-                      ? "bg-[#FF8300] text-white border-[#FF8300] font-semibold"
-                      : "bg-white/5 text-white/70 border-white/10 hover:bg-white/10"
+                      ? "bg-[#FF8300] text-white border-[#FF8300] shadow-xs"
+                      : "bg-white text-[#4A4A4A] border-black/10 hover:bg-black/5"
                   }`}
                 >
                   {formatCLP(preset)}
@@ -108,65 +104,65 @@ export function PorqueSolarCalculator() {
               ))}
             </div>
 
-            <div className="p-4 rounded-2xl bg-white/5 border border-white/10 text-xs text-white/70 leading-relaxed">
-              <span className="text-emerald-400 font-semibold">⚡ Tarifa de referencia:</span> Calculado con tarifa media del sur de Chile (~$270 CLP/kWh) y 3.5% de inflación tarifaria anual proyectada.
+            <div className="p-4 rounded-2xl bg-white border border-black/5 text-xs text-[#4A4A4A] font-light leading-relaxed">
+              <span className="text-[#FF8300] font-normal">⚡ Tarifa de referencia:</span> Calculado con tarifa media del sur de Chile (~$270 CLP/kWh) y 3.5% de inflación tarifaria anual proyectada.
             </div>
           </div>
 
           {/* Right Column: Dynamic KPIs & Summary (6 cols) */}
           <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* KPI 1: Ahorro Anual */}
-            <div className="p-6 rounded-3xl bg-white/5 border border-white/10">
-              <div className="flex items-center gap-2 text-xs text-white/60 mb-1">
-                <DollarSign className="w-4 h-4 text-emerald-400" />
+            <div className="p-6 rounded-3xl bg-[#F7F8FA] border border-black/10 hover:border-[#FF8300]/30 transition-all">
+              <div className="flex items-center gap-2 text-xs text-[#6B7280] font-light mb-1">
+                <DollarSign className="w-4 h-4 text-emerald-600" />
                 <span>Ahorro Estimado Anual</span>
               </div>
-              <span className="text-2xl md:text-3xl font-bold text-white block mb-1">
+              <span className="text-2xl md:text-3xl font-light text-brand-fg block mb-1">
                 {formatCLP(annualSavings)}
               </span>
-              <span className="text-[11px] text-emerald-400 font-medium">
+              <span className="text-[11px] text-emerald-600 font-light">
                 ~85% de reducción en boleta
               </span>
             </div>
 
             {/* KPI 2: Ahorro a 25 Años */}
-            <div className="p-6 rounded-3xl bg-white/5 border border-white/10">
-              <div className="flex items-center gap-2 text-xs text-white/60 mb-1">
+            <div className="p-6 rounded-3xl bg-[#F7F8FA] border border-black/10 hover:border-[#FF8300]/30 transition-all">
+              <div className="flex items-center gap-2 text-xs text-[#6B7280] font-light mb-1">
                 <Zap className="w-4 h-4 text-[#FF8300]" />
                 <span>Ahorro Total a 25 Años</span>
               </div>
-              <span className="text-2xl md:text-3xl font-bold text-[#FF8300] block mb-1">
+              <span className="text-2xl md:text-3xl font-light text-[#FF8300] block mb-1">
                 {formatCLP(cumulative25Years)}
               </span>
-              <span className="text-[11px] text-white/50">
+              <span className="text-[11px] text-[#6B7280] font-light">
                 Garantía de generación 25 años
               </span>
             </div>
 
             {/* KPI 3: Payback */}
-            <div className="p-6 rounded-3xl bg-white/5 border border-white/10">
-              <div className="flex items-center gap-2 text-xs text-white/60 mb-1">
-                <Clock className="w-4 h-4 text-blue-400" />
+            <div className="p-6 rounded-3xl bg-[#F7F8FA] border border-black/10 hover:border-[#FF8300]/30 transition-all">
+              <div className="flex items-center gap-2 text-xs text-[#6B7280] font-light mb-1">
+                <Clock className="w-4 h-4 text-blue-600" />
                 <span>Retorno de Inversión (ROI)</span>
               </div>
-              <span className="text-2xl md:text-3xl font-bold text-white block mb-1">
+              <span className="text-2xl md:text-3xl font-light text-brand-fg block mb-1">
                 {estimatedPayback}
               </span>
-              <span className="text-[11px] text-white/50">
+              <span className="text-[11px] text-[#6B7280] font-light">
                 Años promedio de amortización
               </span>
             </div>
 
             {/* KPI 4: CO2 Evitado */}
-            <div className="p-6 rounded-3xl bg-white/5 border border-white/10">
-              <div className="flex items-center gap-2 text-xs text-white/60 mb-1">
-                <Leaf className="w-4 h-4 text-emerald-400" />
+            <div className="p-6 rounded-3xl bg-[#F7F8FA] border border-black/10 hover:border-[#FF8300]/30 transition-all">
+              <div className="flex items-center gap-2 text-xs text-[#6B7280] font-light mb-1">
+                <Leaf className="w-4 h-4 text-emerald-600" />
                 <span>CO₂ Evitado Anual</span>
               </div>
-              <span className="text-2xl md:text-3xl font-bold text-emerald-400 block mb-1">
+              <span className="text-2xl md:text-3xl font-light text-emerald-600 block mb-1">
                 {co2AvoidedTons} ton
               </span>
-              <span className="text-[11px] text-white/50">
+              <span className="text-[11px] text-[#6B7280] font-light">
                 Planta recomendada: ~{suggestedKwp} kWp
               </span>
             </div>
@@ -175,9 +171,9 @@ export function PorqueSolarCalculator() {
             <div className="sm:col-span-2 mt-2">
               <Link
                 href="/cotizacion"
-                className="w-full bg-[#FF8300] hover:bg-[#e07400] text-white text-xs md:text-sm font-semibold py-4 rounded-2xl transition-all shadow-lg hover:shadow-[0_0_25px_rgba(255,131,0,0.5)] flex items-center justify-center gap-2 group"
+                className="w-full bg-[#FF8300] hover:bg-[#e07400] text-white text-xs md:text-sm font-light py-3.5 px-7 rounded-xl transition-all shadow-md hover:shadow-[0_0_25px_rgba(255,131,0,0.4)] flex items-center justify-center gap-2 group cursor-pointer"
               >
-                <span>Solicitar Estudio y Cotización Exacta con mi Boleta</span>
+                <span>Solicitar Estudio Real</span>
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </Link>
             </div>

@@ -2,8 +2,7 @@
 
 import { motion } from "framer-motion";
 import { PORQUE_SOLAR_DATA } from "@/lib/constants";
-import { TrendingDown, Zap, Home, ArrowUpRight } from "lucide-react";
-import Link from "next/link";
+import { TrendingDown, Zap, Home } from "lucide-react";
 
 export function PorqueSolarPillars() {
   const { pillars } = PORQUE_SOLAR_DATA;
@@ -13,13 +12,10 @@ export function PorqueSolarPillars() {
     <section className="py-20 md:py-28 px-4 md:px-8 max-w-7xl mx-auto">
       {/* Header */}
       <div className="text-center max-w-3xl mx-auto mb-16">
-        <span className="text-xs md:text-sm font-semibold uppercase tracking-widest text-[#FF8300] mb-2 block">
-          Beneficios Fundamentales
-        </span>
-        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-brand-fg tracking-tight">
+        <h2 className="text-3xl md:text-4xl lg:text-5xl font-light text-brand-fg tracking-tight">
           Tres Razones Inmediatas para Cambiarte a Solar
         </h2>
-        <p className="mt-4 text-sm md:text-base text-[#4A4A4A]">
+        <p className="mt-4 text-sm md:text-base text-[#4A4A4A] font-light leading-relaxed">
           La energía solar fotovoltaica ya no es una tecnología del futuro: es la decisión financiera y de seguridad energética más inteligente que puedes tomar hoy.
         </p>
       </div>
@@ -35,30 +31,21 @@ export function PorqueSolarPillars() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: idx * 0.15 }}
-              className="bg-white rounded-3xl p-8 md:p-10 border border-black/10 shadow-[0_10px_30px_rgba(0,0,0,0.05)] flex flex-col justify-between group hover:border-[#FF8300]/40 transition-all duration-300 relative overflow-hidden"
+              className="bg-white rounded-3xl p-8 md:p-10 border border-black/10 shadow-[0_10px_30px_rgba(0,0,0,0.05)] flex flex-col justify-start group hover:border-[#FF8300]/40 transition-all duration-300 relative overflow-hidden"
             >
-              <div>
-                <div className="flex items-center justify-between mb-6">
-                  <div className="p-3.5 rounded-2xl bg-[#FF8300]/10 text-[#FF8300] group-hover:scale-110 transition-transform">
-                    <Icon className="w-7 h-7" />
-                  </div>
-                  <span className="text-[11px] font-semibold uppercase tracking-wider text-[#FF8300] bg-[#FF8300]/10 px-3 py-1 rounded-full">
-                    {pillar.tag}
-                  </span>
-                </div>
-
-                <h3 className="text-2xl font-bold text-brand-fg mb-4 leading-snug">
-                  {pillar.title}
-                </h3>
-                <p className="text-xs md:text-sm text-[#4A4A4A] leading-relaxed mb-6">
-                  {pillar.description}
-                </p>
+              <div className="flex items-center justify-between mb-6">
+                <Icon className="w-8 h-8 text-[#FF8300] transition-transform duration-300 group-hover:scale-105" />
+                <span className="text-xs uppercase tracking-wider text-[#FF8300] font-light">
+                  {pillar.tag}
+                </span>
               </div>
 
-              <div className="pt-6 border-t border-black/5 flex items-center justify-between text-xs font-semibold text-brand-fg group-hover:text-[#FF8300] transition-colors">
-                <span>Ver Soluciones</span>
-                <ArrowUpRight className="w-4 h-4" />
-              </div>
+              <h3 className="text-xl md:text-2xl font-light text-brand-fg mb-3 leading-snug">
+                {pillar.title}
+              </h3>
+              <p className="text-xs md:text-sm text-[#4A4A4A] font-light leading-relaxed">
+                {pillar.description}
+              </p>
             </motion.div>
           );
         })}

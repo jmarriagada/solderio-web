@@ -254,10 +254,11 @@ export function EmpresasDiagram() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="text-center mb-10 md:mb-14 max-w-4xl px-4"
+          className="text-center mb-10 md:mb-14 max-w-5xl px-4"
         >
-          <h2 className="text-3xl md:text-5xl font-light text-[#1F1F1F] tracking-tight leading-[1.1]">
-            Solar, baterías y la red sincronizadas, minimizando el costo eléctrico operacional de tu empresa.
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[44px] xl:text-5xl font-light text-[#1F1F1F] tracking-tight leading-[1.15]">
+            <span className="block sm:whitespace-nowrap">Generación Fotovoltaica + Eficiencia Energética</span>
+            <span className="block sm:whitespace-nowrap">minimizan el OpEx de tu empresa.</span>
           </h2>
         </motion.div>
 
@@ -265,7 +266,7 @@ export function EmpresasDiagram() {
         <motion.div
           initial={{ opacity: 0, scale: 0.98 }}
           whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true, margin: "-60px" }}
+          viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
           className="relative w-full aspect-[16/9] md:aspect-[21/9] min-h-[420px] md:min-h-[580px] rounded-[24px] md:rounded-[32px] overflow-hidden bg-[#F7F8FA] border border-black/10 shadow-xl"
         >
@@ -275,9 +276,11 @@ export function EmpresasDiagram() {
             alt="Diagrama Planta Solar Comercial e Industrial SoldeRío"
             fill
             priority
-            className="object-cover opacity-95"
+            unoptimized
+            sizes="(max-width: 1400px) 100vw, 1400px"
+            className="object-cover object-center"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
 
           {/* Interactive Uniform Pin Boxes */}
           {HOTSPOTS.map((hotspot) => {

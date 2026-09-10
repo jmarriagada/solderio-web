@@ -25,7 +25,7 @@ export function SegmentedSolutions() {
             className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6"
           >
             <div>
-              <span className="text-xs md:text-sm font-medium uppercase tracking-widest text-[#FF8300] mb-3 md:mb-4 block">
+              <span className="text-xs md:text-sm font-light uppercase tracking-widest text-[#FF8300] mb-3 md:mb-4 block">
                 Soluciones Segmentadas
               </span>
               <h2 className="text-3xl md:text-5xl font-light text-brand-fg tracking-tight">

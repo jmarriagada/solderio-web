@@ -30,6 +30,7 @@ const satoshi = localFont({
 
 import { VisitaModalProvider } from "@/context/VisitaModalContext";
 import { VisitaTecnicaModal } from "@/components/modal/VisitaTecnicaModal";
+import { RouteScrollManager } from "@/components/RouteScrollManager";
 
 export const metadata: Metadata = {
   title: "SoldeRío | Soberanía Energética",
@@ -50,10 +51,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className="scroll-smooth">
+    <html lang="es">
       <body
         className={`${satoshi.variable} font-sans antialiased text-[#1F1F1F] min-h-full flex flex-col`}
       >
+        <RouteScrollManager />
         <VisitaModalProvider>
           {children}
           <VisitaTecnicaModal />

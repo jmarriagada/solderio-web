@@ -2,11 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Award, Droplets, Landmark, Sparkles, ArrowRight, ExternalLink } from "lucide-react";
-import { useVisitaModal } from "@/context/VisitaModalContext";
-
 export function IncentivosFondosConcursables() {
-  const { openModal } = useVisitaModal();
-
   const funds = [
     {
       icon: Award,
@@ -107,13 +103,15 @@ export function IncentivosFondosConcursables() {
               </div>
             </div>
 
-            <button
-              onClick={() => openModal()}
+            <a
+              href="https://wa.me/56966186667?text=Hola,%20quisiera%20consultar%20por%20asesor%C3%ADa%20para%20postular%20mi%20proyecto%20solar%20a%20un%20fondo%20del%20Estado"
+              target="_blank"
+              rel="noopener noreferrer"
               className="px-8 py-3.5 rounded-full bg-[#FF8300] text-white font-light text-xs md:text-sm hover:bg-[#e07400] transition-all duration-300 shadow-lg cursor-pointer whitespace-nowrap flex items-center gap-2"
             >
               <span>Consultar Asesoría</span>
               <ArrowRight className="w-4 h-4" />
-            </button>
+            </a>
           </div>
 
         </div>

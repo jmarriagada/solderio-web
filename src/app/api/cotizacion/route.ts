@@ -52,10 +52,10 @@ async function dispatchWebhookToN8n(lead: LeadSubmission): Promise<void> {
   const candidateUrls: string[] = [];
   if (process.env.EXTERNAL_WEBHOOK_URL) {
     candidateUrls.push(process.env.EXTERNAL_WEBHOOK_URL);
+  } else if (process.env.NODE_ENV !== "production") {
+    candidateUrls.push("http://localhost:5678/webhook-test/solderio-leads");
+    candidateUrls.push("http://localhost:5678/webhook/solderio-leads");
   }
-  // Local fallback endpoints
-  candidateUrls.push("http://localhost:5678/webhook-test/solderio-leads");
-  candidateUrls.push("http://localhost:5678/webhook/solderio-leads");
 
   const payload = {
     event: "lead.created",
@@ -163,10 +163,14 @@ export async function POST(request: Request) {
       sizingResult,
       message: "Cotización procesada exitosamente y sincronizada.",
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error al procesar cotización:", error);
     return NextResponse.json(
-      { error: "Error interno al procesar la cotización solar." },
+      { 
+        error: "Error interno al procesar la cotización solar.",
+        details: error?.message || String(error),
+        stack: error?.stack,
+      },
       { status: 500 }
     );
   }

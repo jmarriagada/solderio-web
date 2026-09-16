@@ -24,9 +24,7 @@ export function getAdminApp(): App | null {
         storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || `${projectId}.appspot.com`,
       });
     } else {
-      return initializeApp({
-        projectId,
-      });
+      return null;
     }
   } catch (err) {
     console.warn("Could not initialize Firebase Admin App:", err);

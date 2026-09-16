@@ -1,10 +1,8 @@
+import React from "react";
 import { Resend } from "resend";
 import { QuoteSummaryEmail } from "@/emails/QuoteSummaryEmail";
 import { SolarSizingResult } from "@/types/cotizacion";
 import { validateAndNormalizeEmail } from "./email-validator";
-
-const resendApiKey = process.env.RESEND_API_KEY;
-const resend = resendApiKey ? new Resend(resendApiKey) : null;
 
 // Official sender address configured with SPF/DKIM on solderio.cl
 const DEFAULT_SENDER = "SoldeRío Energía <contacto@solderio.cl>";
@@ -48,10 +46,11 @@ export async function sendQuoteReportEmail(
 
   const validRecipient = validation.normalizedEmail;
 
-  // 2. Check if Resend API key is configured
-  if (!resend) {
+  // 2. Dynamic evaluation of API Key per request
+  const apiKey = process.env.RESEND_API_KEY?.trim();
+  if (!apiKey) {
     console.info(
-      `[Mailer: Modo Simulación] RESEND_API_KEY no detectada en .env. Correo para ${validRecipient} (Lead: ${leadId}) no enviado físicamente.`
+      `[Mailer: Modo Simulación] RESEND_API_KEY no detectada en environment. Correo para ${validRecipient} (Lead: ${leadId}) no enviado físicamente.`
     );
     return {
       success: true,
@@ -60,7 +59,8 @@ export async function sendQuoteReportEmail(
     };
   }
 
-  const sender = process.env.SENDER_EMAIL || DEFAULT_SENDER;
+  const resend = new Resend(apiKey);
+  const sender = process.env.SENDER_EMAIL?.trim() || DEFAULT_SENDER;
   const subject = `Tu Propuesta Solar Fotovoltaica en ${comuna} (ID: ${leadId}) | SoldeRío`;
 
   try {
@@ -69,7 +69,7 @@ export async function sendQuoteReportEmail(
       to: [validRecipient],
       replyTo: REPLY_TO,
       subject: subject,
-      react: QuoteSummaryEmail({
+      react: React.createElement(QuoteSummaryEmail, {
         fullName,
         leadId,
         comuna,

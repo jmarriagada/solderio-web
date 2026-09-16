@@ -10,24 +10,27 @@ import { sendQuoteReportEmail } from "@/lib/mailer";
 const LEADS_FILE_PATH = path.join(process.cwd(), "data", "leads.json");
 
 async function ensureLocalLeadsFile(): Promise<void> {
-  const dir = path.dirname(LEADS_FILE_PATH);
   try {
+    const dir = path.dirname(LEADS_FILE_PATH);
     await fs.mkdir(dir, { recursive: true });
     await fs.access(LEADS_FILE_PATH);
   } catch {
-    await fs.writeFile(LEADS_FILE_PATH, JSON.stringify([], null, 2), "utf-8");
+    try {
+      await fs.writeFile(LEADS_FILE_PATH, JSON.stringify([], null, 2), "utf-8");
+    } catch {}
   }
 }
 
 async function saveLeadLocally(lead: LeadSubmission): Promise<void> {
-  await ensureLocalLeadsFile();
   try {
+    await ensureLocalLeadsFile();
     const raw = await fs.readFile(LEADS_FILE_PATH, "utf-8");
     const leads = JSON.parse(raw) as LeadSubmission[];
     leads.unshift(lead);
     await fs.writeFile(LEADS_FILE_PATH, JSON.stringify(leads, null, 2), "utf-8");
   } catch (err) {
-    console.error("Error guardando lead localmente:", err);
+    // In serverless environments like Vercel, the filesystem is read-only.
+    console.warn("[Local Leads] Entorno Serverless (disco de solo lectura), omitiendo respaldo en disco local.");
   }
 }
 

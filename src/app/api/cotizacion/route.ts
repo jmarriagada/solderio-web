@@ -149,21 +149,29 @@ export async function POST(request: Request) {
     // 2. Dispatch event to n8n for WhatsApp, Email and Telegram
     dispatchWebhookToN8n(newLead).catch((e) => console.error("Webhook background error:", e));
 
-    // 3. Dispatch official transactional email from @solderio.cl asynchronously
-    sendQuoteReportEmail({
-      to: emailValidation.normalizedEmail,
-      fullName: body.fullName,
-      comuna: body.comuna,
-      distributor: body.distributor,
-      systemType: body.systemType,
-      leadId,
-      sizing: sizingResult,
-    }).catch((e) => console.error("[Mailer Background Error]:", e));
+    // 3. Dispatch official transactional email from @solderio.cl
+    let emailDelivery: any = null;
+    try {
+      emailDelivery = await sendQuoteReportEmail({
+        to: emailValidation.normalizedEmail,
+        fullName: body.fullName,
+        comuna: body.comuna,
+        distributor: body.distributor,
+        systemType: body.systemType,
+        leadId,
+        sizing: sizingResult,
+      });
+      console.log(`[Mailer] Resultado de envío a ${emailValidation.normalizedEmail}:`, emailDelivery);
+    } catch (e: any) {
+      console.error("[Mailer Error]:", e);
+      emailDelivery = { success: false, error: e?.message || String(e) };
+    }
 
     return NextResponse.json({
       success: true,
       leadId,
       sizingResult,
+      emailDelivery,
       message: "Cotización procesada exitosamente y sincronizada.",
     });
   } catch (error: any) {

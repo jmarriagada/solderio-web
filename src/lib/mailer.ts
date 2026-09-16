@@ -5,7 +5,7 @@ import { SolarSizingResult } from "@/types/cotizacion";
 import { validateAndNormalizeEmail } from "./email-validator";
 
 // Official sender address configured with SPF/DKIM on solderio.cl
-const DEFAULT_SENDER = "SoldeRío Energía <contacto@solderio.cl>";
+const DEFAULT_SENDER = "SoldeRio Energia <contacto@solderio.cl>";
 const REPLY_TO = "contacto@solderio.cl";
 
 export interface SendQuoteReportParams {
@@ -24,6 +24,11 @@ export interface SendEmailResult {
   messageId?: string;
   error?: string;
   simulated?: boolean;
+  diagnostic?: {
+    apiKeyConfigured: boolean;
+    sender: string;
+    recipient: string;
+  };
 }
 
 /**
@@ -41,6 +46,11 @@ export async function sendQuoteReportEmail(
     return {
       success: false,
       error: validation.error || "Correo inválido.",
+      diagnostic: {
+        apiKeyConfigured: !!process.env.RESEND_API_KEY,
+        sender: process.env.SENDER_EMAIL?.trim() || DEFAULT_SENDER,
+        recipient: to,
+      },
     };
   }
 
@@ -48,19 +58,25 @@ export async function sendQuoteReportEmail(
 
   // 2. Dynamic evaluation of API Key per request
   const apiKey = process.env.RESEND_API_KEY?.trim();
+  const sender = process.env.SENDER_EMAIL?.trim() || DEFAULT_SENDER;
+
   if (!apiKey) {
-    console.info(
-      `[Mailer: Modo Simulación] RESEND_API_KEY no detectada en environment. Correo para ${validRecipient} (Lead: ${leadId}) no enviado físicamente.`
+    console.warn(
+      `[Mailer: Modo Simulación] RESEND_API_KEY no detectada en environment de Vercel. Correo para ${validRecipient} (Lead: ${leadId}) no enviado físicamente.`
     );
     return {
-      success: true,
+      success: false,
       simulated: true,
-      messageId: `sim_${Date.now()}`,
+      error: "RESEND_API_KEY no está configurada en las variables de entorno de Vercel.",
+      diagnostic: {
+        apiKeyConfigured: false,
+        sender,
+        recipient: validRecipient,
+      },
     };
   }
 
   const resend = new Resend(apiKey);
-  const sender = process.env.SENDER_EMAIL?.trim() || DEFAULT_SENDER;
   const subject = `Tu Propuesta Solar Fotovoltaica en ${comuna} (ID: ${leadId}) | SoldeRío`;
 
   try {

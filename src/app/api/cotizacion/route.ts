@@ -3,7 +3,6 @@ import { promises as fs } from "fs";
 import path from "path";
 import { calculateSolarSizing } from "@/lib/solar-calculator";
 import { LeadSubmission, QuoteFormData } from "@/types/cotizacion";
-import { getAdminDb } from "@/lib/firebase-admin";
 import { validateAndNormalizeEmail } from "@/lib/email-validator";
 import { sendQuoteReportEmail } from "@/lib/mailer";
 
@@ -35,9 +34,13 @@ async function saveLeadLocally(lead: LeadSubmission): Promise<void> {
 }
 
 async function saveLeadToFirestore(lead: LeadSubmission): Promise<boolean> {
+  if (!process.env.FIREBASE_ADMIN_CLIENT_EMAIL || !process.env.FIREBASE_ADMIN_PRIVATE_KEY) {
+    return false;
+  }
   try {
+    const { getAdminDb } = await import("@/lib/firebase-admin");
     const db = getAdminDb();
-    if (db && process.env.FIREBASE_ADMIN_CLIENT_EMAIL) {
+    if (db) {
       await db.collection("leads").doc(lead.id).set(lead);
       return true;
     }
@@ -177,14 +180,17 @@ export async function POST(request: Request) {
 }
 
 export async function GET() {
-  try {
-    const db = getAdminDb();
-    if (db && process.env.FIREBASE_ADMIN_CLIENT_EMAIL) {
-      const snap = await db.collection("leads").orderBy("createdAt", "desc").limit(50).get();
-      const leads = snap.docs.map((d: any) => d.data() as LeadSubmission);
-      return NextResponse.json({ total: leads.length, leads });
-    }
-  } catch {}
+  if (process.env.FIREBASE_ADMIN_CLIENT_EMAIL && process.env.FIREBASE_ADMIN_PRIVATE_KEY) {
+    try {
+      const { getAdminDb } = await import("@/lib/firebase-admin");
+      const db = getAdminDb();
+      if (db) {
+        const snap = await db.collection("leads").orderBy("createdAt", "desc").limit(50).get();
+        const leads = snap.docs.map((d: any) => d.data() as LeadSubmission);
+        return NextResponse.json({ total: leads.length, leads });
+      }
+    } catch {}
+  }
 
   try {
     await ensureLocalLeadsFile();

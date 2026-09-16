@@ -2,21 +2,23 @@ import { NextResponse } from "next/server";
 import { promises as fs } from "fs";
 import path from "path";
 import { LeadSubmission } from "@/types/cotizacion";
-import { getAdminDb } from "@/lib/firebase-admin";
 
 const LEADS_FILE_PATH = path.join(process.cwd(), "data", "leads.json");
 
 async function getLeads(): Promise<LeadSubmission[]> {
-  try {
-    const db = getAdminDb();
-    if (db && process.env.FIREBASE_ADMIN_CLIENT_EMAIL) {
-      const snap = await db.collection("leads").orderBy("createdAt", "desc").get();
-      if (!snap.empty) {
-        return snap.docs.map((d: any) => d.data() as LeadSubmission);
+  if (process.env.FIREBASE_ADMIN_CLIENT_EMAIL && process.env.FIREBASE_ADMIN_PRIVATE_KEY) {
+    try {
+      const { getAdminDb } = await import("@/lib/firebase-admin");
+      const db = getAdminDb();
+      if (db) {
+        const snap = await db.collection("leads").orderBy("createdAt", "desc").get();
+        if (!snap.empty) {
+          return snap.docs.map((d: any) => d.data() as LeadSubmission);
+        }
       }
+    } catch (e) {
+      console.warn("Error leyendo Firestore en admin, usando almacenamiento local:", e);
     }
-  } catch (e) {
-    console.warn("Error leyendo Firestore en admin, usando almacenamiento local:", e);
   }
 
   try {

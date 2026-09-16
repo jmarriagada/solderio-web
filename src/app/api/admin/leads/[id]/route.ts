@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { promises as fs } from "fs";
 import path from "path";
 import { LeadSubmission } from "@/types/cotizacion";
-import { getAdminDb } from "@/lib/firebase-admin";
 
 const LEADS_FILE_PATH = path.join(process.cwd(), "data", "leads.json");
 
@@ -16,16 +15,19 @@ export async function PATCH(request: Request, { params }: Props) {
     const body = await request.json();
 
     // 1. Update in Firestore if available
-    try {
-      const db = getAdminDb();
-      if (db && process.env.FIREBASE_ADMIN_CLIENT_EMAIL) {
-        await db.collection("leads").doc(id).update({
-          status: body.status,
-          updatedAt: new Date().toISOString(),
-        });
+    if (process.env.FIREBASE_ADMIN_CLIENT_EMAIL && process.env.FIREBASE_ADMIN_PRIVATE_KEY) {
+      try {
+        const { getAdminDb } = await import("@/lib/firebase-admin");
+        const db = getAdminDb();
+        if (db) {
+          await db.collection("leads").doc(id).update({
+            status: body.status,
+            updatedAt: new Date().toISOString(),
+          });
+        }
+      } catch (e) {
+        console.warn("Error actualizando Firestore:", e);
       }
-    } catch (e) {
-      console.warn("Error actualizando Firestore:", e);
     }
 
     // 2. Update local storage backup

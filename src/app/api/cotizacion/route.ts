@@ -4,6 +4,8 @@ import path from "path";
 import { calculateSolarSizing } from "@/lib/solar-calculator";
 import { LeadSubmission, QuoteFormData } from "@/types/cotizacion";
 import { getAdminDb } from "@/lib/firebase-admin";
+import { validateAndNormalizeEmail } from "@/lib/email-validator";
+import { sendQuoteReportEmail } from "@/lib/mailer";
 
 const LEADS_FILE_PATH = path.join(process.cwd(), "data", "leads.json");
 
@@ -100,9 +102,10 @@ export async function POST(request: Request) {
       );
     }
 
-    if (!body.email || !body.email.includes("@")) {
+    const emailValidation = validateAndNormalizeEmail(body.email);
+    if (!emailValidation.isValid) {
       return NextResponse.json(
-        { error: "Correo electrónico válido es requerido" },
+        { error: emailValidation.error || "Correo electrónico válido es requerido" },
         { status: 400 }
       );
     }
@@ -120,6 +123,7 @@ export async function POST(request: Request) {
       createdAt: timestamp,
       formData: {
         ...body,
+        email: emailValidation.normalizedEmail,
         billFile: body.billFile ? {
           name: body.billFile.name,
           size: body.billFile.size,
@@ -138,6 +142,17 @@ export async function POST(request: Request) {
 
     // 2. Dispatch event to n8n for WhatsApp, Email and Telegram
     dispatchWebhookToN8n(newLead).catch((e) => console.error("Webhook background error:", e));
+
+    // 3. Dispatch official transactional email from @solderio.cl asynchronously
+    sendQuoteReportEmail({
+      to: emailValidation.normalizedEmail,
+      fullName: body.fullName,
+      comuna: body.comuna,
+      distributor: body.distributor,
+      systemType: body.systemType,
+      leadId,
+      sizing: sizingResult,
+    }).catch((e) => console.error("[Mailer Background Error]:", e));
 
     return NextResponse.json({
       success: true,

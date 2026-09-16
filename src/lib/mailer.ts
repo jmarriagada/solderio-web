@@ -1,5 +1,6 @@
 import React from "react";
 import { Resend } from "resend";
+import { render } from "@react-email/render";
 import { QuoteSummaryEmail } from "@/emails/QuoteSummaryEmail";
 import { SolarSizingResult } from "@/types/cotizacion";
 import { validateAndNormalizeEmail } from "./email-validator";
@@ -80,12 +81,8 @@ export async function sendQuoteReportEmail(
   const subject = `Tu Propuesta Solar Fotovoltaica en ${comuna} (ID: ${leadId}) | SoldeRío`;
 
   try {
-    const { data, error } = await resend.emails.send({
-      from: sender,
-      to: [validRecipient],
-      replyTo: REPLY_TO,
-      subject: subject,
-      react: React.createElement(QuoteSummaryEmail, {
+    const emailHtml = await render(
+      React.createElement(QuoteSummaryEmail, {
         fullName,
         leadId,
         comuna,
@@ -93,7 +90,15 @@ export async function sendQuoteReportEmail(
         systemType,
         sizing,
         portalUrl: portalUrl || `https://solderio.cl/cotizacion?leadId=${leadId}`,
-      }),
+      })
+    );
+
+    const { data, error } = await resend.emails.send({
+      from: sender,
+      to: [validRecipient],
+      replyTo: REPLY_TO,
+      subject: subject,
+      html: emailHtml,
       headers: {
         // RFC 8058 One-Click Unsubscribe headers required by Google & Yahoo since 2024
         "List-Unsubscribe": `<mailto:${REPLY_TO}?subject=Unsubscribe%20${leadId}>`,

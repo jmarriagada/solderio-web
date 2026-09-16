@@ -94,10 +94,10 @@ export function TriadSection() {
             className="text-center max-w-3xl mx-auto mb-14"
           >
             <span className="text-xs md:text-sm font-light uppercase tracking-widest text-[#FF8300] block mb-3">
-              Diseño e implementación
+              Generación Solar Fotovoltaica
             </span>
             <h2 className="text-3xl md:text-5xl font-light text-[#1F1F1F] tracking-tight mb-4">
-              Ecosistemas de generación solar
+              Diseño e implementación
             </h2>
             <p className="text-brand-muted text-base md:text-lg font-light leading-relaxed">
               Ingeniería que asegura tu suministro eléctrico y la inteligencia que gestiona tu consumo.

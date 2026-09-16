@@ -223,7 +223,7 @@ export function HogarPropertyTypes() {
                     {/* Desafío - Short & Punchy */}
                     <div className="bg-amber-50/50 border border-amber-200/50 rounded-xl p-3.5 flex items-start gap-3">
                       <AlertTriangle className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
-                      <div className="text-xs md:text-sm text-black/80 font-light leading-relaxed">
+                      <div className="text-sm md:text-base text-black/80 font-light leading-relaxed">
                         <strong className="font-medium text-amber-900 mr-1.5">El Desafío:</strong>
                         {current.painShort}
                       </div>
@@ -232,7 +232,7 @@ export function HogarPropertyTypes() {
                     {/* Solución - Dark BG Protagonista */}
                     <div className="bg-[#1A1A1A] border border-black/10 rounded-xl p-3.5 md:p-4 flex items-start gap-3 shadow-sm">
                       <CheckCircle2 className="w-4 h-4 text-[#FF8300] shrink-0 mt-0.5" />
-                      <div className="text-xs md:text-sm text-white/90 font-light leading-relaxed">
+                      <div className="text-sm md:text-base text-white/90 font-light leading-relaxed">
                         <strong className="font-medium text-[#FF8300] mr-1.5">Solución SoldeRío:</strong>
                         {current.solutionShort}
                       </div>
@@ -283,13 +283,13 @@ export function HogarPropertyTypes() {
                         key={idx}
                         className="bg-[#F7F8FA] p-3.5 rounded-2xl border border-black/5 flex flex-col"
                       >
-                        <span className="text-xs text-black/50 font-light mb-0.5">
+                        <span className="text-[13px] text-black/50 font-light mb-0.5">
                           {metric.label}
                         </span>
                         <span className="text-xl md:text-2xl font-medium text-[#1F1F1F] tracking-tight mb-0.5">
                           {metric.value}
                         </span>
-                        <span className="text-[11px] font-mono text-black/40">
+                        <span className="text-[12px] font-mono text-black/40">
                           {metric.subtext}
                         </span>
                       </div>
@@ -299,7 +299,10 @@ export function HogarPropertyTypes() {
 
                 {/* Bottom Action Row */}
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-4 border-t border-black/5">
-                  <CtaButton href={current.quoteHref}>
+                  <CtaButton
+                    href={current.quoteHref}
+                    className="text-[13px] md:text-[15px]"
+                  >
                     Cotizar para {current.name}
                   </CtaButton>
 

@@ -135,14 +135,14 @@ export function HogarFAQ() {
                       transition={{ duration: 0.35, ease: "easeInOut" }}
                     >
                       <div className="px-6 md:px-7 pb-6 md:pb-7 pt-1 border-t border-white/10">
-                        <p className="text-xs md:text-sm text-white/70 font-light leading-relaxed whitespace-pre-line mb-4">
+                        <p className="text-sm md:text-base text-white/70 font-light leading-relaxed whitespace-pre-line mb-4">
                           {faq.answer}
                         </p>
 
                         {faq.highlight && (
                           <div className="bg-[#FF8300]/10 border border-[#FF8300]/25 rounded-xl p-3.5 flex items-start gap-2.5">
                             <ShieldCheck className="w-4 h-4 text-[#FF8300] shrink-0 mt-0.5" />
-                            <p className="text-xs text-white/90 font-light leading-relaxed">
+                            <p className="text-sm md:text-base text-white/90 font-light leading-relaxed">
                               {faq.highlight}
                             </p>
                           </div>
@@ -165,10 +165,10 @@ export function HogarFAQ() {
               <HelpCircle className="w-6 h-6" />
             </div>
             <div>
-              <h4 className="text-base font-normal text-white mb-1">
+              <h4 className="text-[17px] font-normal text-white mb-1">
                 ¿Tienes una duda específica sobre tu proyecto solar?
               </h4>
-              <p className="text-xs md:text-sm text-white/70 font-light">
+              <p className="text-sm md:text-base text-white/70 font-light">
                 Conversa directamente con nuestros ingenieros.
               </p>
             </div>
@@ -179,7 +179,7 @@ export function HogarFAQ() {
             target="_blank"
             rel="noopener noreferrer"
             variant="white"
-            className="relative z-10"
+            className="relative z-10 text-sm md:text-base"
           >
             Hablar con un Ingeniero
           </CtaButton>

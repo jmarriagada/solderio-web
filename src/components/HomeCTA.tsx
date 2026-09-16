@@ -6,7 +6,7 @@ import { ArrowRight } from "lucide-react";
 
 export function HomeCTA() {
   return (
-    <section className="bg-[#141414] py-32 md:py-44 text-center text-white relative flex items-center justify-center overflow-visible">
+    <section className="bg-[#141414] py-32 md:py-44 text-center text-white relative z-10 -my-1 flex items-center justify-center overflow-visible border-none">
       {/* Centered SoldeRío Watermark Icon with 10% Opacity behind text and button */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-0 opacity-10 flex items-center justify-center">
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -36,7 +36,7 @@ export function HomeCTA() {
         >
           <Link
             href="/cotizacion"
-            className="inline-flex items-center gap-2 px-10 py-3.5 rounded-full bg-white text-black font-light text-xs md:text-sm hover:bg-[#FF8300] hover:text-white transition-all duration-300 shadow-xl hover:shadow-[0_0_30px_rgba(255,131,0,0.5)] cursor-pointer group"
+            className="inline-flex items-center gap-2 px-10 py-3.5 rounded-full bg-white text-black font-light text-[14px] md:text-sm hover:bg-[#FF8300] hover:text-white transition-all duration-300 shadow-xl hover:shadow-[0_0_30px_rgba(255,131,0,0.5)] cursor-pointer group"
           >
             <span>Iniciar Cotización</span>
             <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />

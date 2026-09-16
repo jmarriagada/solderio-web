@@ -5,7 +5,7 @@ import { ArrowUpRight } from "lucide-react";
 
 function CashflowChart() {
   return (
-    <div className="w-full bg-[#F7F8FA] p-5 rounded-2xl border border-black/5 my-5">
+    <div className="hidden md:block bg-[#F7F8FA] p-4 sm:p-5 rounded-2xl border border-black/5 mb-6">
       {/* Header & Legend */}
       <div className="flex items-center justify-between mb-4">
         <div>
@@ -157,7 +157,7 @@ export function EmpresasValueProps() {
             {/* Left Column: Context & Bullet points (7 cols) */}
             <div className="lg:col-span-7 flex flex-col justify-between h-full">
               <div>
-                <div className="flex items-center gap-3 mb-4">
+                <div className="hidden md:flex items-center gap-3 mb-4">
                   <span className="text-xs font-mono uppercase tracking-wider text-[#FF8300] bg-[#FF8300]/10 px-3 py-1 rounded-full">
                     {financialData.badge}
                   </span>

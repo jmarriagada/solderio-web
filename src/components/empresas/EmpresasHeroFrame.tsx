@@ -87,7 +87,7 @@ export function EmpresasHeroFrame() {
         >
           <Link
             href="/cotizacion"
-            className="w-full sm:w-auto bg-white text-black font-light text-xs md:text-sm px-7 py-2.5 rounded-xl shadow-lg hover:bg-[#FF8300] hover:text-white transition-all duration-300 cursor-pointer flex items-center justify-center hover:shadow-[0_0_30px_rgba(255,131,0,0.4)]"
+            className="w-full sm:w-auto bg-white text-black font-light text-[15px] sm:text-xs md:text-sm px-7 py-3.5 sm:py-2.5 rounded-xl shadow-lg hover:bg-[#FF8300] hover:text-white transition-all duration-300 cursor-pointer flex items-center justify-center hover:shadow-[0_0_30px_rgba(255,131,0,0.4)]"
           >
             Iniciar Cotización Solar
           </Link>
@@ -95,7 +95,7 @@ export function EmpresasHeroFrame() {
             href="https://wa.me/56966186667?text=Hola,%20quisiera%20contacto%20t%C3%A9cnico-comercial%20por%20un%20proyecto%20solar%20para%20mi%20empresa"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full sm:w-auto bg-black/40 border border-white/40 text-white font-light text-xs md:text-sm px-7 py-2.5 rounded-xl backdrop-blur-md hover:bg-black/60 hover:border-white transition-all cursor-pointer text-center flex items-center justify-center"
+            className="w-full sm:w-auto bg-black/40 border border-white/40 text-white font-light text-[15px] sm:text-xs md:text-sm px-7 py-3.5 sm:py-2.5 rounded-xl backdrop-blur-md hover:bg-black/60 hover:border-white transition-all cursor-pointer text-center flex items-center justify-center"
           >
             Contacto técnico-comercial
           </a>

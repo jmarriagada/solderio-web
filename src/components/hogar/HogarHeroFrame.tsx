@@ -125,7 +125,7 @@ export function HogarHeroFrame() {
                 hidden: { opacity: 0, y: 15 },
                 visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
               }}
-              className="text-sm md:text-lg text-white/95 font-light max-w-2xl leading-relaxed tracking-wide"
+              className="text-[16px] md:text-[18px] text-white/95 font-light max-w-2xl leading-relaxed tracking-wide"
             >
               Genera energía limpia y baja tu cuenta eléctrica
             </motion.p>
@@ -141,7 +141,7 @@ export function HogarHeroFrame() {
         >
           <Link
             href="/cotizacion"
-            className="w-full sm:w-auto bg-white text-black font-light text-xs md:text-sm px-7 py-2.5 rounded-xl shadow-lg hover:bg-[#FF8300] hover:text-white transition-all duration-300 cursor-pointer flex items-center justify-center hover:shadow-[0_0_30px_rgba(255,131,0,0.4)]"
+            className="w-full sm:w-auto bg-white text-black font-light text-[15px] sm:text-xs md:text-sm px-7 py-3.5 sm:py-2.5 rounded-xl shadow-lg hover:bg-[#FF8300] hover:text-white transition-all duration-300 cursor-pointer flex items-center justify-center hover:shadow-[0_0_30px_rgba(255,131,0,0.4)]"
           >
             Obtener una Cotización Solar
           </Link>
@@ -149,7 +149,7 @@ export function HogarHeroFrame() {
             href="https://wa.me/56966186667?text=Hola,%20quisiera%20conversar%20con%20un%20ingeniero%20de%20SoldeR%C3%ADo"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full sm:w-auto bg-black/40 border border-white/40 text-white font-light text-xs md:text-sm px-7 py-2.5 rounded-xl backdrop-blur-md hover:bg-black/60 hover:border-white transition-all cursor-pointer text-center flex items-center justify-center"
+            className="w-full sm:w-auto bg-black/40 border border-white/40 text-white font-light text-[15px] sm:text-xs md:text-sm px-7 py-3.5 sm:py-2.5 rounded-xl backdrop-blur-md hover:bg-black/60 hover:border-white transition-all cursor-pointer text-center flex items-center justify-center"
           >
             Hablar con un Ingeniero
           </a>

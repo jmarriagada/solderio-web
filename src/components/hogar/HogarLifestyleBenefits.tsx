@@ -184,7 +184,7 @@ export function HogarLifestyleBenefits() {
                   </h3>
 
                   {/* Short Summary */}
-                  <p className="text-xs md:text-sm text-black/60 font-light leading-relaxed mb-4">
+                  <p className="text-[13px] md:text-[15px] text-black/60 font-light leading-relaxed mb-4">
                     {item.shortSummary}
                   </p>
 
@@ -210,7 +210,7 @@ export function HogarLifestyleBenefits() {
                         transition={{ duration: 0.3 }}
                         className="overflow-hidden"
                       >
-                        <p className="text-xs text-black/70 font-light leading-relaxed pt-2 pb-3 border-t border-black/5">
+                        <p className="text-[13px] text-black/70 font-light leading-relaxed pt-2 pb-3 border-t border-black/5">
                           {item.expandedDetail}
                         </p>
                       </motion.div>
@@ -261,7 +261,7 @@ export function HogarLifestyleBenefits() {
             />
           </div>
 
-          <div className="relative z-10">
+          <div className="relative z-10 text-center sm:text-left">
             <h4 className="text-xl md:text-2xl font-light mb-1.5">
               Calcula el ahorro exacto para tu casa o parcela en 2 minutos
             </h4>
@@ -272,7 +272,7 @@ export function HogarLifestyleBenefits() {
 
           <Link
             href="/cotizacion"
-            className="group relative z-10 whitespace-nowrap px-8 py-3.5 rounded-full bg-white text-black font-light text-xs md:text-sm hover:bg-[#FF8300] hover:text-white transition-all duration-300 shadow-lg hover:shadow-[0_0_30px_rgba(255,131,0,0.4)] cursor-pointer flex items-center justify-center gap-2"
+            className="group relative z-10 whitespace-nowrap px-8 py-3.5 rounded-full bg-white text-black font-light text-[14px] md:text-sm hover:bg-[#FF8300] hover:text-white transition-all duration-300 shadow-lg hover:shadow-[0_0_30px_rgba(255,131,0,0.4)] cursor-pointer flex items-center justify-center gap-2"
           >
             <span>Iniciar Cotización</span>
             <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />

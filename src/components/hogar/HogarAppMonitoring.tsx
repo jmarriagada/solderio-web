@@ -182,52 +182,54 @@ export function HogarAppMonitoring() {
         </motion.div>
 
         {/* 4-Scenario Interactive State Selector Bar */}
-        <div className="flex items-center justify-center mb-10 md:mb-14 overflow-x-auto pb-2 scrollbar-none">
-          <div className="inline-flex p-1.5 rounded-2xl md:rounded-full bg-[#1F1F1F]/90 backdrop-blur-md border border-white/10 shadow-xl max-w-full">
-            {(Object.keys(SCENARIOS) as ScenarioType[]).map((key) => {
-              const tab = SCENARIOS[key];
-              const Icon = tab.icon;
-              const isActive = activeTab === key;
+        <div className="flex items-center justify-center mb-10 md:mb-14 w-full">
+          <div className="w-full sm:w-auto max-w-full overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden p-1.5 rounded-2xl md:rounded-full bg-[#1F1F1F]/90 backdrop-blur-md border border-white/10 shadow-xl">
+            <div className="flex items-center justify-start sm:justify-center min-w-max gap-1">
+              {(Object.keys(SCENARIOS) as ScenarioType[]).map((key) => {
+                const tab = SCENARIOS[key];
+                const Icon = tab.icon;
+                const isActive = activeTab === key;
 
-              return (
-                <button
-                  key={key}
-                  onClick={() => setActiveTab(key)}
-                  className={`relative flex items-center gap-2.5 px-4 md:px-6 py-2.5 rounded-xl md:rounded-full text-xs md:text-sm font-light transition-all duration-300 cursor-pointer whitespace-nowrap ${
-                    isActive
-                      ? "text-white shadow-lg font-normal"
-                      : "text-white/60 hover:text-white hover:bg-white/5"
-                  }`}
-                >
-                  {isActive && (
-                    <motion.div
-                      layoutId="activeAppScenarioPill"
-                      className="absolute inset-0 bg-[#FF8300] rounded-xl md:rounded-full shadow-[0_0_25px_rgba(255,131,0,0.4)]"
-                      transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                    />
-                  )}
-                  <span className="relative z-10 flex items-center gap-2">
-                    <Icon
-                      className={`w-4 h-4 ${
-                        isActive
-                          ? "text-white"
-                          : key === "outage"
-                          ? "text-amber-400"
-                          : "text-[#FF8300]"
-                      }`}
-                    />
-                    <span>{tab.label}</span>
-                    <span
-                      className={`hidden sm:inline-block text-[10px] font-mono px-1.5 py-0.5 rounded ${
-                        isActive ? "bg-black/20 text-white" : "bg-white/5 text-white/50"
-                      }`}
-                    >
-                      {tab.time}
+                return (
+                  <button
+                    key={key}
+                    onClick={() => setActiveTab(key)}
+                    className={`relative flex items-center gap-2.5 px-4 md:px-6 py-2.5 rounded-xl md:rounded-full text-xs md:text-sm font-light transition-all duration-300 cursor-pointer whitespace-nowrap ${
+                      isActive
+                        ? "text-white shadow-lg font-normal"
+                        : "text-white/60 hover:text-white hover:bg-white/5"
+                    }`}
+                  >
+                    {isActive && (
+                      <motion.div
+                        layoutId="activeAppScenarioPill"
+                        className="absolute inset-0 bg-[#FF8300] rounded-xl md:rounded-full shadow-[0_0_25px_rgba(255,131,0,0.4)]"
+                        transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                      />
+                    )}
+                    <span className="relative z-10 flex items-center gap-2">
+                      <Icon
+                        className={`w-4 h-4 ${
+                          isActive
+                            ? "text-white"
+                            : key === "outage"
+                            ? "text-amber-400"
+                            : "text-[#FF8300]"
+                        }`}
+                      />
+                      <span>{tab.label}</span>
+                      <span
+                        className={`hidden sm:inline-block text-[10px] font-mono px-1.5 py-0.5 rounded ${
+                          isActive ? "bg-black/20 text-white" : "bg-white/5 text-white/50"
+                        }`}
+                      >
+                        {tab.time}
+                      </span>
                     </span>
-                  </span>
-                </button>
-              );
-            })}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
 
@@ -695,7 +697,7 @@ export function HogarAppMonitoring() {
                 <h3 className="text-lg font-normal text-white mb-2">
                   Balance Energético en Vivo
                 </h3>
-                <p className="text-xs text-white/70 font-light mb-5 leading-relaxed">
+                <p className="text-[13px] text-white/70 font-light mb-5 leading-relaxed">
                   El inversor híbrido inteligente prioriza el consumo del hogar. El excedente solar carga el banco de baterías. Una vez cargadas al 100%, el sobrante se inyecta a la red. Si se corta la red pública, el sistema conmuta en menos de 10ms para mantener tu hogar 100% operativo.
                 </p>
 
@@ -771,7 +773,7 @@ export function HogarAppMonitoring() {
                 <h3 className="text-lg font-normal text-white mb-2">
                   Protección Anti-Cortes (UPS)
                 </h3>
-                <p className="text-xs text-white/60 font-light mb-4 leading-relaxed">
+                <p className="text-[13px] text-white/60 font-light mb-4 leading-relaxed">
                   Conmutación automática en &lt;10ms. Tu familia no se entera cuando la red eléctrica local falla.
                 </p>
 
@@ -834,7 +836,7 @@ export function HogarAppMonitoring() {
                 <h3 className="text-lg font-normal text-white mb-2">
                   Ahorro & Venta de Excedentes
                 </h3>
-                <p className="text-xs text-white/60 font-light mb-5 leading-relaxed">
+                <p className="text-[13px] text-white/60 font-light mb-5 leading-relaxed">
                   Inyectas energía a la red eléctrica oficial y recibes abonos directos en tu boleta mensual.
                 </p>
 
@@ -894,7 +896,7 @@ export function HogarAppMonitoring() {
                 <h3 className="text-lg font-normal text-white mb-2">
                   Climatización & Cargador EV
                 </h3>
-                <p className="text-xs text-white/60 font-light mb-5 leading-relaxed">
+                <p className="text-[13px] text-white/60 font-light mb-5 leading-relaxed">
                   Deriva automáticamente los picos solares hacia la bomba de calor y el vehículo eléctrico.
                 </p>
 

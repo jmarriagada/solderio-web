@@ -373,7 +373,7 @@ export function SolarTopologyVisualizer({
   const isGridImporting = activeTab === "ongrid" && (selectedHour < 6 || selectedHour > 19);
 
   return (
-    <section className="bg-transparent w-full pt-16 md:pt-24 pb-0 relative text-white">
+    <section className="hidden md:block bg-transparent w-full pt-16 md:pt-24 pb-0 relative text-white">
       {/* 1. Header Section (100% Transparent Background matching the rest of the site) */}
       <div className="w-full px-3 md:px-5 box-border mb-10 md:mb-12">
         <div className="max-w-[1400px] mx-auto text-center">

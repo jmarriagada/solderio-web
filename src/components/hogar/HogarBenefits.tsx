@@ -65,12 +65,12 @@ export function HogarBenefits() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="max-w-4xl mx-auto text-center mb-14 md:mb-16"
+            className="max-w-4xl mx-auto text-center mb-14 md:mb-16 px-6 sm:px-8 md:px-0"
           >
             <h2 className="text-3xl md:text-5xl font-light text-[#1F1F1F] mb-4 tracking-tight">
               Genera tu propia energía limpia y baja tu costo eléctrico.
             </h2>
-            <p className="text-brand-muted text-base md:text-lg leading-relaxed font-light max-w-none mx-auto whitespace-nowrap">
+            <p className="text-brand-muted text-base md:text-lg leading-relaxed font-light max-w-none mx-auto whitespace-normal md:whitespace-nowrap">
               Protege la economía de tu hogar con la máxima rentabilidad y respaldo técnico a largo plazo.
             </p>
           </motion.div>
@@ -95,7 +95,7 @@ export function HogarBenefits() {
                       <div className="text-3xl sm:text-4xl lg:text-5xl font-light text-[#1F1F1F] tracking-tight mb-1 group-hover:text-[#FF8300] transition-colors">
                         {card.metric}
                       </div>
-                      <div className="text-xs sm:text-sm text-[#6B7280] font-light">
+                      <div className="text-[14px] sm:text-sm text-[#6B7280] font-light">
                         {card.metricLabel}
                       </div>
                     </div>
@@ -114,7 +114,7 @@ export function HogarBenefits() {
                     {card.indicators.map((ind, iIdx) => (
                       <div key={iIdx} className="flex items-start gap-2.5">
                         <CheckCircle2 className="w-4 h-4 text-[#FF8300] flex-shrink-0 mt-0.5" />
-                        <span className="text-xs sm:text-sm text-[#4B5563] font-light leading-relaxed">
+                        <span className="text-[14px] sm:text-sm text-[#4B5563] font-light leading-relaxed">
                           {ind}
                         </span>
                       </div>

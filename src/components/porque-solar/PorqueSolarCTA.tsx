@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 
 export function PorqueSolarCTA() {
   return (
-    <section className="bg-[#141414] pt-28 md:pt-36 pb-20 md:pb-28 text-center text-white relative flex items-center justify-center overflow-hidden">
+    <section className="bg-[#141414] pt-28 md:pt-36 pb-20 md:pb-28 text-center text-white relative z-10 -my-1 flex items-center justify-center overflow-hidden border-none">
       {/* Centered SoldeRío Watermark Icon with 10% Opacity behind text and button */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-0 opacity-10 flex items-center justify-center">
         {/* eslint-disable-next-line @next/next/no-img-element */}

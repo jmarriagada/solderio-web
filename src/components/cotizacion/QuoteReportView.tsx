@@ -14,23 +14,17 @@ import {
   PhoneCall, 
   ArrowRight, 
   Sparkles,
-  CloudSun,
   HelpCircle,
   X,
   Download,
   FileText,
-  Refrigerator,
-  Wifi,
-  Flame,
-  Tv,
-  Car,
-  Clock,
   FileCheck2,
   Wrench,
   Award,
-  AlertCircle,
-  Loader2,
-  Wallet
+  Wallet,
+  ArrowLeft,
+  RotateCcw,
+  ChevronDown
 } from "lucide-react";
 import { SolarSizingResult, QuoteFormData, MonthlyGenBreakdown } from "@/types/cotizacion";
 import { useVisitaModal } from "@/context/VisitaModalContext";
@@ -44,6 +38,7 @@ interface Props {
   sizing: SolarSizingResult;
   leadId: string;
   onReset: () => void;
+  onBack?: () => void;
 }
 
 interface ExplanatoryModalContent {
@@ -105,10 +100,84 @@ const EXPLANATORY_MODALS: Record<string, ExplanatoryModalContent> = {
   },
 };
 
-export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
+const RESIDENTIAL_INCLUDED_SERVICES = [
+  {
+    title: "Monitoreo 24/7",
+    desc: "Nuestro Call Center está disponible todos los días, a toda hora, para resolver tus dudas y acompañarte en cada etapa del proceso.",
+    icon: PhoneCall,
+    badge: "Soporte Continuo",
+  },
+  {
+    title: "Diseño de Proyecto",
+    desc: "Máxima eficiencia energética en tu proyecto solar hogar para ubicaciones en el Sur de Chile.",
+    icon: Sun,
+    badge: "A Medida",
+  },
+  {
+    title: "Ingeniería",
+    desc: "Cada detalle diseñado para funcionar sin problemas. Con instaladores certificados.",
+    icon: Wrench,
+    badge: "Instaladores SEC",
+  },
+  {
+    title: "Instalación y construcción",
+    desc: "Proyecto llave en mano, nuestros expertos se encargarán de todo.",
+    icon: Zap,
+    badge: "Llave en Mano",
+  },
+  {
+    title: "Certificación",
+    desc: "Gestionamos la certificación de tu proyecto solar frente a la SEC, y el cambio de medidor con la distribuidora electrica para activar la inyección bajo Ley Netbilling.",
+    icon: Award,
+    badge: "Ley Netbilling",
+  },
+  {
+    title: "Garantía Extendida",
+    desc: "3 años de garantía en la instalación. Además, todos los productos incluyen garantía del fabricante.",
+    icon: ShieldCheck,
+    badge: "Garantía 3 Años",
+  },
+  {
+    title: "Servicios de O&M",
+    desc: "Contamos con planes para el mantenimiento preventivo y correctivo. Nuestro personal se ubica en el sur y trabajamos con equipamiento especializado.",
+    icon: Sparkles,
+    badge: "Mantenimiento Local",
+  },
+];
+
+const FAQ_ITEMS = [
+  {
+    question: "¿En cuánto tiempo estará operativa mi planta solar?",
+    answer: "Una vez firmado el contrato, la instalación física en tu techo o terreno toma entre 3 y 5 días hábiles. La puesta en marcha para autoconsumo directo es inmediata tras finalizar el montaje. Luego, la tramitación del certificado TE-4 ante la SEC y la activación del nuevo medidor bidireccional con tu distribuidora eléctrica (Saesa, Crell o CGE) toma entre 30 y 60 días para comenzar a inyectar excedentes bajo la Ley Netbilling.",
+  },
+  {
+    question: "¿En qué consiste una visita técnica?",
+    answer: "Un Ingeniero visita tu propiedad para inspeccionar la orientación e inclinación de la techumbre o terreno, medir sombras de árboles o construcciones cercanas, y revisar el empalme y tablero eléctrico principal. Con estos datos calculamos las dimensiones exactas de canalizaciones, protecciones y cableado para entregarte el diseño definitivo.",
+  },
+  {
+    question: "¿Por qué es importante la visita técnica?",
+    answer: "Es fundamental porque permite verificar la factibilidad técnica real in situ, resolver todas tus dudas de forma personalizada y definir la ubicación exacta de los módulos e inversores. Además, nos permite entregarte un presupuesto 100% cerrado y llave en mano, garantizando que no existan sobrecostos ocultos el día del montaje.",
+  },
+  {
+    question: "¿Mis paneles solares funcionan cuando hay un corte de electricidad?",
+    answer: "En una planta On-Grid tradicional conectada a la red, los paneles se desconectan automáticamente por normativa de seguridad SEC (para proteger a los técnicos que reparan las líneas eléctricas). Si buscas tener electricidad y luz durante apagones, tu planta debe ser Híbrida o Aislada (Off-Grid) con Baterías, las cuales conmutan automáticamente para alimentar tus consumos esenciales sin interrupción.",
+  },
+  {
+    question: "¿Mi generación de energía es constante durante todo el año?",
+    answer: "No, en el Sur de Chile la radiación solar varía según la estación: durante primavera y verano generas una gran cantidad de energía, acumulando saldos a favor en dinero en tu boleta gracias a la Ley Netbilling. En otoño e invierno la producción baja debido a días más cortos, pero los excedentes que acumulaste en los meses soleados ayudan a compensar las cuentas de los meses fríos.",
+  },
+  {
+    question: "¿Qué pasa en los días nublados o con lluvia en el Sur?",
+    answer: "Nuestros paneles fotovoltaicos N-Type TOPCon captan radiación difusa de mejor forma que los paneles convencionales y continúan generando energía incluso con cielo nublado o lluvia moderada. Además, el clima lluvioso del sur beneficia a tu sistema al limpiar el polvo y la suciedad superficial de los paneles de manera 100% natural.",
+  },
+];
+
+export function QuoteReportView({ formData, sizing, leadId, onReset, onBack }: Props) {
   const { openModal } = useVisitaModal();
   const [activeModalKey, setActiveModalKey] = useState<string | null>(null);
   const [isExecutiveReportOpen, setIsExecutiveReportOpen] = useState(false);
+  const [isServicesModalOpen, setIsServicesModalOpen] = useState(false);
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
 
   const formatCurrency = (val: number) => {
     return new Intl.NumberFormat("es-CL", {
@@ -116,6 +185,10 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
       currency: "CLP",
       maximumFractionDigits: 0,
     }).format(val);
+  };
+
+  const formatNumber = (val: number) => {
+    return Math.round(val).toLocaleString("es-CL");
   };
 
   const monthlyData = sizing.monthlyBreakdown || [];
@@ -158,57 +231,16 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
               title="Descargar archivo PDF oficial del pre-informe"
             >
               <Download className="w-4 h-4" />
-              <span>Descargar PDF Directo</span>
+              <span>Descargar en PDF</span>
             </button>
 
             <button
-              onClick={() => setIsExecutiveReportOpen(true)}
-              className="w-full sm:w-auto px-4 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all text-xs font-light tracking-wide flex items-center justify-center gap-1.5 cursor-pointer"
-              title="Previsualizar Ficha Ejecutiva"
-            >
-              <FileText className="w-4 h-4 text-white/70" />
-              <span>Ver Ficha</span>
-            </button>
-
-            <a
-              href={`https://wa.me/56987654321?text=Hola%20SoldeR%C3%ADo,%20acabo%20de%20generar%20mi%20pre-informe%20solar%20(${leadId})%20para%20${formData.comuna}%20y%20deseo%20coordinar%20mi%20visita%20t%C3%A9cnica.`}
-              target="_blank"
-              rel="noopener noreferrer"
+              onClick={() => openModal()}
               className="w-full sm:w-auto px-5 py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white font-light text-xs md:text-sm transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer"
             >
-              <PhoneCall className="w-4 h-4" />
-              <span>Hablar con un Ingeniero</span>
-            </a>
-          </div>
-        </div>
-      </div>
-
-      {/* Spotlight: "¿Cuánto vas a pagar ahora?" (Comparativa de Boleta) */}
-      <div className="p-5 sm:p-8 rounded-[24px] sm:rounded-[28px] bg-gradient-to-r from-emerald-950/40 via-[#181818] to-emerald-900/20 border border-emerald-500/30 shadow-2xl relative overflow-hidden">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="space-y-2 text-center md:text-left">
-            <span className="text-xs font-mono uppercase tracking-wider text-emerald-400 font-semibold flex items-center justify-center md:justify-start gap-1.5">
-              <Sparkles className="w-4 h-4" />
-              <span>TU NUEVA REALIDAD ENERGÉTICA</span>
-            </span>
-            <h3 className="text-xl sm:text-2xl md:text-3xl font-light text-white">
-              Tu cuenta mensual baja de{" "}
-              <span className="line-through text-white/50">{formatCurrency(formData.monthlyBillClp)}</span> a solo{" "}
-              <strong className="text-emerald-400 font-mono font-normal">
-                {formatCurrency(sizing.estimatedNewMonthlyBillClp || 14500)} / mes
-              </strong>
-            </h3>
-            <p className="text-xs md:text-sm text-white/70 font-light">
-              Ahorras aproximadamente <strong className="text-white font-medium">{formatCurrency(sizing.estimatedAnnualSavingsClp)} al año</strong> que antes regalabas a {formData.distributor}.
-              {sizing.winterLimitSavingsClp ? ` (Incluye ~$${sizing.winterLimitSavingsClp.toLocaleString("es-CL")} ahorrados al eliminar el Límite de Invierno).` : ""}
-            </p>
-          </div>
-
-          <div className="w-full md:w-auto flex-shrink-0 bg-emerald-500/10 border border-emerald-500/30 px-6 py-4 rounded-2xl text-center">
-            <span className="text-[11px] font-mono text-emerald-300 uppercase block">COBERTURA SOLAR ANUAL</span>
-            <span className="text-3xl md:text-4xl font-light font-mono text-emerald-400">
-              {sizing.coberturaTotalAnualPct || 88}%
-            </span>
+              <Calendar className="w-4 h-4" />
+              <span>Coordinar Visita</span>
+            </button>
           </div>
         </div>
       </div>
@@ -230,7 +262,7 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
                   <HelpCircle className="w-3.5 h-3.5" />
                 </button>
               </span>
-              <Sun className="w-5 h-5 text-amber-400 flex-shrink-0" />
+              <Sun className="w-5 h-5 text-[#FF8300] flex-shrink-0" />
             </div>
             <div className="text-2xl sm:text-3xl font-light font-mono text-white mb-1">
               {sizing.recommendedKwp} <span className="text-sm sm:text-base text-white/50">kWp</span>
@@ -240,7 +272,7 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
             </p>
           </div>
           <div className="pt-3 mt-3 border-t border-white/10 text-[11px] text-white/60 font-mono flex items-center justify-between gap-1 flex-wrap">
-            <span>Inversor: <strong className="text-white font-medium">{sizing.inverterKw} kW</strong></span>
+            <span className="text-[#FF8300]">Inversor: <strong className="text-white font-medium">{sizing.inverterKw} kW</strong></span>
             <button
               onClick={() => setActiveModalKey("kwp")}
               className="text-[#FF8300] hover:underline text-[10px] cursor-pointer"
@@ -268,7 +300,7 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
               <Battery className="w-5 h-5 text-emerald-400 flex-shrink-0" />
             </div>
             <div className="text-2xl sm:text-3xl font-light font-mono text-white mb-1">
-              {sizing.batteryKwh > 0 ? `${sizing.batteryKwh} kWh` : "On-Grid"}
+              {sizing.batteryKwh > 0 ? `${sizing.batteryKwh} kWh` : "Sin Baterías"}
             </div>
             <p className="text-xs text-white/60 font-light leading-snug">
               {sizing.batteryKwh > 0
@@ -276,8 +308,10 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
                 : "Inyección directa Ley Net Billing"}
             </p>
           </div>
-          <div className="pt-3 mt-3 border-t border-white/10 text-[11px] text-emerald-400 font-mono flex items-center justify-between gap-1 flex-wrap">
-            <span>{sizing.batteryKwh > 0 ? "Respaldo <10ms en cortes" : "Sin baterías"}</span>
+          <div className="pt-3 mt-3 border-t border-white/10 text-[11px] font-mono flex items-center justify-between gap-1 flex-wrap">
+            <span className={sizing.batteryKwh > 0 ? "text-white" : "text-emerald-400"}>
+              {sizing.batteryKwh > 0 ? "Respaldo en cortes" : "On-Grid"}
+            </span>
             <button
               onClick={() => setActiveModalKey("bess")}
               className="text-emerald-400 hover:underline text-[10px] cursor-pointer"
@@ -304,20 +338,20 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
               </span>
               <TrendingUp className="w-5 h-5 text-blue-400 flex-shrink-0" />
             </div>
-            <div className="text-xl sm:text-2xl lg:text-[22px] xl:text-2xl 2xl:text-3xl font-light font-mono text-emerald-400 mb-1">
+            <div className="text-xl sm:text-2xl lg:text-[22px] xl:text-2xl 2xl:text-3xl font-light font-mono text-white mb-1">
               {formatCurrency(sizing.estimatedAnnualSavingsClp)}
             </div>
             <p className="text-xs text-white/60 font-light leading-snug">
               Autoconsumo {sizing.autoconsumoPct}% + Excedentes
             </p>
           </div>
-          <div className="pt-3 mt-3 border-t border-white/10 text-[10px] sm:text-[11px] text-white/60 font-mono flex items-center justify-between gap-1 flex-wrap">
-            <span>25 Años: <strong className="text-emerald-400">{formatCurrency(sizing.estimated25YearSavingsClp)}</strong></span>
+          <div className="pt-3 mt-3 border-t border-white/10 text-[10px] sm:text-[11px] text-blue-400 font-mono flex items-center justify-between gap-1 flex-wrap">
+            <span>A 25 años: <strong className="text-white font-medium">{formatCurrency(sizing.estimated25YearSavingsClp)}</strong></span>
             <button
               onClick={() => setActiveModalKey("netbilling")}
               className="text-blue-400 hover:underline text-[10px] cursor-pointer"
             >
-              Ley 21.118
+              ¿Cómo funciona?
             </button>
           </div>
         </div>
@@ -337,7 +371,7 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
                   <HelpCircle className="w-3.5 h-3.5" />
                 </button>
               </span>
-              <Leaf className="w-5 h-5 text-emerald-400 flex-shrink-0" />
+              <Leaf className="w-5 h-5 text-amber-400 flex-shrink-0" />
             </div>
             <div className="text-2xl sm:text-3xl font-light font-mono text-white mb-1">
               {sizing.paybackYears} <span className="text-sm sm:text-base text-white/50">años</span>
@@ -358,24 +392,21 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
         </div>
       </div>
 
-      {/* NEW: Presupuesto Llave en Mano, Hitos 50/35/15 & Cobertura O&M */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-stretch">
-        {/* Left: Turnkey Pricing & Cashflow Milestones (7 cols) */}
-        <div className="lg:col-span-7 p-6 sm:p-8 rounded-[24px] sm:rounded-[28px] bg-gradient-to-br from-[#1F1F1F] via-[#1A1A1A] to-black border border-white/10 shadow-xl space-y-6 flex flex-col justify-between">
+      {/* PRESUPUESTO LLAVE EN MANO & Hitos 50/35/15 */}
+      <div className="w-full">
+        {/* Turnkey Pricing & Cashflow Milestones */}
+        <div className="w-full p-6 sm:p-8 rounded-[24px] sm:rounded-[28px] bg-[#1F1F1F]/90 backdrop-blur-md border border-white/10 shadow-lg space-y-6 flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between gap-2 mb-2">
               <span className="text-xs font-mono uppercase tracking-wider text-[#FF8300] font-semibold flex items-center gap-1.5">
                 <Wallet className="w-4 h-4" />
-                PRESUPUESTO LLAVE EN MANO TRANSPARENTE
-              </span>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                Flete Sur & SEC Incluido
+                PRESUPUESTO LLAVE EN MANO
               </span>
             </div>
 
             <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 mt-3 pb-4 border-b border-white/10">
               <div>
-                <span className="text-xs text-white/50 font-light block">Inversión Total con IVA (19%)</span>
+                <span className="text-xs text-white/50 font-light block">Inversión Total Estimada (IVA incluído)</span>
                 <div className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight">
                   {formatCurrency(sizing.estimatedSystemCostIvaClp || Math.round((sizing.estimatedSystemCostNetoClp || 0) * 1.19))}
                 </div>
@@ -407,14 +438,14 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
                     {formatCurrency(sizing.downpaymentHito1Clp || Math.round((sizing.estimatedSystemCostNetoClp || 0) * 0.5))}
                   </div>
                   <p className="text-[10px] text-white/50 leading-tight">
-                    Reserva y compra de Inversor Huawei, Paneles Jinko y Estructura.
+                    Reserva y compra de Inversor, Paneles, Estructura y protecciones.
                   </p>
                 </div>
 
                 <div className="p-3.5 rounded-xl bg-black/40 border border-amber-500/30 space-y-1">
                   <div className="flex items-center justify-between text-amber-400 font-bold font-mono text-[11px]">
                     <span>2. En Obra 35%</span>
-                    <span>Faena</span>
+                    <span>Montaje</span>
                   </div>
                   <div className="text-sm font-black text-white font-mono">
                     {formatCurrency(sizing.faenaHito2Clp || Math.round((sizing.estimatedSystemCostNetoClp || 0) * 0.35))}
@@ -427,7 +458,7 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
                 <div className="p-3.5 rounded-xl bg-black/40 border border-emerald-500/30 space-y-1">
                   <div className="flex items-center justify-between text-emerald-400 font-bold font-mono text-[11px]">
                     <span>3. Final 15%</span>
-                    <span>TE-4 SEC</span>
+                    <span>Certificación Netbilling</span>
                   </div>
                   <div className="text-sm font-black text-white font-mono">
                     {formatCurrency(sizing.finalHito3Clp || Math.round((sizing.estimatedSystemCostNetoClp || 0) * 0.15))}
@@ -440,53 +471,9 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
             </div>
           </div>
 
-          <div className="pt-3 border-t border-white/10 text-[11px] text-white/50 font-light flex items-center justify-between flex-wrap gap-2">
-            <span>✓ Hardware Oficial Huawei FusionSolar & Jinko Solar</span>
-            <span>✓ Cero sobrecostos ocultos</span>
-          </div>
-        </div>
-
-        {/* Right: Selected O&M / Warranty Package Card (5 cols) */}
-        <div className="lg:col-span-5 p-6 sm:p-8 rounded-[24px] sm:rounded-[28px] bg-gradient-to-br from-[#1F1F1F] via-[#1A1A1A] to-[#141414] border border-emerald-500/30 shadow-xl flex flex-col justify-between space-y-4">
-          <div>
-            <div className="flex items-center justify-between gap-2 mb-3">
-              <span className="text-xs font-mono uppercase tracking-wider text-emerald-400 font-semibold flex items-center gap-1.5">
-                <ShieldCheck className="w-4 h-4" />
-                NIVEL DE PROTECCIÓN
-              </span>
-              <span className="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 uppercase font-bold">
-                {sizing.selectedOmPackage?.badge || "Incluida"}
-              </span>
-            </div>
-
-            <h3 className="text-lg sm:text-xl font-bold text-white mb-1">
-              {sizing.selectedOmPackage?.name || "Garantía Estándar SoldeRío"}
-            </h3>
-            <p className="text-xs text-white/60 font-light mb-4">
-              {sizing.selectedOmPackage?.tagline || "Garantía oficial de fábrica y soporte de instalación"}
-            </p>
-
-            <div className="p-3.5 rounded-xl bg-black/40 border border-white/10 mb-4 flex items-baseline justify-between">
-              <span className="text-xs text-white/70">Costo de Suscripción:</span>
-              <span className="text-base font-mono font-bold text-emerald-400">
-                {sizing.selectedOmPackage?.monthlyPriceClp === 0 
-                  ? "$0 / mes (Incluida)" 
-                  : `${formatCurrency(sizing.selectedOmPackage?.monthlyPriceClp || 0)} / mes`}
-              </span>
-            </div>
-
-            <div className="space-y-2">
-              {sizing.selectedOmPackage?.features.slice(0, 4).map((feat, fIdx) => (
-                <div key={fIdx} className="flex items-start gap-2 text-xs text-white/80 font-light leading-snug">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0 mt-0.5" />
-                  <span>{feat}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="pt-3 border-t border-white/10 text-[10px] font-mono text-white/40">
-            * Planes O&M activables o modificables en cualquier momento.
+          <div className="pt-3 border-t border-white/10 text-[11px] text-white/50 font-light flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+            <span>El precio es estimado y se ajustará según las condiciones de la instalación. Esta cotización tiene una validez de 15 días.</span>
+            <span className="shrink-0">✓ Cero sobrecostos ocultos</span>
           </div>
         </div>
       </div>
@@ -501,45 +488,34 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
         />
       )}
 
-      {/* Everyday Appliances Powered ("Con peras y manzanas") */}
-      <div className="p-5 sm:p-8 rounded-[24px] sm:rounded-[28px] bg-[#1F1F1F]/90 border border-white/10 shadow-xl">
-        <div className="mb-6">
-          <span className="text-xs font-mono uppercase tracking-wider text-[#FF8300] block mb-1">
-            CONTINUIDAD OPERATIVA EN TU HOGAR
-          </span>
-          <h3 className="text-lg sm:text-xl md:text-2xl font-light text-white">
-            ¿Qué podrás mantener funcionando con tu planta solar?
+      {/* Spotlight: Tu Nueva Realidad Energética */}
+      <div className="w-full p-6 sm:p-8 rounded-[24px] sm:rounded-[28px] bg-gradient-to-r from-orange-950/30 via-[#1F1F1F] to-black border border-[#FF8300]/30 shadow-xl flex flex-col items-center justify-center text-center">
+        <div className="space-y-3 flex flex-col items-center max-w-3xl mx-auto">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FF8300]/10 border border-[#FF8300]/30 text-[#FF8300] text-xs font-mono font-medium">
+            <Zap className="w-3.5 h-3.5" />
+            <span>TU NUEVA REALIDAD ENERGÉTICA</span>
+          </div>
+          <h3 className="text-xl sm:text-2xl md:text-3xl font-light text-white tracking-tight">
+            Ahorras aproximadamente <strong className="text-white font-medium">{formatCurrency(sizing.estimatedAnnualSavingsClp)} al año</strong>.
           </h3>
-          <p className="text-xs text-white/60 font-light mt-1">
-            Equipamiento cotidiano respaldado por tu sistema fotovoltaico con y sin cortes de luz.
+          <p className="text-xs sm:text-sm text-white/60 font-light max-w-2xl mx-auto">
+            Generarás aproximadamente <strong className="text-white font-medium">{formatNumber(sizing.estimatedAnnualGenKwh)} kWh/año</strong> limpios en tu techo en {formData.comuna}, reduciendo drásticamente tus cuentas eléctricas.
           </p>
-        </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
-          {sizing.applianceEquivalencies?.map((app, idx) => (
-            <div key={idx} className="p-4 sm:p-5 rounded-2xl bg-black/40 border border-white/10 flex items-start gap-3.5">
-              <div className="w-10 h-10 rounded-xl bg-[#FF8300]/10 text-[#FF8300] flex items-center justify-center flex-shrink-0">
-                {idx === 0 && <Refrigerator className="w-5 h-5" />}
-                {idx === 1 && <Wifi className="w-5 h-5" />}
-                {idx === 2 && <Flame className="w-5 h-5" />}
-                {idx === 3 && <Zap className="w-5 h-5" />}
-                {idx >= 4 && <Car className="w-5 h-5" />}
-              </div>
-              <div>
-                <h4 className="text-sm font-medium text-white">{app.title}</h4>
-                <p className="text-xs text-white/60 font-light mt-1 leading-snug">{app.description}</p>
-              </div>
-            </div>
-          ))}
+          <button
+            type="button"
+            onClick={() => setIsServicesModalOpen(true)}
+            className="mt-2 px-6 py-2.5 rounded-full border border-white/20 hover:border-[#FF8300] bg-white/5 hover:bg-[#FF8300]/10 text-white/90 hover:text-white text-xs font-light tracking-wide transition-all shadow-md hover:shadow-[0_0_20px_rgba(255,131,0,0.2)] flex items-center gap-2 cursor-pointer group"
+          >
+            <ShieldCheck className="w-4 h-4 text-[#FF8300] group-hover:scale-110 transition-transform" />
+            <span>Ver Servicios Incluídos</span>
+          </button>
         </div>
       </div>
 
       {/* Checklist del Proceso Residencial (Paso a Paso) */}
       <div className="p-5 sm:p-8 rounded-[24px] sm:rounded-[28px] bg-[#1A1A1A] border border-white/10 shadow-xl">
         <div className="mb-6">
-          <span className="text-xs font-mono uppercase tracking-wider text-emerald-400 block mb-1">
-            TRANSPARENCIA TOTAL
-          </span>
           <h3 className="text-lg sm:text-xl md:text-2xl font-light text-white">
             Checklist del Proceso Residencial Llave en Mano
           </h3>
@@ -553,35 +529,35 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
             {
               step: "01",
               title: "Pre-Informe Digital",
-              desc: "Cálculo técnico con TMY y dimensionamiento preliminar.",
+              desc: "Cálculo técnico con meteorología local y dimensionamiento preliminar de la planta solar.",
               status: "COMPLETADO",
               icon: FileCheck2,
             },
             {
               step: "02",
               title: "Visita en Terreno",
-              desc: "Inspección de techos, sombras y empalme con Ingeniero SEC.",
+              desc: "Inspección de techos, sombras y empalme con Ingeniero.",
               status: "SIGUIENTE PASO",
               icon: Calendar,
             },
             {
               step: "03",
-              title: "Ingeniería y Planos",
-              desc: "Diseño eléctrico ejecutivo y cálculo estructural para viento sur.",
+              title: "Firma de Contrato",
+              desc: "Con la propuesta revisada y cuando estés listo para avanzar, te enviaremos el contrato.",
               status: "PENDIENTE",
-              icon: ShieldCheck,
+              icon: FileText,
             },
             {
               step: "04",
-              title: "Montaje en 48-72h",
-              desc: "Instalación limpia, sin cables a la vista y con fijación sellada.",
+              title: "Ejecución del Proyecto",
+              desc: "Ingeniería de detalle, planos ejecutivos, montaje e instalación eléctrica.",
               status: "PENDIENTE",
               icon: Wrench,
             },
             {
               step: "05",
-              title: "Certificado TE-4 SEC",
-              desc: "Tramitación legal ante distribuidora y cambio de medidor.",
+              title: "Proceso de Certificación SEC",
+              desc: "Tramitación legal ante distribuidora y cambio/activación de medidor para Netbilling.",
               status: "PENDIENTE",
               icon: Award,
             },
@@ -661,68 +637,108 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
         </div>
       )}
 
-      {/* SEC Normative Compliance & Technical Visit CTA */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-stretch">
-        
-        {/* Left: Engineering & SEC Badges (7 cols) */}
-        <div className="lg:col-span-7 p-6 sm:p-8 rounded-[24px] sm:rounded-[28px] bg-[#1A1A1A] border border-white/10 shadow-xl flex flex-col justify-between">
-          <div>
-            <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
-              <div className="flex items-center gap-2 text-[#FF8300] text-xs font-mono uppercase">
-                <ShieldCheck className="w-4 h-4" />
-                <span>Cumplimiento Normativo SEC</span>
-              </div>
-              <span className="px-2.5 py-0.5 rounded-full bg-white/10 text-white/80 font-mono text-[10px] sm:text-[11px] uppercase">
-                {sizing.recommendedPhaseType === "trifasico" ? "Trifásico 380V" : "Monofásico 220V"}
-              </span>
-            </div>
-            <h3 className="text-lg sm:text-xl font-light text-white mb-3">
-              Ingeniería y Certificación SEC Llave en Mano
-            </h3>
-            <p className="text-xs sm:text-sm text-white/70 font-light leading-relaxed mb-5">
-              Tu instalación solar será proyectada y declarada formalmente ante la SEC por nuestro equipo de ingenieros Clase A, asegurando total compatibilidad con la red de {formData.distributor} y habilitando la Ley Net Billing.
-            </p>
-
-            <div className="space-y-2">
-              {sizing.secNorms.map((norm, nIdx) => (
-                <div key={nIdx} className="flex items-center gap-2 text-xs text-white/90 font-light">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-                  <span>{norm}</span>
-                </div>
-              ))}
-            </div>
+      {/* Technical Visit CTA Box */}
+      <div className="w-full p-6 sm:p-10 md:p-12 rounded-[24px] sm:rounded-[28px] bg-gradient-to-br from-[#FF8300]/20 via-[#1F1F1F] to-[#141414] border border-[#FF8300]/40 shadow-2xl flex flex-col items-center justify-center text-center no-print">
+        <div className="w-full max-w-2xl mx-auto flex flex-col items-center">
+          <div className="w-14 h-14 rounded-2xl bg-[#FF8300] text-white flex items-center justify-center mb-4 shadow-lg shadow-[#FF8300]/30">
+            <Calendar className="w-7 h-7 stroke-[1.5]" />
           </div>
-
-          <div className="pt-5 mt-5 border-t border-white/10 text-[11px] sm:text-xs text-white/50 font-light flex items-center justify-between">
-            <span>Distribuidora: <strong className="text-white capitalize">{formData.distributor}</strong></span>
-            <span>Topología: <strong className="text-[#FF8300] uppercase font-mono">{formData.systemType}</strong></span>
-          </div>
-        </div>
-
-        {/* Right: Schedule Technical Visit CTA Box (5 cols) */}
-        <div className="lg:col-span-5 p-6 sm:p-8 rounded-[24px] sm:rounded-[28px] bg-gradient-to-br from-[#FF8300]/20 via-[#1F1F1F] to-[#141414] border border-[#FF8300]/40 shadow-2xl flex flex-col justify-between text-center no-print">
-          <div>
-            <div className="w-12 h-12 rounded-2xl bg-[#FF8300] text-white flex items-center justify-center mx-auto mb-4 shadow-lg shadow-[#FF8300]/30">
-              <Calendar className="w-6 h-6 stroke-[1.5]" />
-            </div>
-            <h3 className="text-lg sm:text-xl font-normal text-white mb-2">
-              Siguiente Paso: Visita en Terreno
-            </h3>
-            <p className="text-xs text-white/70 font-light leading-relaxed mb-6">
-              Un Ingeniero Eléctrico SEC visitará tu propiedad en {formData.comuna} para verificar techumbres, orientación, pérdidas y empalme.
-            </p>
-          </div>
+          <h3 className="text-xl sm:text-2xl md:text-3xl font-normal text-white mb-2">
+            Siguiente Paso: Visita en Terreno
+          </h3>
+          <p className="text-xs sm:text-sm md:text-base text-white/70 font-light leading-relaxed mb-6 max-w-xl mx-auto">
+            Un Ingeniero te contactará para coordinar una Visita Técnica en tu propiedad en {formData.comuna}, también puedes adelantarte y coordinarla en el siguiente botón:
+          </p>
 
           <button
             type="button"
             onClick={() => openModal()}
-            className="w-full py-3.5 sm:py-4 rounded-full bg-white text-black font-light text-xs md:text-sm uppercase tracking-wider hover:bg-[#FF8300] hover:text-white transition-all duration-300 shadow-xl cursor-pointer flex items-center justify-center gap-2 group"
+            className="w-full max-w-lg mx-auto py-3.5 sm:py-4 px-8 rounded-full bg-[#FF8300] hover:bg-[#e07400] text-white font-medium text-xs md:text-sm uppercase tracking-wider transition-all duration-300 shadow-xl shadow-[#FF8300]/25 cursor-pointer flex items-center justify-center gap-2 group"
           >
             <span>Agendar Visita Técnica</span>
             <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
           </button>
+
+          {/* Secondary Actions: Volver & Crear Nueva Cotización */}
+          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 mt-5 w-full max-w-lg mx-auto">
+            <button
+              type="button"
+              onClick={onBack || onReset}
+              className="px-5 py-2.5 rounded-full border border-white/15 hover:border-white/30 bg-white/5 hover:bg-white/10 text-white/70 hover:text-white text-xs font-light tracking-wide transition-all flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>Volver</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={onReset}
+              className="px-5 py-2.5 rounded-full border border-white/15 hover:border-white/30 bg-white/5 hover:bg-white/10 text-white/70 hover:text-white text-xs font-light tracking-wide transition-all flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              <span>Crear Nueva Cotización</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Preguntas Frecuentes (FAQ) */}
+      <div className="w-full p-6 sm:p-10 rounded-[24px] sm:rounded-[28px] bg-[#1A1A1A] border border-white/10 shadow-xl space-y-6">
+        <div className="text-center max-w-2xl mx-auto space-y-2 mb-6 sm:mb-8">
+          <h3 className="text-2xl sm:text-3xl font-light text-white tracking-tight">
+            Preguntas Frecuentes
+          </h3>
+          <p className="text-xs sm:text-sm text-white/60 font-light">
+            Todo lo que necesitas saber antes de dar el paso hacia la energía solar en tu hogar.
+          </p>
         </div>
 
+        <div className="max-w-3xl mx-auto space-y-3">
+          {FAQ_ITEMS.map((faq, idx) => {
+            const isOpen = openFaqIndex === idx;
+            return (
+              <div
+                key={idx}
+                className="rounded-2xl bg-black/40 border border-white/10 hover:border-white/20 transition-all overflow-hidden"
+              >
+                <button
+                  type="button"
+                  onClick={() => setOpenFaqIndex(isOpen ? null : idx)}
+                  className="w-full p-4 sm:p-5 flex items-center justify-between text-left cursor-pointer transition-colors"
+                >
+                  <span className="text-sm sm:text-base font-medium text-white pr-4 leading-snug">
+                    {faq.question}
+                  </span>
+                  <div
+                    className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 transition-transform duration-300 ${
+                      isOpen
+                        ? "bg-[#FF8300]/20 text-[#FF8300] rotate-180"
+                        : "bg-white/5 text-white/50"
+                    }`}
+                  >
+                    <ChevronDown className="w-4 h-4" />
+                  </div>
+                </button>
+
+                <AnimatePresence initial={false}>
+                  {isOpen && (
+                    <motion.div
+                      key="content"
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.25, ease: "easeInOut" }}
+                    >
+                      <div className="px-4 pb-4 sm:px-5 sm:pb-5 pt-1 text-sm sm:text-base text-white/70 font-light leading-relaxed border-t border-white/5 mt-1">
+                        {faq.answer}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       {/* Explanatory Modal Dialog ("Con peras y manzanas") */}
@@ -771,6 +787,83 @@ export function QuoteReportView({ formData, sizing, leadId, onReset }: Props) {
                   type="button"
                   onClick={() => setActiveModalKey(null)}
                   className="px-6 py-2.5 rounded-full bg-white text-black text-xs uppercase tracking-wider font-light hover:bg-[#FF8300] hover:text-white transition-all cursor-pointer"
+                >
+                  Entendido
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Modal: Servicios Incluídos en el Proyecto Residencial */}
+      <AnimatePresence>
+        {isServicesModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              className="w-full max-w-2xl max-h-[90vh] flex flex-col p-6 sm:p-8 rounded-[28px] bg-[#1A1A1A] border border-white/15 shadow-2xl relative text-white"
+            >
+              <button
+                onClick={() => setIsServicesModalOpen(false)}
+                className="absolute top-5 right-5 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white/70 hover:text-white transition-colors cursor-pointer z-10"
+              >
+                <X className="w-4 h-4" />
+              </button>
+
+              {/* Header */}
+              <div className="mb-6 pr-8">
+                <span className="text-xs font-mono uppercase tracking-wider text-[#FF8300] font-semibold flex items-center gap-1.5 mb-1.5">
+                  <ShieldCheck className="w-4 h-4" />
+                  <span>PROYECTO SOLAR RESIDENCIAL LLAVE EN MANO</span>
+                </span>
+                <h3 className="text-xl sm:text-2xl font-light text-white tracking-tight">
+                  Servicios Incluídos en tu Proyecto
+                </h3>
+                <p className="text-xs sm:text-sm text-white/60 font-light mt-1 leading-relaxed">
+                  Con SoldeRío no compras solo equipos: obtienes una solución integral garantizada de inicio a fin.
+                </p>
+              </div>
+
+              {/* Body: List of 7 services */}
+              <div className="overflow-y-auto pr-1 space-y-3 flex-1 max-h-[55vh]">
+                {RESIDENTIAL_INCLUDED_SERVICES.map((serv, sIdx) => {
+                  const Icon = serv.icon;
+                  return (
+                    <div
+                      key={sIdx}
+                      className="p-4 rounded-2xl bg-black/40 border border-white/10 hover:border-[#FF8300]/40 transition-colors flex items-start gap-3.5"
+                    >
+                      <div className="w-10 h-10 rounded-xl bg-[#FF8300]/10 border border-[#FF8300]/25 flex items-center justify-center text-[#FF8300] flex-shrink-0 mt-0.5">
+                        <Icon className="w-5 h-5" />
+                      </div>
+                      <div className="space-y-1 flex-1">
+                        <div className="flex items-center justify-between gap-2 flex-wrap">
+                          <h4 className="text-sm font-medium text-white">{serv.title}</h4>
+                          <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                            {serv.badge}
+                          </span>
+                        </div>
+                        <p className="text-xs text-white/70 font-light leading-relaxed">
+                          {serv.desc}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Footer */}
+              <div className="pt-5 mt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <span className="text-[11px] text-white/50 font-light text-center sm:text-left">
+                  ✓ Estándar SEC y garantía directa en el Sur de Chile.
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setIsServicesModalOpen(false)}
+                  className="w-full sm:w-auto px-6 py-2.5 rounded-full bg-[#FF8300] hover:bg-[#e07400] text-white text-xs font-medium tracking-wider uppercase transition-all shadow-md cursor-pointer"
                 >
                   Entendido
                 </button>

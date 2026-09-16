@@ -117,7 +117,10 @@ export function HogarEquipmentShowcase() {
 
         {/* Center CTA Button */}
         <div className="text-center mt-12">
-          <CtaButton onClick={() => openModal("gratuita")}>
+          <CtaButton
+            onClick={() => openModal("gratuita")}
+            className="text-[14px] md:text-base"
+          >
             Agenda Una Visita Gratis
           </CtaButton>
         </div>

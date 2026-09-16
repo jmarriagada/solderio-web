@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Compass, ShieldCheck, Cpu, ArrowRight, CheckCircle2 } from "lucide-react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
@@ -9,6 +9,16 @@ import { useVisitaModal } from "@/context/VisitaModalContext";
 export function TriadSection() {
   const [activeTab, setActiveTab] = useState<number>(1);
   const { openModal } = useVisitaModal();
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  const handleTabClick = (index: number) => {
+    setActiveTab(index);
+    if (typeof window !== "undefined" && window.innerWidth < 1024) {
+      setTimeout(() => {
+        contentRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 50);
+    }
+  };
 
   const pillars = [
     {
@@ -108,7 +118,7 @@ export function TriadSection() {
               return (
                 <button
                   key={pillar.id}
-                  onClick={() => setActiveTab(index)}
+                  onClick={() => handleTabClick(index)}
                   className={`relative text-left p-5 rounded-[16px] transition-all duration-300 cursor-pointer border ${
                     isSelected
                       ? "bg-[#F7F8FA] border-[#FF8300] shadow-[0_8px_30px_rgba(255,131,0,0.12)] ring-1 ring-[#FF8300]/40 scale-[1.01]"
@@ -144,7 +154,7 @@ export function TriadSection() {
                   <h3 className="text-lg md:text-xl font-light text-brand-fg mb-1">
                     {pillar.title}
                   </h3>
-                  <p className="text-xs md:text-sm text-brand-muted line-clamp-1 font-light">
+                  <p className="text-[14px] md:text-sm text-brand-muted line-clamp-1 font-light">
                     {pillar.subtitle}
                   </p>
                 </button>
@@ -153,72 +163,74 @@ export function TriadSection() {
           </motion.div>
 
           {/* Tab Content Display (Always open, smoothly transitions on switch) */}
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentPillar.id}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -12 }}
-              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              className="bg-[#F7F8FA] rounded-[24px] border border-black/10 overflow-hidden shadow-xl"
-            >
-                <div className="grid grid-cols-1 lg:grid-cols-12 items-stretch">
-                  {/* Left Content Column */}
-                  <div className="lg:col-span-7 p-8 md:p-12 flex flex-col justify-between">
-                    <div>
-                      <div className="inline-block px-3 py-1 rounded-full bg-[#1F1F1F] text-white text-xs font-light tracking-wide mb-4 shadow-sm">
-                        {currentPillar.highlight}
-                      </div>
-                      <h3 className={`text-2xl md:text-3xl font-light text-brand-fg leading-tight ${
-                        currentPillar.description ? "mb-2 md:mb-3" : "mb-6 md:mb-8"
-                      }`}>
-                        {currentPillar.displayHeadline}
-                      </h3>
-                      {currentPillar.description && (
-                        <p className="text-brand-muted text-base leading-relaxed font-light mb-8">
-                          {currentPillar.description}
-                        </p>
-                      )}
+          <div ref={contentRef} className="scroll-mt-24">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentPillar.id}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                className="bg-[#F7F8FA] rounded-[24px] border border-black/10 overflow-hidden shadow-xl"
+              >
+                  <div className="grid grid-cols-1 lg:grid-cols-12 items-stretch">
+                    {/* Left Content Column */}
+                    <div className="lg:col-span-7 p-8 md:p-12 flex flex-col justify-between">
+                      <div>
+                        <div className="inline-block px-3 py-1 rounded-full bg-[#1F1F1F] text-white text-xs font-light tracking-wide mb-4 shadow-sm">
+                          {currentPillar.highlight}
+                        </div>
+                        <h3 className={`text-2xl md:text-3xl font-light text-brand-fg leading-tight ${
+                          currentPillar.description ? "mb-2 md:mb-3" : "mb-6 md:mb-8"
+                        }`}>
+                          {currentPillar.displayHeadline}
+                        </h3>
+                        {currentPillar.description && (
+                          <p className="text-brand-muted text-base leading-relaxed font-light mb-8">
+                            {currentPillar.description}
+                          </p>
+                        )}
 
-                      <div className="space-y-3.5 mb-8">
-                        {currentPillar.bullets.map((bullet, idx) => (
-                          <motion.div
-                            key={idx}
-                            initial={{ opacity: 0, x: -10 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: 0.08 * idx }}
-                            className="flex items-start gap-3"
-                          >
-                            <CheckCircle2 className="w-5 h-5 text-[#FF8300] flex-shrink-0 mt-0.5" />
-                            <span className="text-sm md:text-base text-brand-fg/90 font-light">
-                              {bullet}
-                            </span>
-                          </motion.div>
-                        ))}
+                        <div className="space-y-3.5 mb-8">
+                          {currentPillar.bullets.map((bullet, idx) => (
+                            <motion.div
+                              key={idx}
+                              initial={{ opacity: 0, x: -10 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ delay: 0.08 * idx }}
+                              className="flex items-start gap-3"
+                            >
+                              <CheckCircle2 className="w-5 h-5 text-[#FF8300] flex-shrink-0 mt-0.5" />
+                              <span className="text-sm md:text-base text-brand-fg/90 font-light">
+                                {bullet}
+                              </span>
+                            </motion.div>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="pt-4 border-t border-black/5 flex items-center justify-between">
+                        <span className="text-xs text-[#6B7280] font-light">
+                          Estándares SEC • Certificación Oficial Chile
+                        </span>
                       </div>
                     </div>
 
-                    <div className="pt-4 border-t border-black/5 flex items-center justify-between">
-                      <span className="text-xs text-[#6B7280] font-light">
-                        Estándares SEC • Certificación Oficial Chile
-                      </span>
+                    {/* Right Image Column */}
+                    <div className="lg:col-span-5 relative min-h-[300px] lg:min-h-full border-t lg:border-t-0 lg:border-l border-black/10 overflow-hidden">
+                      <Image
+                        src={currentPillar.image}
+                        alt={currentPillar.title}
+                        fill
+                        unoptimized
+                        priority
+                        className={`object-cover ${currentPillar.imagePosition || "object-center"} transition-transform duration-700 hover:scale-105`}
+                      />
                     </div>
                   </div>
-
-                  {/* Right Image Column */}
-                  <div className="lg:col-span-5 relative min-h-[300px] lg:min-h-full border-t lg:border-t-0 lg:border-l border-black/10 overflow-hidden">
-                    <Image
-                      src={currentPillar.image}
-                      alt={currentPillar.title}
-                      fill
-                      unoptimized
-                      priority
-                      className={`object-cover ${currentPillar.imagePosition || "object-center"} transition-transform duration-700 hover:scale-105`}
-                    />
-                  </div>
-                </div>
-              </motion.div>
-          </AnimatePresence>
+                </motion.div>
+            </AnimatePresence>
+          </div>
         </div>
       </div>
     </section>

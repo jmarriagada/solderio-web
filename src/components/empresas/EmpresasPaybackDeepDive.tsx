@@ -176,7 +176,7 @@ export function EmpresasPaybackDeepDive() {
                         transition={{ duration: 0.3 }}
                         className="overflow-hidden"
                       >
-                        <p className="text-xs md:text-sm text-black/60 font-light leading-relaxed mb-3">
+                        <p className="text-[14px] md:text-sm text-black/60 font-light leading-relaxed mb-3">
                           {factor.description}
                         </p>
                       </motion.div>
@@ -238,7 +238,7 @@ export function EmpresasPaybackDeepDive() {
               <h3 className="text-2xl md:text-3xl lg:text-4xl font-light tracking-tight leading-[1.2] mb-4 text-white">
                 Una vez recuperada la inversión, tu empresa disfruta de más de 20 años de electricidad a costo marginal cero.
               </h3>
-              <p className="text-xs md:text-sm text-white/70 font-light leading-relaxed mb-6">
+              <p className="text-[14px] md:text-sm text-white/70 font-light leading-relaxed mb-6">
                 Los módulos solares N-Type TOPCon de SoldeRío cuentan con garantía de rendimiento lineal por 30 años. Tras el período de amortización, el costo nivelado de energía (LCOE) desciende por debajo de <strong className="text-white font-medium">$48 por kWh</strong>, protegiendo a la empresa de la inflación eléctrica de la red que ya supera los <strong className="text-white font-medium">$190 - $240 por kWh</strong>.
               </p>
 
@@ -313,7 +313,7 @@ export function EmpresasPaybackDeepDive() {
 
           <Link
             href="/cotizacion"
-            className="group relative z-10 whitespace-nowrap px-8 py-3.5 rounded-full bg-white text-black font-light text-xs md:text-sm hover:bg-[#FF8300] hover:text-white transition-all duration-300 shadow-lg hover:shadow-[0_0_30px_rgba(255,131,0,0.4)] cursor-pointer flex items-center justify-center gap-2 shrink-0"
+            className="group relative z-10 whitespace-nowrap px-8 py-3.5 rounded-full bg-white text-black font-light text-[14px] md:text-sm hover:bg-[#FF8300] hover:text-white transition-all duration-300 shadow-lg hover:shadow-[0_0_30px_rgba(255,131,0,0.4)] cursor-pointer flex items-center justify-center gap-2 shrink-0"
           >
             <span>Simular Proyecto Solar</span>
             <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />

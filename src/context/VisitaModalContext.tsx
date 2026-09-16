@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
-export type TipoVisita = "gratuita" | "ingenieria";
+export type TipoVisita = "tecnica" | "gratuita" | "ingenieria";
 
 interface VisitaModalContextType {
   isOpen: boolean;
@@ -16,10 +16,10 @@ const VisitaModalContext = createContext<VisitaModalContextType | undefined>(und
 
 export function VisitaModalProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedType, setSelectedType] = useState<TipoVisita>("gratuita");
+  const [selectedType, setSelectedType] = useState<TipoVisita>("tecnica");
 
-  const openModal = (type: TipoVisita = "gratuita") => {
-    setSelectedType(type);
+  const openModal = (type: TipoVisita = "tecnica") => {
+    setSelectedType("tecnica");
     setIsOpen(true);
   };
 

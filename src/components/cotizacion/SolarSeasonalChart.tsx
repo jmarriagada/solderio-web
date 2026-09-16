@@ -2,14 +2,11 @@
 
 import { useState } from "react";
 import { 
-  CloudSun, 
   Sun, 
   Snowflake, 
   ArrowUpRight, 
   ArrowDownRight, 
-  Zap, 
-  Sparkles, 
-  Thermometer 
+  Zap 
 } from "lucide-react";
 import { MonthlyGenBreakdown, SolarSizingResult } from "@/types/cotizacion";
 
@@ -53,16 +50,9 @@ export function SolarSeasonalChart({ monthlyData, comuna, distributor, sizing }:
       {/* Header Bar */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5 mb-6 relative z-10">
         <div>
-          <div className="flex items-center gap-2 text-[#FF8300] text-xs font-mono uppercase tracking-wider mb-1.5">
-            <CloudSun className="w-4 h-4 text-[#FF8300]" />
-            <span>Simulación Física Mensual TMY • {comuna}</span>
-          </div>
           <h3 className="text-xl sm:text-2xl font-light text-white tracking-tight">
-            Curva de Generación Solar vs Demanda Real
+            Simulación de Generación y Demanda
           </h3>
-          <p className="text-xs text-white/60 font-light mt-1 max-w-xl">
-            Modelado con datos meteorológicos de alta resolución, termodinámica TOPCon y curva estacional de consumo en el sur.
-          </p>
         </div>
 
         {/* Top Controls & KPI Pills */}
@@ -77,7 +67,7 @@ export function SolarSeasonalChart({ monthlyData, comuna, distributor, sizing }:
                   : "text-white/60 hover:text-white hover:bg-white/5"
               }`}
             >
-              ☀️ Comparativa Dual
+              ☀️ Generación & Consumo
             </button>
             <button
               onClick={() => setActiveViewMode("net")}
@@ -87,33 +77,15 @@ export function SolarSeasonalChart({ monthlyData, comuna, distributor, sizing }:
                   : "text-white/60 hover:text-white hover:bg-white/5"
               }`}
             >
-              ⚡ Balance Neto
+              ⚡ Balance Energético
             </button>
-          </div>
-
-          {/* Quick Metrics Badge */}
-          <div className="hidden sm:flex items-center gap-3 bg-black/40 px-3.5 py-1.5 rounded-xl border border-white/5 text-[11px] font-mono">
-            <div>
-              <span className="text-white/40 block text-[9px]">VERANO</span>
-              <span className="text-amber-400 font-semibold">{sizing.summerAvgMonthlyGenKwh || Math.round(totalAnnualGen / 8)} kWh</span>
-            </div>
-            <div className="h-5 w-px bg-white/10" />
-            <div>
-              <span className="text-white/40 block text-[9px]">INVIERNO</span>
-              <span className="text-blue-400 font-semibold">{sizing.winterAvgMonthlyGenKwh || Math.round(totalAnnualGen / 26)} kWh</span>
-            </div>
-            <div className="h-5 w-px bg-white/10" />
-            <div>
-              <span className="text-white/40 block text-[9px]">ESTACIONAL</span>
-              <span className="text-[#FF8300] font-semibold">{sizing.seasonalVariationRatio || 3.4}x</span>
-            </div>
           </div>
         </div>
       </div>
 
       {/* Interactive Detail Card (Current Inspected Month) */}
-      <div className="mb-6 bg-black/40 border border-white/10 rounded-2xl p-4 sm:p-5 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3 text-xs relative z-10 backdrop-blur-md">
-        <div className="col-span-2 sm:col-span-1 border-r border-white/10 pr-3">
+      <div className="mb-6 bg-black/40 border border-white/10 rounded-2xl p-4 sm:p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs relative z-10 backdrop-blur-md">
+        <div className="border-b sm:border-b-0 sm:border-r border-white/10 pb-3 sm:pb-0 sm:pr-4">
           <span className="text-[10px] uppercase font-mono text-white/40 block">Mes Seleccionado</span>
           <div className="text-base font-semibold text-white mt-0.5 flex items-center gap-2">
             <span>{currentMonth.monthName}</span>
@@ -150,8 +122,8 @@ export function SolarSeasonalChart({ monthlyData, comuna, distributor, sizing }:
           </span>
         </div>
 
-        <div className="col-span-2 sm:col-span-1 lg:col-span-2">
-          <span className="text-[10px] uppercase font-mono text-white/40 block">Balance Ley 21.118</span>
+        <div>
+          <span className="text-[10px] uppercase font-mono text-white/40 block">Balance Netbilling</span>
           {currentMonth.monthlyGenKwh >= currentMonth.monthlyDemandKwh ? (
             <div className="text-emerald-400 font-mono font-semibold text-sm sm:text-base mt-0.5 flex items-center gap-1">
               <ArrowUpRight className="w-4 h-4 text-emerald-400" />
@@ -168,15 +140,6 @@ export function SolarSeasonalChart({ monthlyData, comuna, distributor, sizing }:
               ? "Genera saldo a favor para compensar meses fríos" 
               : "Consumo cubierto con saldo acumulado y batería"}
           </span>
-        </div>
-
-        <div className="hidden lg:block text-right">
-          <span className="text-[10px] uppercase font-mono text-white/40 block">Temp. Celda Prom.</span>
-          <div className="text-sm font-mono font-semibold text-white/80 mt-1 flex items-center justify-end gap-1">
-            <Thermometer className="w-3.5 h-3.5 text-orange-400" />
-            <span>{currentMonth.tCellCelsius ? `${currentMonth.tCellCelsius}°C` : "18.5°C"}</span>
-          </div>
-          <span className="text-[10px] text-emerald-400 font-mono block mt-0.5">Alta Eficiencia</span>
         </div>
       </div>
 
@@ -228,9 +191,7 @@ export function SolarSeasonalChart({ monthlyData, comuna, distributor, sizing }:
                               ? "bg-gradient-to-t from-[#ea580c] via-[#FF8300] to-amber-300 shadow-[0_0_20px_rgba(255,131,0,0.7)] scale-x-105"
                               : "bg-gradient-to-t from-amber-600/90 via-amber-500/90 to-amber-300/80 hover:brightness-110"
                           }`}
-                        >
-                          <div className="absolute top-0 inset-x-0 h-1 bg-amber-200/60 rounded-t-lg" />
-                        </div>
+                        />
 
                         {/* 2. Home Demand Bar */}
                         <div
@@ -240,9 +201,7 @@ export function SolarSeasonalChart({ monthlyData, comuna, distributor, sizing }:
                               ? "bg-slate-600/80 border-white/40 shadow-lg"
                               : "bg-slate-700/50 border-white/15 hover:bg-slate-600/60"
                           }`}
-                        >
-                          <div className="absolute top-0 inset-x-0 h-1 bg-white/40 rounded-t-lg" />
-                        </div>
+                        />
                       </div>
                     ) : (
                       <div className="flex items-end w-full justify-center h-full z-10 px-1">
@@ -257,9 +216,7 @@ export function SolarSeasonalChart({ monthlyData, comuna, distributor, sizing }:
                               ? "bg-gradient-to-t from-blue-700 to-blue-400 shadow-[0_0_20px_rgba(59,130,246,0.7)]"
                               : "bg-gradient-to-t from-blue-800/80 to-blue-600/80"
                           }`}
-                        >
-                          <div className={`absolute top-0 inset-x-0 h-1 rounded-t-lg ${hasSurplus ? "bg-emerald-200" : "bg-blue-200"}`} />
-                        </div>
+                        />
                       </div>
                     )}
 
@@ -304,9 +261,8 @@ export function SolarSeasonalChart({ monthlyData, comuna, distributor, sizing }:
           </div>
         )}
 
-        <div className="flex items-center gap-2 text-emerald-400 text-[11px]">
-          <Sparkles className="w-3.5 h-3.5 flex-shrink-0" />
-          <span>Ley 21.118: En verano acumulas saldos a precio nudo que descuentan tus boletas de invierno.</span>
+        <div className="text-emerald-400 text-[11px]">
+          <span>Ley Netbilling: En verano acumulas los excedentes que bajan tus boletas de invierno.</span>
         </div>
       </div>
     </div>

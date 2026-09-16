@@ -244,7 +244,7 @@ export function FloatingNav() {
 
                       if (isDescubre) {
                         return (
-                          <div key={link.label} className="border-b border-white/10 pb-2">
+                          <div key={link.label} className="pb-1">
                             <button
                               type="button"
                               onClick={() => setIsDescubreOpen((prev) => !prev)}
@@ -307,7 +307,7 @@ export function FloatingNav() {
                           key={link.label}
                           href={link.href}
                           onClick={() => setIsMobileMenuOpen(false)}
-                          className={`text-sm font-light py-2 border-b border-white/10 transition-colors flex items-center justify-between ${
+                          className={`text-sm font-light py-2 transition-colors flex items-center justify-between ${
                             isActive ? "text-[#FF8300] font-normal" : "text-white/90 hover:text-[#FF8300]"
                           }`}
                         >
@@ -324,9 +324,9 @@ export function FloatingNav() {
                           setIsMobileMenuOpen(false);
                           openModal();
                         }}
-                        className="w-full py-2.5 rounded-full bg-[#FF8300] text-white text-xs font-light uppercase tracking-wider hover:bg-[#e07400] transition-all flex items-center justify-center gap-1.5 shadow-md cursor-pointer"
+                        className="w-full py-3 rounded-full bg-[#FF8300] text-white text-sm font-light hover:bg-[#e07400] transition-all flex items-center justify-center gap-2 shadow-md cursor-pointer"
                       >
-                        <span className="font-light">Solicitar Pre-Evaluación ($0 CLP)</span>
+                        <span className="font-light">Solicitar Pre-Evaluación</span>
                         <ArrowRight className="w-3.5 h-3.5" />
                       </button>
                     </div>

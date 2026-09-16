@@ -102,11 +102,17 @@ export function HeroHeaderNav({
 
   return (
     <div
-      className="relative z-30 w-full"
+      className={`relative z-30 w-full transition-colors duration-200 ${
+        isMobileMenuOpen ? "bg-[#141414] md:bg-transparent" : "bg-transparent"
+      }`}
       onMouseLeave={handleMouseLeave}
     >
       {/* Top Header Bar */}
-      <header className="relative z-40 w-full flex items-center justify-between px-6 md:px-8 pt-6">
+      <header
+        className={`relative z-40 w-full flex items-center justify-between px-6 md:px-8 pt-6 pb-3 md:pb-0 transition-colors duration-200 ${
+          isMobileMenuOpen ? "bg-[#141414] md:bg-transparent" : "bg-transparent"
+        }`}
+      >
         {/* Left: Logo */}
         <Link href="/" className="flex items-center group">
           <Image
@@ -178,7 +184,10 @@ export function HeroHeaderNav({
           <button className="p-1.5 hover:text-[#FF8300] transition-colors rounded-full hover:bg-white/10 cursor-pointer hidden sm:block" title="Usuario">
             <User className="w-4 h-4 stroke-[1.5]" />
           </button>
-          <LocationBadge className="hidden sm:inline-block" />
+          {/* Location badge strictly hidden on mobile (< md) */}
+          <div className="hidden md:inline-block">
+            <LocationBadge />
+          </div>
 
           {/* Mobile Burger Button (Visible only on screens < md) */}
           <button
@@ -296,16 +305,16 @@ export function HeroHeaderNav({
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            className="md:hidden absolute top-full left-0 right-0 z-50 bg-[#141414]/98 backdrop-blur-2xl border-b border-white/15 px-6 py-6 text-white shadow-2xl overflow-hidden"
+            className="md:hidden absolute top-full left-0 right-0 z-50 bg-[#141414] border-b border-white/10 px-6 pb-8 pt-2 text-white shadow-2xl rounded-b-[24px] overflow-hidden"
           >
-            <div className="flex flex-col space-y-4">
+            <div className="flex flex-col space-y-3">
               {NAV_LINKS.map((link) => {
                 const isActive = activePage === link.label;
                 const isDescubre = link.label === "Descubre";
 
                 if (isDescubre) {
                   return (
-                    <div key={link.label} className="border-b border-white/10 pb-3">
+                    <div key={link.label} className="pb-1">
                       <button
                         type="button"
                         onClick={() => setIsDescubreOpen((prev) => !prev)}
@@ -368,7 +377,7 @@ export function HeroHeaderNav({
                     key={link.label}
                     href={link.href}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className={`text-base font-light py-2 border-b border-white/10 transition-colors flex items-center justify-between ${
+                    className={`text-base font-light py-2 transition-colors flex items-center justify-between ${
                       isActive ? "text-[#FF8300] font-normal" : "text-white/90 hover:text-[#FF8300]"
                     }`}
                   >
@@ -378,17 +387,16 @@ export function HeroHeaderNav({
                 );
               })}
 
-              <div className="pt-4 flex flex-col gap-3">
-                <LocationBadge className="w-full flex justify-center" />
+              <div className="pt-3 flex flex-col gap-3">
                 <button
                   type="button"
                   onClick={() => {
                     setIsMobileMenuOpen(false);
                     openModal();
                   }}
-                  className="w-full py-3.5 rounded-full bg-[#FF8300] text-white text-xs font-light uppercase tracking-wider hover:bg-[#e07400] transition-all flex items-center justify-center gap-2 shadow-lg cursor-pointer"
+                  className="w-full py-3.5 rounded-full bg-[#FF8300] text-white text-sm font-light hover:bg-[#e07400] transition-all flex items-center justify-center gap-2 shadow-lg cursor-pointer"
                 >
-                  <span className="font-light">Solicitar Pre-Evaluación ($0 CLP)</span>
+                  <span className="font-light">Solicitar Pre-Evaluación</span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
               </div>

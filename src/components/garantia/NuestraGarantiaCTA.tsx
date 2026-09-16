@@ -6,7 +6,7 @@ import { ArrowRight, MessageSquare, ShieldCheck } from "lucide-react";
 
 export function NuestraGarantiaCTA() {
   return (
-    <section className="bg-[#141414] py-20 md:py-28 text-center text-white border-t border-white/10 relative overflow-hidden">
+    <section className="bg-[#141414] py-20 md:py-28 text-center text-white relative z-10 -my-1 overflow-hidden border-none">
       {/* Background Solar Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[320px] bg-[#FF8300]/15 rounded-full blur-[150px] pointer-events-none" />
 

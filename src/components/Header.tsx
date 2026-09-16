@@ -61,7 +61,9 @@ export function Header() {
 
         {/* Right Icons */}
         <div className="flex items-center gap-6">
-          <LocationBadge className="hidden sm:inline-block" />
+          <div className="hidden md:inline-block">
+            <LocationBadge />
+          </div>
           <button
             className={`p-2 rounded-full transition-colors ${
               isScrolled

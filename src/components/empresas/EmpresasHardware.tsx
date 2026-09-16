@@ -75,7 +75,7 @@ export function EmpresasHardware() {
                 <p className="text-sm text-black/60 font-light leading-relaxed mb-4">
                   {item.description}
                 </p>
-                <span className="mt-auto text-xs text-black/40 font-light italic">
+                <span className="mt-auto text-[14px] md:text-xs text-black/40 font-light italic">
                   {item.footnote}
                 </span>
                 {item.id === "bateria" && (
@@ -94,7 +94,7 @@ export function EmpresasHardware() {
 
         {/* Action Button */}
         <div className="flex justify-center">
-          <CtaButton href="/cotizacion">
+          <CtaButton href="/cotizacion" className="text-[14px] md:text-sm">
             Cotizar a Medida
           </CtaButton>
         </div>

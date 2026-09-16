@@ -317,7 +317,7 @@ export function Attributes() {
               />
             </div>
 
-            <div className="relative z-10">
+            <div className="relative z-10 text-center sm:text-left">
               <h4 className="text-xl md:text-2xl font-light mb-1.5">
                 ¿Quieres dimensionar tu proyecto solar?
               </h4>
@@ -327,10 +327,10 @@ export function Attributes() {
             </div>
             <button
               type="button"
-              onClick={() => openModal("gratuita")}
-              className="group relative z-10 whitespace-nowrap px-8 py-3.5 rounded-full bg-white text-black font-light text-xs md:text-sm hover:bg-[#FF8300] hover:text-white transition-all duration-300 shadow-lg hover:shadow-[0_0_30px_rgba(255,131,0,0.4)] cursor-pointer flex items-center justify-center gap-2"
+              onClick={() => openModal("tecnica")}
+              className="group relative z-10 whitespace-nowrap px-8 py-3.5 rounded-full bg-white text-black font-light text-[14px] md:text-sm hover:bg-[#FF8300] hover:text-white transition-all duration-300 shadow-lg hover:shadow-[0_0_30px_rgba(255,131,0,0.4)] cursor-pointer flex items-center justify-center gap-2"
             >
-              <span>Solicitar Evaluación Gratuita</span>
+              <span>Solicitar Evaluación In-Situ</span>
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
             </button>
           </motion.div>

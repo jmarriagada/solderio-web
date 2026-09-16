@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ShieldCheck, Sun } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface SolarTip {
   title: string;
@@ -257,7 +258,7 @@ export function LocationBadge({ locationText, className = "" }: LocationBadgePro
 
   return (
     <div
-      className={`relative inline-block ${className}`}
+      className={cn("relative inline-block", className)}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >

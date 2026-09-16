@@ -22,9 +22,9 @@ export function SegmentedSolutions() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6"
+            className="flex flex-col items-center md:items-end md:flex-row justify-between mb-12 gap-6"
           >
-            <div>
+            <div className="text-center md:text-left">
               <span className="text-xs md:text-sm font-light uppercase tracking-widest text-[#FF8300] mb-3 md:mb-4 block">
                 Soluciones Segmentadas
               </span>
@@ -34,7 +34,7 @@ export function SegmentedSolutions() {
             </div>
 
             {/* Selector de Segmento (Residencial vs Comercial) */}
-            <div className="inline-flex p-1.5 rounded-full bg-[#E5E7EB]/60 backdrop-blur-md border border-black/5 self-start md:self-auto">
+            <div className="inline-flex p-1.5 rounded-full bg-[#E5E7EB]/60 backdrop-blur-md border border-black/5 self-center md:self-auto">
               <button
                 type="button"
                 onClick={() => setSegment("residential")}
@@ -102,7 +102,7 @@ export function SegmentedSolutions() {
                         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                         className="overflow-hidden"
                       >
-                        <p className="text-brand-muted text-sm md:text-base leading-relaxed font-light mt-3">
+                        <p className="text-brand-muted text-[15px] md:text-base leading-relaxed font-light mt-3">
                           En el sur, los cortes de luz son habituales. Nuestros sistemas híbridos con baterías se activan de forma imperceptible, manteniendo energizado sin interrupciones.
                         </p>
                       </motion.div>
@@ -136,7 +136,7 @@ export function SegmentedSolutions() {
                         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                         className="overflow-hidden"
                       >
-                        <p className="text-brand-muted text-sm md:text-base leading-relaxed font-light mt-3">
+                        <p className="text-brand-muted text-[15px] md:text-base leading-relaxed font-light mt-3">
                           Genera tu energía limpia, ahorra hasta el 90% en tu cuenta de luz, inyectas y abonas los excedentes entregados a la red, acelerando la recuperacion de la inversión.
                         </p>
                       </motion.div>
@@ -178,7 +178,7 @@ export function SegmentedSolutions() {
                         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                         className="overflow-hidden"
                       >
-                        <p className="text-brand-muted text-sm md:text-base leading-relaxed font-light mt-3">
+                        <p className="text-brand-muted text-[15px] md:text-base leading-relaxed font-light mt-3">
                           Monitorea desde cualquier lugar del mundo, tu generación, nivel de autoconsumo y el estado de baterías. Alertas ante cualquier anomalía y envío de reportes mensuales.
                         </p>
                       </motion.div>
@@ -221,7 +221,7 @@ export function SegmentedSolutions() {
                         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                         className="overflow-hidden"
                       >
-                        <p className="text-brand-muted text-sm md:text-base leading-relaxed font-light mt-3">
+                        <p className="text-brand-muted text-[15px] md:text-base leading-relaxed font-light mt-3">
                           Para plantas industriales, lecherías, frigoríficos y hoteles en el sur. Mitigamos el impacto de las tarifas en horas punta y bajamos el costo nivelado de la energía (LCOE) para blindar tu margen operacional.
                         </p>
                       </motion.div>
@@ -260,7 +260,7 @@ export function SegmentedSolutions() {
                         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                         className="overflow-hidden"
                       >
-                        <p className="text-brand-muted text-sm md:text-base leading-relaxed font-light mt-3">
+                        <p className="text-brand-muted text-[15px] md:text-base leading-relaxed font-light mt-3">
                           Implementa tu planta solar sin desembolso inicial de capital. SoldeRío financia, diseña, instala y opera el activo bajo un contrato de suministro de energía limpia con tarifas garantizadas más bajas que la red.
                         </p>
                       </motion.div>
@@ -299,7 +299,7 @@ export function SegmentedSolutions() {
                         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                         className="overflow-hidden"
                       >
-                        <p className="text-brand-muted text-sm md:text-base leading-relaxed font-light mt-3">
+                        <p className="text-brand-muted text-[15px] md:text-base leading-relaxed font-light mt-3">
                           Acelera la descarbonización de tu cadena de valor. Emitimos certificados de generación 100% renovable auditables para memorias de sostenibilidad, estándares IREC y requerimientos de mercados de exportación europeos y norteamericanos.
                         </p>
                       </motion.div>

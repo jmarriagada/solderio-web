@@ -24,7 +24,10 @@ export interface QuoteFormData {
   hasPhases: "monofasico" | "trifasico" | "desconoce";
 
   // Step 3: Objective & System
-  systemType: TopologyType;
+  systemType?: TopologyType;
+  batteryObjectives?: string[];
+  roofType?: "inclinado" | "plano" | "suelo";
+  roofMaterial?: string;
   includeEvCharger: boolean;
   backupPriority: "cargas_criticas" | "hogar_completo" | "solo_ahorro";
   omPackage?: OMPackageType;

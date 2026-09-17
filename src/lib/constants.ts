@@ -8,7 +8,7 @@ export const BRAND = {
   region: "Macrozona Sur de Chile (Los Ríos, Los Lagos y La Araucanía)",
   contact: {
     email: "contacto@solderio.cl",
-    phone: "+56 9 8765 4321",
+    phone: "+56 9 6618 6667",
     address: "Valdivia, Región de Los Ríos, Chile",
     hours: "Lun - Vie: 09:00 - 18:30 hrs",
   },

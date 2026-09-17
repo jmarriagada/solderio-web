@@ -81,7 +81,7 @@ export function buildEventDetails(params: CalendarEventParams) {
     `- Factibilidad de conexión Net Billing Ley 21.118`,
     `- Costo: $14.990 CLP (100% Reembolsable al contratar el proyecto)`,
     ``,
-    `Contacto directo SoldeRío: contacto@solderio.cl | +56 9 8765 4321`,
+    `Contacto directo SoldeRío: contacto@solderio.cl | +56 9 6618 6667`,
   ]
     .filter(Boolean)
     .join("\n");

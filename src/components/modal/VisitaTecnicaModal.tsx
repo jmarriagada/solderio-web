@@ -357,7 +357,7 @@ export function VisitaTecnicaModal() {
 
     const msg = `Hola SoldeRío, he solicitado una ${tipoTexto}.%0A%0A📋 *Folio:* ${folio}%0A👤 *Nombre:* ${formData.nombre}%0A📞 *Teléfono:* ${formData.telefono}%0A📍 *Ubicación:* ${direccionTexto}, ${formData.comuna}, ${formData.region}${coordsTexto}%0A🏡 *Propiedad:* ${formData.tipoPropiedad}%0A📅 *Fecha solicitada:* ${formData.fechaSeleccionada}%0A⏰ *Horario:* ${horarioTexto}%0A%0AQuedo atento para coordinar la visita técnica en terreno.`;
 
-    return `https://wa.me/56987654321?text=${msg}`;
+    return `https://wa.me/56966186667?text=${msg}`;
   };
 
   // Google Calendar URL Generator
@@ -383,7 +383,7 @@ export function VisitaTecnicaModal() {
       (formData.coordenadasTexto ? `🌐 Coordenadas GPS: ${formData.coordenadasTexto}\n` : "") +
       (formData.latitud ? `🗺 Google Maps: https://www.google.com/maps?q=${formData.latitud},${formData.longitud}\n` : "") +
       `💰 Costo: $14.990 CLP (100% Reembolsable al adquirir el proyecto)\n\n` +
-      `Contacto SoldeRío: +56 9 8765 4321 - contacto@solderio.cl`
+      `Contacto SoldeRío: +56 9 6618 6667 - contacto@solderio.cl`
     );
     const location = encodeURIComponent(
       `${formData.direccion ? formData.direccion + ", " : ""}${formData.comuna}, ${formData.region}, Chile`
@@ -407,7 +407,7 @@ export function VisitaTecnicaModal() {
     const loc = `${formData.direccion ? formData.direccion + ", " : ""}${formData.comuna}, ${formData.region}, Chile`;
     const desc = `Visita técnica en terreno SoldeRío\\nFolio: ${folio}\\nCliente: ${formData.nombre}\\nTeléfono: ${formData.telefono}\\nUbicación: ${loc}${
       formData.coordenadasTexto ? `\\nGPS: ${formData.coordenadasTexto}` : ""
-    }\\nCosto: $14.990 CLP (100% Reembolsable al adquirir el proyecto)\\nContacto: contacto@solderio.cl`;
+    }\\nCosto: $14.990 CLP (100% Reembolsable al adquirir el proyecto)\\nContacto SoldeRío: +56 9 6618 6667 - contacto@solderio.cl`;
 
     const icsContent = [
       "BEGIN:VCALENDAR",

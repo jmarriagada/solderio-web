@@ -233,11 +233,22 @@ export function VisitaTecnicaConfirmationEmail({
 
             <Row style={{ marginTop: "14px" }}>
               <Column>
-                <Button href="https://wa.me/56987654321" style={whatsappButton}>
+                <Button
+                  href={`https://wa.me/56966186667?text=${encodeURIComponent(
+                    `Hola SoldeRío, tengo una consulta sobre mi Visita Técnica Folio ${folio}`
+                  )}`}
+                  style={whatsappButton}
+                >
                   💬 Chatear por WhatsApp
                 </Button>
               </Column>
               <Column style={{ textAlign: "right" }}>
+                <Text style={contactEmailText}>
+                  Teléfono:{" "}
+                  <Link href="tel:+56966186667" style={{ color: "#FFFFFF", fontWeight: "bold", textDecoration: "none" }}>
+                    +56 9 6618 6667
+                  </Link>
+                </Text>
                 <Text style={contactEmailText}>
                   Correo oficial:{" "}
                   <Link href="mailto:contacto@solderio.cl" style={contactEmailLink}>

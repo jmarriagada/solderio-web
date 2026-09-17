@@ -1,16 +1,16 @@
 import React from "react";
 import { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
-import { prisma } from "@/lib/prisma";
 import { FloatingNav } from "@/components/FloatingNav";
 import { HeroHeaderNav } from "@/components/HeroHeaderNav";
 import { Footer } from "@/components/Footer";
 import { ProposalClientWrapper } from "./ProposalClientWrapper";
-import { Clock, AlertTriangle, ArrowRight, Phone, RotateCcw } from "lucide-react";
+import { decodeProposalToken } from "@/lib/proposal-token";
+import { Clock, Phone, RotateCcw } from "lucide-react";
 
 interface Props {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -25,46 +25,102 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function PropuestaPage({ params }: Props) {
+export default async function PropuestaPage({ params, searchParams }: Props) {
   const { id } = await params;
-
-  // 1. Limpieza automática de propuestas que hayan superado los 15 días de validez
-  try {
-    await prisma.publicProposal.deleteMany({
-      where: {
-        expiresAt: { lt: new Date() },
-      },
-    });
-  } catch (err) {
-    console.warn("[Propuesta] Limpieza de expiradas omitida:", err);
-  }
-
-  // 2. Búsqueda de la propuesta por Folio / ID
-  let proposal: any = null;
-  try {
-    proposal = await prisma.publicProposal.findUnique({
-      where: { id },
-    });
-  } catch (err) {
-    console.error("[Propuesta] Error buscando propuesta en BD:", err);
-  }
+  const sParams = await searchParams;
+  const token =
+    typeof sParams.t === "string"
+      ? sParams.t
+      : typeof sParams.token === "string"
+      ? sParams.token
+      : null;
 
   const now = new Date();
-  const isExpired = !proposal || new Date(proposal.expiresAt) < now;
+  let proposalData: {
+    id: string;
+    formData: any;
+    sizingResult: any;
+    createdAt: Date;
+    expiresAt: Date;
+  } | null = null;
 
-  // Si está expirada, si aún existe en BD la eliminamos de inmediato
-  if (proposal && isExpired) {
+  // 1. Limpieza oportuna y búsqueda en base de datos PostgreSQL
+  try {
+    const { prisma } = await import("@/lib/prisma");
+    await prisma.publicProposal.deleteMany({
+      where: {
+        expiresAt: { lt: now },
+      },
+    }).catch(() => {});
+
+    const dbProposal = await prisma.publicProposal.findUnique({
+      where: { id },
+    });
+
+    if (dbProposal) {
+      proposalData = {
+        id: dbProposal.id,
+        formData: dbProposal.formData,
+        sizingResult: dbProposal.sizingResult,
+        createdAt: new Date(dbProposal.createdAt),
+        expiresAt: new Date(dbProposal.expiresAt),
+      };
+    }
+  } catch (err) {
+    console.warn("[Propuesta] Base de datos no disponible o sin conexión:", err);
+  }
+
+  // 2. Si no se encontró en la BD (o no configurada en Vercel), decodificar el token resiliente URL
+  if (!proposalData && token) {
+    const decoded = decodeProposalToken(token);
+    if (decoded && decoded.id === id) {
+      proposalData = {
+        id: decoded.id,
+        formData: decoded.formData,
+        sizingResult: decoded.sizingResult,
+        createdAt: new Date(decoded.createdAt),
+        expiresAt: new Date(decoded.expiresAt),
+      };
+
+      // Si la BD está disponible, respaldar para futuras consultas
+      try {
+        const { prisma } = await import("@/lib/prisma");
+        prisma.publicProposal
+          .upsert({
+            where: { id: decoded.id },
+            create: {
+              id: decoded.id,
+              clientName: decoded.formData.fullName,
+              clientEmail: decoded.formData.email,
+              clientPhone: decoded.formData.whatsapp,
+              comuna: decoded.formData.comuna,
+              formData: decoded.formData as any,
+              sizingResult: decoded.sizingResult as any,
+              createdAt: new Date(decoded.createdAt),
+              expiresAt: new Date(decoded.expiresAt),
+            },
+            update: {},
+          })
+          .catch(() => {});
+      } catch {}
+    }
+  }
+
+  // 3. Verificación estricta de expiración (15 días)
+  const isExpired = !proposalData || proposalData.expiresAt.getTime() < now.getTime();
+
+  // Si está expirada, si aún existe en la base de datos la eliminamos
+  if (proposalData && isExpired) {
     try {
-      await prisma.publicProposal.delete({
-        where: { id },
-      });
+      const { prisma } = await import("@/lib/prisma");
+      await prisma.publicProposal.delete({ where: { id } }).catch(() => {});
     } catch {}
   }
 
   return (
     <main className="w-full min-h-screen relative bg-[#141414] text-white">
       <FloatingNav />
-      
+
       <div className="w-full relative z-30 bg-transparent">
         <HeroHeaderNav locationText="Sur de Chile" />
       </div>
@@ -89,7 +145,8 @@ export default async function PropuestaPage({ params }: Props) {
             </h1>
 
             <p className="text-white/70 text-sm sm:text-base leading-relaxed mb-8 max-w-lg mx-auto">
-              Nuestras propuestas solares fotovoltaicas tienen una <strong>validez estricta de 15 días corridos</strong> desde su fecha de emisión. Debido a las actualizaciones de precios de módulos solares N-Type, equipamiento de inversores e indexación de tarifas de las distribuidoras eléctricas en el sur de Chile, es necesario realizar un nuevo cálculo actualizado.
+              Nuestras propuestas solares fotovoltaicas tienen una{" "}
+              <strong>validez de 15 días corridos</strong> desde su fecha de emisión. Debido a las variaciones periódicas de costos de equipamiento fotovoltaico e indexación de tarifas eléctricas en el sur de Chile, es necesario realizar una nueva estimación actualizada.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -98,7 +155,7 @@ export default async function PropuestaPage({ params }: Props) {
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#FF8300] hover:bg-[#FF8300]/90 text-white font-bold px-7 py-3.5 rounded-full text-sm shadow-lg shadow-[#FF8300]/25 transition-all"
               >
                 <RotateCcw className="w-4 h-4" />
-                Generar Nueva Cotización Inmediata
+                Generar Nueva Cotización
               </Link>
 
               <a
@@ -110,21 +167,21 @@ export default async function PropuestaPage({ params }: Props) {
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#25D366]/90 text-white font-bold px-6 py-3.5 rounded-full text-sm transition-all"
               >
                 <Phone className="w-4 h-4" />
-                Contactar por WhatsApp
+                Consultar por WhatsApp
               </a>
             </div>
           </div>
         ) : (
           /* Active Proposal Screen */
           <ProposalClientWrapper
-            leadId={proposal.id}
-            formData={proposal.formData}
-            sizingResult={proposal.sizingResult}
-            expiresAtIso={new Date(proposal.expiresAt).toISOString()}
+            leadId={proposalData.id}
+            formData={proposalData.formData}
+            sizingResult={proposalData.sizingResult}
+            expiresAtIso={proposalData.expiresAt.toISOString()}
             daysRemaining={Math.max(
               1,
               Math.ceil(
-                (new Date(proposal.expiresAt).getTime() - now.getTime()) /
+                (proposalData.expiresAt.getTime() - now.getTime()) /
                   (1000 * 60 * 60 * 24)
               )
             )}

@@ -5,6 +5,7 @@ import { calculateSolarSizing } from "@/lib/solar-calculator";
 import { LeadSubmission, QuoteFormData } from "@/types/cotizacion";
 import { validateAndNormalizeEmail } from "@/lib/email-validator";
 import { sendQuoteReportEmail } from "@/lib/mailer";
+import { encodeProposalToken } from "@/lib/proposal-token";
 
 const LEADS_FILE_PATH = path.join(process.cwd(), "data", "leads.json");
 
@@ -193,7 +194,21 @@ export async function POST(request: Request) {
     // 2. Dispatch event to n8n for WhatsApp, Email and Telegram
     dispatchWebhookToN8n(newLead).catch((e) => console.error("Webhook background error:", e));
 
-    // 3. Dispatch official transactional email from @solderio.cl
+    // 3. Generar token de propuesta resiliente a 15 días para el portal
+    const createdAtMs = Date.now();
+    const expiresAtMs = createdAtMs + 15 * 24 * 60 * 60 * 1000;
+    const proposalToken = encodeProposalToken({
+      id: leadId,
+      createdAt: createdAtMs,
+      expiresAt: expiresAtMs,
+      formData: newLead.formData,
+      sizingResult,
+    });
+    const portalUrl = proposalToken
+      ? `https://solderio.cl/propuesta/${leadId}?t=${proposalToken}`
+      : `https://solderio.cl/propuesta/${leadId}`;
+
+    // 4. Dispatch official transactional email from @solderio.cl
     let emailDelivery: any = null;
     try {
       emailDelivery = await sendQuoteReportEmail({
@@ -204,6 +219,7 @@ export async function POST(request: Request) {
         systemType: body.systemType,
         leadId,
         sizing: sizingResult,
+        portalUrl,
       });
       console.log(`[Mailer] Resultado de envío a ${emailValidation.normalizedEmail}:`, emailDelivery);
     } catch (e: any) {

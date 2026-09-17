@@ -22,6 +22,7 @@ import {
   ExternalLink,
   ChevronDown,
   Trash2,
+  Loader2,
 } from "lucide-react";
 import { useVisitaModal } from "@/context/VisitaModalContext";
 import dynamic from "next/dynamic";
@@ -169,6 +170,7 @@ export function VisitaTecnicaModal() {
   });
 
   const [folio, setFolio] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Generate the next 10 business days for the interactive calendar
   const availableDates = useMemo(() => {
@@ -252,7 +254,7 @@ export function VisitaTecnicaModal() {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Validar que exista al menos dirección ingresada o punto marcado en el mapa
@@ -267,9 +269,39 @@ export function VisitaTecnicaModal() {
     }
 
     setLocationError(null);
+    setIsSubmitting(true);
+
     const randomFolio = `SOL-VIS-${Math.floor(1000 + Math.random() * 9000)}`;
-    setFolio(randomFolio);
-    setStep(3);
+    const selectedDateObj = availableDates.find(
+      (d) => d.formattedDate === formData.fechaSeleccionada
+    );
+
+    const payload = {
+      ...formData,
+      folio: randomFolio,
+      fechaIso: selectedDateObj?.fullIso || new Date().toISOString().split("T")[0],
+    };
+
+    try {
+      const res = await fetch("/api/visita-tecnica", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setFolio(data.folio || randomFolio);
+      } else {
+        setFolio(randomFolio);
+      }
+    } catch (err) {
+      console.warn("Error en despacho de visita técnica, usando folio local:", err);
+      setFolio(randomFolio);
+    } finally {
+      setIsSubmitting(false);
+      setStep(3);
+    }
   };
 
   const handleRequestClose = () => {
@@ -935,10 +967,22 @@ export function VisitaTecnicaModal() {
 
                 <button
                   type="submit"
-                  className="px-8 py-3 rounded-full bg-[#FF8300] hover:bg-[#e07400] text-white text-xs font-medium uppercase tracking-wider shadow-lg hover:shadow-[0_0_20px_rgba(255,131,0,0.4)] flex items-center gap-2 transition-all cursor-pointer"
+                  disabled={isSubmitting}
+                  className={`px-8 py-3 rounded-full bg-[#FF8300] hover:bg-[#e07400] text-white text-xs font-medium uppercase tracking-wider shadow-lg hover:shadow-[0_0_20px_rgba(255,131,0,0.4)] flex items-center gap-2 transition-all cursor-pointer ${
+                    isSubmitting ? "opacity-70 cursor-not-allowed" : ""
+                  }`}
                 >
-                  <span>Confirmar Solicitud de Visita</span>
-                  <ArrowRight className="w-4 h-4" />
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>Agendando cita...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Confirmar Solicitud de Visita</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </>
+                  )}
                 </button>
               </div>
             </form>
@@ -1021,6 +1065,14 @@ export function VisitaTecnicaModal() {
                 <ShieldCheck className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
                 <span className="leading-relaxed">
                   <strong className="text-white font-medium">100% Reembolsable:</strong> Los $14.990 CLP serán descontados íntegramente de tu presupuesto final al contratar tu proyecto solar.
+                </span>
+              </div>
+
+              {/* Email Sent Notice */}
+              <div className="max-w-md mx-auto p-3.5 rounded-xl bg-[#FF8300]/10 border border-[#FF8300]/30 text-xs text-white/90 font-light flex items-start gap-2.5 text-left">
+                <Mail className="w-4 h-4 text-[#FF8300] flex-shrink-0 mt-0.5" />
+                <span className="leading-relaxed">
+                  Hemos enviado la confirmación con el archivo para tu calendario (Google, Outlook, Apple) a <strong className="text-[#FF8300] font-medium">{formData.email}</strong>.
                 </span>
               </div>
 

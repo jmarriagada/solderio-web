@@ -178,25 +178,27 @@ export async function POST(request: Request) {
     ]);
 
     // 4. Notificaciones internas para el equipo de SoldeRío (Telegram Bot + Correo Interno)
-    notifyInternalVisitaLead({
-      folio,
-      nombre: visitaRecord.nombre,
-      telefono: visitaRecord.telefono,
-      email: visitaRecord.email,
-      direccion: visitaRecord.direccion,
-      comuna: visitaRecord.comuna,
-      region: visitaRecord.region,
-      latitud: visitaRecord.latitud,
-      longitud: visitaRecord.longitud,
-      coordenadasTexto: visitaRecord.coordenadasTexto,
-      fechaSeleccionada: visitaRecord.fechaSeleccionada,
-      bloqueHorario: visitaRecord.bloqueHorario,
-      tipoPropiedad: visitaRecord.tipoPropiedad,
-      montoBoleta: visitaRecord.montoBoleta,
-      notas: visitaRecord.notas,
-    }).catch((notifErr) =>
-      console.warn("[Notificación Interna Visita Falló]:", notifErr)
-    );
+    try {
+      await notifyInternalVisitaLead({
+        folio,
+        nombre: visitaRecord.nombre,
+        telefono: visitaRecord.telefono,
+        email: visitaRecord.email,
+        direccion: visitaRecord.direccion,
+        comuna: visitaRecord.comuna,
+        region: visitaRecord.region,
+        latitud: visitaRecord.latitud,
+        longitud: visitaRecord.longitud,
+        coordenadasTexto: visitaRecord.coordenadasTexto,
+        fechaSeleccionada: visitaRecord.fechaSeleccionada,
+        bloqueHorario: visitaRecord.bloqueHorario,
+        tipoPropiedad: visitaRecord.tipoPropiedad,
+        montoBoleta: visitaRecord.montoBoleta,
+        notas: visitaRecord.notas,
+      });
+    } catch (notifErr) {
+      console.warn("[Notificación Interna Visita Falló]:", notifErr);
+    }
 
     // 5. Webhook en segundo plano (n8n)
     dispatchWebhookToN8n(visitaRecord).catch((err) =>

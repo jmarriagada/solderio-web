@@ -2,7 +2,7 @@ import { Resend } from "resend";
 import { QuoteFormData, SolarSizingResult } from "@/types/cotizacion";
 
 const DEFAULT_INTERNAL_EMAIL = "contacto@solderio.cl";
-const DEFAULT_SENDER = process.env.SENDER_EMAIL?.trim() || "SoldeRío Energía <contacto@solderio.cl>";
+const DEFAULT_INTERNAL_SENDER = "SoldeRio Notificaciones <notificaciones@solderio.cl>";
 
 function cleanPhoneNumber(phone: string): string {
   let cleaned = (phone || "").replace(/[^0-9]/g, "");
@@ -204,8 +204,9 @@ export async function notifyInternalQuoteLead(params: {
 </html>`;
 
       const { data, error } = await resend.emails.send({
-        from: DEFAULT_SENDER,
+        from: DEFAULT_INTERNAL_SENDER,
         to: internalRecipient.split(",").map((e) => e.trim()),
+        replyTo: formData.email,
         subject: emailSubject,
         html: htmlContent,
       });
@@ -399,8 +400,9 @@ export async function notifyInternalVisitaLead(params: {
 </html>`;
 
       const { data, error } = await resend.emails.send({
-        from: DEFAULT_SENDER,
+        from: DEFAULT_INTERNAL_SENDER,
         to: internalRecipient.split(",").map((e) => e.trim()),
+        replyTo: email,
         subject: emailSubject,
         html: htmlContent,
       });

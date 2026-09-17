@@ -6,6 +6,7 @@ import { LeadSubmission, QuoteFormData } from "@/types/cotizacion";
 import { validateAndNormalizeEmail } from "@/lib/email-validator";
 import { sendQuoteReportEmail } from "@/lib/mailer";
 import { encodeProposalToken } from "@/lib/proposal-token";
+import { notifyInternalQuoteLead } from "@/lib/notifier";
 
 const LEADS_FILE_PATH = path.join(process.cwd(), "data", "leads.json");
 
@@ -208,7 +209,17 @@ export async function POST(request: Request) {
       ? `https://solderio.cl/propuesta/${leadId}?t=${proposalToken}`
       : `https://solderio.cl/propuesta/${leadId}`;
 
-    // 4. Dispatch official transactional email from @solderio.cl
+    // 4. Notificaciones internas inmediatas al equipo de SoldeRío (Telegram Bot + Correo Interno)
+    notifyInternalQuoteLead({
+      leadId,
+      formData: newLead.formData,
+      sizingResult,
+      portalUrl,
+    }).catch((notifErr) =>
+      console.warn("[Notificación Interna Cotización Falló]:", notifErr)
+    );
+
+    // 5. Dispatch official transactional email from @solderio.cl al cliente
     let emailDelivery: any = null;
     try {
       emailDelivery = await sendQuoteReportEmail({

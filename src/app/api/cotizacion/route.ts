@@ -33,6 +33,49 @@ async function saveLeadLocally(lead: LeadSubmission): Promise<void> {
   }
 }
 
+async function saveProposalToDatabase(lead: LeadSubmission): Promise<boolean> {
+  try {
+    const { prisma } = await import("@/lib/prisma");
+    const expiresAt = new Date(Date.now() + 15 * 24 * 60 * 60 * 1000); // Validez estricta: 15 días
+
+    await prisma.publicProposal.upsert({
+      where: { id: lead.id },
+      create: {
+        id: lead.id,
+        clientName: lead.formData.fullName,
+        clientEmail: lead.formData.email,
+        clientPhone: lead.formData.whatsapp,
+        comuna: lead.formData.comuna,
+        formData: lead.formData as any,
+        sizingResult: lead.sizingResult as any,
+        createdAt: new Date(),
+        expiresAt,
+      },
+      update: {
+        clientName: lead.formData.fullName,
+        clientEmail: lead.formData.email,
+        clientPhone: lead.formData.whatsapp,
+        comuna: lead.formData.comuna,
+        formData: lead.formData as any,
+        sizingResult: lead.sizingResult as any,
+        expiresAt,
+      },
+    });
+
+    // Limpieza oportunista de cotizaciones con más de 15 días de antigüedad
+    await prisma.publicProposal.deleteMany({
+      where: {
+        expiresAt: { lt: new Date() },
+      },
+    }).catch(() => {});
+
+    return true;
+  } catch (err) {
+    console.warn("[Database] Error guardando propuesta en PostgreSQL:", err);
+    return false;
+  }
+}
+
 async function saveLeadToFirestore(lead: LeadSubmission): Promise<boolean> {
   if (!process.env.FIREBASE_ADMIN_CLIENT_EMAIL || !process.env.FIREBASE_ADMIN_PRIVATE_KEY) {
     return false;
@@ -140,8 +183,9 @@ export async function POST(request: Request) {
       status: "NUEVO",
     };
 
-    // 1. Save to Firestore (Cloud) & Local backup
+    // 1. Guardar en Base de Datos PostgreSQL (Propuesta oficial con 15 días de validez), Firestore y backup local
     await Promise.all([
+      saveProposalToDatabase(newLead),
       saveLeadToFirestore(newLead),
       saveLeadLocally(newLead),
     ]);

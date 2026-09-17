@@ -96,7 +96,7 @@ export async function sendQuoteReportEmail(
         distributor,
         systemType,
         sizing,
-        portalUrl: portalUrl || `https://solderio.cl/cotizacion?leadId=${leadId}`,
+        portalUrl: portalUrl || `https://solderio.cl/propuesta/${leadId}`,
       })
     );
 

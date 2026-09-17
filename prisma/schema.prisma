@@ -263,3 +263,15 @@ model SecComplianceItem {
   @@unique([secComplianceId, code])
 }
 
+model PublicProposal {
+  id           String   @id // e.g. "SOL-2026-4581"
+  clientName   String
+  clientEmail  String
+  clientPhone  String
+  comuna       String
+  formData     Json
+  sizingResult Json
+  createdAt    DateTime @default(now())
+  expiresAt    DateTime
+}
+

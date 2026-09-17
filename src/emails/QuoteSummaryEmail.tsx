@@ -13,28 +13,44 @@ import {
   Link,
   Hr,
   Button,
+  Img,
 } from "@react-email/components";
 import { SolarSizingResult } from "@/types/cotizacion";
 
 export interface QuoteSummaryEmailProps {
-  fullName: string;
-  leadId: string;
-  comuna: string;
+  fullName?: string;
+  leadId?: string;
+  comuna?: string;
   distributor?: string;
   systemType?: string;
-  sizing: SolarSizingResult;
+  sizing?: SolarSizingResult;
   portalUrl?: string;
+  logoUrl?: string;
+  isotipoUrl?: string;
+  iconsBaseUrl?: string;
+  boltIconUrl?: string;
+  chartIconUrl?: string;
+  shieldIconUrl?: string;
 }
 
 export function QuoteSummaryEmail({
   fullName = "Estimado/a cliente",
-  leadId = "SOL-2026-0000",
+  leadId = "SOL-2026-1040",
   comuna = "Puerto Varas",
   distributor = "Saesa",
   systemType = "hibrida",
   sizing,
   portalUrl = "https://solderio.cl/cotizacion",
+  logoUrl = "https://solderio.cl/logos/logo-solderio-lightmode.png",
+  isotipoUrl = "https://solderio.cl/logos/isotipo.png",
+  iconsBaseUrl = "https://solderio.cl/email-icons",
+  boltIconUrl,
+  chartIconUrl,
+  shieldIconUrl,
 }: QuoteSummaryEmailProps) {
+  const finalBoltIcon = boltIconUrl || `${iconsBaseUrl}/bolt.png`;
+  const finalChartIcon = chartIconUrl || `${iconsBaseUrl}/chart.png`;
+  const finalShieldIcon = shieldIconUrl || `${iconsBaseUrl}/shield.png`;
   const formatCurrency = (val: number) => {
     return new Intl.NumberFormat("es-CL", {
       style: "currency",
@@ -43,15 +59,13 @@ export function QuoteSummaryEmail({
     }).format(val);
   };
 
-  const isHybrid = systemType === "hibrida";
-  const isOffGrid = systemType === "offgrid";
-  const recommendedKwp = sizing?.recommendedKwp || 4.1;
+  const recommendedKwp = sizing?.recommendedKwp || 5.2;
   const panelsCount = sizing?.panelsCount || Math.ceil((recommendedKwp * 1000) / 580);
-  const annualSavings = sizing?.estimatedAnnualSavingsClp || 1200000;
-  const annualGen = sizing?.estimatedAnnualGenKwh || Math.round(recommendedKwp * 1250);
-  const systemCost = sizing?.estimatedSystemCostIvaClp || sizing?.estimatedSystemCostNetoClp || 0;
+  const annualSavings = sizing?.estimatedAnnualSavingsClp || 1730000;
+  const annualGen = sizing?.estimatedAnnualGenKwh || Math.round(recommendedKwp * 1350);
+  const autoconsumoPct = sizing?.autoconsumoPct || 75;
 
-  const previewText = `Tu propuesta solar en ${comuna}: ${recommendedKwp} kWp y ahorro de ${formatCurrency(annualSavings)}/año | SoldeRío`;
+  const previewText = `Tu estudio solar en ${comuna} está listo: ${recommendedKwp} kWp y ahorro de ${formatCurrency(annualSavings)}/año`;
 
   return (
     <Html lang="es">
@@ -59,141 +73,196 @@ export function QuoteSummaryEmail({
       <Preview>{previewText}</Preview>
       <Body style={main}>
         <Container style={container}>
-          {/* Header */}
-          <Section style={headerSection}>
-            <Row>
-              <Column>
-                <Text style={logoBrand}>
-                  SOLDE<span style={{ color: "#FF8300" }}>RÍO</span>
-                </Text>
-                <Text style={logoSub}>INGENIERÍA SOLAR & RESILIENCIA ENERGÉTICA</Text>
-              </Column>
-              <Column style={{ textAlign: "right" }}>
-                <Text style={badgeHeader}>ID: {leadId}</Text>
-              </Column>
-            </Row>
-          </Section>
-
-          {/* Main Hero Card */}
-          <Section style={cardHero}>
-            <Text style={categoryText}>PRE-INFORME TÉCNICO ENERGÉTICO</Text>
-            <Heading as="h1" style={titleHeading}>
-              Hola {fullName}, tu propuesta solar para {comuna} está lista
-            </Heading>
-            <Text style={paragraph}>
-              Analizamos la radiación solar y condiciones climáticas de tu comuna junto a las normativas
-              de tu distribuidora ({distributor.toUpperCase()}). Aquí tienes el dimensionamiento
-              preliminar optimizado para tu propiedad:
-            </Text>
-
-            {/* Metrics Grid */}
-            <Section style={metricsGrid}>
-              <Row>
-                <Column style={metricBox}>
-                  <Text style={metricLabel}>POTENCIA SUGERIDA</Text>
-                  <Text style={metricValue}>{recommendedKwp} kWp</Text>
-                  <Text style={metricFoot}>{panelsCount} Paneles N-Type TOPCon 580W</Text>
-                </Column>
-                <Column style={metricBox}>
-                  <Text style={metricLabel}>AHORRO AÑO 1</Text>
-                  <Text style={metricValueOrange}>{formatCurrency(annualSavings)}</Text>
-                  <Text style={metricFoot}>Bajo Ley Netbilling 21.118</Text>
-                </Column>
-              </Row>
-              <Row style={{ marginTop: "12px" }}>
-                <Column style={metricBox}>
-                  <Text style={metricLabel}>GENERACIÓN ESTIMADA</Text>
-                  <Text style={metricValue}>{annualGen.toLocaleString("es-CL")} kWh/año</Text>
-                  <Text style={metricFoot}>Energía limpia y directa en tu techo</Text>
-                </Column>
-                <Column style={metricBox}>
-                  <Text style={metricLabel}>SISTEMA DE RESPALDO</Text>
-                  <Text style={metricValue}>
-                    {isHybrid || isOffGrid ? "Batería LiFePO4" : "On-Grid SEC"}
-                  </Text>
-                  <Text style={metricFoot}>
-                    {isHybrid ? "Respaldo continuo en cortes de red" : "Sincronizado a red sin baterías"}
-                  </Text>
-                </Column>
-              </Row>
+          {/* Main Card */}
+          <Section style={card}>
+            {/* Header with Logo */}
+            <Section style={header}>
+              <Img
+                src={logoUrl}
+                alt="SoldeRío Energía SpA"
+                width="160"
+                height="auto"
+                style={logoImg}
+              />
+              <div style={folioBadge}>FOLIO: {leadId}</div>
             </Section>
 
-            {/* Total Budget Row */}
-            {systemCost > 0 && (
-              <Section style={budgetBanner}>
-                <Row>
-                  <Column>
-                    <Text style={budgetLabel}>PRESUPUESTO ESTIMADO LLAVE EN MANO</Text>
-                    <Text style={budgetValue}>{formatCurrency(systemCost)} CLP</Text>
-                    <Text style={budgetSub}>IVA incluido • Materiales, Montaje y Certificación SEC</Text>
-                  </Column>
-                </Row>
-              </Section>
-            )}
-
-            {/* Main CTA */}
-            <Section style={{ textAlign: "center", marginTop: "28px", marginBottom: "16px" }}>
-              <Button
-                style={ctaButton}
-                href={`https://solderio.cl/cotizacion?leadId=${leadId}&action=visita`}
-              >
-                Agendar Visita Técnica en Terreno →
-              </Button>
-              <Text style={ctaSubtext}>
-                Diagnóstico in situ, evaluación de cubierta y presupuesto 100% cerrado.
+            {/* Headline & Intro */}
+            <Section style={heroSection}>
+              <Heading as="h1" style={mainTitle}>
+                Tu propuesta solar para {comuna} está lista
+              </Heading>
+              <Text style={introText}>
+                Hola <strong>{fullName}</strong>, calculamos el dimensionamiento fotovoltaico preliminar optimizado para tu propiedad, considerando la radiación histórica de tu comuna y la normativa de <strong>{distributor.toUpperCase()}</strong>:
               </Text>
             </Section>
-          </Section>
 
-          {/* Included Services Section */}
-          <Section style={includedSection}>
-            <Text style={includedTitle}>Tu Proyecto Llave en Mano Incluye:</Text>
-            <Text style={includedItem}>✓ <strong>Ingeniería & Planos Eléctricos:</strong> Memoria de cálculo y diseño a medida para el sur.</Text>
-            <Text style={includedItem}>✓ <strong>Montaje Certificado:</strong> Estructura de fijación para viento y lluvia austral.</Text>
-            <Text style={includedItem}>✓ <strong>Certificación SEC TE-4:</strong> Tramitación legal completa y cambio de medidor con tu distribuidora.</Text>
-            <Text style={includedItem}>✓ <strong>Garantía de Rendimiento:</strong> 25 años en paneles solares y 3 años en instalación.</Text>
-            <Text style={includedItem}>✓ <strong>Monitoreo en Tiempo Real:</strong> App móvil para ver tu generación y consumos 24/7.</Text>
-          </Section>
+            {/* Metrics Highlight Card */}
+            <Section style={metricsBox}>
+              <Row>
+                <Column style={metricColLeft}>
+                  <Text style={metricLabel}>POTENCIA SUGERIDA</Text>
+                  <Text style={metricValueOrange}>{recommendedKwp} kWp</Text>
+                  <Text style={metricSub}>{panelsCount} Paneles TOPCon 580W</Text>
+                </Column>
+                <Column style={metricColRight}>
+                  <Text style={metricLabel}>AHORRO PROYECTADO AÑO 1</Text>
+                  <Text style={metricValueDark}>{formatCurrency(annualSavings)}</Text>
+                  <Text style={metricSub}>Ley Net Billing 21.118</Text>
+                </Column>
+              </Row>
 
-          {/* Online Report Link */}
-          <Section style={onlineReportSection}>
-            <Text style={onlineReportText}>
-              ¿Quieres revisar los gráficos estacionales mes a mes o simular financiamiento con Crédito Verde?{" "}
-              <Link href={portalUrl} style={onlineReportLink}>
-                Ver tu propuesta digital interactiva en línea →
-              </Link>
-            </Text>
-          </Section>
+              <Hr style={innerDivider} />
 
-          <Hr style={divider} />
+              <Row>
+                <Column style={metricColLeft}>
+                  <Text style={metricLabel}>GENERACIÓN ESTIMADA</Text>
+                  <Text style={metricValueSmall}>{annualGen.toLocaleString("es-CL")} kWh/año</Text>
+                  <Text style={metricSub}>Alta captación solar</Text>
+                </Column>
+                <Column style={metricColRight}>
+                  <Text style={metricLabel}>COBERTURA SOLAR</Text>
+                  <Text style={metricValueSmall}>{autoconsumoPct}% Autoconsumo</Text>
+                  <Text style={metricSub}>Energía limpia directa</Text>
+                </Column>
+              </Row>
+            </Section>
 
-          {/* Footer & Anti-Spam Compliance */}
-          <Section style={footerSection}>
-            <Text style={footerText}>
-              <strong>SoldeRío SpA</strong> • Soluciones de Generación Solar Fotovoltaica y Resiliencia Energética
-            </Text>
-            <Text style={footerSub}>
-              Puerto Varas, Región de Los Lagos, Chile • Teléfono/WhatsApp: +56 9 9123 4567
-            </Text>
-            <Text style={footerSub}>
-              Correo oficial:{" "}
-              <Link href="mailto:contacto@solderio.cl" style={{ color: "#FF8300" }}>
-                contacto@solderio.cl
-              </Link>{" "}
-              • Web:{" "}
-              <Link href="https://solderio.cl" style={{ color: "#FFFFFF" }}>
-                solderio.cl
-              </Link>
-            </Text>
+            {/* Main Action Button */}
+            <Section style={buttonContainer}>
+              <Button href={portalUrl} style={primaryButton}>
+                Ver Propuesta &rarr;
+              </Button>
+              <Text style={validityNotice}>
+                Validez de la propuesta: 15 días a partir de su emisión.
+              </Text>
+              <Text style={buttonHint}>
+                Accede a tu estudio técnico interactivo, curva estacional de generación y especificaciones de equipos.
+              </Text>
+            </Section>
 
-            <Text style={footerLegal}>
-              Recibiste este correo porque solicitaste una pre-evaluación solar en solderio.cl. De conformidad
-              con la Ley 19.628 de Protección de Datos Personales y Ley 19.496, tus datos se encuentran protegidos.
-              Si no realizaste esta solicitud, puedes ignorar este mensaje o{" "}
-              <Link href="https://solderio.cl/contacto" style={{ color: "#888888", textDecoration: "underline" }}>
-                darte de baja aquí
-              </Link>.
-            </Text>
+            <Hr style={sectionDivider} />
+
+            {/* Value Pillars with Line-Art Icons */}
+            <Section style={pillarsSection}>
+              <Text style={pillarsHeading}>¿POR QUÉ ELEGIR SOLDERÍO?</Text>
+
+              <Row style={pillarRow}>
+                <Column style={pillarIconCol}>
+                  <Img
+                    src={finalBoltIcon}
+                    alt="Ingeniería SEC"
+                    width="22"
+                    height="22"
+                    style={pillarIconImg}
+                  />
+                </Column>
+                <Column style={pillarTextCol}>
+                  <Text style={pillarTitle}>Ingeniería SEC Clase A</Text>
+                  <Text style={pillarDesc}>
+                    Proyectos certificados e inscritos formalmente ante la SEC (trámite TE-4) y la distribuidora zonal.
+                  </Text>
+                </Column>
+              </Row>
+
+              <Row style={pillarRow}>
+                <Column style={pillarIconCol}>
+                  <Img
+                    src={finalChartIcon}
+                    alt="Monitoreo"
+                    width="22"
+                    height="22"
+                    style={pillarIconImg}
+                  />
+                </Column>
+                <Column style={pillarTextCol}>
+                  <Text style={pillarTitle}>Monitoreo Inteligente 24/7</Text>
+                  <Text style={pillarDesc}>
+                    Visualiza generación, inyección a la red y nivel de baterías en tiempo real desde tu smartphone.
+                  </Text>
+                </Column>
+              </Row>
+
+              <Row style={pillarRow}>
+                <Column style={pillarIconCol}>
+                  <Img
+                    src={finalShieldIcon}
+                    alt="Garantía"
+                    width="22"
+                    height="22"
+                    style={pillarIconImg}
+                  />
+                </Column>
+                <Column style={pillarTextCol}>
+                  <Text style={pillarTitle}>Garantía y Calidad Industrial</Text>
+                  <Text style={pillarDesc}>
+                    25 años de rendimiento en paneles solares y respaldo técnico directo en la Macrozona Sur de Chile.
+                  </Text>
+                </Column>
+              </Row>
+            </Section>
+
+            {/* Contact Card (Minimalist) */}
+            <Section style={contactCard}>
+              <Text style={contactTitle}>¿Quieres afinar este estudio o agendar una visita técnica?</Text>
+              <Text style={contactDesc}>
+                Nuestro equipo técnico está listo para resolver tus consultas y coordinar el levantamiento en terreno.
+              </Text>
+              <Row style={{ marginTop: "14px" }}>
+                <Column style={{ textAlign: "center" }}>
+                  <Button
+                    href={`https://wa.me/56966186667?text=${encodeURIComponent(
+                      `Hola SoldeRío, recibí mi propuesta solar Folio ${leadId} y me gustaría resolver consultas.`
+                    )}`}
+                    style={whatsappButton}
+                  >
+                    Chatear por WhatsApp
+                  </Button>
+                </Column>
+              </Row>
+            </Section>
+
+            {/* Footer */}
+            <Section style={footer}>
+              <Img
+                src={isotipoUrl}
+                alt="SoldeRío Isotipo"
+                width="33"
+                height="33"
+                style={isotipoImg}
+              />
+              <Text style={footerBrand}>SoldeRío Energía SpA</Text>
+              <Text style={footerAddress}>
+                Ingeniería Solar Fotovoltaica y Eficiencia Energética, Osorno, Chile
+              </Text>
+              <Text style={footerLinks}>
+                <Link href="https://solderio.cl" style={footerLink}>
+                  solderio.cl
+                </Link>{" "}
+                •{" "}
+                <Link href="mailto:contacto@solderio.cl" style={footerLink}>
+                  contacto@solderio.cl
+                </Link>{" "}
+                •{" "}
+                <Link href="tel:+56966186667" style={footerLink}>
+                  +56 9 6618 6667
+                </Link>
+              </Text>
+
+              <Hr style={footerDivider} />
+
+              <Text style={footerUnsubscribe}>
+                Conforme a la Ley N° 19.496 (Protección de los Derechos de los Consumidores, Art. 28 B), tienes derecho a suspender envíos informativos. Si no deseas recibir más actualizaciones sobre esta propuesta, puedes{" "}
+                <Link href={`https://solderio.cl/desuscribir?leadId=${leadId}`} style={footerUnsubscribeLink}>
+                  darte de baja aquí
+                </Link>{" "}
+                o responder a este correo indicando &ldquo;BAJA&rdquo;.
+              </Text>
+
+              <Text style={footerLegal}>
+                Recibes este correo porque solicitaste un dimensionamiento solar en nuestro cotizador web. Folio: {leadId}.
+              </Text>
+            </Section>
           </Section>
         </Container>
       </Body>
@@ -201,247 +270,313 @@ export function QuoteSummaryEmail({
   );
 }
 
-export default QuoteSummaryEmail;
-
-// --- Email Styles (Inline compatible for maximum email client deliverability) ---
-const main = {
-  backgroundColor: "#0A0A0A",
+// Estilos limpios Light Mode basados en Headspace, Spotify y Republic
+const main: React.CSSProperties = {
+  backgroundColor: "#F4F5F7",
   fontFamily:
-    "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
-  color: "#FFFFFF",
-  margin: "0 auto",
-  padding: "24px 0",
+    "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+  margin: 0,
+  padding: "32px 12px",
+  color: "#1F1F1F",
 };
 
-const container = {
-  backgroundColor: "#141414",
-  border: "1px solid #262626",
+const container: React.CSSProperties = {
+  margin: "0 auto",
+  maxWidth: "580px",
+};
+
+const card: React.CSSProperties = {
+  backgroundColor: "#FFFFFF",
   borderRadius: "16px",
-  maxWidth: "600px",
-  margin: "0 auto",
-  padding: "32px 24px",
-  overflow: "hidden",
+  border: "1px solid #E5E7EB",
+  padding: "40px 36px 32px 36px",
+  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.04)",
 };
 
-const headerSection = {
-  marginBottom: "24px",
+const header: React.CSSProperties = {
+  textAlign: "center",
+  marginBottom: "32px",
 };
 
-const logoBrand = {
-  fontSize: "22px",
-  fontWeight: "800",
-  letterSpacing: "1px",
-  color: "#FFFFFF",
-  margin: "0",
-  lineHeight: "1.2",
+const logoImg: React.CSSProperties = {
+  margin: "0 auto 12px auto",
+  display: "block",
+  height: "auto",
 };
 
-const logoSub = {
-  fontSize: "9px",
-  letterSpacing: "1.5px",
-  color: "#888888",
-  margin: "2px 0 0 0",
-};
-
-const badgeHeader = {
-  fontSize: "11px",
-  fontFamily: "monospace",
-  color: "#FF8300",
-  backgroundColor: "rgba(255, 131, 0, 0.12)",
-  border: "1px solid rgba(255, 131, 0, 0.3)",
-  borderRadius: "20px",
-  padding: "4px 10px",
+const folioBadge: React.CSSProperties = {
   display: "inline-block",
-  margin: "0",
-};
-
-const cardHero = {
-  backgroundColor: "#1A1A1A",
-  border: "1px solid #2B2B2B",
-  borderRadius: "14px",
-  padding: "24px 20px",
-  marginBottom: "20px",
-};
-
-const categoryText = {
-  fontSize: "11px",
+  backgroundColor: "#F3F4F6",
+  color: "#4B5563",
+  fontSize: "10px",
+  fontWeight: 600,
+  letterSpacing: "0.12em",
   fontFamily: "monospace",
-  letterSpacing: "1px",
-  color: "#FF8300",
-  fontWeight: "600",
-  margin: "0 0 8px 0",
+  padding: "4px 10px",
+  borderRadius: "9999px",
+  border: "1px solid #E5E7EB",
 };
 
-const titleHeading = {
-  fontSize: "22px",
-  fontWeight: "400",
-  color: "#FFFFFF",
-  lineHeight: "1.3",
-  margin: "0 0 14px 0",
+const heroSection: React.CSSProperties = {
+  textAlign: "center",
+  marginBottom: "28px",
 };
 
-const paragraph = {
-  fontSize: "13px",
+const mainTitle: React.CSSProperties = {
+  color: "#1F1F1F",
+  fontSize: "24px",
+  fontWeight: 700,
+  lineHeight: "1.25",
+  margin: "0 0 12px 0",
+  letterSpacing: "-0.02em",
+};
+
+const introText: React.CSSProperties = {
+  color: "#4B5563",
+  fontSize: "14px",
   lineHeight: "1.6",
-  color: "#BBBBBB",
-  margin: "0 0 20px 0",
+  margin: "0 auto",
+  maxWidth: "480px",
 };
 
-const metricsGrid = {
-  marginBottom: "16px",
+const metricsBox: React.CSSProperties = {
+  backgroundColor: "#F9FAFB",
+  borderRadius: "14px",
+  border: "1px solid #E5E7EB",
+  padding: "24px",
+  marginBottom: "28px",
 };
 
-const metricBox = {
-  backgroundColor: "#101010",
-  border: "1px solid #262626",
-  borderRadius: "10px",
-  padding: "12px 14px",
+const metricColLeft: React.CSSProperties = {
+  textAlign: "left",
   width: "50%",
+  verticalAlign: "top",
 };
 
-const metricLabel = {
+const metricColRight: React.CSSProperties = {
+  textAlign: "right",
+  width: "50%",
+  verticalAlign: "top",
+};
+
+const metricLabel: React.CSSProperties = {
+  color: "#6B7280",
   fontSize: "10px",
-  fontFamily: "monospace",
-  color: "#888888",
+  fontWeight: 700,
+  letterSpacing: "0.1em",
   margin: "0 0 4px 0",
-  letterSpacing: "0.5px",
 };
 
-const metricValue = {
-  fontSize: "18px",
-  fontWeight: "700",
-  color: "#FFFFFF",
-  margin: "0 0 2px 0",
-  lineHeight: "1.2",
-};
-
-const metricValueOrange = {
-  fontSize: "18px",
-  fontWeight: "700",
+const metricValueOrange: React.CSSProperties = {
   color: "#FF8300",
+  fontSize: "22px",
+  fontWeight: 700,
   margin: "0 0 2px 0",
-  lineHeight: "1.2",
+  letterSpacing: "-0.02em",
 };
 
-const metricFoot = {
-  fontSize: "10px",
-  color: "#777777",
-  margin: "0",
+const metricValueDark: React.CSSProperties = {
+  color: "#1F1F1F",
+  fontSize: "22px",
+  fontWeight: 700,
+  margin: "0 0 2px 0",
+  letterSpacing: "-0.02em",
 };
 
-const budgetBanner = {
-  backgroundColor: "#0F1A12",
-  border: "1px solid rgba(16, 185, 129, 0.3)",
-  borderRadius: "10px",
-  padding: "14px 16px",
-  marginTop: "16px",
-};
-
-const budgetLabel = {
-  fontSize: "10px",
-  fontFamily: "monospace",
-  color: "#10B981",
-  fontWeight: "600",
-  margin: "0 0 4px 0",
-};
-
-const budgetValue = {
-  fontSize: "20px",
-  fontWeight: "800",
-  color: "#FFFFFF",
+const metricValueSmall: React.CSSProperties = {
+  color: "#1F1F1F",
+  fontSize: "16px",
+  fontWeight: 600,
   margin: "0 0 2px 0",
 };
 
-const budgetSub = {
-  fontSize: "10px",
-  color: "#888888",
-  margin: "0",
+const metricSub: React.CSSProperties = {
+  color: "#6B7280",
+  fontSize: "12px",
+  margin: 0,
 };
 
-const ctaButton = {
+const innerDivider: React.CSSProperties = {
+  borderColor: "#E5E7EB",
+  margin: "18px 0",
+};
+
+const buttonContainer: React.CSSProperties = {
+  textAlign: "center",
+  marginBottom: "32px",
+};
+
+const primaryButton: React.CSSProperties = {
   backgroundColor: "#FF8300",
   color: "#FFFFFF",
-  borderRadius: "28px",
-  padding: "13px 26px",
-  fontSize: "13px",
-  fontWeight: "600",
+  borderRadius: "9999px",
+  padding: "14px 36px",
+  fontSize: "15px",
+  fontWeight: 700,
   textDecoration: "none",
   display: "inline-block",
-  margin: "0 auto",
-  boxShadow: "0 4px 14px rgba(255, 131, 0, 0.3)",
+  textAlign: "center",
+  boxShadow: "0 4px 12px rgba(255, 131, 0, 0.25)",
 };
 
-const ctaSubtext = {
+const validityNotice: React.CSSProperties = {
+  color: "#FF8300",
+  fontSize: "12px",
+  fontWeight: 600,
+  marginTop: "12px",
+  marginBottom: "4px",
+};
+
+const buttonHint: React.CSSProperties = {
+  color: "#6B7280",
+  fontSize: "12px",
+  lineHeight: "1.5",
+  margin: "4px auto 0 auto",
+  maxWidth: "420px",
+};
+
+const sectionDivider: React.CSSProperties = {
+  borderColor: "#E5E7EB",
+  margin: "28px 0",
+};
+
+const pillarsSection: React.CSSProperties = {
+  marginBottom: "28px",
+};
+
+const pillarsHeading: React.CSSProperties = {
+  color: "#9CA3AF",
   fontSize: "11px",
-  color: "#777777",
-  marginTop: "10px",
-  marginBottom: "0",
+  fontWeight: 700,
+  letterSpacing: "0.12em",
+  marginBottom: "16px",
+  textAlign: "left",
 };
 
-const includedSection = {
-  backgroundColor: "#161616",
-  border: "1px solid #222222",
+const pillarRow: React.CSSProperties = {
+  marginBottom: "14px",
+};
+
+const pillarIconCol: React.CSSProperties = {
+  width: "32px",
+  verticalAlign: "top",
+  paddingTop: "1px",
+};
+
+const pillarIconImg: React.CSSProperties = {
+  display: "block",
+  width: "22px",
+  height: "22px",
+};
+
+const pillarTextCol: React.CSSProperties = {
+  verticalAlign: "top",
+  paddingLeft: "8px",
+};
+
+const pillarTitle: React.CSSProperties = {
+  color: "#1F1F1F",
+  fontSize: "14px",
+  fontWeight: 600,
+  margin: "0 0 2px 0",
+};
+
+const pillarDesc: React.CSSProperties = {
+  color: "#4B5563",
+  fontSize: "12px",
+  lineHeight: "1.5",
+  margin: 0,
+};
+
+const contactCard: React.CSSProperties = {
+  backgroundColor: "#F9FAFB",
   borderRadius: "12px",
-  padding: "18px 20px",
-  marginBottom: "20px",
+  border: "1px solid #E5E7EB",
+  padding: "20px",
+  textAlign: "center",
+  marginBottom: "32px",
 };
 
-const includedTitle = {
-  fontSize: "13px",
-  fontWeight: "600",
-  color: "#FFFFFF",
-  margin: "0 0 10px 0",
-};
-
-const includedItem = {
-  fontSize: "11px",
-  lineHeight: "1.6",
-  color: "#AAAAAA",
+const contactTitle: React.CSSProperties = {
+  color: "#1F1F1F",
+  fontSize: "14px",
+  fontWeight: 600,
   margin: "0 0 6px 0",
 };
 
-const onlineReportSection = {
-  textAlign: "center" as const,
-  marginBottom: "20px",
-};
-
-const onlineReportText = {
+const contactDesc: React.CSSProperties = {
+  color: "#4B5563",
   fontSize: "12px",
-  color: "#888888",
-  margin: "0",
+  lineHeight: "1.5",
+  margin: "0 0 12px 0",
 };
 
-const onlineReportLink = {
+const whatsappButton: React.CSSProperties = {
+  backgroundColor: "#25D366",
+  color: "#FFFFFF",
+  borderRadius: "9999px",
+  padding: "10px 22px",
+  fontSize: "13px",
+  fontWeight: 600,
+  textDecoration: "none",
+  display: "inline-block",
+};
+
+const footer: React.CSSProperties = {
+  textAlign: "center",
+  paddingTop: "16px",
+};
+
+const isotipoImg: React.CSSProperties = {
+  margin: "0 auto 10px auto",
+  display: "block",
+};
+
+const footerBrand: React.CSSProperties = {
+  color: "#1F1F1F",
+  fontSize: "12px",
+  fontWeight: 600,
+  margin: "0 0 2px 0",
+};
+
+const footerAddress: React.CSSProperties = {
+  color: "#6B7280",
+  fontSize: "11px",
+  margin: "0 0 8px 0",
+};
+
+const footerLinks: React.CSSProperties = {
+  color: "#9CA3AF",
+  fontSize: "11px",
+  margin: "0 0 16px 0",
+};
+
+const footerLink: React.CSSProperties = {
   color: "#FF8300",
   textDecoration: "none",
-  fontWeight: "500",
 };
 
-const divider = {
-  borderColor: "#222222",
-  margin: "24px 0 16px 0",
+const footerDivider: React.CSSProperties = {
+  borderColor: "#E5E7EB",
+  margin: "16px 0",
 };
 
-const footerSection = {
-  textAlign: "center" as const,
-};
-
-const footerText = {
-  fontSize: "11px",
-  color: "#888888",
-  margin: "0 0 4px 0",
-};
-
-const footerSub = {
+const footerUnsubscribe: React.CSSProperties = {
+  color: "#6B7280",
   fontSize: "10px",
-  color: "#666666",
-  margin: "0 0 4px 0",
+  lineHeight: "1.5",
+  margin: "0 auto 10px auto",
+  maxWidth: "480px",
 };
 
-const footerLegal = {
-  fontSize: "9px",
+const footerUnsubscribeLink: React.CSSProperties = {
+  color: "#4B5563",
+  textDecoration: "underline",
+};
+
+const footerLegal: React.CSSProperties = {
+  color: "#9CA3AF",
+  fontSize: "10px",
   lineHeight: "1.5",
-  color: "#444444",
-  marginTop: "12px",
-  marginBottom: "0",
+  margin: 0,
 };

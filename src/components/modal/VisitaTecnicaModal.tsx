@@ -171,6 +171,7 @@ export function VisitaTecnicaModal() {
 
   const [folio, setFolio] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   // Generate the next 10 business days for the interactive calendar
   const availableDates = useMemo(() => {
@@ -269,6 +270,7 @@ export function VisitaTecnicaModal() {
     }
 
     setLocationError(null);
+    setSubmitError(null);
     setIsSubmitting(true);
 
     const randomFolio = `SOL-VIS-${Math.floor(1000 + Math.random() * 9000)}`;
@@ -292,15 +294,20 @@ export function VisitaTecnicaModal() {
       const data = await res.json();
       if (res.ok && data.success) {
         setFolio(data.folio || randomFolio);
+        setStep(3);
       } else {
-        setFolio(randomFolio);
+        setSubmitError(
+          data.error ||
+            "No se pudo registrar la visita técnica. Por favor revisa los datos ingresados e intenta nuevamente."
+        );
       }
     } catch (err) {
-      console.warn("Error en despacho de visita técnica, usando folio local:", err);
-      setFolio(randomFolio);
+      console.warn("Error en despacho de visita técnica:", err);
+      setSubmitError(
+        "Ocurrió un error de conexión al enviar la solicitud. Por favor intenta nuevamente."
+      );
     } finally {
       setIsSubmitting(false);
-      setStep(3);
     }
   };
 
@@ -335,6 +342,7 @@ export function VisitaTecnicaModal() {
         notas: "",
       });
       setLocationError(null);
+      setSubmitError(null);
     }, 300);
   };
 
@@ -727,7 +735,7 @@ export function VisitaTecnicaModal() {
                   <div className="flex items-center justify-between mb-1.5">
                     <label className="text-xs font-light text-white/70 flex items-center gap-1.5">
                       <Home className="w-3.5 h-3.5 text-[#FF8300]" />
-                      Dirección / Sector o Condominio
+                      Dirección / Sector o Condominio *
                     </label>
 
                     {/* Botón Seleccionar ubicación en el mapa */}
@@ -953,6 +961,14 @@ export function VisitaTecnicaModal() {
                   </button>
                 </div>
               </div>
+
+              {/* Submit Error Banner */}
+              {submitError && (
+                <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30 flex items-start gap-2.5 text-xs text-rose-300">
+                  <AlertCircle className="w-4 h-4 text-rose-400 flex-shrink-0 mt-0.5" />
+                  <span>{submitError}</span>
+                </div>
+              )}
 
               {/* Action Buttons */}
               <div className="pt-4 border-t border-white/10 flex items-center justify-between gap-4">

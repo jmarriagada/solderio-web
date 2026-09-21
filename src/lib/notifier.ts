@@ -22,6 +22,13 @@ function formatCLP(val: number): string {
   }).format(val || 0);
 }
 
+function escapeHtml(str: string = ""): string {
+  return String(str || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
 /**
  * Envía un mensaje directo a Telegram usando Bot API con formato HTML.
  */
@@ -76,15 +83,22 @@ export async function notifyInternalQuoteLead(params: {
   const { leadId, formData, sizingResult, portalUrl } = params;
   const cleanPhone = cleanPhoneNumber(formData.whatsapp);
 
+  const safeName = escapeHtml(formData.fullName);
+  const safeComuna = escapeHtml(formData.comuna);
+  const safeRegion = escapeHtml(formData.region || "Sur de Chile");
+  const safeDistributor = escapeHtml((formData.distributor || "Saesa").toUpperCase());
+  const safePropertyType = escapeHtml(formData.propertyType || "Residencial");
+  const safeSystemType = escapeHtml(formData.systemType || "Híbrido");
+
   // 1. TELEGRAM
   const telegramHtml = `⚡ <b>NUEVO LEAD DE COTIZACIÓN SOLAR</b>
 ━━━━━━━━━━━━━━━━━━━━━
-👤 <b>Cliente:</b> ${formData.fullName}
+👤 <b>Cliente:</b> ${safeName}
 📱 <b>WhatsApp:</b> <a href="https://wa.me/${cleanPhone}">+${cleanPhone}</a>
 ✉️ <b>Email:</b> <a href="mailto:${formData.email}">${formData.email}</a>
-📍 <b>Ubicación:</b> ${formData.comuna}, ${formData.region || "Sur de Chile"}
-⚡ <b>Distribuidora:</b> ${(formData.distributor || "Saesa").toUpperCase()}
-🏡 <b>Tipo Inmueble:</b> ${formData.propertyType || "Residencial"} | Sistema: ${formData.systemType || "Híbrido"}
+📍 <b>Ubicación:</b> ${safeComuna}, ${safeRegion}
+⚡ <b>Distribuidora:</b> ${safeDistributor}
+🏡 <b>Tipo Inmueble:</b> ${safePropertyType} | Sistema: ${safeSystemType}
 
 ☀️ <b>POTENCIA SUGERIDA:</b> ${sizingResult.recommendedKwp} kWp (${sizingResult.panelsCount} Paneles 580W)
 🔋 <b>Batería LiFePO4:</b> ${sizingResult.batteryKwh > 0 ? `${sizingResult.batteryKwh} kWh` : "On-Grid Net Billing"}
@@ -92,7 +106,7 @@ export async function notifyInternalQuoteLead(params: {
 📈 <b>Ahorro Proyectado:</b> ${formatCLP(sizingResult.estimatedAnnualSavingsClp)}/año
 💡 <b>Gasto Mensual Actual:</b> ${formatCLP(formData.monthlyBillClp)}/mes
 
-🔗 <a href="${portalUrl}"><b>VER PROPUESTA DEL CLIENTE</b></a>
+🔗 <a href="${escapeHtml(portalUrl)}"><b>VER PROPUESTA DEL CLIENTE</b></a>
 🏷️ <b>Folio:</b> <code>${leadId}</code>`;
 
   const telegramRes = await sendTelegramMessage(telegramHtml).catch((e) => ({
@@ -277,21 +291,30 @@ export async function notifyInternalVisitaLead(params: {
       : encodeURIComponent(`${direccion}, ${comuna}, Chile`);
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${mapsQuery}`;
 
+  const safeNombre = escapeHtml(nombre);
+  const safeDireccion = escapeHtml(direccion || "Punto marcado en mapa");
+  const safeComuna = escapeHtml(comuna);
+  const safeRegion = escapeHtml(region);
+  const safeTipoPropiedad = escapeHtml(tipoPropiedad || "Residencial");
+  const safeMontoBoleta = escapeHtml(montoBoleta || "No especificado");
+  const safeNotas = escapeHtml(notas || "Ninguna");
+  const safeMapsUrl = escapeHtml(mapsUrl);
+
   // 1. TELEGRAM
   const telegramHtml = `📅 <b>NUEVA VISITA TÉCNICA AGENDADA</b>
 ━━━━━━━━━━━━━━━━━━━━━
-👤 <b>Cliente:</b> ${nombre}
+👤 <b>Cliente:</b> ${safeNombre}
 📱 <b>WhatsApp:</b> <a href="https://wa.me/${cleanPhone}">+${cleanPhone}</a>
 ✉️ <b>Email:</b> <a href="mailto:${email}">${email}</a>
 
 🗓️ <b>Fecha:</b> ${fechaSeleccionada}
 ⏰ <b>Horario:</b> ${bloqueTexto}
-📍 <b>Dirección:</b> ${direccion || "Punto marcado en mapa"} (${comuna}, ${region})
-🗺️ <a href="${mapsUrl}"><b>Abrir en Google Maps</b></a>
+📍 <b>Dirección:</b> ${safeDireccion} (${safeComuna}, ${safeRegion})
+🗺️ <a href="${safeMapsUrl}"><b>Abrir en Google Maps</b></a>
 
-🏡 <b>Tipo Inmueble:</b> ${tipoPropiedad || "Residencial"}
-💡 <b>Rango Boleta:</b> ${montoBoleta || "No especificado"}
-📝 <b>Notas:</b> ${notas || "Ninguna"}
+🏡 <b>Tipo Inmueble:</b> ${safeTipoPropiedad}
+💡 <b>Rango Boleta:</b> ${safeMontoBoleta}
+📝 <b>Notas:</b> ${safeNotas}
 
 🏷️ <b>Folio Cita:</b> <code>${folio}</code>`;
 

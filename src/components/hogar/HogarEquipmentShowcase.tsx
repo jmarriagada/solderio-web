@@ -1,14 +1,16 @@
 "use client";
 
-import { Zap, Cpu, Battery } from "lucide-react";
+import { Zap, Cpu, Battery, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { CtaButton } from "@/components/ui/cta-button";
 import { useVisitaModal } from "@/context/VisitaModalContext";
+import { OptimizerModal } from "./OptimizerModal";
 
 export function HogarEquipmentShowcase() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const { openModal } = useVisitaModal();
+  const [isOptimizerModalOpen, setIsOptimizerModalOpen] = useState(false);
 
   const scroll = (direction: "left" | "right") => {
     if (scrollRef.current) {
@@ -23,11 +25,12 @@ export function HogarEquipmentShowcase() {
   const equipments = [
     {
       icon: Cpu,
-      title: "Controlador de módulos",
+      title: "Optimizador de panel",
       tagline: "Optimización Inteligente",
       description:
         "Libera el máximo potencial de cada panel, de forma inteligente y segura. Se usa en paneles con sombreamientos parciales.",
       caption: "Máximo rendimiento individual por string",
+      hasModal: true,
     },
     {
       icon: Zap,
@@ -99,9 +102,20 @@ export function HogarEquipmentShowcase() {
                       {item.title}
                     </h3>
 
-                    <p className="text-brand-muted text-sm md:text-base leading-relaxed font-light mb-8">
+                    <p className="text-brand-muted text-sm md:text-base leading-relaxed font-light mb-6">
                       {item.description}
                     </p>
+
+                    {item.hasModal && (
+                      <button
+                        type="button"
+                        onClick={() => setIsOptimizerModalOpen(true)}
+                        className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#FF8300]/10 hover:bg-[#FF8300] text-[#FF8300] hover:text-white text-xs font-medium transition-all duration-200 cursor-pointer mb-6 group/btn w-fit shadow-xs"
+                      >
+                        <span>Saber más</span>
+                        <ChevronRight className="w-3.5 h-3.5 transition-transform group-hover/btn:translate-x-0.5" />
+                      </button>
+                    )}
                   </div>
 
                   <div className="pt-4 border-t border-black/5 flex items-center justify-between">
@@ -125,6 +139,12 @@ export function HogarEquipmentShowcase() {
           </CtaButton>
         </div>
       </div>
+
+      {/* Visual Modal for Optimizer Explanation */}
+      <OptimizerModal
+        isOpen={isOptimizerModalOpen}
+        onClose={() => setIsOptimizerModalOpen(false)}
+      />
     </section>
   );
 }

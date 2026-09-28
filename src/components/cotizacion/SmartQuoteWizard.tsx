@@ -28,12 +28,14 @@ import {
   Sliders,
   Hash,
   Check,
-  BatteryCharging
+  BatteryCharging,
+  ChevronRight
 } from "lucide-react";
 import { QuoteFormData, SolarSizingResult, PropertyType, TopologyType, DistributorType, ConsumptionInputMode } from "@/types/cotizacion";
 import { calculateSolarSizing } from "@/lib/solar-calculator";
 import { SOUTHERN_REGIONS_AND_COMUNAS } from "@/lib/solar/meteorology-tmy";
 import { QuoteReportView } from "./QuoteReportView";
+import { PlantTypeModal, PlantModalType } from "./PlantTypeModal";
 
 const DEFAULT_REGION = "Región de Los Lagos";
 
@@ -171,6 +173,7 @@ export function SmartQuoteWizard() {
     sizing: SolarSizingResult;
     leadId: string;
   } | null>(null);
+  const [activePlantModal, setActivePlantModal] = useState<PlantModalType | null>(null);
 
   const [formData, setFormData] = useState<QuoteFormData>({
     propertyType: initialParams.propertyType || "residencial",
@@ -247,20 +250,20 @@ export function SmartQuoteWizard() {
     {
       id: "hibrida",
       title: "Planta Solar Híbrida",
-      tag: "Con respaldo",
-      desc: "Genera, autoconsume, respalda ante cortes (<10ms) y vende excedentes (Ley 21.118).",
+      tag: "Generación + Respaldo",
+      desc: "Genera energía solar, Autoconsume, Integra baterías para respaldo, Vende la energía sobrante a la red.",
     },
     {
       id: "ongrid",
       title: "Planta Solar On-Grid",
-      tag: "Ahorro + Retorno Acelerado",
-      desc: "Autoconsumo directo y venta de excedentes a la distribuidora. Sin baterías.",
+      tag: "La más económica",
+      desc: "Genera energía solar, Autoconsume, Vende la energía sobrante a la red. (Sin baterías)",
     },
     {
       id: "offgrid",
       title: "Planta Solar Off-Grid",
-      tag: "100% Autónoma",
-      desc: "Autonomía total para parcelas sin conexión a la red eléctrica de distribución.",
+      tag: "100% de Autonomía",
+      desc: "Autonomía Total: Genera energía solar, Autoconsume, Integra baterías para uso nocturno, Conecta un generador de respaldo.",
     },
   ];
 
@@ -888,7 +891,7 @@ export function SmartQuoteWizard() {
                   Objetivos de tu Proyecto Solar
                 </h2>
                 <p className="text-white/60 text-xs md:text-sm font-light">
-                  Configura si requieres almacenamiento en baterías LiFePO4 para continuidad ante cortes.
+                  Elige el tipo de planta solar que quieres cotizar. Presiona el botón Saber más para ver mas detalles de cada tipo de planta
                 </p>
               </div>
 
@@ -897,17 +900,24 @@ export function SmartQuoteWizard() {
                 {systems.map((sys) => {
                   const isSelected = formData.systemType === sys.id;
                   return (
-                    <button
+                    <div
                       key={sys.id}
-                      type="button"
+                      role="button"
+                      tabIndex={0}
                       onClick={() => setFormData({ ...formData, systemType: sys.id })}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          setFormData({ ...formData, systemType: sys.id });
+                        }
+                      }}
                       className={`w-full p-4 sm:p-6 rounded-2xl border text-left transition-all duration-300 cursor-pointer flex items-start justify-between gap-3.5 sm:gap-4 ${
                         isSelected
                           ? "bg-white text-black border-white shadow-xl scale-[1.01]"
                           : "bg-black/30 border-white/10 text-white hover:bg-black/50"
                       }`}
                     >
-                      <div>
+                      <div className="flex-1 pr-2">
                         <div className="flex flex-wrap items-center gap-2 mb-1.5">
                           <h3 className="text-base sm:text-lg font-medium leading-snug">{sys.title}</h3>
                           <span
@@ -920,19 +930,38 @@ export function SmartQuoteWizard() {
                             {sys.tag}
                           </span>
                         </div>
-                        <p className={`text-xs md:text-sm font-light ${isSelected ? "text-black/70" : "text-white/60"}`}>
+                        <p className={`text-xs md:text-sm font-light leading-relaxed ${isSelected ? "text-black/70" : "text-white/60"}`}>
                           {sys.desc}
                         </p>
                       </div>
 
-                      <div
-                        className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full border flex items-center justify-center flex-shrink-0 mt-1 ${
-                          isSelected ? "border-[#FF8300] bg-[#FF8300] text-white" : "border-white/30"
-                        }`}
-                      >
-                        {isSelected && <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
+                      <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0 mt-0.5">
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setActivePlantModal(sys.id as PlantModalType);
+                          }}
+                          className={`text-[11px] sm:text-xs font-normal px-2.5 py-1 rounded-full border transition-all cursor-pointer flex items-center gap-1 shadow-xs ${
+                            isSelected
+                              ? "border-black/15 bg-black/[0.04] text-black/75 hover:text-black hover:border-black/30 hover:bg-black/[0.08]"
+                              : "border-white/15 bg-white/[0.04] text-white/70 hover:text-[#FF8300] hover:border-[#FF8300]/40 hover:bg-white/[0.08]"
+                          }`}
+                          title={`Ver detalles de ${sys.title}`}
+                        >
+                          <span>Saber más</span>
+                          <ChevronRight className="w-3 h-3 opacity-70" />
+                        </button>
+
+                        <div
+                          className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full border flex items-center justify-center flex-shrink-0 ${
+                            isSelected ? "border-[#FF8300] bg-[#FF8300] text-white" : "border-white/30"
+                          }`}
+                        >
+                          {isSelected && <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
+                        </div>
                       </div>
-                    </button>
+                    </div>
                   );
                 })}
               </div>
@@ -1290,6 +1319,15 @@ export function SmartQuoteWizard() {
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* Modal Explicativo de Tipos de Planta Solar */}
+        <PlantTypeModal
+          type={activePlantModal}
+          onClose={() => setActivePlantModal(null)}
+          onSelect={(selectedType) => {
+            setFormData((prev) => ({ ...prev, systemType: selectedType }));
+          }}
+        />
 
       </div>
     </div>

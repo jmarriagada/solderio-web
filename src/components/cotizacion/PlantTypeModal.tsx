@@ -297,7 +297,7 @@ export function PlantTypeModal({ type, onClose, onSelect }: PlantTypeModalProps)
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 15 }}
           transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full max-w-2xl bg-[#18191B] border border-white/10 rounded-[28px] p-5 sm:p-7 md:p-8 text-white relative shadow-2xl my-auto max-h-[92vh] overflow-y-auto"
+          className="w-full max-w-3xl bg-[#18191B] border border-white/10 rounded-[28px] p-5 sm:p-7 md:p-8 text-white relative shadow-2xl my-auto max-h-[92vh] overflow-y-auto"
         >
           {/* Close Button */}
           <button
@@ -350,7 +350,7 @@ export function PlantTypeModal({ type, onClose, onSelect }: PlantTypeModalProps)
           </div>
 
           {/* Visual Graphic Flow (Brand-Consistent Diagram) */}
-          <div className="bg-[#0C0E12] border border-white/10 rounded-2xl p-4 sm:p-5 mb-5 sm:mb-6">
+          <div className="bg-[#0C0E12] border border-white/10 rounded-2xl p-4 sm:p-5 mb-5 sm:mb-6 overflow-hidden">
             <div className="text-center mb-3">
               <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-wider text-zinc-400 font-medium">
                 Flujo de energía en tu hogar
@@ -359,34 +359,36 @@ export function PlantTypeModal({ type, onClose, onSelect }: PlantTypeModalProps)
             </div>
 
             {/* Horizontal Flow Steps */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 md:flex md:items-center md:justify-between gap-2.5 sm:gap-3 pt-2">
-              {data.flowSteps.map((step, idx) => {
-                const Icon = step.icon;
-                return (
-                  <React.Fragment key={idx}>
-                    <div className="bg-[#14161B] border border-white/10 rounded-xl p-2.5 sm:p-3 text-center flex-1 flex flex-col items-center justify-center min-w-[90px] shadow-sm">
-                      <div
-                        className="w-8 h-8 rounded-lg flex items-center justify-center mb-1.5"
-                        style={{ backgroundColor: `${step.color}15` }}
-                      >
-                        <Icon className="w-4 h-4" style={{ color: step.color }} />
+            <div className="overflow-x-auto scrollbar-none pb-1 pt-1">
+              <div className="flex items-stretch justify-between gap-1 sm:gap-1.5 md:gap-2 min-w-[520px] md:min-w-0 w-full">
+                {data.flowSteps.map((step, idx) => {
+                  const Icon = step.icon;
+                  return (
+                    <React.Fragment key={idx}>
+                      <div className="bg-[#14161B] border border-white/10 rounded-xl p-2 sm:p-2.5 text-center flex-1 flex flex-col items-center justify-start shadow-sm min-w-0">
+                        <div
+                          className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center mb-1.5 flex-shrink-0"
+                          style={{ backgroundColor: `${step.color}15` }}
+                        >
+                          <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" style={{ color: step.color }} />
+                        </div>
+                        <span className="text-[11px] sm:text-xs font-medium text-white leading-tight block mb-0.5 break-words">
+                          {step.label}
+                        </span>
+                        <span className="text-[9px] sm:text-[10px] text-zinc-400 font-light leading-tight break-words">
+                          {step.sublabel}
+                        </span>
                       </div>
-                      <span className="text-xs font-medium text-white leading-tight block mb-0.5">
-                        {step.label}
-                      </span>
-                      <span className="text-[10px] text-zinc-400 font-light leading-tight">
-                        {step.sublabel}
-                      </span>
-                    </div>
 
-                    {idx < data.flowSteps.length - 1 && (
-                      <div className="hidden md:flex items-center justify-center text-white/30 flex-shrink-0">
-                        <ArrowRight className="w-3.5 h-3.5 text-zinc-600" />
-                      </div>
-                    )}
-                  </React.Fragment>
-                );
-              })}
+                      {idx < data.flowSteps.length - 1 && (
+                        <div className="flex items-center justify-center text-white/30 flex-shrink-0 px-0.5">
+                          <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-zinc-600" />
+                        </div>
+                      )}
+                    </React.Fragment>
+                  );
+                })}
+              </div>
             </div>
           </div>
 

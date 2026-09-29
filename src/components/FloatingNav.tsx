@@ -5,10 +5,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { NAV_LINKS, DESCUBRE_MENU } from "@/lib/constants";
-import { ArrowRight, Zap, ChevronDown, Menu, X } from "lucide-react";
+import { ArrowRight, ChevronDown, Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useVisitaModal } from "@/context/VisitaModalContext";
-import { LocationBadge } from "@/components/LocationBadge";
 
 export function FloatingNav() {
   const pathname = usePathname();

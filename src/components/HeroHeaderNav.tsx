@@ -1,14 +1,12 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Sun, Zap, User, ArrowRight, Menu, X, ChevronDown } from "lucide-react";
+import { ArrowRight, Menu, X, ChevronDown } from "lucide-react";
 import { NAV_LINKS, DESCUBRE_MENU } from "@/lib/constants";
 import { motion, AnimatePresence } from "framer-motion";
 import { useVisitaModal } from "@/context/VisitaModalContext";
-
-import { LocationBadge } from "@/components/LocationBadge";
 
 interface HeroHeaderNavProps {
   activePage?: "Inicio" | "Hogar" | "Empresas" | "Carga EV" | "Descubre";
@@ -21,70 +19,8 @@ export function HeroHeaderNav({
 }: HeroHeaderNavProps) {
   const [isDescubreOpen, setIsDescubreOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [userLocation, setUserLocation] = useState<string | null>(locationText || null);
   const { openModal } = useVisitaModal();
   const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  useEffect(() => {
-    // If locationText was provided explicitly as non-empty, use it
-    if (locationText) {
-      setUserLocation(locationText);
-      return;
-    }
-
-    let isMounted = true;
-
-    // Check cached location in sessionStorage
-    try {
-      const cached = sessionStorage.getItem("solderio_user_geo");
-      if (cached) {
-        setUserLocation(cached);
-        return;
-      }
-    } catch {}
-
-    const detectLocation = async () => {
-      try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 2500);
-
-        const res = await fetch("https://ipwho.is/", {
-          signal: controller.signal,
-        });
-        clearTimeout(timeoutId);
-
-        if (res.ok) {
-          const data = await res.json();
-          if (data.success && isMounted) {
-            const locParts: string[] = [];
-            if (data.city) locParts.push(data.city);
-            if (data.region) locParts.push(data.region);
-
-            const formatted = locParts.join(", ");
-            if (formatted) {
-              setUserLocation(formatted);
-              try {
-                sessionStorage.setItem("solderio_user_geo", formatted);
-              } catch {}
-              return;
-            }
-          }
-        }
-      } catch {
-        // Silently catch if ad-blocked or offline
-      }
-
-      if (isMounted && !locationText) {
-        setUserLocation(null);
-      }
-    };
-
-    detectLocation();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [locationText]);
 
   const handleMouseEnter = () => {
     if (closeTimeoutRef.current) {
@@ -173,21 +109,16 @@ export function HeroHeaderNav({
           })}
         </nav>
 
-        {/* Right: Icons, Location & Mobile Burger Button */}
-        <div className="flex items-center gap-2.5 md:gap-4 text-white/90">
-          <button className="p-1.5 hover:text-[#FF8300] transition-colors rounded-full hover:bg-white/10 cursor-pointer hidden sm:block" title="Modo">
-            <Sun className="w-4 h-4 stroke-[1.5]" />
-          </button>
-          <button className="p-1.5 hover:text-[#FF8300] transition-colors rounded-full hover:bg-white/10 cursor-pointer hidden sm:block" title="Energía">
-            <Zap className="w-4 h-4 stroke-[1.5]" />
-          </button>
-          <button className="p-1.5 hover:text-[#FF8300] transition-colors rounded-full hover:bg-white/10 cursor-pointer hidden sm:block" title="Usuario">
-            <User className="w-4 h-4 stroke-[1.5]" />
-          </button>
-          {/* Location badge strictly hidden on mobile (< md) */}
-          <div className="hidden md:inline-block">
-            <LocationBadge />
-          </div>
+        {/* Right: Cotizador Solar CTA & Mobile Burger Button */}
+        <div className="flex items-center gap-2 sm:gap-3">
+          <Link
+            href="/cotizacion"
+            className="flex items-center gap-1.5 text-xs sm:text-[13px] font-medium bg-[#FF8300] text-white px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-full hover:bg-[#e07400] transition-all shadow-sm hover:shadow-[0_0_15px_rgba(255,131,0,0.4)] cursor-pointer whitespace-nowrap"
+          >
+            <span className="hidden sm:inline">Cotizador Solar</span>
+            <span className="sm:hidden">Cotizar</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
 
           {/* Mobile Burger Button (Visible only on screens < md) */}
           <button
@@ -387,17 +318,24 @@ export function HeroHeaderNav({
                 );
               })}
 
-              <div className="pt-3 flex flex-col gap-3">
+              <div className="pt-3 flex flex-col gap-2.5">
+                <Link
+                  href="/cotizacion"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="w-full py-3.5 rounded-full bg-[#FF8300] text-white text-sm font-medium hover:bg-[#e07400] transition-all flex items-center justify-center gap-2 shadow-lg cursor-pointer"
+                >
+                  <span>Cotizador Solar</span>
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
                 <button
                   type="button"
                   onClick={() => {
                     setIsMobileMenuOpen(false);
                     openModal();
                   }}
-                  className="w-full py-3.5 rounded-full bg-[#FF8300] text-white text-sm font-light hover:bg-[#e07400] transition-all flex items-center justify-center gap-2 shadow-lg cursor-pointer"
+                  className="w-full py-3 rounded-full bg-white/10 border border-white/20 text-white text-sm font-light hover:bg-white/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <span className="font-light">Solicitar Pre-Evaluación</span>
-                  <ArrowRight className="w-4 h-4" />
                 </button>
               </div>
             </div>

@@ -25,13 +25,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { useVisitaModal } from "@/context/VisitaModalContext";
-import dynamic from "next/dynamic";
 
-// Dynamic import of MapLocationPicker to avoid SSR issues
-const MapLocationPicker = dynamic(
-  () => import("./MapLocationPicker").then((mod) => mod.MapLocationPicker),
-  { ssr: false }
-);
 
 // Regiones y Comunas del Sur de Chile cubiertas por SoldeRío
 const REGIONES_DATA: Record<string, string[]> = {
@@ -122,7 +116,6 @@ export function VisitaTecnicaModal() {
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [showCloseConfirm, setShowCloseConfirm] = useState(false);
   const [showCancelVisitModal, setShowCancelVisitModal] = useState(false);
-  const [showMapPicker, setShowMapPicker] = useState(false);
   const [showCalendarMenu, setShowCalendarMenu] = useState(false);
   const [locationError, setLocationError] = useState<string | null>(null);
 
@@ -231,41 +224,12 @@ export function VisitaTecnicaModal() {
     }));
   };
 
-  const handleMapConfirm = (coords: {
-    lat: number;
-    lng: number;
-    formatted: string;
-  }) => {
-    setFormData((prev) => ({
-      ...prev,
-      latitud: coords.lat,
-      longitud: coords.lng,
-      coordenadasTexto: coords.formatted,
-    }));
-    setLocationError(null);
-    setShowMapPicker(false);
-  };
-
-  const handleClearCoordinates = () => {
-    setFormData((prev) => ({
-      ...prev,
-      latitud: null,
-      longitud: null,
-      coordenadasTexto: "",
-    }));
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validar que exista al menos dirección ingresada o punto marcado en el mapa
-    const hasAddress = formData.direccion.trim().length > 0;
-    const hasCoords = formData.latitud !== null && formData.longitud !== null;
-
-    if (!hasAddress && !hasCoords) {
-      setLocationError(
-        "Por favor ingresa tu dirección o selecciona tu ubicación en el mapa."
-      );
+    // Validar que se haya ingresado la dirección
+    if (!formData.direccion || formData.direccion.trim().length === 0) {
+      setLocationError("Por favor ingresa tu dirección o sector.");
       return;
     }
 
@@ -730,75 +694,26 @@ export function VisitaTecnicaModal() {
                   </select>
                 </div>
 
-                {/* Dirección y Botón de Mapa */}
+                {/* Dirección o Sector */}
                 <div className="sm:col-span-2">
-                  <div className="flex items-center justify-between mb-1.5">
-                    <label className="text-xs font-light text-white/70 flex items-center gap-1.5">
-                      <Home className="w-3.5 h-3.5 text-[#FF8300]" />
-                      Dirección / Sector o Condominio *
-                    </label>
-
-                    {/* Botón Seleccionar ubicación en el mapa */}
-                    <button
-                      type="button"
-                      onClick={() => setShowMapPicker(true)}
-                      className="text-xs text-[#FF8300] hover:text-[#ff9d33] font-medium flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#FF8300]/10 border border-[#FF8300]/30 hover:bg-[#FF8300]/20 transition-all cursor-pointer"
-                    >
-                      <MapPin className="w-3.5 h-3.5" />
-                      <span>
-                        {formData.latitud !== null
-                          ? "Modificar punto en mapa"
-                          : "Seleccionar ubicación en el mapa"}
-                      </span>
-                    </button>
-                  </div>
+                  <label className="text-xs font-light text-white/70 block mb-1.5 flex items-center gap-1.5">
+                    <Home className="w-3.5 h-3.5 text-[#FF8300]" />
+                    Dirección / Sector o Condominio *
+                  </label>
 
                   <input
                     type="text"
                     name="direccion"
+                    required
                     value={formData.direccion}
                     onChange={handleInputChange}
-                    placeholder="Ej. Parcela 14, Camino a Ensenada Km 12 (o marca el punto en el mapa)"
+                    placeholder="Ej. Parcela 14, Camino a Ensenada Km 12 (o Calle Los Alerces 450)"
                     className={`w-full px-4 py-2.5 rounded-xl border bg-black/40 text-xs text-white placeholder:text-white/30 focus:outline-none transition-colors ${
                       locationError
                         ? "border-rose-500/70 focus:border-rose-500"
                         : "border-white/15 focus:border-[#FF8300]"
                     }`}
                   />
-
-                  {/* Badge de coordenadas seleccionadas en el mapa */}
-                  {formData.coordenadasTexto && (
-                    <div className="mt-2 p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-between text-xs text-emerald-400">
-                      <div className="flex items-center gap-2">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-                        <div>
-                          <span className="font-medium text-white block text-[11px]">
-                            Ubicación fijada en el mapa:
-                          </span>
-                          <span className="font-mono text-[11px] text-emerald-300">
-                            {formData.coordenadasTexto}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <button
-                          type="button"
-                          onClick={() => setShowMapPicker(true)}
-                          className="px-2 py-1 rounded bg-emerald-500/20 hover:bg-emerald-500/30 text-[10px] text-emerald-300 transition-colors cursor-pointer"
-                        >
-                          Ver
-                        </button>
-                        <button
-                          type="button"
-                          onClick={handleClearCoordinates}
-                          className="p-1 rounded hover:bg-rose-500/20 text-white/50 hover:text-rose-400 transition-colors cursor-pointer"
-                          title="Quitar ubicación fijada"
-                        >
-                          <X className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
-                    </div>
-                  )}
 
                   {/* Mensaje de error de validación de ubicación */}
                   {locationError && (
@@ -1272,16 +1187,7 @@ export function VisitaTecnicaModal() {
         )}
       </AnimatePresence>
 
-      {/* Map Location Picker Modal */}
-      <MapLocationPicker
-        isOpen={showMapPicker}
-        onClose={() => setShowMapPicker(false)}
-        onConfirm={handleMapConfirm}
-        initialComuna={formData.comuna}
-        initialRegion={formData.region}
-        initialLat={formData.latitud}
-        initialLng={formData.longitud}
-      />
+
     </div>
   );
 }

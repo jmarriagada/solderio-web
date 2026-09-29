@@ -126,11 +126,9 @@ export async function POST(request: Request) {
     }
 
     const hasAddress = body.direccion && body.direccion.trim().length > 0;
-    const hasCoords = body.latitud !== undefined && body.latitud !== null && body.longitud !== undefined && body.longitud !== null;
-
-    if (!hasAddress && !hasCoords) {
+    if (!hasAddress) {
       return NextResponse.json(
-        { error: "Dirección o punto en mapa es requerido para la visita." },
+        { error: "La dirección o sector es requerida para agendar la visita técnica." },
         { status: 400 }
       );
     }

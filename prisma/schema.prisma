@@ -1,13 +1,11 @@
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["postgresqlExtensions"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider   = "postgresql"
-  url        = env("DATABASE_URL")
-  directUrl  = env("DIRECT_URL")
-  extensions = [postgis]
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 enum Role {
@@ -108,7 +106,6 @@ model ProjectLocation {
   latitude    Decimal  @db.Decimal(10, 8)
   longitude   Decimal  @db.Decimal(11, 8)
   altitudeM   Decimal? @db.Decimal(8, 2)
-  geom        Unsupported("geometry(Point, 4326)")?
 
   project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
 }

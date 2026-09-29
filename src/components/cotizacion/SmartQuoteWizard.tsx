@@ -1357,7 +1357,7 @@ export function SmartQuoteWizard() {
           className="w-full py-3.5 px-6 rounded-full bg-transparent hover:bg-[#25D366]/10 text-white border border-[#25D366] text-xs sm:text-sm font-light tracking-wide transition-all shadow-[0_0_12px_rgba(37,211,102,0.12)] hover:shadow-[0_0_20px_rgba(37,211,102,0.3)] flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98]"
         >
           <WhatsAppIcon className="w-4 h-4 text-[#25D366] flex-shrink-0" />
-          <span className="font-light">Cotización Asistida</span>
+          <span className="font-light">Realizar Cotización Asistida</span>
         </a>
       </div>
     </div>

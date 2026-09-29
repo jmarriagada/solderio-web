@@ -140,7 +140,7 @@ export function FloatingNav() {
                   className="hidden md:flex items-center gap-1.5 text-xs sm:text-[13px] font-light tracking-wide bg-transparent hover:bg-[#25D366]/10 text-white px-3.5 sm:px-4 py-2 rounded-full border border-[#25D366] transition-all shadow-[0_0_12px_rgba(37,211,102,0.12)] hover:shadow-[0_0_15px_rgba(37,211,102,0.3)] whitespace-nowrap cursor-pointer"
                 >
                   <WhatsAppIcon className="w-3.5 h-3.5 text-[#25D366] flex-shrink-0" />
-                  <span>Cotización Asistida</span>
+                  <span>Realizar Cotización Asistida</span>
                 </a>
               ) : (
                 <Link
@@ -356,7 +356,7 @@ export function FloatingNav() {
                           className="w-full py-3 rounded-full bg-transparent hover:bg-[#25D366]/10 text-white border border-[#25D366] text-sm font-light tracking-wide transition-all flex items-center justify-center gap-2 shadow-md cursor-pointer"
                         >
                           <WhatsAppIcon className="w-4 h-4 text-[#25D366] flex-shrink-0" />
-                          <span className="font-light">Cotización Asistida</span>
+                          <span className="font-light">Realizar Cotización Asistida</span>
                         </a>
                       ) : (
                         <Link

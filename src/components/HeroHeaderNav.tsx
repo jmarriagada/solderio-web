@@ -155,7 +155,7 @@ export function HeroHeaderNav({
                 className="relative overflow-hidden flex items-center gap-1.5 sm:gap-2 text-xs sm:text-[13px] font-light tracking-wide bg-transparent hover:bg-[#25D366]/10 text-white px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-full border border-[#25D366] shadow-[0_0_12px_rgba(37,211,102,0.12)] hover:shadow-[0_0_20px_rgba(37,211,102,0.3)] transition-all duration-300 cursor-pointer whitespace-nowrap active:scale-[0.98]"
               >
                 <WhatsAppIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#25D366] relative z-10 flex-shrink-0" />
-                <span className="relative z-10 font-light text-white">Cotización Asistida</span>
+                <span className="relative z-10 font-light text-white">Realizar Cotización Asistida</span>
               </a>
             </div>
           ) : (
@@ -438,7 +438,7 @@ export function HeroHeaderNav({
                     className="w-full py-3.5 rounded-full bg-transparent hover:bg-[#25D366]/10 text-white border border-[#25D366] text-sm font-light tracking-wide transition-all flex items-center justify-center gap-2 shadow-md cursor-pointer"
                   >
                     <WhatsAppIcon className="w-4 h-4 text-[#25D366] flex-shrink-0" />
-                    <span className="font-light">Cotización Asistida</span>
+                    <span className="font-light">Realizar Cotización Asistida</span>
                   </a>
                 ) : (
                   <Link

@@ -137,7 +137,7 @@ export function FloatingNav() {
                   href={WHATSAPP_COTIZACION_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 text-xs sm:text-[13px] font-light tracking-wide bg-transparent hover:bg-[#25D366]/10 text-white px-3.5 sm:px-4 py-2 rounded-full border border-[#25D366] transition-all shadow-[0_0_12px_rgba(37,211,102,0.12)] hover:shadow-[0_0_15px_rgba(37,211,102,0.3)] whitespace-nowrap cursor-pointer"
+                  className="hidden md:flex items-center gap-1.5 text-xs sm:text-[13px] font-light tracking-wide bg-transparent hover:bg-[#25D366]/10 text-white px-3.5 sm:px-4 py-2 rounded-full border border-[#25D366] transition-all shadow-[0_0_12px_rgba(37,211,102,0.12)] hover:shadow-[0_0_15px_rgba(37,211,102,0.3)] whitespace-nowrap cursor-pointer"
                 >
                   <WhatsAppIcon className="w-3.5 h-3.5 text-[#25D366] flex-shrink-0" />
                   <span>Cotización Asistida</span>

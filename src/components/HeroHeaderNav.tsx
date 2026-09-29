@@ -141,7 +141,7 @@ export function HeroHeaderNav({
         {/* Right: Cotizador Solar / Asistencia WhatsApp CTA & Mobile Burger Button */}
         <div className="flex items-center gap-2 sm:gap-3">
           {isCotizacionPage ? (
-            <div className="relative group flex items-center">
+            <div className="relative group hidden md:flex items-center">
               {/* Subtle WhatsApp Ambient Glow */}
               <div
                 className="absolute -inset-1 rounded-full bg-[#25D366]/15 blur-md pointer-events-none group-hover:opacity-90 group-hover:scale-105 transition-all duration-300"

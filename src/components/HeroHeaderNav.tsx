@@ -144,18 +144,18 @@ export function HeroHeaderNav({
             <div className="relative group flex items-center">
               {/* Subtle WhatsApp Ambient Glow */}
               <div
-                className="absolute -inset-1 rounded-full bg-[#25D366]/30 blur-md pointer-events-none group-hover:opacity-90 group-hover:scale-105 transition-all duration-300"
+                className="absolute -inset-1 rounded-full bg-[#25D366]/15 blur-md pointer-events-none group-hover:opacity-90 group-hover:scale-105 transition-all duration-300"
               />
 
-              {/* Cotización Asistida WhatsApp CTA - Satoshi Light, sin partículas */}
+              {/* Cotización Asistida WhatsApp CTA - Solo stroke verde, sin fondo */}
               <a
                 href={WHATSAPP_COTIZACION_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="relative overflow-hidden flex items-center gap-1.5 sm:gap-2 text-xs sm:text-[13px] font-light tracking-wide bg-[#25D366] hover:bg-[#20ba5a] text-white px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-full border border-white/20 shadow-sm hover:shadow-[0_0_20px_rgba(37,211,102,0.45)] transition-all duration-300 cursor-pointer whitespace-nowrap active:scale-[0.98]"
+                className="relative overflow-hidden flex items-center gap-1.5 sm:gap-2 text-xs sm:text-[13px] font-light tracking-wide bg-transparent hover:bg-[#25D366]/10 text-white px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-full border border-[#25D366] shadow-[0_0_12px_rgba(37,211,102,0.12)] hover:shadow-[0_0_20px_rgba(37,211,102,0.3)] transition-all duration-300 cursor-pointer whitespace-nowrap active:scale-[0.98]"
               >
-                <WhatsAppIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 relative z-10 flex-shrink-0" />
-                <span className="relative z-10 font-light">Cotización Asistida</span>
+                <WhatsAppIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#25D366] relative z-10 flex-shrink-0" />
+                <span className="relative z-10 font-light text-white">Cotización Asistida</span>
               </a>
             </div>
           ) : (
@@ -435,9 +435,9 @@ export function HeroHeaderNav({
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="w-full py-3.5 rounded-full bg-[#25D366] hover:bg-[#20ba5a] text-white text-sm font-light tracking-wide transition-all flex items-center justify-center gap-2 shadow-lg cursor-pointer"
+                    className="w-full py-3.5 rounded-full bg-transparent hover:bg-[#25D366]/10 text-white border border-[#25D366] text-sm font-light tracking-wide transition-all flex items-center justify-center gap-2 shadow-md cursor-pointer"
                   >
-                    <WhatsAppIcon className="w-4 h-4 flex-shrink-0" />
+                    <WhatsAppIcon className="w-4 h-4 text-[#25D366] flex-shrink-0" />
                     <span className="font-light">Cotización Asistida</span>
                   </a>
                 ) : (

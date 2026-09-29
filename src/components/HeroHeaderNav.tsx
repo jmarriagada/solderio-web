@@ -13,6 +13,15 @@ interface HeroHeaderNavProps {
   locationText?: string;
 }
 
+const SOLAR_PARTICLES = [
+  { id: 1, top: "-4px", left: "22%", size: 3.5, color: "#FBBF24", y: [0, -5, 0], x: [0, 2, 0], duration: 3.2, delay: 0 },
+  { id: 2, top: "2px", left: "-5px", size: 2.5, color: "#FF8300", y: [0, -4, 0], x: [0, -2, 0], duration: 3.8, delay: 0.7 },
+  { id: 3, top: "-3px", right: "26px", size: 3, color: "#FCD34D", y: [0, -4, 0], x: [0, 2, 0], duration: 3.5, delay: 1.2 },
+  { id: 4, bottom: "-4px", left: "35%", size: 2.5, color: "#FF921A", y: [0, 4, 0], x: [0, -2, 0], duration: 3.6, delay: 0.4 },
+  { id: 5, bottom: "-3px", right: "32px", size: 2, color: "#FFFBEB", y: [0, 3, 0], x: [0, 2, 0], duration: 4.0, delay: 1.6 },
+  { id: 6, top: "35%", right: "-6px", size: 2.5, color: "#F59E0B", y: [0, 3, 0], x: [0, 2, 0], duration: 3.3, delay: 0.9 },
+];
+
 export function HeroHeaderNav({
   activePage,
   locationText,
@@ -111,14 +120,75 @@ export function HeroHeaderNav({
 
         {/* Right: Cotizador Solar CTA & Mobile Burger Button */}
         <div className="flex items-center gap-2 sm:gap-3">
-          <Link
-            href="/cotizacion"
-            className="flex items-center gap-1.5 text-xs sm:text-[13px] font-medium bg-[#FF8300] text-white px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-full hover:bg-[#e07400] transition-all shadow-sm hover:shadow-[0_0_15px_rgba(255,131,0,0.4)] cursor-pointer whitespace-nowrap"
-          >
-            <span className="hidden sm:inline">Cotizador Solar</span>
-            <span className="sm:hidden">Cotizar</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
+          <div className="relative group flex items-center">
+            {/* Ambient Pulsing Solar Glow */}
+            <motion.div
+              animate={{
+                scale: [1, 1.06, 1],
+                opacity: [0.35, 0.65, 0.35],
+              }}
+              transition={{
+                duration: 3.2,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              className="absolute -inset-1 rounded-full bg-gradient-to-r from-[#FF8300]/40 via-amber-400/30 to-[#FF8300]/40 blur-md pointer-events-none group-hover:opacity-90 group-hover:scale-105 transition-all duration-500"
+            />
+
+            {/* Subtle Floating Solar Particles */}
+            <div className="hidden sm:block">
+              {SOLAR_PARTICLES.map((p) => (
+                <motion.span
+                  key={p.id}
+                  animate={{
+                    y: p.y,
+                    x: p.x,
+                    opacity: [0.25, 0.9, 0.25],
+                    scale: [0.75, 1.25, 0.75],
+                  }}
+                  transition={{
+                    duration: p.duration,
+                    repeat: Infinity,
+                    delay: p.delay,
+                    ease: "easeInOut",
+                  }}
+                  style={{
+                    top: p.top,
+                    bottom: p.bottom,
+                    left: p.left,
+                    right: p.right,
+                    width: `${p.size}px`,
+                    height: `${p.size}px`,
+                    backgroundColor: p.color,
+                    boxShadow: `0 0 ${p.size * 2}px ${p.color}, 0 0 ${p.size * 3.5}px rgba(255, 131, 0, 0.6)`,
+                  }}
+                  className="absolute rounded-full pointer-events-none z-10"
+                />
+              ))}
+            </div>
+
+            {/* Main CTA Button with Satoshi Light typography */}
+            <Link
+              href="/cotizacion"
+              className="relative overflow-hidden flex items-center gap-1.5 text-xs sm:text-[13px] font-light tracking-wide bg-gradient-to-r from-[#FF8300] via-[#FF8D10] to-[#FF8300] text-white px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-full border border-white/20 shadow-sm hover:shadow-[0_0_20px_rgba(255,131,0,0.5)] transition-all duration-300 cursor-pointer whitespace-nowrap active:scale-[0.98]"
+            >
+              {/* Subtle Shimmer Sweep passing across the button */}
+              <motion.div
+                animate={{ x: ["-130%", "230%"] }}
+                transition={{
+                  duration: 2.6,
+                  repeat: Infinity,
+                  repeatDelay: 3.2,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-[-20deg] pointer-events-none"
+              />
+
+              <span className="hidden sm:inline relative z-10 font-light">Cotizador Solar</span>
+              <span className="sm:hidden relative z-10 font-light">Cotizar</span>
+              <ArrowRight className="w-3.5 h-3.5 relative z-10 stroke-[1.25] transition-transform duration-300 group-hover:translate-x-0.5" />
+            </Link>
+          </div>
 
           {/* Mobile Burger Button (Visible only on screens < md) */}
           <button
@@ -322,10 +392,10 @@ export function HeroHeaderNav({
                 <Link
                   href="/cotizacion"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="w-full py-3.5 rounded-full bg-[#FF8300] text-white text-sm font-medium hover:bg-[#e07400] transition-all flex items-center justify-center gap-2 shadow-lg cursor-pointer"
+                  className="w-full py-3.5 rounded-full bg-[#FF8300] text-white text-sm font-light tracking-wide hover:bg-[#e07400] transition-all flex items-center justify-center gap-2 shadow-lg cursor-pointer"
                 >
-                  <span>Cotizador Solar</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <span className="font-light">Cotizador Solar</span>
+                  <ArrowRight className="w-4 h-4 stroke-[1.25]" />
                 </Link>
                 <button
                   type="button"

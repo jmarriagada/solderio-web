@@ -25,6 +25,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { useVisitaModal } from "@/context/VisitaModalContext";
+import { TurnstileWidget } from "@/components/security/TurnstileWidget";
 
 
 // Regiones y Comunas del Sur de Chile cubiertas por SoldeRío
@@ -167,6 +168,7 @@ export function VisitaTecnicaModal() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [honeypot, setHoneypot] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState("");
 
   // Generate the next 10 business days for the interactive calendar
   const availableDates = useMemo(() => {
@@ -248,6 +250,7 @@ export function VisitaTecnicaModal() {
       ...formData,
       folio: randomFolio,
       fechaIso: selectedDateObj?.fullIso || new Date().toISOString().split("T")[0],
+      turnstileToken,
       website_url: honeypot,
     };
 
@@ -932,6 +935,14 @@ export function VisitaTecnicaModal() {
                   y autorizo el tratamiento de mis datos de contacto y ubicación para coordinar la visita técnica in situ conforme a la Ley N° 19.628. *
                 </label>
               </div>
+
+              {/* Cloudflare Turnstile Anti-Bot Shield */}
+              <TurnstileWidget
+                theme="dark"
+                onSuccess={(token) => setTurnstileToken(token)}
+                onExpire={() => setTurnstileToken("")}
+                className="my-2"
+              />
 
               {/* Submit Error Banner */}
               {submitError && (

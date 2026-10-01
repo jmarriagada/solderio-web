@@ -36,6 +36,7 @@ import { calculateSolarSizing } from "@/lib/solar-calculator";
 import { SOUTHERN_REGIONS_AND_COMUNAS } from "@/lib/solar/meteorology-tmy";
 import { QuoteReportView } from "./QuoteReportView";
 import { PlantTypeModal, PlantModalType } from "./PlantTypeModal";
+import { TurnstileWidget } from "@/components/security/TurnstileWidget";
 
 const DEFAULT_REGION = "Región de Los Lagos";
 
@@ -187,6 +188,7 @@ export function SmartQuoteWizard() {
   const [confirmEmail, setConfirmEmail] = useState("");
   const [emailMismatch, setEmailMismatch] = useState(false);
   const [honeypot, setHoneypot] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState("");
   const [submissionResult, setSubmissionResult] = useState<{
     sizing: SolarSizingResult;
     leadId: string;
@@ -390,6 +392,7 @@ export function SmartQuoteWizard() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...formData,
+          turnstileToken,
           website_url: honeypot,
         }),
       });
@@ -1330,6 +1333,14 @@ export function SmartQuoteWizard() {
                     y autorizo a SoldeRío SpA a contactarme para presentar la propuesta técnica conforme a la Ley N° 19.628. *
                   </label>
                 </div>
+
+                {/* Cloudflare Turnstile Anti-Bot Shield */}
+                <TurnstileWidget
+                  theme="dark"
+                  onSuccess={(token) => setTurnstileToken(token)}
+                  onExpire={() => setTurnstileToken("")}
+                  className="my-3"
+                />
 
                 {/* Navigation Actions */}
                 <div className="pt-6 border-t border-white/10 flex flex-col-reverse sm:flex-row items-center justify-between gap-3">

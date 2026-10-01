@@ -3,6 +3,7 @@ import { trabajaFormSchema } from "@/lib/validation/schemas";
 import { getClientIp, checkRateLimit } from "@/lib/rate-limiter";
 import { validateAndNormalizeEmail } from "@/lib/email-validator";
 import { notifyInternalJobApplication } from "@/lib/notifier";
+import { verifyTurnstileToken } from "@/lib/turnstile";
 
 export async function POST(request: Request) {
   try {
@@ -37,6 +38,12 @@ export async function POST(request: Request) {
         success: true,
         message: "Postulación recibida exitosamente.",
       });
+    }
+
+    // 2.1 Verificación Anti-Bot de Cloudflare Turnstile
+    const turnstileCheck = await verifyTurnstileToken(validationResult.data.turnstileToken, clientIp);
+    if (!turnstileCheck.success) {
+      return NextResponse.json({ error: turnstileCheck.message }, { status: 403 });
     }
 
     const body = validationResult.data;

@@ -147,6 +147,9 @@ export const quoteFormSchema = z.object({
     .nullable()
     .optional(),
 
+  // Token de seguridad Cloudflare Turnstile
+  turnstileToken: z.string().optional(),
+
   // Campo Honeypot invisible para bots (debe venir vacío)
   website_url: z.string().optional(),
 });
@@ -254,6 +257,9 @@ export const visitaFormSchema = z.object({
     .optional()
     .default(true),
 
+  // Token de seguridad Cloudflare Turnstile
+  turnstileToken: z.string().optional(),
+
   // Campo Honeypot invisible para bots (debe venir vacío)
   website_url: z.string().optional(),
 });
@@ -330,6 +336,9 @@ export const trabajaFormSchema = z.object({
     .boolean()
     .optional()
     .default(true),
+
+  // Token de seguridad Cloudflare Turnstile
+  turnstileToken: z.string().optional(),
 
   // Campo Honeypot invisible para bots (debe venir vacío)
   website_url: z.string().optional(),

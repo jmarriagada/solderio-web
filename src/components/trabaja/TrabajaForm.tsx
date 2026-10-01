@@ -3,12 +3,14 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Upload, CheckCircle2, Send, AlertCircle, Loader2 } from "lucide-react";
+import { TurnstileWidget } from "@/components/security/TurnstileWidget";
 
 export function TrabajaForm() {
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [honeypot, setHoneypot] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState("");
   const [acceptTerms, setAcceptTerms] = useState(true);
   const [formData, setFormData] = useState({
     nombre: "",
@@ -78,6 +80,7 @@ export function TrabajaForm() {
           ...formData,
           cvFile: fileDetails,
           acceptTerms,
+          turnstileToken,
           website_url: honeypot,
         }),
       });
@@ -332,6 +335,14 @@ export function TrabajaForm() {
                     y autorizo el tratamiento confidencial de mis antecedentes curriculares para procesos de selección en SoldeRío SpA conforme a la Ley N° 19.628. *
                   </label>
                 </div>
+
+                {/* Cloudflare Turnstile Anti-Bot Shield */}
+                <TurnstileWidget
+                  theme="dark"
+                  onSuccess={(token) => setTurnstileToken(token)}
+                  onExpire={() => setTurnstileToken("")}
+                  className="my-2"
+                />
 
                 {submitError && (
                   <div

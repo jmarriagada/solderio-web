@@ -100,6 +100,7 @@ async function dispatchWebhookToN8n(visita: any): Promise<void> {
 
 import { visitaFormSchema } from "@/lib/validation/schemas";
 import { getClientIp, checkRateLimit } from "@/lib/rate-limiter";
+import { verifyTurnstileToken } from "@/lib/turnstile";
 
 export async function POST(request: Request) {
   try {
@@ -135,6 +136,12 @@ export async function POST(request: Request) {
         folio: `SOL-VIS-0000`,
         message: "Visita técnica registrada exitosamente.",
       });
+    }
+
+    // 2.1 Verificación Anti-Bot de Cloudflare Turnstile
+    const turnstileCheck = await verifyTurnstileToken(validationResult.data.turnstileToken, clientIp);
+    if (!turnstileCheck.success) {
+      return NextResponse.json({ error: turnstileCheck.message }, { status: 403 });
     }
 
     const body = validationResult.data;

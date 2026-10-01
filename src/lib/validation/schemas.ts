@@ -1,5 +1,11 @@
 import { z } from "zod";
-import { sanitizeString, sanitizeMultilineText, sanitizePhone, sanitizeRut } from "../sanitizer";
+import {
+  sanitizeString,
+  sanitizeMultilineText,
+  sanitizePhone,
+  sanitizeRut,
+  sanitizeFilename,
+} from "../sanitizer";
 
 /**
  * Esquema de validación y sanitización para el Cotizador Solar (/api/cotizacion)
@@ -133,7 +139,7 @@ export const quoteFormSchema = z.object({
 
   billFile: z
     .object({
-      name: z.string().transform((n) => sanitizeString(n, 120)),
+      name: z.string().transform((n) => sanitizeFilename(n, 120)),
       size: z.number().max(20 * 1024 * 1024, "Archivo excede 20MB"),
       type: z.string().transform((t) => sanitizeString(t, 50)),
       dataUrl: z.string().optional(),
@@ -243,6 +249,11 @@ export const visitaFormSchema = z.object({
     .optional()
     .transform((val) => (val ? sanitizeString(val, 50) : undefined)),
 
+  acceptTerms: z
+    .boolean()
+    .optional()
+    .default(true),
+
   // Campo Honeypot invisible para bots (debe venir vacío)
   website_url: z.string().optional(),
 });
@@ -294,13 +305,31 @@ export const trabajaFormSchema = z.object({
 
   cvFile: z
     .object({
-      name: z.string().transform((n) => sanitizeString(n, 120)),
+      name: z.string().transform((n) => sanitizeFilename(n, 120)),
       size: z.number().max(10 * 1024 * 1024, "El archivo excede el límite de 10 MB"),
-      type: z.string().transform((t) => sanitizeString(t, 50)),
+      type: z
+        .string()
+        .refine(
+          (t) =>
+            [
+              "application/pdf",
+              "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+              "application/msword",
+              "binary/octet-stream",
+              "application/octet-stream",
+            ].includes(t) || t === "",
+          "Tipo de archivo no permitido. Solo se aceptan PDF o Word (.docx, .doc)"
+        )
+        .transform((t) => sanitizeString(t, 50)),
       dataUrl: z.string().optional(),
     })
     .nullable()
     .optional(),
+
+  acceptTerms: z
+    .boolean()
+    .optional()
+    .default(true),
 
   // Campo Honeypot invisible para bots (debe venir vacío)
   website_url: z.string().optional(),

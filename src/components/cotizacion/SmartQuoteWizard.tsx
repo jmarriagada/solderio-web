@@ -1306,18 +1306,28 @@ export function SmartQuoteWizard() {
                   </div>
                 </div>
 
-                {/* Consent Checkbox */}
+                {/* Consent Checkbox Conforme Ley N° 19.628 */}
                 <div className="flex items-start gap-3 pt-2">
                   <input
                     type="checkbox"
                     id="terms"
                     required
+                    aria-required="true"
                     checked={formData.acceptTerms}
                     onChange={(e) => setFormData({ ...formData, acceptTerms: e.target.checked })}
                     className="w-4 h-4 mt-0.5 accent-[#FF8300] rounded cursor-pointer flex-shrink-0"
                   />
-                  <label htmlFor="terms" className="text-xs text-white/60 font-light cursor-pointer">
-                    Acepto las <a href="/politicas-de-privacidad" className="text-[#FF8300] underline" target="_blank">políticas de privacidad</a> y autorizo a SoldeRío a contactarme para presentar la propuesta técnica.
+                  <label htmlFor="terms" className="text-xs text-white/70 font-light cursor-pointer leading-relaxed">
+                    He leído y acepto las{" "}
+                    <a
+                      href="/politicas-de-privacidad"
+                      className="text-[#FF8300] underline hover:text-[#e07400] transition-colors"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      políticas de privacidad
+                    </a>{" "}
+                    y autorizo a SoldeRío SpA a contactarme para presentar la propuesta técnica conforme a la Ley N° 19.628. *
                   </label>
                 </div>
 

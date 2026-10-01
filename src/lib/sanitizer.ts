@@ -84,3 +84,17 @@ export function sanitizeRut(input: unknown): string {
   const clean = input.replace(/[^0-9kK.-]/g, "").trim();
   return clean.slice(0, 15);
 }
+
+/**
+ * Sanitiza nombres de archivos subidos para prevenir directory traversal (../, ..\, null bytes) y caracteres ilegales
+ */
+export function sanitizeFilename(input: unknown, maxLength: number = 100): string {
+  if (typeof input !== "string") return "archivo_adjunto";
+  
+  // Extrae solo el nombre base sin rutas relativas o absolutas
+  const base = input.replace(/^.*[\\\/]/, "");
+  // Remueve caracteres de control y peligrosos, manteniendo solo caracteres seguros para nombre de archivo
+  const clean = base.replace(/[^a-zA-Z0-9._\-]/g, "_").trim();
+  return clean.slice(0, maxLength) || "archivo_adjunto";
+}
+

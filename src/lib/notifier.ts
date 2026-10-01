@@ -523,11 +523,11 @@ ${safeMensaje}`;
       <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 14px;">
         <tr style="border-bottom: 1px solid #f3f4f6;">
           <td style="padding: 8px 0; color: #6b7280; width: 140px;">Nombre:</td>
-          <td style="padding: 8px 0; font-weight: 600; color: #1f1f1f;">${nombre}</td>
+          <td style="padding: 8px 0; font-weight: 600; color: #1f1f1f;">${safeNombre}</td>
         </tr>
         <tr style="border-bottom: 1px solid #f3f4f6;">
           <td style="padding: 8px 0; color: #6b7280;">Cargo:</td>
-          <td style="padding: 8px 0; font-weight: 700; color: #ff8300;">${cargo}</td>
+          <td style="padding: 8px 0; font-weight: 700; color: #ff8300;">${safeCargo}</td>
         </tr>
         <tr style="border-bottom: 1px solid #f3f4f6;">
           <td style="padding: 8px 0; color: #6b7280;">Teléfono / WhatsApp:</td>
@@ -543,23 +543,23 @@ ${safeMensaje}`;
         </tr>
         <tr style="border-bottom: 1px solid #f3f4f6;">
           <td style="padding: 8px 0; color: #6b7280;">Comuna:</td>
-          <td style="padding: 8px 0; color: #1f1f1f;">${comuna || "No especificada"}</td>
+          <td style="padding: 8px 0; color: #1f1f1f;">${safeComuna || "No especificada"}</td>
         </tr>
         ${linkedin ? `
         <tr style="border-bottom: 1px solid #f3f4f6;">
           <td style="padding: 8px 0; color: #6b7280;">LinkedIn:</td>
           <td style="padding: 8px 0;">
-            <a href="${linkedin}" target="_blank" style="color: #2563eb; text-decoration: underline;">${linkedin}</a>
+            <a href="${escapeHtml(linkedin)}" target="_blank" rel="noopener noreferrer" style="color: #2563eb; text-decoration: underline;">${safeLinkedin}</a>
           </td>
         </tr>` : ""}
         ${cvFileName ? `
         <tr style="border-bottom: 1px solid #f3f4f6;">
           <td style="padding: 8px 0; color: #6b7280;">Archivo Adjunto:</td>
-          <td style="padding: 8px 0; font-weight: 600; color: #059669;">📎 ${cvFileName}</td>
+          <td style="padding: 8px 0; font-weight: 600; color: #059669;">📎 ${safeCvName}</td>
         </tr>` : ""}
         <tr>
           <td style="padding: 8px 0; color: #6b7280;">Mensaje / Carta:</td>
-          <td style="padding: 8px 0; color: #4b5563; font-style: italic; white-space: pre-wrap;">${mensaje || "Sin mensaje"}</td>
+          <td style="padding: 8px 0; color: #4b5563; font-style: italic; white-space: pre-wrap;">${safeMensaje || "Sin mensaje"}</td>
         </tr>
       </table>
 

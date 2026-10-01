@@ -160,6 +160,7 @@ export function VisitaTecnicaModal() {
     fechaSeleccionada: "",
     bloqueHorario: "manana", // "manana" | "tarde"
     notas: "",
+    acceptTerms: true,
   });
 
   const [folio, setFolio] = useState("");
@@ -620,11 +621,12 @@ export function VisitaTecnicaModal() {
               {/* Form Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-xs font-light text-white/70 block mb-1.5 flex items-center gap-1.5">
+                  <label htmlFor="visita_nombre" className="text-xs font-light text-white/70 block mb-1.5 flex items-center gap-1.5">
                     <User className="w-3.5 h-3.5 text-[#FF8300]" />
                     Nombre y Apellido *
                   </label>
                   <input
+                    id="visita_nombre"
                     type="text"
                     required
                     name="nombre"
@@ -636,11 +638,12 @@ export function VisitaTecnicaModal() {
                 </div>
 
                 <div>
-                  <label className="text-xs font-light text-white/70 block mb-1.5 flex items-center gap-1.5">
+                  <label htmlFor="visita_telefono" className="text-xs font-light text-white/70 block mb-1.5 flex items-center gap-1.5">
                     <Phone className="w-3.5 h-3.5 text-[#FF8300]" />
                     WhatsApp / Teléfono *
                   </label>
                   <input
+                    id="visita_telefono"
                     type="tel"
                     required
                     name="telefono"
@@ -652,11 +655,12 @@ export function VisitaTecnicaModal() {
                 </div>
 
                 <div>
-                  <label className="text-xs font-light text-white/70 block mb-1.5 flex items-center gap-1.5">
+                  <label htmlFor="visita_email" className="text-xs font-light text-white/70 block mb-1.5 flex items-center gap-1.5">
                     <Mail className="w-3.5 h-3.5 text-[#FF8300]" />
                     Correo Electrónico *
                   </label>
                   <input
+                    id="visita_email"
                     type="email"
                     required
                     name="email"
@@ -669,11 +673,12 @@ export function VisitaTecnicaModal() {
 
                 {/* Selector de Región */}
                 <div>
-                  <label className="text-xs font-light text-white/70 block mb-1.5 flex items-center gap-1.5">
+                  <label htmlFor="visita_region" className="text-xs font-light text-white/70 block mb-1.5 flex items-center gap-1.5">
                     <MapPin className="w-3.5 h-3.5 text-[#FF8300]" />
                     Seleccionar Región *
                   </label>
                   <select
+                    id="visita_region"
                     name="region"
                     value={formData.region}
                     onChange={handleRegionChange}
@@ -693,11 +698,12 @@ export function VisitaTecnicaModal() {
 
                 {/* Selector de Comuna */}
                 <div className="sm:col-span-2">
-                  <label className="text-xs font-light text-white/70 block mb-1.5 flex items-center gap-1.5">
+                  <label htmlFor="visita_comuna" className="text-xs font-light text-white/70 block mb-1.5 flex items-center gap-1.5">
                     <MapPin className="w-3.5 h-3.5 text-[#FF8300]" />
                     Seleccionar Comuna *
                   </label>
                   <select
+                    id="visita_comuna"
                     name="comuna"
                     value={formData.comuna}
                     onChange={handleInputChange}
@@ -713,12 +719,13 @@ export function VisitaTecnicaModal() {
 
                 {/* Dirección o Sector */}
                 <div className="sm:col-span-2">
-                  <label className="text-xs font-light text-white/70 block mb-1.5 flex items-center gap-1.5">
+                  <label htmlFor="visita_direccion" className="text-xs font-light text-white/70 block mb-1.5 flex items-center gap-1.5">
                     <Home className="w-3.5 h-3.5 text-[#FF8300]" />
                     Dirección / Sector o Condominio *
                   </label>
 
                   <input
+                    id="visita_direccion"
                     type="text"
                     name="direccion"
                     required
@@ -742,10 +749,11 @@ export function VisitaTecnicaModal() {
                 </div>
 
                 <div>
-                  <label className="text-xs font-light text-white/70 block mb-1.5">
+                  <label htmlFor="visita_tipoPropiedad" className="text-xs font-light text-white/70 block mb-1.5">
                     Tipo de Propiedad
                   </label>
                   <select
+                    id="visita_tipoPropiedad"
                     name="tipoPropiedad"
                     value={formData.tipoPropiedad}
                     onChange={handleInputChange}
@@ -767,10 +775,11 @@ export function VisitaTecnicaModal() {
                 </div>
 
                 <div>
-                  <label className="text-xs font-light text-white/70 block mb-1.5">
+                  <label htmlFor="visita_montoBoleta" className="text-xs font-light text-white/70 block mb-1.5">
                     Gasto Mensual Boleta de Luz (Promedio)
                   </label>
                   <select
+                    id="visita_montoBoleta"
                     name="montoBoleta"
                     value={formData.montoBoleta}
                     onChange={handleInputChange}
@@ -892,6 +901,36 @@ export function VisitaTecnicaModal() {
                     )}
                   </button>
                 </div>
+              </div>
+
+              {/* Checkbox de Consentimiento Ley N° 19.628 */}
+              <div className="flex items-start gap-2.5 pt-2">
+                <input
+                  type="checkbox"
+                  id="visita_accept_terms"
+                  required
+                  aria-required="true"
+                  checked={formData.acceptTerms}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, acceptTerms: e.target.checked }))
+                  }
+                  className="w-4 h-4 mt-0.5 accent-[#FF8300] rounded cursor-pointer flex-shrink-0"
+                />
+                <label
+                  htmlFor="visita_accept_terms"
+                  className="text-xs text-white/70 font-light cursor-pointer leading-relaxed"
+                >
+                  He leído y acepto las{" "}
+                  <a
+                    href="/politicas-de-privacidad"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[#FF8300] underline hover:text-[#e07400] transition-colors"
+                  >
+                    Políticas de Privacidad
+                  </a>{" "}
+                  y autorizo el tratamiento de mis datos de contacto y ubicación para coordinar la visita técnica in situ conforme a la Ley N° 19.628. *
+                </label>
               </div>
 
               {/* Submit Error Banner */}

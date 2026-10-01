@@ -26,16 +26,25 @@ function WhatsAppIcon({ className = "w-3.5 h-3.5" }: { className?: string }) {
   );
 }
 
-export function FloatingNav() {
+interface FloatingNavProps {
+  alwaysVisible?: boolean;
+}
+
+export function FloatingNav({ alwaysVisible = false }: FloatingNavProps = {}) {
   const pathname = usePathname();
   const isCotizacionPage = pathname === "/cotizacion" || pathname?.startsWith("/cotizacion");
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(alwaysVisible);
   const [isDescubreOpen, setIsDescubreOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { openModal } = useVisitaModal();
   const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
+    if (alwaysVisible) {
+      setIsVisible(true);
+      return;
+    }
+
     const handleScroll = () => {
       // Show floating navbar once user scrolls past 300px
       if (window.scrollY > 300) {
@@ -48,7 +57,7 @@ export function FloatingNav() {
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [alwaysVisible]);
 
   const handleMouseEnter = () => {
     if (closeTimeoutRef.current) {
@@ -68,7 +77,7 @@ export function FloatingNav() {
     <AnimatePresence>
       {isVisible && (
         <motion.nav
-          initial={{ y: -80, opacity: 0, scale: 0.95 }}
+          initial={alwaysVisible ? { y: 0, opacity: 1, scale: 1 } : { y: -80, opacity: 0, scale: 0.95 }}
           animate={{ y: 0, opacity: 1, scale: 1 }}
           exit={{ y: -80, opacity: 0, scale: 0.95 }}
           transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}

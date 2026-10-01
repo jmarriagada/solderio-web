@@ -12,7 +12,7 @@ export const metadata = {
 export default function TerminosPage() {
   return (
     <main className="w-full min-h-screen relative bg-[#F7F8FA]">
-      <FloatingNav />
+      <FloatingNav alwaysVisible={true} />
 
       <article className="pt-28 md:pt-36 pb-20">
         <div className="w-full px-4 sm:px-6 md:px-8 box-border max-w-4xl mx-auto">

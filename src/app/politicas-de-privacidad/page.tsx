@@ -12,7 +12,7 @@ export const metadata = {
 export default function PoliticasPrivacidadPage() {
   return (
     <main className="w-full min-h-screen relative bg-[#F7F8FA]">
-      <FloatingNav />
+      <FloatingNav alwaysVisible={true} />
 
       <article className="pt-28 md:pt-36 pb-20">
         <div className="w-full px-4 sm:px-6 md:px-8 box-border max-w-4xl mx-auto">
@@ -117,33 +117,49 @@ export default function PoliticasPrivacidadPage() {
             </section>
 
             {/* 3. Postulantes Laborales */}
-            <section className="p-6 rounded-2xl bg-[#141414] text-white not-prose space-y-4">
-              <div className="flex items-center gap-2.5 text-[#FF8300]">
-                <Briefcase className="w-5 h-5" />
-                <h3 className="text-lg md:text-xl font-normal text-white">
-                  3. Política de Privacidad para Postulaciones Laborales ("Trabaja con Nosotros")
-                </h3>
-              </div>
-              <p className="text-xs md:text-sm text-white/80 font-light leading-relaxed">
+            <section>
+              <h2 className="text-xl md:text-2xl font-medium text-[#1F1F1F] mb-3 flex items-center gap-2">
+                <span>3. Política de Privacidad para Postulaciones Laborales ("Trabaja con Nosotros")</span>
+              </h2>
+              <p>
                 En nuestro formulario de postulación (<a href="/trabaja-con-nosotros" className="text-[#FF8300] underline">/trabaja-con-nosotros</a>), recopilamos antecedentes laborales, currículum vitae (CV) y certificaciones técnicas (por ejemplo, Licencia SEC Clase A, B, C o instalador eléctrico) para incorporar talento a nuestro equipo de ingeniería y montaje en el sur de Chile.
               </p>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-light text-white/70">
-                <div className="p-3.5 rounded-xl bg-white/5 border border-white/10">
-                  <strong className="text-white block font-medium mb-1">Finalidad Exclusiva</strong>
-                  Evaluación de idoneidad técnica, experiencia en energías renovables y selección para vacantes laborales vigentes o futuras en SoldeRío SpA.
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-4 not-prose">
+                <div className="p-4 rounded-xl bg-white border border-black/10">
+                  <div className="text-xs font-mono uppercase text-[#FF8300] font-semibold mb-1.5">
+                    Finalidad Exclusiva
+                  </div>
+                  <p className="text-xs text-[#4B5563] leading-relaxed">
+                    Evaluación de idoneidad técnica, experiencia en energías renovables y selección para vacantes laborales vigentes o futuras en SoldeRío SpA.
+                  </p>
                 </div>
-                <div className="p-3.5 rounded-xl bg-white/5 border border-white/10">
-                  <strong className="text-white block font-medium mb-1">Principio de No Discriminación</strong>
-                  Cumplimos rigurosamente con el Artículo 2 del Código del Trabajo chileno. Los procesos se basan estrictamente en mérito técnico y competencias.
+
+                <div className="p-4 rounded-xl bg-white border border-black/10">
+                  <div className="text-xs font-mono uppercase text-emerald-600 font-semibold mb-1.5">
+                    Principio de No Discriminación
+                  </div>
+                  <p className="text-xs text-[#4B5563] leading-relaxed">
+                    Cumplimos rigurosamente con el Artículo 2 del Código del Trabajo chileno. Los procesos se basan estrictamente en mérito técnico y competencias profesionales.
+                  </p>
                 </div>
-                <div className="p-3.5 rounded-xl bg-white/5 border border-white/10">
-                  <strong className="text-white block font-medium mb-1">Plazo de Conservación</strong>
-                  Los antecedentes curriculares se conservan por un plazo máximo de doce (12) meses para procesos afines, tras lo cual son eliminados de forma segura de nuestros registros.
+
+                <div className="p-4 rounded-xl bg-white border border-black/10">
+                  <div className="text-xs font-mono uppercase text-[#1F1F1F] font-semibold mb-1.5">
+                    Plazo de Conservación
+                  </div>
+                  <p className="text-xs text-[#4B5563] leading-relaxed">
+                    Los antecedentes curriculares se conservan por un plazo máximo de doce (12) meses para procesos afines, tras lo cual son eliminados de forma segura de nuestros registros.
+                  </p>
                 </div>
-                <div className="p-3.5 rounded-xl bg-white/5 border border-white/10">
-                  <strong className="text-white block font-medium mb-1">Eliminación Inmediata</strong>
-                  Cualquier postulante puede solicitar la eliminación inmediata de su CV y datos de contacto escribiendo a contacto@solderio.cl con el asunto "Eliminación de Antecedentes".
+
+                <div className="p-4 rounded-xl bg-white border border-black/10">
+                  <div className="text-xs font-mono uppercase text-blue-600 font-semibold mb-1.5">
+                    Eliminación Inmediata
+                  </div>
+                  <p className="text-xs text-[#4B5563] leading-relaxed">
+                    Cualquier postulante puede solicitar la eliminación inmediata de su CV y datos de contacto escribiendo a <a href="mailto:contacto@solderio.cl" className="font-mono text-[#FF8300] underline">contacto@solderio.cl</a> con el asunto "Eliminación de Antecedentes".
+                  </p>
                 </div>
               </div>
             </section>

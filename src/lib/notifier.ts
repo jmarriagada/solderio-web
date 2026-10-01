@@ -444,3 +444,154 @@ export async function notifyInternalVisitaLead(params: {
 
   return { telegram: telegramRes, email: emailRes };
 }
+
+/**
+ * Notificación interna para una NUEVA POSTULACIÓN LABORAL (Trabaja con Nosotros)
+ * (Telegram + Correo interno al equipo)
+ */
+export async function notifyInternalJobApplication(params: {
+  nombre: string;
+  email: string;
+  telefono: string;
+  cargo: string;
+  comuna?: string;
+  linkedin?: string;
+  mensaje?: string;
+  cvFileName?: string;
+}): Promise<{ telegram: any; email: any }> {
+  const { nombre, email, telefono, cargo, comuna, linkedin, mensaje, cvFileName } = params;
+  const cleanPhone = cleanPhoneNumber(telefono);
+
+  const safeNombre = escapeHtml(nombre);
+  const safeCargo = escapeHtml(cargo);
+  const safeComuna = escapeHtml(comuna || "No especificada");
+  const safeLinkedin = escapeHtml(linkedin || "No indicado");
+  const safeMensaje = escapeHtml(mensaje || "Sin mensaje adicional");
+  const safeCvName = escapeHtml(cvFileName || "Archivo adjunto");
+
+  // 1. TELEGRAM
+  const telegramHtml = `💼 <b>NUEVA POSTULACIÓN LABORAL</b>
+━━━━━━━━━━━━━━━━━━━━━
+👤 <b>Candidato:</b> ${safeNombre}
+📌 <b>Cargo:</b> ${safeCargo}
+📱 <b>WhatsApp:</b> <a href="https://wa.me/${cleanPhone}">+${cleanPhone}</a>
+✉️ <b>Email:</b> <a href="mailto:${email}">${email}</a>
+📍 <b>Comuna:</b> ${safeComuna}
+🔗 <b>LinkedIn:</b> ${linkedin ? `<a href="${escapeHtml(linkedin)}">${safeLinkedin}</a>` : "No indicado"}
+📎 <b>CV / Certificado:</b> ${safeCvName}
+
+📝 <b>Mensaje:</b>
+${safeMensaje}`;
+
+  const telegramRes = await sendTelegramMessage(telegramHtml).catch((e) => ({
+    success: false,
+    error: e?.message || String(e),
+  }));
+
+  // 2. CORREO INTERNO
+  let emailRes: any = { success: false };
+  const apiKey = process.env.RESEND_API_KEY?.trim();
+  const internalRecipient = process.env.INTERNAL_NOTIFICATION_EMAIL?.trim() || DEFAULT_INTERNAL_EMAIL;
+
+  if (apiKey) {
+    try {
+      const resend = new Resend(apiKey);
+      const emailSubject = `💼 [POSTULACIÓN LABORAL] ${nombre} - ${cargo} (${comuna || "Sur de Chile"})`;
+
+      const htmlContent = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Nueva Postulación Laboral</title>
+</head>
+<body style="margin: 0; padding: 24px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f4f5f7; color: #1f1f1f;">
+  <div style="max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 12px; border: 1px solid #e5e7eb; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+    <div style="background-color: #1e3a8a; padding: 20px 24px; border-bottom: 3px solid #3b82f6;">
+      <h2 style="color: #ffffff; margin: 0; font-size: 18px; font-weight: 700; letter-spacing: -0.01em;">
+        💼 Nueva Postulación Laboral - SoldeRío
+      </h2>
+      <p style="color: #bfdbfe; margin: 4px 0 0 0; font-size: 12px; font-mono;">
+        ${cargo} • ${new Date().toLocaleString("es-CL", { timeZone: "America/Santiago" })}
+      </p>
+    </div>
+
+    <div style="padding: 24px;">
+      <h3 style="margin: 0 0 12px 0; font-size: 14px; text-transform: uppercase; color: #1e3a8a; letter-spacing: 0.05em;">
+        Datos del Postulante
+      </h3>
+      <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 14px;">
+        <tr style="border-bottom: 1px solid #f3f4f6;">
+          <td style="padding: 8px 0; color: #6b7280; width: 140px;">Nombre:</td>
+          <td style="padding: 8px 0; font-weight: 600; color: #1f1f1f;">${nombre}</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #f3f4f6;">
+          <td style="padding: 8px 0; color: #6b7280;">Cargo:</td>
+          <td style="padding: 8px 0; font-weight: 700; color: #ff8300;">${cargo}</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #f3f4f6;">
+          <td style="padding: 8px 0; color: #6b7280;">Teléfono / WhatsApp:</td>
+          <td style="padding: 8px 0; font-weight: 600;">
+            <a href="https://wa.me/${cleanPhone}" style="color: #25d366; text-decoration: none;">+${cleanPhone} (Abrir Chat)</a>
+          </td>
+        </tr>
+        <tr style="border-bottom: 1px solid #f3f4f6;">
+          <td style="padding: 8px 0; color: #6b7280;">Correo:</td>
+          <td style="padding: 8px 0;">
+            <a href="mailto:${email}" style="color: #ff8300; text-decoration: none;">${email}</a>
+          </td>
+        </tr>
+        <tr style="border-bottom: 1px solid #f3f4f6;">
+          <td style="padding: 8px 0; color: #6b7280;">Comuna:</td>
+          <td style="padding: 8px 0; color: #1f1f1f;">${comuna || "No especificada"}</td>
+        </tr>
+        ${linkedin ? `
+        <tr style="border-bottom: 1px solid #f3f4f6;">
+          <td style="padding: 8px 0; color: #6b7280;">LinkedIn:</td>
+          <td style="padding: 8px 0;">
+            <a href="${linkedin}" target="_blank" style="color: #2563eb; text-decoration: underline;">${linkedin}</a>
+          </td>
+        </tr>` : ""}
+        ${cvFileName ? `
+        <tr style="border-bottom: 1px solid #f3f4f6;">
+          <td style="padding: 8px 0; color: #6b7280;">Archivo Adjunto:</td>
+          <td style="padding: 8px 0; font-weight: 600; color: #059669;">📎 ${cvFileName}</td>
+        </tr>` : ""}
+        <tr>
+          <td style="padding: 8px 0; color: #6b7280;">Mensaje / Carta:</td>
+          <td style="padding: 8px 0; color: #4b5563; font-style: italic; white-space: pre-wrap;">${mensaje || "Sin mensaje"}</td>
+        </tr>
+      </table>
+
+      <div style="text-align: center; margin-top: 20px;">
+        <a href="mailto:${email}" style="display: inline-block; background-color: #1e3a8a; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 9999px; font-weight: 700; font-size: 14px;">
+          Responder al Postulante por Correo &rarr;
+        </a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>`;
+
+      const { data, error } = await resend.emails.send({
+        from: DEFAULT_INTERNAL_SENDER,
+        to: internalRecipient.split(",").map((e) => e.trim()),
+        replyTo: email,
+        subject: emailSubject,
+        html: htmlContent,
+      });
+
+      emailRes = { success: !error, messageId: data?.id, error };
+      if (error) {
+        console.error("[Internal Job Email Error]:", error);
+      } else {
+        console.log(`[Internal Job Email] Enviado a ${internalRecipient}`);
+      }
+    } catch (err: any) {
+      console.error("[Internal Job Email Exception]:", err);
+      emailRes = { success: false, error: err?.message || String(err) };
+    }
+  }
+
+  return { telegram: telegramRes, email: emailRes };
+}

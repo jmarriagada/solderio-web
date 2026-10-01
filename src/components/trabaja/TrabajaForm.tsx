@@ -2,10 +2,13 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Upload, CheckCircle2, Send, Paperclip } from "lucide-react";
+import { Upload, CheckCircle2, Send, Paperclip, AlertCircle, Loader2 } from "lucide-react";
 
 export function TrabajaForm() {
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [honeypot, setHoneypot] = useState("");
   const [formData, setFormData] = useState({
     nombre: "",
     email: "",
@@ -17,9 +20,38 @@ export function TrabajaForm() {
   });
   const [fileName, setFileName] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setSubmitError(null);
+    setIsSubmitting(true);
+
+    try {
+      const res = await fetch("/api/trabaja-con-nosotros", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...formData,
+          cvFile: fileName ? { name: fileName, size: 0, type: "application/pdf" } : null,
+          website_url: honeypot,
+        }),
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setSubmitted(true);
+      } else {
+        setSubmitError(
+          data.error ||
+            "Ocurrió un error al procesar tu postulación. Por favor verifica tus datos e intenta nuevamente."
+        );
+      }
+    } catch (err) {
+      setSubmitError(
+        "Ocurrió un error de conexión al enviar tu postulación. Por favor intenta nuevamente."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -59,6 +91,23 @@ export function TrabajaForm() {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Honeypot anti-spam field */}
+                <div
+                  className="hidden"
+                  aria-hidden="true"
+                  style={{ display: "none", position: "absolute", left: "-9999px" }}
+                >
+                  <label htmlFor="job_website_url">No completar este campo</label>
+                  <input
+                    type="text"
+                    id="job_website_url"
+                    name="website_url"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={honeypot}
+                    onChange={(e) => setHoneypot(e.target.value)}
+                  />
+                </div>
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div>
@@ -190,12 +239,29 @@ export function TrabajaForm() {
                   />
                 </div>
 
+                {submitError && (
+                  <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs md:text-sm flex items-start gap-2.5">
+                    <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                    <p className="leading-relaxed">{submitError}</p>
+                  </div>
+                )}
+
                 <button
                   type="submit"
-                  className="w-full py-4 rounded-full bg-[#FF8300] text-white font-light text-sm uppercase tracking-wider hover:bg-[#e07400] transition-all shadow-xl hover:shadow-[0_0_30px_rgba(255,131,0,0.5)] cursor-pointer flex items-center justify-center gap-2"
+                  disabled={isSubmitting}
+                  className="w-full py-4 rounded-full bg-[#FF8300] text-white font-light text-sm uppercase tracking-wider hover:bg-[#e07400] transition-all shadow-xl hover:shadow-[0_0_30px_rgba(255,131,0,0.5)] cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <span>Enviar Postulación</span>
-                  <Send className="w-4 h-4" />
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>Enviando Antecedentes...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Enviar Postulación</span>
+                      <Send className="w-4 h-4" />
+                    </>
+                  )}
                 </button>
 
               </form>

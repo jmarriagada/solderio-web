@@ -246,3 +246,63 @@ export const visitaFormSchema = z.object({
   // Campo Honeypot invisible para bots (debe venir vacío)
   website_url: z.string().optional(),
 });
+
+/**
+ * Esquema de validación y sanitización para Postulaciones Laborales (/api/trabaja-con-nosotros)
+ */
+export const trabajaFormSchema = z.object({
+  nombre: z
+    .string({ required_error: "Nombre completo es requerido" })
+    .min(2, "El nombre debe tener al menos 2 caracteres")
+    .max(80, "El nombre no puede exceder 80 caracteres")
+    .transform((val) => sanitizeString(val, 80)),
+
+  email: z
+    .string({ required_error: "Correo electrónico es requerido" })
+    .email("Formato de correo electrónico inválido")
+    .max(100, "El correo no puede exceder 100 caracteres")
+    .transform((val) => sanitizeString(val.toLowerCase(), 100)),
+
+  telefono: z
+    .string({ required_error: "Teléfono de contacto es requerido" })
+    .min(7, "El teléfono debe tener al menos 7 dígitos")
+    .max(25, "El teléfono no puede exceder 25 caracteres")
+    .transform((val) => sanitizePhone(val)),
+
+  cargo: z
+    .string({ required_error: "Cargo es requerido" })
+    .max(80, "Cargo no puede exceder 80 caracteres")
+    .transform((val) => sanitizeString(val, 80)),
+
+  comuna: z
+    .string()
+    .max(60, "Comuna no puede exceder 60 caracteres")
+    .optional()
+    .transform((val) => (val ? sanitizeString(val, 60) : "")),
+
+  linkedin: z
+    .string()
+    .max(200, "Enlace de LinkedIn no puede exceder 200 caracteres")
+    .optional()
+    .transform((val) => (val ? sanitizeString(val, 200) : "")),
+
+  mensaje: z
+    .string()
+    .max(1000, "El mensaje no puede exceder 1000 caracteres")
+    .optional()
+    .transform((val) => (val ? sanitizeMultilineText(val, 1000) : "")),
+
+  cvFile: z
+    .object({
+      name: z.string().transform((n) => sanitizeString(n, 120)),
+      size: z.number().max(10 * 1024 * 1024, "El archivo excede el límite de 10 MB"),
+      type: z.string().transform((t) => sanitizeString(t, 50)),
+      dataUrl: z.string().optional(),
+    })
+    .nullable()
+    .optional(),
+
+  // Campo Honeypot invisible para bots (debe venir vacío)
+  website_url: z.string().optional(),
+});
+

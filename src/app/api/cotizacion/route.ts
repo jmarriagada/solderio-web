@@ -134,24 +134,46 @@ async function dispatchWebhookToN8n(lead: LeadSubmission): Promise<void> {
   }
 }
 
+import { quoteFormSchema } from "@/lib/validation/schemas";
+import { getClientIp, checkRateLimit } from "@/lib/rate-limiter";
+
 export async function POST(request: Request) {
   try {
-    const body = (await request.json()) as QuoteFormData;
-
-    // Basic Validation
-    if (!body.fullName || body.fullName.trim().length < 2) {
+    // 0. Rate Limiting por IP (Máx 5 peticiones por minuto)
+    const clientIp = getClientIp(request);
+    const rateLimit = checkRateLimit(clientIp, { maxRequests: 5, windowSeconds: 60 });
+    if (!rateLimit.isAllowed) {
       return NextResponse.json(
-        { error: "Nombre completo es requerido" },
-        { status: 400 }
+        { error: "Has realizado demasiadas solicitudes en poco tiempo. Por favor espera un momento antes de volver a intentar." },
+        {
+          status: 429,
+          headers: {
+            "Retry-After": String(rateLimit.resetSeconds),
+          },
+        }
       );
     }
 
-    if (!body.whatsapp || body.whatsapp.trim().length < 7) {
-      return NextResponse.json(
-        { error: "Número de teléfono WhatsApp válido es requerido" },
-        { status: 400 }
-      );
+    const rawBody = await request.json();
+
+    // 1. Validación y Sanitización con Zod (Anti-XSS / Anti-Injection)
+    const validationResult = quoteFormSchema.safeParse(rawBody);
+    if (!validationResult.success) {
+      const firstError = validationResult.error.errors[0]?.message || "Datos de cotización inválidos";
+      return NextResponse.json({ error: firstError }, { status: 400 });
     }
+
+    // 2. Honeypot check: Si un bot llenó el campo trampa, descartamos en silencio (shadow-drop)
+    if (validationResult.data.website_url && validationResult.data.website_url.trim().length > 0) {
+      console.log(`[Honeypot Triggered - Cotización] Descartando bot silenciosamente desde IP: ${clientIp}`);
+      return NextResponse.json({
+        success: true,
+        leadId: `SOL-${new Date().getFullYear()}-0000`,
+        message: "Cotización procesada exitosamente.",
+      });
+    }
+
+    const body = validationResult.data as QuoteFormData;
 
     const emailValidation = validateAndNormalizeEmail(body.email);
     if (!emailValidation.isValid) {

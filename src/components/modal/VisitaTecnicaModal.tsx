@@ -165,6 +165,7 @@ export function VisitaTecnicaModal() {
   const [folio, setFolio] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [honeypot, setHoneypot] = useState("");
 
   // Generate the next 10 business days for the interactive calendar
   const availableDates = useMemo(() => {
@@ -246,6 +247,7 @@ export function VisitaTecnicaModal() {
       ...formData,
       folio: randomFolio,
       fechaIso: selectedDateObj?.fullIso || new Date().toISOString().split("T")[0],
+      website_url: honeypot,
     };
 
     try {
@@ -307,6 +309,7 @@ export function VisitaTecnicaModal() {
       });
       setLocationError(null);
       setSubmitError(null);
+      setHoneypot("");
     }, 300);
   };
 
@@ -570,6 +573,20 @@ export function VisitaTecnicaModal() {
           {/* STEP 2: FORM & CALENDAR */}
           {step === 2 && (
             <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Honeypot Anti-Bot Shield (Invisible para usuarios legítimos) */}
+              <div className="hidden" aria-hidden="true" style={{ display: 'none', position: 'absolute', left: '-9999px' }}>
+                <label htmlFor="visita_website_url">No completar este campo</label>
+                <input
+                  type="text"
+                  id="visita_website_url"
+                  name="website_url"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={honeypot}
+                  onChange={(e) => setHoneypot(e.target.value)}
+                />
+              </div>
+
               {/* Selected Plan Summary Banner */}
               {/* Selected Plan Summary Banner */}
               <div className="bg-[#1F1F1F] rounded-2xl p-4 border border-white/10 flex items-center justify-between">

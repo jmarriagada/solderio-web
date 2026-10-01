@@ -98,24 +98,46 @@ async function dispatchWebhookToN8n(visita: any): Promise<void> {
   }
 }
 
+import { visitaFormSchema } from "@/lib/validation/schemas";
+import { getClientIp, checkRateLimit } from "@/lib/rate-limiter";
+
 export async function POST(request: Request) {
   try {
-    const body = (await request.json()) as VisitaRequestBody;
-
-    // 1. Validaciones básicas
-    if (!body.nombre || body.nombre.trim().length < 2) {
+    // 0. Rate Limiting por IP (Máx 5 peticiones por minuto)
+    const clientIp = getClientIp(request);
+    const rateLimit = checkRateLimit(clientIp, { maxRequests: 5, windowSeconds: 60 });
+    if (!rateLimit.isAllowed) {
       return NextResponse.json(
-        { error: "Nombre completo es requerido." },
-        { status: 400 }
+        { error: "Has realizado demasiadas solicitudes en poco tiempo. Por favor espera un momento antes de volver a intentar." },
+        {
+          status: 429,
+          headers: {
+            "Retry-After": String(rateLimit.resetSeconds),
+          },
+        }
       );
     }
 
-    if (!body.telefono || body.telefono.trim().length < 7) {
-      return NextResponse.json(
-        { error: "Teléfono de contacto válido es requerido." },
-        { status: 400 }
-      );
+    const rawBody = await request.json();
+
+    // 1. Validación y Sanitización con Zod (Anti-XSS / Anti-Injection)
+    const validationResult = visitaFormSchema.safeParse(rawBody);
+    if (!validationResult.success) {
+      const firstError = validationResult.error.errors[0]?.message || "Datos de visita técnica inválidos";
+      return NextResponse.json({ error: firstError }, { status: 400 });
     }
+
+    // 2. Honeypot check: Si un bot llenó el campo trampa, descartamos en silencio
+    if (validationResult.data.website_url && validationResult.data.website_url.trim().length > 0) {
+      console.log(`[Honeypot Triggered - Visita] Descartando bot silenciosamente desde IP: ${clientIp}`);
+      return NextResponse.json({
+        success: true,
+        folio: `SOL-VIS-0000`,
+        message: "Visita técnica registrada exitosamente.",
+      });
+    }
+
+    const body = validationResult.data;
 
     const emailValidation = validateAndNormalizeEmail(body.email);
     if (!emailValidation.isValid) {
@@ -126,9 +148,10 @@ export async function POST(request: Request) {
     }
 
     const hasAddress = body.direccion && body.direccion.trim().length > 0;
-    if (!hasAddress) {
+    const hasCoords = body.latitud !== undefined && body.latitud !== null && body.longitud !== undefined && body.longitud !== null;
+    if (!hasAddress && !hasCoords) {
       return NextResponse.json(
-        { error: "La dirección o sector es requerida para agendar la visita técnica." },
+        { error: "La dirección o punto en el mapa es requerido para agendar la visita técnica." },
         { status: 400 }
       );
     }

@@ -31,7 +31,7 @@ const satoshi = localFont({
 import { VisitaModalProvider } from "@/context/VisitaModalContext";
 import { VisitaTecnicaModal } from "@/components/modal/VisitaTecnicaModal";
 import { RouteScrollManager } from "@/components/RouteScrollManager";
-import { Analytics } from '@vercel/analytics/next';
+import { Analytics } from '@vercel/analytics/react';
 
 export const metadata: Metadata = {
   title: "SoldeRío | Eficiencia Energética y Energía Solar en el Sur de Chile",

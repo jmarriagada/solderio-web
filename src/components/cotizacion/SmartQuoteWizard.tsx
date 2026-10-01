@@ -186,6 +186,7 @@ export function SmartQuoteWizard() {
   const [selectedRegion, setSelectedRegion] = useState<string>(initialParams.region || DEFAULT_REGION);
   const [confirmEmail, setConfirmEmail] = useState("");
   const [emailMismatch, setEmailMismatch] = useState(false);
+  const [honeypot, setHoneypot] = useState("");
   const [submissionResult, setSubmissionResult] = useState<{
     sizing: SolarSizingResult;
     leadId: string;
@@ -387,7 +388,10 @@ export function SmartQuoteWizard() {
       const res = await fetch("/api/cotizacion", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          website_url: honeypot,
+        }),
       });
 
       const data = await res.json();
@@ -1203,6 +1207,20 @@ export function SmartQuoteWizard() {
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
+                {/* Honeypot Anti-Bot Shield (Invisible para usuarios legítimos) */}
+                <div className="hidden" aria-hidden="true" style={{ display: 'none', position: 'absolute', left: '-9999px' }}>
+                  <label htmlFor="quote_website_url">No completar este campo</label>
+                  <input
+                    type="text"
+                    id="quote_website_url"
+                    name="website_url"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={honeypot}
+                    onChange={(e) => setHoneypot(e.target.value)}
+                  />
+                </div>
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                   <div>
                     <label className="text-xs text-white/70 font-light block mb-2">

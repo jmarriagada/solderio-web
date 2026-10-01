@@ -34,7 +34,7 @@ import { RouteScrollManager } from "@/components/RouteScrollManager";
 import { Analytics } from '@vercel/analytics/next';
 
 export const metadata: Metadata = {
-  title: "SoldeRío | Soberanía Energética",
+  title: "SoldeRío | Eficiencia Energética y Energía Solar en el Sur de Chile",
   description: "Energía inteligente, ingeniería confiable en el sur de Chile.",
   icons: {
     icon: [

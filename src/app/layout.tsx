@@ -32,6 +32,7 @@ import { VisitaModalProvider } from "@/context/VisitaModalContext";
 import { VisitaTecnicaModal } from "@/components/modal/VisitaTecnicaModal";
 import { RouteScrollManager } from "@/components/RouteScrollManager";
 import { Analytics } from '@vercel/analytics/react';
+import { GoogleTagManager } from '@next/third-parties/google';
 
 export const metadata: Metadata = {
   title: "SoldeRío | Eficiencia Energética y Energía Solar en el Sur de Chile",
@@ -53,6 +54,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
+      <GoogleTagManager gtmId="GTM-KWXTX2Z8" />
       <body
         className={`${satoshi.variable} font-sans antialiased text-[#1F1F1F] min-h-full flex flex-col`}
       >

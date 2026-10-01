@@ -316,6 +316,7 @@ export function VisitaTecnicaModal() {
         fechaSeleccionada: availableDates[0]?.formattedDate || "",
         bloqueHorario: "manana",
         notas: "",
+        acceptTerms: true,
       });
       setLocationError(null);
       setSubmitError(null);

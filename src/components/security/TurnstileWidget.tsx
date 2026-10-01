@@ -49,6 +49,17 @@ export function TurnstileWidget({
   const widgetIdRef = useRef<string | null>(null);
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
 
+  // Mantener callbacks en refs estables para no provocar re-renderizados/destrucciones del widget
+  const onSuccessRef = useRef(onSuccess);
+  const onErrorRef = useRef(onError);
+  const onExpireRef = useRef(onExpire);
+
+  useEffect(() => {
+    onSuccessRef.current = onSuccess;
+    onErrorRef.current = onError;
+    onExpireRef.current = onExpire;
+  });
+
   const siteKey =
     process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim() || CLOUDFLARE_TEST_SITE_KEY;
 
@@ -75,7 +86,18 @@ export function TurnstileWidget({
       };
       document.head.appendChild(script);
     } else {
-      script.addEventListener("load", () => setIsScriptLoaded(true));
+      // Si el script ya existe en el DOM, esperar a que window.turnstile esté disponible
+      if (window.turnstile) {
+        setIsScriptLoaded(true);
+      } else {
+        const interval = setInterval(() => {
+          if (window.turnstile) {
+            setIsScriptLoaded(true);
+            clearInterval(interval);
+          }
+        }, 50);
+        return () => clearInterval(interval);
+      }
     }
   }, []);
 
@@ -83,7 +105,9 @@ export function TurnstileWidget({
   useEffect(() => {
     if (!isScriptLoaded || !containerRef.current || !window.turnstile) return;
 
-    // Si ya existe un widget montado, lo removemos antes de renderizar uno nuevo
+    let activeWidgetId: string | null = null;
+
+    // Si ya existe un widget montado, lo removemos antes de renderizar
     if (widgetIdRef.current) {
       try {
         window.turnstile.remove(widgetIdRef.current);
@@ -93,38 +117,45 @@ export function TurnstileWidget({
       widgetIdRef.current = null;
     }
 
+    if (containerRef.current) {
+      containerRef.current.innerHTML = "";
+    }
+
     try {
-      widgetIdRef.current = window.turnstile.render(containerRef.current, {
+      activeWidgetId = window.turnstile.render(containerRef.current, {
         sitekey: siteKey,
         theme,
         size,
         language: "es",
         callback: (token: string) => {
-          onSuccess(token);
+          onSuccessRef.current?.(token);
         },
         "error-callback": (err: any) => {
           console.warn("[Turnstile Widget Error]:", err);
-          onError?.(err);
+          onErrorRef.current?.(err);
         },
         "expired-callback": () => {
-          onExpire?.();
+          onExpireRef.current?.();
         },
       });
+      widgetIdRef.current = activeWidgetId;
     } catch (err) {
       console.warn("[Turnstile Render Exception]:", err);
     }
 
     return () => {
-      if (widgetIdRef.current && window.turnstile) {
+      if (activeWidgetId && window.turnstile) {
         try {
-          window.turnstile.remove(widgetIdRef.current);
+          window.turnstile.remove(activeWidgetId);
         } catch (e) {
           // Cleanup seguro
         }
-        widgetIdRef.current = null;
+        if (widgetIdRef.current === activeWidgetId) {
+          widgetIdRef.current = null;
+        }
       }
     };
-  }, [isScriptLoaded, siteKey, theme, size, onSuccess, onError, onExpire]);
+  }, [isScriptLoaded, siteKey, theme, size]);
 
   return (
     <div className={`turnstile-wrapper my-2 flex justify-center ${className}`}>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import Link from "next/link";
 import { Upload, CheckCircle2, Send, AlertCircle, Loader2 } from "lucide-react";
 import { TurnstileWidget } from "@/components/security/TurnstileWidget";
@@ -11,6 +11,12 @@ export function TrabajaForm() {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [honeypot, setHoneypot] = useState("");
   const [turnstileToken, setTurnstileToken] = useState("");
+  const handleTurnstileSuccess = useCallback((token: string) => {
+    setTurnstileToken(token);
+  }, []);
+  const handleTurnstileExpire = useCallback(() => {
+    setTurnstileToken("");
+  }, []);
   const [acceptTerms, setAcceptTerms] = useState(true);
   const [formData, setFormData] = useState({
     nombre: "",
@@ -339,8 +345,8 @@ export function TrabajaForm() {
                 {/* Cloudflare Turnstile Anti-Bot Shield */}
                 <TurnstileWidget
                   theme="dark"
-                  onSuccess={(token) => setTurnstileToken(token)}
-                  onExpire={() => setTurnstileToken("")}
+                  onSuccess={handleTurnstileSuccess}
+                  onExpire={handleTurnstileExpire}
                   className="my-2"
                 />
 

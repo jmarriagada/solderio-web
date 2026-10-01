@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useRef, useEffect } from "react";
+import { useState, useMemo, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X,
@@ -169,6 +169,12 @@ export function VisitaTecnicaModal() {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [honeypot, setHoneypot] = useState("");
   const [turnstileToken, setTurnstileToken] = useState("");
+  const handleTurnstileSuccess = useCallback((token: string) => {
+    setTurnstileToken(token);
+  }, []);
+  const handleTurnstileExpire = useCallback(() => {
+    setTurnstileToken("");
+  }, []);
 
   // Generate the next 10 business days for the interactive calendar
   const availableDates = useMemo(() => {
@@ -939,8 +945,8 @@ export function VisitaTecnicaModal() {
               {/* Cloudflare Turnstile Anti-Bot Shield */}
               <TurnstileWidget
                 theme="dark"
-                onSuccess={(token) => setTurnstileToken(token)}
-                onExpire={() => setTurnstileToken("")}
+                onSuccess={handleTurnstileSuccess}
+                onExpire={handleTurnstileExpire}
                 className="my-2"
               />
 

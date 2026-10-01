@@ -189,6 +189,12 @@ export function SmartQuoteWizard() {
   const [emailMismatch, setEmailMismatch] = useState(false);
   const [honeypot, setHoneypot] = useState("");
   const [turnstileToken, setTurnstileToken] = useState("");
+  const handleTurnstileSuccess = useCallback((token: string) => {
+    setTurnstileToken(token);
+  }, []);
+  const handleTurnstileExpire = useCallback(() => {
+    setTurnstileToken("");
+  }, []);
   const [submissionResult, setSubmissionResult] = useState<{
     sizing: SolarSizingResult;
     leadId: string;
@@ -1337,8 +1343,8 @@ export function SmartQuoteWizard() {
                 {/* Cloudflare Turnstile Anti-Bot Shield */}
                 <TurnstileWidget
                   theme="dark"
-                  onSuccess={(token) => setTurnstileToken(token)}
-                  onExpire={() => setTurnstileToken("")}
+                  onSuccess={handleTurnstileSuccess}
+                  onExpire={handleTurnstileExpire}
                   className="my-3"
                 />
 

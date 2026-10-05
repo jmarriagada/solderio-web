@@ -19,14 +19,14 @@ export default function Home() {
       {/* 1. Header & Hero Frame */}
       <HeaderHeroFrame />
 
-      {/* 2. Soluciones Segmentadas: A la medida de tu consumo (Residencial vs Comercial e Industrial) */}
-      <SegmentedSolutions />
+      {/* 2. Tríada de Excelencia: Más que paneles en un techo: Un ecosistema completo */}
+      <TriadSection />
 
       {/* 3. Imagen Panorámica & Paisaje del Sur */}
       <Intro />
 
-      {/* 4. Tríada de Excelencia: Más que paneles en un techo: Un ecosistema completo */}
-      <TriadSection />
+      {/* 4. Soluciones Segmentadas: A la medida de tu consumo (Residencial vs Comercial e Industrial) */}
+      <SegmentedSolutions />
 
       {/* 5. Simulador Interactivo de Topologías Solares (Flujo de energía y tipo de planta) */}
       <SolarTopologyVisualizer showExplanationDetails={false} />

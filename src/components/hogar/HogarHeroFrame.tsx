@@ -117,7 +117,7 @@ export function HogarHeroFrame() {
               }}
               className="text-[40px] sm:text-[54px] md:text-[68px] font-bold text-white tracking-[-0.04em] leading-[1.05] mb-2 drop-shadow-sm"
             >
-              Plantas Solares
+              Baja tu cuenta de luz hoy <br className="hidden sm:inline" /> aprovechando el sol del sur
             </motion.h1>
 
             <motion.p
@@ -127,7 +127,7 @@ export function HogarHeroFrame() {
               }}
               className="text-[16px] md:text-[18px] text-white/95 font-light max-w-2xl leading-relaxed tracking-wide"
             >
-              Genera energía limpia y baja tu cuenta eléctrica
+              Comienza el verano inyectando energía a la empresa eléctrica. Acumula saldo a favor y úsalo el próximo invierno para reducir tu cuenta hasta en un 95%.
             </motion.p>
           </motion.div>
         </div>
@@ -143,7 +143,7 @@ export function HogarHeroFrame() {
             href="/cotizacion"
             className="w-full sm:w-auto bg-white text-black font-light text-[15px] sm:text-xs md:text-sm px-7 py-3.5 sm:py-2.5 rounded-xl shadow-lg hover:bg-[#FF8300] hover:text-white transition-all duration-300 cursor-pointer flex items-center justify-center hover:shadow-[0_0_30px_rgba(255,131,0,0.4)]"
           >
-            Obtener una Cotización Solar
+            Cotizar mi Proyecto Solar
           </Link>
           <a
             href="https://wa.me/56966186667?text=Hola,%20quisiera%20conversar%20con%20un%20ingeniero%20de%20SoldeR%C3%ADo"

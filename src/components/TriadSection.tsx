@@ -97,10 +97,10 @@ export function TriadSection() {
               Generación Solar Fotovoltaica
             </span>
             <h2 className="text-3xl md:text-5xl font-light text-[#1F1F1F] tracking-tight mb-4">
-              Diseño e implementación
+              Energía Inteligente, Ingeniería Confiable
             </h2>
             <p className="text-brand-muted text-base md:text-lg font-light leading-relaxed">
-              Ingeniería que asegura tu suministro eléctrico y la inteligencia que gestiona tu consumo.
+              Gestiona la soberanía energética de tu hogar o empresa. Ingeniería que asegura un suministro eléctrico sustentable y la inteligencia que gestionará tu consumo y operación.
             </p>
           </motion.div>
 

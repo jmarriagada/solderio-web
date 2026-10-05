@@ -35,8 +35,8 @@ import { Analytics } from '@vercel/analytics/react';
 import { GoogleTagManager } from '@next/third-parties/google';
 
 export const metadata: Metadata = {
-  title: "SoldeRío | Eficiencia Energética y Energía Solar en el Sur de Chile",
-  description: "Energía inteligente, ingeniería confiable en el sur de Chile.",
+  title: "SoldeRío | Paneles Solares y Energía Rentable para el Sur de Chile",
+  description: "Energía solar de alto rendimiento para hogares y empresas. Baja tu cuenta de luz y asegura tu independencia energética en Osorno, Valdivia y el sur.",
   icons: {
     icon: [
       { url: "/icon-solderio.svg", type: "image/svg+xml" },

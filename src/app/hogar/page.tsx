@@ -14,9 +14,9 @@ import { HogarCTA } from "@/components/hogar/HogarCTA";
 import { Footer } from "@/components/Footer";
 
 export const metadata = {
-  title: "Plantas Solares Residenciales & Parcelas | SoldeRío",
+  title: "Paneles Solares para Hogares y Parcelas en el Sur de Chile | SoldeRío",
   description:
-    "Genera energía limpia y ahorra hasta un 90% en tu cuenta con las plantas fotovoltaicas para hogares y parcelas de SoldeRío en el sur de Chile.",
+    "Reduce tu cuenta de luz hasta un 95% inyectando energía con Netbilling. Sistemas solares y baterías de litio contra cortes de luz. Cotiza tu proyecto.",
 };
 
 export default function HogarPage() {

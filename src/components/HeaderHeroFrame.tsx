@@ -37,7 +37,7 @@ export function HeaderHeroFrame() {
             className="absolute inset-0 w-full h-full"
           >
             <Image
-              src="/images/energia-solar-region-de-los-lagos-solderio.jpg"
+              src="/images/hero-energia-solar-sur-de-chile-solderio.jpg"
               alt="SoldeRío Energía Solar Sur de Chile"
               fill
               priority

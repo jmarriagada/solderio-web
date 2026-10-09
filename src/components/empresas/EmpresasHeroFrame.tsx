@@ -86,7 +86,7 @@ export function EmpresasHeroFrame() {
           className="relative z-10 text-center px-6 pb-8 md:pb-12 flex flex-col sm:flex-row items-center justify-center gap-4"
         >
           <Link
-            href="/cotizacion"
+            href="/cotizacion?tipo=empresa"
             className="w-full sm:w-auto bg-white text-black font-light text-[15px] sm:text-xs md:text-sm px-7 py-3.5 sm:py-2.5 rounded-xl shadow-lg hover:bg-[#FF8300] hover:text-white transition-all duration-300 cursor-pointer flex items-center justify-center hover:shadow-[0_0_30px_rgba(255,131,0,0.4)]"
           >
             Iniciar Cotización Solar

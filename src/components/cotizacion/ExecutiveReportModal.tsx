@@ -39,6 +39,9 @@ export function ExecutiveReportModal({ isOpen, onClose, formData, sizing, leadId
     }).format(val);
   };
 
+  const isB2B = Boolean(sizing.isB2B || formData.propertyType === "comercial" || formData.propertyType === "agricola");
+  const isOffGrid = formData.systemType === "offgrid";
+
   const currentDateStr = new Date().toLocaleDateString("es-CL", {
     day: "2-digit",
     month: "2-digit",
@@ -103,16 +106,26 @@ export function ExecutiveReportModal({ isOpen, onClose, formData, sizing, leadId
                 SOLDE<span className="text-[#ea580c]">RÍO</span>
               </div>
               <div className="text-[10px] uppercase tracking-widest text-slate-500 font-semibold">
-                Ingeniería Solar & Micro-Redes • Macrozona Sur de Chile
+                {isB2B 
+                  ? "Ingeniería Solar Corporativa • Macrozona Sur de Chile" 
+                  : isOffGrid 
+                    ? "Micro-Redes Aisladas & Almacenamiento • Macrozona Sur de Chile" 
+                    : "Ingeniería Solar & Micro-Redes • Macrozona Sur de Chile"}
               </div>
             </div>
 
             <div className="text-right">
-              <div className="inline-block bg-orange-50 text-orange-800 border border-orange-200 px-3 py-1 rounded-md text-xs font-mono font-bold">
-                PRE-INFORME N° {leadId}
+              <div className={`inline-block px-3 py-1 rounded-md text-xs font-mono font-bold border ${
+                isB2B 
+                  ? "bg-blue-50 text-blue-800 border-blue-200" 
+                  : isOffGrid 
+                    ? "bg-emerald-50 text-emerald-800 border-emerald-200" 
+                    : "bg-orange-50 text-orange-800 border-orange-200"
+              }`}>
+                {isB2B ? `DOSSIER B2B N° ${leadId}` : isOffGrid ? `PRE-INFORME PLANTA AISLADA N° ${leadId}` : `PRE-INFORME N° ${leadId}`}
               </div>
               <div className="text-xs text-slate-500 mt-1">Fecha: {currentDateStr}</div>
-              <div className="text-[11px] text-slate-400">Validez comercial: 30 días</div>
+              <div className="text-[11px] text-slate-400">Validez comercial: 15 días</div>
             </div>
           </div>
 
@@ -130,7 +143,7 @@ export function ExecutiveReportModal({ isOpen, onClose, formData, sizing, leadId
                   <span className="font-semibold text-slate-900">{formData.fullName}</span>
                 </div>
                 <div className="flex justify-between py-1 border-b border-slate-200/60">
-                  <span className="text-slate-500">Comuna / Región:</span>
+                  <span className="text-slate-500">Comuna / Ubicación:</span>
                   <span className="font-semibold text-slate-900">{formData.comuna}</span>
                 </div>
                 <div className="flex justify-between py-1 border-b border-slate-200/60">
@@ -138,8 +151,10 @@ export function ExecutiveReportModal({ isOpen, onClose, formData, sizing, leadId
                   <span className="font-semibold text-slate-900 uppercase">{formData.propertyType}</span>
                 </div>
                 <div className="flex justify-between py-1">
-                  <span className="text-slate-500">Distribuidora / Tarifa:</span>
-                  <span className="font-semibold text-slate-900 uppercase">{formData.distributor} (BT-1)</span>
+                  <span className="text-slate-500">Distribuidora / Conexión:</span>
+                  <span className="font-semibold text-slate-900 uppercase">
+                    {isOffGrid ? "SITIO AISLADO (OFF-GRID 100% AUTÓNOMO)" : `${formData.distributor} (${sizing.requiresThreePhase ? "Trifásico" : "Monofásico"})`}
+                  </span>
                 </div>
               </div>
             </div>
@@ -153,51 +168,72 @@ export function ExecutiveReportModal({ isOpen, onClose, formData, sizing, leadId
               <div className="space-y-1.5 text-xs">
                 <div className="flex justify-between py-1 border-b border-slate-200/60">
                   <span className="text-slate-500">Potencia Pico Sugerida:</span>
-                  <span className="font-semibold text-slate-900">{sizing.recommendedKwp} kWp</span>
+                  <span className="font-semibold text-slate-900">{sizing.recommendedKwp} kWp ({sizing.panelsCount} Módulos)</span>
                 </div>
                 <div className="flex justify-between py-1 border-b border-slate-200/60">
-                  <span className="text-slate-500">Módulos Solares:</span>
-                  <span className="font-semibold text-slate-900">{sizing.panelsCount} Módulos N-Type TOPCon {sizing.panelWatts}W</span>
+                  <span className="text-slate-500">Módulos Tier 1:</span>
+                  <span className="font-semibold text-slate-900">N-Type TOPCon {sizing.panelWatts}W (25 Años Rendimiento)</span>
                 </div>
                 <div className="flex justify-between py-1 border-b border-slate-200/60">
-                  <span className="text-slate-500">Inversor Inteligente:</span>
-                  <span className="font-semibold text-slate-900">{sizing.inverterKw} kW ({sizing.recommendedPhaseType?.toUpperCase() || "MONOFÁSICO"})</span>
+                  <span className="text-slate-500">{isOffGrid ? "Inversor Cargador Off-Grid:" : "Inversor Inteligente:"}</span>
+                  <span className="font-semibold text-slate-900">
+                    {sizing.inverterKw} kW {isOffGrid ? "(Con ATS Generador Aux)" : `(${sizing.recommendedPhaseType?.toUpperCase() || "MONOFÁSICO"})`}
+                  </span>
                 </div>
                 <div className="flex justify-between py-1">
-                  <span className="text-slate-500">Batería LiFePO4:</span>
+                  <span className="text-slate-500">{isOffGrid ? "Banco Baterías LiFePO4:" : sizing.batteryKwh > 0 ? "Batería LiFePO4:" : "Topología de Red:"}</span>
                   <span className="font-semibold text-emerald-700">
-                    {sizing.batteryKwh > 0 ? `${sizing.batteryKwh} kWh (${sizing.usableBatteryKwh || Math.round(sizing.batteryKwh * 0.85)} kWh Útil)` : "On-Grid (Sin Batería)"}
+                    {isOffGrid
+                      ? `${sizing.batteryKwh} kWh (${sizing.usableBatteryKwh || Math.round(sizing.batteryKwh * 0.85)} kWh Útil 24/7)`
+                      : sizing.batteryKwh > 0 
+                        ? `${sizing.batteryKwh} kWh (${sizing.usableBatteryKwh || Math.round(sizing.batteryKwh * 0.85)} kWh Útil)` 
+                        : isB2B ? "On-Grid Industrial (Autoconsumo & Inyección)" : "On-Grid Residencial (Net Billing)"}
                   </span>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Grid 2: Finanzas (03) & Normativa SEC (04) - UBICADOS ANTES DE NUEVA REALIDAD TARIFARIA */}
+          {/* Grid 2: Finanzas (03) & Normativa SEC (04) */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
             {/* Finanzas (03) */}
             <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
               <div className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-3 flex items-center gap-1.5">
                 <TrendingUp className="w-3.5 h-3.5 text-[#ea580c]" />
-                <span>03. Indicadores Financieros a 25 Años</span>
+                <span>{isB2B ? "03. Indicadores Financieros & Tributarios (B2B)" : "03. Indicadores Financieros a 25 Años"}</span>
               </div>
               <div className="space-y-1.5 text-xs">
                 <div className="flex justify-between py-1 border-b border-slate-200/60">
-                  <span className="text-slate-500">Ahorro Acumulado (25 años):</span>
-                  <span className="font-bold text-emerald-700 font-mono">{formatCurrency(sizing.estimated25YearSavingsClp)}</span>
+                  <span className="text-slate-500">Ahorro Anual Estimado:</span>
+                  <span className="font-bold text-emerald-700 font-mono">{formatCurrency(sizing.estimatedAnnualSavingsClp)} / año</span>
                 </div>
                 <div className="flex justify-between py-1 border-b border-slate-200/60">
                   <span className="text-slate-500">Período de Retorno (Payback):</span>
-                  <span className="font-semibold text-slate-900">{sizing.paybackYears} años</span>
+                  <span className="font-semibold text-slate-900">{sizing.paybackYears} años (TIR: {sizing.tirPercent || 15}%)</span>
                 </div>
-                <div className="flex justify-between py-1 border-b border-slate-200/60">
-                  <span className="text-slate-500">Valor Actual Neto (VAN):</span>
-                  <span className="font-semibold text-slate-900 font-mono">{sizing.vanClp ? formatCurrency(sizing.vanClp) : "Positivo"}</span>
-                </div>
-                <div className="flex justify-between py-1">
-                  <span className="text-slate-500">Costo Nivelado (LCOE):</span>
-                  <span className="font-semibold text-slate-900 font-mono">${sizing.lcoeClpPerKwh || 52} CLP / kWh</span>
-                </div>
+                {isB2B ? (
+                  <>
+                    <div className="flex justify-between py-1 border-b border-slate-200/60">
+                      <span className="text-slate-500">Crédito Art. 33 bis LIR (5%):</span>
+                      <span className="font-bold text-emerald-700 font-mono">{formatCurrency(sizing.taxShieldArt33BisClp || 0)}</span>
+                    </div>
+                    <div className="flex justify-between py-1">
+                      <span className="text-slate-500">IVA Crédito Fiscal (19%):</span>
+                      <span className="font-bold text-emerald-700 font-mono">{formatCurrency(sizing.recoverableVatClp || 0)} (F29)</span>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="flex justify-between py-1 border-b border-slate-200/60">
+                      <span className="text-slate-500">Valor Actual Neto (VAN):</span>
+                      <span className="font-semibold text-slate-900 font-mono">{sizing.vanClp ? formatCurrency(sizing.vanClp) : "Positivo"}</span>
+                    </div>
+                    <div className="flex justify-between py-1">
+                      <span className="text-slate-500">Costo Nivelado (LCOE):</span>
+                      <span className="font-semibold text-slate-900 font-mono">${sizing.lcoeClpPerKwh || 52} CLP / kWh</span>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
 
@@ -209,42 +245,85 @@ export function ExecutiveReportModal({ isOpen, onClose, formData, sizing, leadId
                   <span>04. Garantía & Cumplimiento Normativo SEC</span>
                 </div>
                 <div className="flex flex-wrap gap-1.5 mb-2.5">
-                  <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-semibold border border-emerald-200">
-                    Pliego RIC N°09
-                  </span>
-                  <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-semibold border border-emerald-200">
-                    Pliego RIC N°15 (Anti-Isla)
-                  </span>
-                  <span className="px-2 py-0.5 rounded bg-orange-100 text-orange-800 text-[10px] font-semibold border border-orange-200">
-                    Trámite TE-4 SEC
-                  </span>
+                  {isOffGrid ? (
+                    <>
+                      <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-semibold border border-emerald-200">
+                        RIC N°09 (Almacenamiento)
+                      </span>
+                      <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-semibold border border-emerald-200">
+                        RIC N°10 (Inst. Autónomas)
+                      </span>
+                      <span className="px-2 py-0.5 rounded bg-orange-100 text-orange-800 text-[10px] font-semibold border border-orange-200">
+                        Declaración TE-1 SEC
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-semibold border border-emerald-200">
+                        Pliego RIC N°09
+                      </span>
+                      <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-semibold border border-emerald-200">
+                        PE Nº 1/26 Anti-Isla
+                      </span>
+                      <span className="px-2 py-0.5 rounded bg-orange-100 text-orange-800 text-[10px] font-semibold border border-orange-200">
+                        Trámite TE-4 SEC
+                      </span>
+                    </>
+                  )}
                 </div>
                 <p className="text-[11px] text-slate-600 leading-snug">
-                  Proyecto llave en mano diseñado bajo estricta normativa chilena con tramitación formal ante la SEC y medidor bidireccional.
+                  {isB2B 
+                    ? `Vía Regulatoria: ${sizing.regulatoryTitle || "Ley 21.118 Netbilling"}. Provisión de recambio de inversor año 12 incluída en modelo.` 
+                    : isOffGrid
+                      ? "Proyecto autónomo 100% aislado de la red diseñado bajo estricta normativa SEC (RIC N°09 y N°10). Incluye banco LiFePO4 de ciclo profundo, protecciones DC/AC integradas y tramitación formal TE-1."
+                      : "Proyecto llave en mano diseñado bajo estricta normativa chilena con tramitación formal ante la SEC y medidor bidireccional."}
                 </p>
               </div>
 
               <div className="pt-2.5 mt-2.5 border-t border-slate-200 text-[10px] text-slate-400 font-mono">
-                Garantía de potencia solar: 25 Años al 84.8%
+                {isOffGrid 
+                  ? "Banco LiFePO4: +6.000 ciclos de vida útil • Garantía solar 25 Años al 84.8%"
+                  : "Garantía de potencia solar: 25 Años al 84.8% • Tier 1 TOPCon"}
               </div>
             </div>
           </div>
 
-          {/* Spotlight Ahorro Banner: NUEVA REALIDAD TARIFARIA */}
+          {/* Spotlight Ahorro Banner */}
           <div className="p-5 bg-gradient-to-r from-slate-900 to-slate-800 text-white rounded-xl mb-5 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
               <div className="text-[11px] font-mono uppercase tracking-widest text-[#ea580c] font-semibold flex items-center gap-1.5">
                 <Sparkles className="w-3.5 h-3.5" />
-                <span>NUEVA REALIDAD TARIFARIA (LEY 21.118)</span>
+                <span>
+                  {isB2B 
+                    ? "IMPACTO FINANCIERO OPERACIONAL (B2B)" 
+                    : isOffGrid 
+                      ? "INDEPENDENCIA ENERGÉTICA TOTAL (OFF-GRID 24/7)" 
+                      : "NUEVA REALIDAD TARIFARIA (LEY 21.118)"}
+                </span>
               </div>
-              <div className="text-lg font-medium mt-1">
-                Tu boleta mensual baja de <span className="line-through text-slate-400">{formatCurrency(formData.monthlyBillClp)}</span> a solo{" "}
-                <strong className="text-emerald-400">{formatCurrency(sizing.estimatedNewMonthlyBillClp || 14500)} / mes</strong>
+              <div className="text-base sm:text-lg font-medium mt-1">
+                {isB2B ? (
+                  <>
+                    Inversión Neta: <strong className="text-sky-300 font-mono">{formatCurrency(sizing.estimatedSystemCostNetoClp || 0)}</strong> • Costo Neto Efectivo con Escudo Fiscal: <strong className="text-emerald-400 font-mono">{formatCurrency((sizing.estimatedSystemCostNetoClp || 0) - (sizing.taxShieldArt33BisClp || 0))}</strong>
+                  </>
+                ) : isOffGrid ? (
+                  <>
+                    Gasto de referencia reemplazado: <span className="line-through text-slate-400">{formatCurrency(formData.monthlyBillClp)}</span> a solo{" "}
+                    <strong className="text-emerald-400">$0 / mes (Autosuficiencia 100%)</strong>
+                  </>
+                ) : (
+                  <>
+                    Tu boleta mensual baja de <span className="line-through text-slate-400">{formatCurrency(formData.monthlyBillClp)}</span> a solo{" "}
+                    <strong className="text-emerald-400">{formatCurrency(sizing.estimatedNewMonthlyBillClp || 14500)} / mes</strong>
+                  </>
+                )}
               </div>
             </div>
 
             <div className="text-right flex-shrink-0 bg-white/10 px-4 py-2 rounded-lg border border-white/10">
-              <span className="text-[10px] uppercase text-slate-300 block font-mono">Ahorro Anual Estimado</span>
+              <span className="text-[10px] uppercase text-slate-300 block font-mono">
+                {isOffGrid ? "Ahorro Operacional Anual" : "Ahorro Anual Estimado"}
+              </span>
               <span className="text-xl font-bold font-mono text-emerald-400">
                 {formatCurrency(sizing.estimatedAnnualSavingsClp)}
               </span>
@@ -255,7 +334,11 @@ export function ExecutiveReportModal({ isOpen, onClose, formData, sizing, leadId
           <div className="mb-6">
             <div className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2 flex items-center gap-1.5">
               <FileText className="w-3.5 h-3.5 text-[#ea580c]" />
-              <span>05. Balance Energético Mensual TMY ({formData.comuna})</span>
+              <span>
+                {isOffGrid 
+                  ? `05. Balance de Autonomía & Generación Mensual TMY (${formData.comuna})` 
+                  : `05. Balance Energético Mensual TMY (${formData.comuna})`}
+              </span>
             </div>
             
             <div className="overflow-x-auto">
@@ -266,7 +349,9 @@ export function ExecutiveReportModal({ isOpen, onClose, formData, sizing, leadId
                     <th className="p-2 text-center">POA (kWh/m²/día)</th>
                     <th className="p-2 text-center">Generación (kWh)</th>
                     <th className="p-2 text-center">Consumo (kWh)</th>
-                    <th className="p-2 text-right rounded-tr-md">Balance / Excedentes</th>
+                    <th className="p-2 text-right rounded-tr-md">
+                      {isOffGrid ? "Balance / Autonomía" : "Balance / Excedentes"}
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-200 text-slate-700">
@@ -279,10 +364,18 @@ export function ExecutiveReportModal({ isOpen, onClose, formData, sizing, leadId
                         <td className="p-2 text-center font-mono font-semibold text-[#ea580c]">{m.monthlyGenKwh} kWh</td>
                         <td className="p-2 text-center font-mono text-slate-600">{m.monthlyDemandKwh} kWh</td>
                         <td className="p-2 text-right font-mono font-medium">
-                          {isSurplus ? (
-                            <span className="text-emerald-700 font-semibold">+{m.monthlyGenKwh - m.monthlyDemandKwh} kWh (Inyección)</span>
+                          {isOffGrid ? (
+                            isSurplus ? (
+                              <span className="text-emerald-700 font-semibold">+{m.monthlyGenKwh - m.monthlyDemandKwh} kWh (Baterías 100% / Autonomía)</span>
+                            ) : (
+                              <span className="text-amber-700 font-semibold">-{m.monthlyDemandKwh - m.monthlyGenKwh} kWh (Respaldo BESS / Aux)</span>
+                            )
                           ) : (
-                            <span className="text-blue-700">-{m.monthlyDemandKwh - m.monthlyGenKwh} kWh (Red/BESS)</span>
+                            isSurplus ? (
+                              <span className="text-emerald-700 font-semibold">+{m.monthlyGenKwh - m.monthlyDemandKwh} kWh (Inyección)</span>
+                            ) : (
+                              <span className="text-blue-700">-{m.monthlyDemandKwh - m.monthlyGenKwh} kWh (Red/BESS)</span>
+                            )
                           )}
                         </td>
                       </tr>

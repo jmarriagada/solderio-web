@@ -33,6 +33,11 @@ interface FloatingNavProps {
 export function FloatingNav({ alwaysVisible = false }: FloatingNavProps = {}) {
   const pathname = usePathname();
   const isCotizacionPage = pathname === "/cotizacion" || pathname?.startsWith("/cotizacion");
+  const cotizacionUrl = pathname?.startsWith("/empresas")
+    ? "/cotizacion?tipo=empresa"
+    : pathname?.startsWith("/hogar")
+    ? "/cotizacion?tipo=hogar"
+    : "/cotizacion";
   const [isVisible, setIsVisible] = useState(alwaysVisible);
   const [isDescubreOpen, setIsDescubreOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -153,7 +158,7 @@ export function FloatingNav({ alwaysVisible = false }: FloatingNavProps = {}) {
                 </a>
               ) : (
                 <Link
-                  href="/cotizacion"
+                  href={cotizacionUrl}
                   className="flex items-center gap-1.5 text-[13px] font-light tracking-wide bg-[#FF8300] text-white px-4 py-2 rounded-full hover:bg-[#e07400] transition-all shadow-sm hover:shadow-[0_0_15px_rgba(255,131,0,0.4)] whitespace-nowrap"
                 >
                   <span className="font-light">Cotizar</span>
@@ -369,7 +374,7 @@ export function FloatingNav({ alwaysVisible = false }: FloatingNavProps = {}) {
                         </a>
                       ) : (
                         <Link
-                          href="/cotizacion"
+                          href={cotizacionUrl}
                           onClick={() => setIsMobileMenuOpen(false)}
                           className="w-full py-3 rounded-full bg-[#FF8300] text-white text-sm font-light tracking-wide hover:bg-[#e07400] transition-all flex items-center justify-center gap-2 shadow-md cursor-pointer"
                         >

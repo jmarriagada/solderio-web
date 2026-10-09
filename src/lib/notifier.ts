@@ -102,7 +102,7 @@ export async function notifyInternalQuoteLead(params: {
 
 ☀️ <b>POTENCIA SUGERIDA:</b> ${sizingResult.recommendedKwp} kWp (${sizingResult.panelsCount} Paneles 580W)
 🔋 <b>Batería LiFePO4:</b> ${sizingResult.batteryKwh > 0 ? `${sizingResult.batteryKwh} kWh` : "On-Grid Net Billing"}
-💰 <b>Inversión Estimada:</b> ${formatCLP(sizingResult.estimatedSystemCostNetoClp)} + IVA
+💰 <b>Inversión Estimada:</b> ${formatCLP(sizingResult.estimatedSystemCostNetoClp || 0)} + IVA
 📈 <b>Ahorro Proyectado:</b> ${formatCLP(sizingResult.estimatedAnnualSavingsClp)}/año
 💡 <b>Gasto Mensual Actual:</b> ${formatCLP(formData.monthlyBillClp)}/mes
 
@@ -196,7 +196,7 @@ export async function notifyInternalQuoteLead(params: {
         <tr style="border-bottom: 1px solid #e5e7eb;">
           <td style="padding: 8px 12px; color: #6b7280;">Inversión Neta:</td>
           <td style="padding: 8px 12px; font-weight: 600; color: #1f1f1f;">
-            ${formatCLP(sizingResult.estimatedSystemCostNetoClp)} + IVA
+            ${formatCLP(sizingResult.estimatedSystemCostNetoClp || 0)} + IVA
           </td>
         </tr>
         <tr>

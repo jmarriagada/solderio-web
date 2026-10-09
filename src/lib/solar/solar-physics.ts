@@ -1,6 +1,7 @@
 /**
  * Solderío Solar Engineering - Módulo de Física Solar & BOS
- * Modela la termodinámica de celdas N-Type TOPCon 580W, pérdidas BOS y curvas de generación
+ * Modela la termodinámica de celdas N-Type TOPCon 585W, pérdidas BOS completas y curvas de generación
+ * Calibrado con perfiles TMY oficiales del Explorador Solar MinEnergía / FCFM Universidad de Chile
  */
 
 import { CommuneMeteorologicalProfile, MonthlyMeteorology } from "./meteorology-tmy";
@@ -11,34 +12,44 @@ export interface PVModuleSpecs {
   pStcWatts: number;
   gammaPmpPercentPerCelsius: number; // Coeficiente térmico de potencia (-0.30%/°C para TOPCon)
   noctCelsius: number; // Temperatura de Operación Nominal de Celda (43°C)
-  efficiencyPercent: number; // 22.5%
-  areaM2: number; // ~2.58 m² por módulo 580W
+  efficiencyPercent: number; // 22.6%
+  areaM2: number; // ~2.58 m² por módulo 585W
 }
 
 export const TOPCON_580W_SPECS: PVModuleSpecs = {
-  model: "SoldeRío Tier 1 N-Type TOPCon 580W Bifacial",
+  model: "SoldeRío Tier 1 N-Type TOPCon 585W Bifacial",
   technology: "N-Type TOPCon Bifacial",
-  pStcWatts: 580,
+  pStcWatts: 585,
   gammaPmpPercentPerCelsius: -0.30,
   noctCelsius: 43.0,
-  efficiencyPercent: 22.5,
+  efficiencyPercent: 22.6,
   areaM2: 2.58,
 };
 
 export interface SystemLossesBOS {
-  soilingLossPercent: number; // Ensuciamiento (2.0% en el sur con lluvia frecuente)
-  mismatchLossPercent: number; // Mismatch y tolerancia de fábrica (1.5%)
+  soilingLossPercent: number; // Ensuciamiento (1.8% en el sur con lluvia frecuente y polen)
+  mismatchLossPercent: number; // Tolerancia de potencia y mismatch de módulos (1.5%)
   dcWiringLossPercent: number; // Caída de tensión DC (1.2% <= 1.5% RIC N°09)
-  acWiringLossPercent: number; // Caída de tensión AC (1.8% <= 3.0% RIC N°09)
-  inverterEfficiencyPercent: number; // Eficiencia europea inversor string (97.5%)
+  acWiringLossPercent: number; // Caída de tensión AC (1.3% <= 3.0% RIC N°09)
+  iamLossPercent: number; // Reflexión óptica angular (Incidence Angle Modifier: 3.0%)
+  horizonAndNearShadingLossPercent: number; // Sombras difusas de horizonte topográfico y techo (3.5%)
+  lidLossPercent: number; // Degradación inducida por luz inicial / calidad (1.0%)
+  lowIrradianceLossPercent: number; // Eficiencia a baja irradiancia en días nublados del sur (3.5%)
+  mpptTrackingLossPercent: number; // Dinámica de seguimiento MPPT en clima variable (1.5%)
+  inverterEfficiencyPercent: number; // Eficiencia europea ponderada inversor Huawei SUN2000 (97.6%)
 }
 
 export const DEFAULT_BOS_LOSSES: SystemLossesBOS = {
-  soilingLossPercent: 1.6,
-  mismatchLossPercent: 1.2,
-  dcWiringLossPercent: 1.0,
-  acWiringLossPercent: 1.4,
-  inverterEfficiencyPercent: 98.2,
+  soilingLossPercent: 1.8,
+  mismatchLossPercent: 1.5,
+  dcWiringLossPercent: 1.2,
+  acWiringLossPercent: 1.3,
+  iamLossPercent: 3.0,
+  horizonAndNearShadingLossPercent: 3.5,
+  lidLossPercent: 1.0,
+  lowIrradianceLossPercent: 3.5,
+  mpptTrackingLossPercent: 1.5,
+  inverterEfficiencyPercent: 97.6,
 };
 
 export interface MonthlyGenerationResult {
@@ -65,7 +76,7 @@ export interface PhysicalSimulationResult {
 }
 
 /**
- * Calcula la temperatura media de celda en función de la irradiación y temperatura ambiente
+ * Calcula la temperatura media diurna de celda en función de la irradiación y temperatura ambiente
  */
 export function calculateCellTemperature(
   tAmbCelsius: number,
@@ -104,12 +115,17 @@ export function simulateSolarPlantGeneration(
 
   const effectiveSoiling = communeProfile.soilingLossPct || bosLosses.soilingLossPercent;
 
-  // Factor de pérdidas no térmicas (calibrado con régimen pluvial de la macrozona sur)
+  // Factor de pérdidas no térmicas del sistema (BOS completo de ingeniería)
   const nonThermalLossesFactor =
     (1 - effectiveSoiling / 100) *
     (1 - bosLosses.mismatchLossPercent / 100) *
     (1 - bosLosses.dcWiringLossPercent / 100) *
     (1 - bosLosses.acWiringLossPercent / 100) *
+    (1 - bosLosses.iamLossPercent / 100) *
+    (1 - bosLosses.horizonAndNearShadingLossPercent / 100) *
+    (1 - bosLosses.lidLossPercent / 100) *
+    (1 - bosLosses.lowIrradianceLossPercent / 100) *
+    (1 - bosLosses.mpptTrackingLossPercent / 100) *
     (bosLosses.inverterEfficiencyPercent / 100);
 
   let annualGenKwh = 0;
@@ -118,13 +134,14 @@ export function simulateSolarPlantGeneration(
   communeProfile.monthlyData.forEach((m: MonthlyMeteorology) => {
     const tCell = calculateCellTemperature(m.avgTempCelsius, m.poaKwhM2Day, moduleSpecs.noctCelsius);
 
-    // Derating térmico: P_DC = P_STC * [1 + gamma * (T_cell - 25)]
-    // En invierno en el sur T_cell puede ser < 25°C, incrementando la eficiencia del módulo
-    const thermalDeratingFactor = 1 + (moduleSpecs.gammaPmpPercentPerCelsius / 100) * (tCell - 25);
+    // Derating térmico TOPCon: gamma = -0.30%/°C
+    // En invierno el frío satura por baja irradiancia (máximo +1.0% de ganancia térmica)
+    let thermalDeratingFactor = 1 + (moduleSpecs.gammaPmpPercentPerCelsius / 100) * (tCell - 25);
+    thermalDeratingFactor = Math.min(1.01, Math.max(0.91, thermalDeratingFactor));
 
     const monthlyPR = Math.round(nonThermalLossesFactor * thermalDeratingFactor * 1000) / 10;
 
-    // Generación mensual: E = P_DC_kW * HSP_diarias * días * PR
+    // Generación mensual: E = P_DC_kW * POA_diaria * días * PR
     const monthlyGen = Math.round(installedKwp * m.poaKwhM2Day * m.daysInMonth * (monthlyPR / 100));
 
     annualGenKwh += monthlyGen;

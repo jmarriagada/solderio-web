@@ -14,7 +14,10 @@ import {
   calculateDemandFromMonthlyKwh,
   DISTRIBUTOR_TARIFFS,
   MonthlyDemandProfile,
-  OM_PACKAGES 
+  OM_PACKAGES,
+  generateTypicalDayHourlyProfile,
+  generateNetBillingMonthlyLedger,
+  generateRightsAndCommitments
 } from "./tariffs-netbilling";
 import { validateSecCompliance } from "./sec-compliance";
 
@@ -22,6 +25,7 @@ export * from "./meteorology-tmy";
 export * from "./solar-physics";
 export * from "./bess-sizing";
 export * from "./tariffs-netbilling";
+export * from "./tariffs-config";
 export * from "./sec-compliance";
 
 /**
@@ -68,12 +72,34 @@ export function calculateSolarSizing(data: Partial<QuoteFormData>): SolarSizingR
   const targetAnnualGenKwh = totalAnnualDemandKwh * coverageRatio;
 
   // 4. Dimensionamiento de potencia DC y conteo de módulos N-Type TOPCon 585W
-  const rawKwp = targetAnnualGenKwh / meteoProfile.specificYieldKwhKwp;
-  const rawPanelsCount = Math.ceil((rawKwp * 1000) / TOPCON_580W_SPECS.pStcWatts);
-  const panelsCount = Math.max(6, rawPanelsCount); // Mínimo 6 paneles para tensión de arranque MPPT (~220V)
+  const isBessOnly = systemType === "bess";
+  const rawKwp = isBessOnly ? 0 : targetAnnualGenKwh / meteoProfile.specificYieldKwhKwp;
+  const rawPanelsCount = isBessOnly ? 0 : Math.ceil((rawKwp * 1000) / TOPCON_580W_SPECS.pStcWatts);
+  const panelsCount = isBessOnly ? 0 : Math.max(6, rawPanelsCount); // Mínimo 6 paneles para tensión de arranque MPPT (~220V)
 
   // 5. Simulación Física Solar (Termodinámica TOPCon + BOS + Pérdidas)
-  const physicalSim = simulateSolarPlantGeneration(panelsCount, meteoProfile);
+  const physicalSim = isBessOnly
+    ? {
+        installedKwp: 0,
+        panelsCount: 0,
+        inverterKw: Math.min(30, Math.max(5, Math.ceil(avgMonthlyDemandKwh / 150))),
+        ilrRatio: 0,
+        annualGenKwh: 0,
+        summerAvgMonthlyGenKwh: 0,
+        winterAvgMonthlyGenKwh: 0,
+        seasonalVariationRatio: 1,
+        avgPerformanceRatioPercent: 0,
+        monthlyBreakdown: meteoProfile.monthlyData.map((m) => ({
+          month: m.month,
+          monthName: m.monthName,
+          poaKwhM2Day: m.poaKwhM2Day,
+          tCellCelsius: m.avgTempCelsius,
+          thermalDeratingFactor: 1,
+          performanceRatioPercent: 0,
+          monthlyGenKwh: 0,
+        })),
+      }
+    : simulateSolarPlantGeneration(panelsCount, meteoProfile);
 
   // 6. Dimensionamiento BESS LiFePO4
   const bessResult = calculateBessSizing(
@@ -83,7 +109,10 @@ export function calculateSolarSizing(data: Partial<QuoteFormData>): SolarSizingR
     backupPriority
   );
 
-  // 7. Simulación Financiera Net Billing y Pricing Oficial SoldeRío
+  // Clasificación B2C vs B2B
+  const isB2B = propertyType === "comercial" || propertyType === "agricola" || monthlyBill >= 450000 || physicalSim.installedKwp >= 15;
+
+  // 7. Simulación Financiera Net Billing y Pricing Oficial SoldeRío (con O&M, recambio año 12 y Art. 33 bis)
   const financials = calculateNetBillingFinancials(
     physicalSim.annualGenKwh,
     monthlyBill,
@@ -91,7 +120,8 @@ export function calculateSolarSizing(data: Partial<QuoteFormData>): SolarSizingR
     systemType,
     physicalSim.installedKwp,
     bessResult.nominalBatteryKwh,
-    seasonalDemands
+    seasonalDemands,
+    isB2B
   );
 
   // 8. Validación de Normativa SEC
@@ -102,7 +132,7 @@ export function calculateSolarSizing(data: Partial<QuoteFormData>): SolarSizingR
     hasPhases
   );
 
-  // Cruce mensual Generación Solar vs Demanda Real de la Casa
+  // Cruce mensual Generación Solar vs Demanda Real de la Casa / Empresa
   const monthlyBreakdown: MonthlyGenBreakdown[] = physicalSim.monthlyBreakdown.map((m, idx) => {
     const demand = seasonalDemands[idx]?.demandKwh || avgMonthlyDemandKwh;
     const surplusKwh = Math.max(0, m.monthlyGenKwh - demand);
@@ -119,6 +149,48 @@ export function calculateSolarSizing(data: Partial<QuoteFormData>): SolarSizingR
       gridImportKwh,
     };
   });
+
+  // Clasificación Regulatoria Oficial (DFL 4/2006 LGSE + DS 57/2019 + DS 8/2019)
+  let regulatoryTrack: "netbilling_ley21118" | "inyeccion_cero_ric09" | "aislada_ric9.1" | "bess_almacenamiento" = "netbilling_ley21118";
+  let regulatoryTitle = "Ley 21.118 Netbilling (Generación Distribuida ≤ 300 kW)";
+  let regulatoryDecree = "DFL 4/2006 + DS 57/2019 + DS 8/2019";
+  let regulatoryNorm = "Pliegos RIC N° 01-19 + NTCO-EG + RGR 01/2024";
+  let regulatoryTramite = "Trámite Eléctrico TE4 vía Plataforma GDA SEC (F1 a F5)";
+
+  if (systemType === "offgrid") {
+    regulatoryTrack = "aislada_ric9.1";
+    regulatoryTitle = "Instalación Aislada Off-Grid (Sin Conexión a Red)";
+    regulatoryDecree = "Pliego Técnico RIC N° 09.1 - Autogeneración Aislada";
+    regulatoryNorm = "RIC 01 al RIC 19 + Protecciones Atmosféricas";
+    regulatoryTramite = "Declaración Eléctrica TE1 ante SEC";
+  } else if (data.includeZeroInjection) {
+    regulatoryTrack = "inyeccion_cero_ric09";
+    regulatoryTitle = "Autoconsumo Industrial con Inyección Cero";
+    regulatoryDecree = "DS 57/2019 + Pliego Técnico RIC N° 09";
+    regulatoryNorm = "Relé de Inyección Cero Certificado SEC + Smart Power Sensor";
+    regulatoryTramite = "Trámite Eléctrico TE4 / TE1 Simplificado";
+  } else if (isBessOnly) {
+    regulatoryTrack = "bess_almacenamiento";
+    regulatoryTitle = "Sistema de Almacenamiento Puro BESS";
+    regulatoryDecree = "Ley 21.505 de Almacenamiento + DS 8/2019";
+    regulatoryNorm = "Pliegos RIC N° 09 y RIC N° 10 (Sistemas de Baterías)";
+    regulatoryTramite = "Declaración TE4 BESS ante SEC";
+  } else if (physicalSim.installedKwp > 300) {
+    regulatoryTitle = "PMGD / Pequeño Medio de Generación Distribuida (DS 88/2019)";
+    regulatoryDecree = "DFL 4/2006 + DS 88/2019 + Norma Técnica CNE";
+    regulatoryNorm = "Coordinador Eléctrico Nacional + SEC";
+    regulatoryTramite = "Conexión PMGD ante Distribuidora e ICC CNE";
+  }
+
+  // Generación de Perfiles para "Saber más" (Imágenes de la industria)
+  const dailySolarGenKwh = physicalSim.annualGenKwh / 365;
+  const dailyDemandKwh = totalAnnualDemandKwh / 365;
+  const hourlyProfileSample = generateTypicalDayHourlyProfile(dailySolarGenKwh, dailyDemandKwh, isB2B);
+  const netBillingMonthlyLedger = generateNetBillingMonthlyLedger(monthlyBreakdown, tariff);
+  const rightsAndCommitments = generateRightsAndCommitments();
+
+  // Ahorro por mitigación de horas punta para clientes comerciales/agrícolas (BT2/BT3/AT)
+  const peakHourDemandSavingsClp = isB2B ? Math.round((monthlyBill * 12) * 0.18) : undefined;
 
   // Impacto ambiental (0.385 kg CO2 por kWh evitado en matriz chilena SEN)
   const co2TonsAvoidedPerYear = Math.round(((physicalSim.annualGenKwh * 0.385) / 1000) * 10) / 10;
@@ -245,5 +317,25 @@ export function calculateSolarSizing(data: Partial<QuoteFormData>): SolarSizingR
     
     // Simulación Crédito
     financingSimulation,
+
+    // Métricas Financieras y Tributarias B2B (Corporativo / Agrícola / Pymes)
+    taxShieldArt33BisClp: financials.taxShieldArt33BisClp,
+    recoverableVatClp: financials.recoverableVatClp,
+    peakHourDemandSavingsClp,
+    annualOpexClp: financials.annualOpexClp,
+    inverterReplacementCostYear12Clp: financials.inverterReplacementCostYear12Clp,
+    isB2B,
+
+    // Mapa Regulatorio Oficial Chileno (DFL 4/2006 LGSE)
+    regulatoryTrack,
+    regulatoryTitle,
+    regulatoryDecree,
+    regulatoryNorm,
+    regulatoryTramite,
+
+    // Perfiles Gráficos e Indicadores "Saber más"
+    hourlyProfileSample,
+    netBillingMonthlyLedger,
+    rightsAndCommitments,
   };
 }

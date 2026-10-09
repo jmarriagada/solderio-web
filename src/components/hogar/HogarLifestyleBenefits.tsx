@@ -271,7 +271,7 @@ export function HogarLifestyleBenefits() {
           </div>
 
           <Link
-            href="/cotizacion"
+            href="/cotizacion?tipo=hogar"
             className="group relative z-10 whitespace-nowrap px-8 py-3.5 rounded-full bg-white text-black font-light text-[14px] md:text-sm hover:bg-[#FF8300] hover:text-white transition-all duration-300 shadow-lg hover:shadow-[0_0_30px_rgba(255,131,0,0.4)] cursor-pointer flex items-center justify-center gap-2"
           >
             <span>Iniciar Cotización</span>

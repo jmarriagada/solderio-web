@@ -46,6 +46,11 @@ export function HeroHeaderNav({
 }: HeroHeaderNavProps) {
   const pathname = usePathname();
   const isCotizacionPage = pathname === "/cotizacion" || pathname?.startsWith("/cotizacion");
+  const cotizacionUrl = pathname?.startsWith("/empresas")
+    ? "/cotizacion?tipo=empresa"
+    : pathname?.startsWith("/hogar")
+    ? "/cotizacion?tipo=hogar"
+    : "/cotizacion";
   const [isDescubreOpen, setIsDescubreOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { openModal } = useVisitaModal();
@@ -208,7 +213,7 @@ export function HeroHeaderNav({
 
               {/* Main CTA Button with Satoshi Light typography */}
               <Link
-                href="/cotizacion"
+                href={cotizacionUrl}
                 className="relative overflow-hidden flex items-center gap-1.5 text-xs sm:text-[13px] font-light tracking-wide bg-gradient-to-r from-[#FF8300] via-[#FF8D10] to-[#FF8300] text-white px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-full border border-white/20 shadow-sm hover:shadow-[0_0_20px_rgba(255,131,0,0.5)] transition-all duration-300 cursor-pointer whitespace-nowrap active:scale-[0.98]"
               >
                 {/* Subtle Shimmer Sweep passing across the button */}
@@ -442,7 +447,7 @@ export function HeroHeaderNav({
                   </a>
                 ) : (
                   <Link
-                    href="/cotizacion"
+                    href={cotizacionUrl}
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="w-full py-3.5 rounded-full bg-[#FF8300] text-white text-sm font-light tracking-wide hover:bg-[#e07400] transition-all flex items-center justify-center gap-2 shadow-lg cursor-pointer"
                   >

@@ -81,6 +81,7 @@ interface ParsedQuoteParams {
   comuna?: string;
   region?: string;
   step?: number;
+  businessIndustry?: string;
 }
 
 function parseQuoteUrlParams(params: URLSearchParams | null): ParsedQuoteParams {
@@ -138,6 +139,12 @@ function parseQuoteUrlParams(params: URLSearchParams | null): ParsedQuoteParams 
 
   let systemType: TopologyType | undefined;
   if (
+    sysRaw.includes("bess") ||
+    sysRaw.includes("solo-bateria") ||
+    sysRaw.includes("peak-shaving")
+  ) {
+    systemType = "bess";
+  } else if (
     sysRaw.includes("offgrid") ||
     sysRaw.includes("off-grid") ||
     sysRaw.includes("aislada") ||
@@ -169,13 +176,16 @@ function parseQuoteUrlParams(params: URLSearchParams | null): ParsedQuoteParams 
   const comuna = params.get("comuna") || undefined;
   const region = params.get("region") || undefined;
 
+  const indRaw = params.get("industria") || params.get("rubro") || params.get("industry");
+  const businessIndustry = indRaw ? decodeURIComponent(indRaw).trim() : undefined;
+
   const stepRaw = params.get("paso") || params.get("step");
   const step =
     stepRaw && !isNaN(Number(stepRaw))
       ? Math.min(4, Math.max(1, Number(stepRaw)))
       : undefined;
 
-  return { propertyType, systemType, includeEvCharger, comuna, region, step };
+  return { propertyType, systemType, includeEvCharger, comuna, region, step, businessIndustry };
 }
 
 export function SmartQuoteWizard() {
@@ -201,13 +211,16 @@ export function SmartQuoteWizard() {
   } | null>(null);
   const [activePlantModal, setActivePlantModal] = useState<PlantModalType | null>(null);
 
+  const isInitialEnterprise = initialParams.propertyType === "comercial" || initialParams.propertyType === "agricola";
+
   const [formData, setFormData] = useState<QuoteFormData>({
     propertyType: initialParams.propertyType || "residencial",
+    businessIndustry: initialParams.businessIndustry || "",
     region: initialParams.region || DEFAULT_REGION,
     comuna: initialParams.comuna || "Puerto Varas",
     address: "",
     consumptionMode: "monthly_bill_clp",
-    monthlyBillClp: 120000,
+    monthlyBillClp: isInitialEnterprise ? 500000 : 120000,
     annualKwh: 6000,
     monthlyKwhBreakdown: DEFAULT_MONTHLY_KWH,
     distributor: "saesa",
@@ -226,6 +239,9 @@ export function SmartQuoteWizard() {
     acceptTerms: true,
   });
 
+  const [showAdvancedMode, setShowAdvancedMode] = useState(false);
+  const isEnterprise = formData.propertyType === "comercial" || formData.propertyType === "agricola";
+
   // Re-sync if URL search params change dynamically
   useEffect(() => {
     if (!searchParams) return;
@@ -236,6 +252,10 @@ export function SmartQuoteWizard() {
       let changed = false;
       if (parsed.propertyType && parsed.propertyType !== prev.propertyType) {
         updated.propertyType = parsed.propertyType;
+        changed = true;
+      }
+      if (parsed.businessIndustry && parsed.businessIndustry !== prev.businessIndustry) {
+        updated.businessIndustry = parsed.businessIndustry;
         changed = true;
       }
       if (parsed.systemType && parsed.systemType !== prev.systemType) {
@@ -265,33 +285,64 @@ export function SmartQuoteWizard() {
     }
   }, [searchParams]);
 
-  const propertyTypes: { id: PropertyType; title: string; desc: string; icon: any }[] = [
-    { id: "residencial", title: "Casa Urbana", desc: "Residencia en ciudad o condominio", icon: Home },
-    { id: "parcela", title: "Parcela de Agrado", desc: "Casa de campo o zona periurbana", icon: Trees },
-    { id: "comercial", title: "Comercial / Pyme", desc: "Local, taller, hotel o bodega", icon: Building2 },
-    { id: "agricola", title: "Industria", desc: "Agrícola, Lechería, Packing, Riego, Acuícola", icon: Factory },
+  const propertyCategories: { id: PropertyType; title: string; desc: string; icon: any }[] = [
+    {
+      id: "residencial",
+      title: "Hogar o Parcela",
+      desc: "Casas en ciudad, condominios, campo o parcelas de agrado",
+      icon: Home,
+    },
+    {
+      id: "comercial",
+      title: "Empresa o Negocio",
+      desc: "Comercio, talleres, turismo, agrícola o industrias",
+      icon: Building2,
+    },
   ];
 
-  const systems: { id: TopologyType; title: string; tag: string; desc: string }[] = [
+  const residentialSystems: { id: TopologyType; title: string; tag: string; desc: string }[] = [
     {
       id: "hibrida",
-      title: "Planta Solar Híbrida",
-      tag: "Generación + Respaldo",
-      desc: "Genera energía solar, Autoconsume, Integra baterías para respaldo, Vende la energía sobrante a la red.",
+      title: "Independencia y Respaldo (Anti-Cortes)",
+      tag: "Sistema Híbrido (El Más Popular)",
+      desc: "Genera tu propia energía, inyecta el sobrante a la red para ahorrar y mantén tu casa iluminada con baterías aunque haya cortes de luz.",
     },
     {
       id: "ongrid",
-      title: "Planta Solar On-Grid",
-      tag: "La más económica",
-      desc: "Genera energía solar, Autoconsume, Vende la energía sobrante a la red. (Sin baterías)",
+      title: "Máximo Ahorro Mensual en tu Boleta",
+      tag: "On-Grid (Sin Baterías)",
+      desc: "La opción más económica. Reduce tu cuenta de luz hasta un 95% inyectando a la red. (Se desactiva por seguridad si hay un apagón en el sector).",
     },
     {
       id: "offgrid",
-      title: "Planta Solar Off-Grid",
-      tag: "100% de Autonomía",
-      desc: "Autonomía Total: Genera energía solar, Autoconsume, Integra baterías para uso nocturno, Conecta un generador de respaldo.",
+      title: "Autonomía Total (Aislado de la red)",
+      tag: "Off-Grid (Con Baterías)",
+      desc: "Ideal para zonas rurales sin tendido eléctrico. Funciona 100% desconectado, apoyado con baterías y generador. Nunca le pagarás a la compañía.",
     },
   ];
+
+  const enterpriseSystems: { id: TopologyType; title: string; tag: string; desc: string }[] = [
+    {
+      id: "ongrid",
+      title: "Reducción de Costo Eléctrico Diurno",
+      tag: "Solar con Máximo ROI Comercial",
+      desc: "Solución On-Grid: Inyecta y autoconsume energía solar durante las horas de operación de tu empresa. Amortización acelerada y deducción de gasto tributario.",
+    },
+    {
+      id: "hibrida",
+      title: "Energía Continua & Respaldo Crítico",
+      tag: "Solar + Respaldo Grado UPS",
+      desc: "Solución Híbrida: Protege servidores, cámaras frigoríficas o líneas de producción frente a microcortes y apagones prolongados, reduciendo tu consumo de red.",
+    },
+    {
+      id: "bess",
+      title: "Banco de Baterías Inteligente (Sin Paneles)",
+      tag: "Ahorro en Horas Punta & Tarifa BT3/AT4",
+      desc: "Solución BESS (Solo Baterías): Almacena energía en horario económico de red y descárgala en Horas Punta (18:00 a 22:00 hrs) para evitar el recargo por potencia máxima contratada.",
+    },
+  ];
+
+  const systems = isEnterprise ? enterpriseSystems : residentialSystems;
 
   const formatCurrency = (val: number) => {
     return new Intl.NumberFormat("es-CL", {
@@ -505,23 +556,47 @@ export function SmartQuoteWizard() {
             >
               <div>
                 <h2 className="text-xl sm:text-2xl md:text-3xl font-light tracking-tight text-white mb-2">
-                  ¿Dónde instalaremos la planta solar?
+                  ¿Para qué tipo de proyecto cotizas?
                 </h2>
                 <p className="text-white/60 text-xs md:text-sm font-light">
-                  Selecciona el tipo de inmueble para adaptar el cálculo de cubiertas y fijaciones mecánicas.
+                  Selecciona la categoría para adaptar el cálculo de potencia, consumo y fijaciones mecánicas.
                 </p>
               </div>
 
-              {/* Property Types Grid */}
+              {/* Property Categories Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
-                {propertyTypes.map((prop) => {
+                {propertyCategories.map((prop) => {
                   const Icon = prop.icon;
-                  const isSelected = formData.propertyType === prop.id;
+                  const isSelected =
+                    prop.id === "residencial"
+                      ? !isEnterprise
+                      : isEnterprise;
                   return (
                     <button
                       key={prop.id}
                       type="button"
-                      onClick={() => setFormData({ ...formData, propertyType: prop.id })}
+                      onClick={() => {
+                        setFormData((prev) => ({
+                          ...prev,
+                          propertyType: prop.id,
+                          monthlyBillClp:
+                            prop.id === "comercial"
+                              ? prev.monthlyBillClp < 50000
+                                ? 500000
+                                : prev.monthlyBillClp === 120000
+                                ? 500000
+                                : prev.monthlyBillClp
+                              : prev.monthlyBillClp === 500000
+                              ? 120000
+                              : prev.monthlyBillClp,
+                          systemType:
+                            prop.id === "comercial" && prev.systemType === "offgrid"
+                              ? "ongrid"
+                              : prop.id === "residencial" && prev.systemType === "bess"
+                              ? "hibrida"
+                              : prev.systemType,
+                        }));
+                      }}
                       className={`p-4 sm:p-5 rounded-2xl border text-left transition-all duration-300 cursor-pointer flex items-start gap-3.5 sm:gap-4 ${
                         isSelected
                           ? "bg-white text-black border-white shadow-xl scale-[1.02]"
@@ -623,60 +698,62 @@ export function SmartQuoteWizard() {
             >
               <div>
                 <h2 className="text-xl sm:text-2xl md:text-3xl font-light tracking-tight text-white mb-2">
-                  Ingresa tu consumo eléctrico
+                  ¿Cuánto pagas de luz? (Aproximado)
                 </h2>
                 <p className="text-white/60 text-xs md:text-sm font-light">
-                  Selecciona la opción que te sea más cómoda: boleta mensual en pesos, consumo anual total en kWh o desglose mes a mes.
+                  No necesitas la boleta exacta, un aproximado es suficiente. Selecciona la opción más cómoda para tu proyecto.
                 </p>
               </div>
 
-              {/* Mode Switcher Tabs */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 p-1.5 rounded-2xl bg-black/50 border border-white/10">
-                <button
-                  type="button"
-                  onClick={() => handleModeChange("monthly_bill_clp")}
-                  className={`px-4 py-3 rounded-xl text-xs sm:text-sm font-light flex items-center justify-center gap-2 transition-all cursor-pointer ${
-                    (formData.consumptionMode || "monthly_bill_clp") === "monthly_bill_clp"
-                      ? "bg-[#FF8300] text-white shadow-lg font-normal"
-                      : "text-white/70 hover:text-white hover:bg-white/5"
-                  }`}
-                >
-                  <Wallet className="w-4 h-4" />
-                  <span>Boleta Mensual ($ CLP)</span>
-                </button>
+              {/* Mode Switcher Tabs (Visible for Enterprise or when activated via subtle button) */}
+              {(isEnterprise || showAdvancedMode) && (
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 p-1.5 rounded-2xl bg-black/50 border border-white/10">
+                  <button
+                    type="button"
+                    onClick={() => handleModeChange("monthly_bill_clp")}
+                    className={`px-4 py-3 rounded-xl text-xs sm:text-sm font-light flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                      (formData.consumptionMode || "monthly_bill_clp") === "monthly_bill_clp"
+                        ? "bg-[#FF8300] text-white shadow-lg font-normal"
+                        : "text-white/70 hover:text-white hover:bg-white/5"
+                    }`}
+                  >
+                    <Wallet className="w-4 h-4" />
+                    <span>Boleta Mensual ($ CLP)</span>
+                  </button>
 
-                <button
-                  type="button"
-                  onClick={() => handleModeChange("annual_kwh")}
-                  className={`px-4 py-3 rounded-xl text-xs sm:text-sm font-light flex items-center justify-center gap-2 transition-all cursor-pointer ${
-                    formData.consumptionMode === "annual_kwh"
-                      ? "bg-[#FF8300] text-white shadow-lg font-normal"
-                      : "text-white/70 hover:text-white hover:bg-white/5"
-                  }`}
-                >
-                  <Zap className="w-4 h-4" />
-                  <span>Total Anual (kWh)</span>
-                </button>
+                  <button
+                    type="button"
+                    onClick={() => handleModeChange("annual_kwh")}
+                    className={`px-4 py-3 rounded-xl text-xs sm:text-sm font-light flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                      formData.consumptionMode === "annual_kwh"
+                        ? "bg-[#FF8300] text-white shadow-lg font-normal"
+                        : "text-white/70 hover:text-white hover:bg-white/5"
+                    }`}
+                  >
+                    <Zap className="w-4 h-4" />
+                    <span>Total Anual (kWh)</span>
+                  </button>
 
-                <button
-                  type="button"
-                  onClick={() => handleModeChange("monthly_kwh")}
-                  className={`px-4 py-3 rounded-xl text-xs sm:text-sm font-light flex items-center justify-center gap-2 transition-all cursor-pointer ${
-                    formData.consumptionMode === "monthly_kwh"
-                      ? "bg-[#FF8300] text-white shadow-lg font-normal"
-                      : "text-white/70 hover:text-white hover:bg-white/5"
-                  }`}
-                >
-                  <Calendar className="w-4 h-4" />
-                  <span>Mes a Mes (el más exacto)</span>
-                </button>
-              </div>
+                  <button
+                    type="button"
+                    onClick={() => handleModeChange("monthly_kwh")}
+                    className={`px-4 py-3 rounded-xl text-xs sm:text-sm font-light flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                      formData.consumptionMode === "monthly_kwh"
+                        ? "bg-[#FF8300] text-white shadow-lg font-normal"
+                        : "text-white/70 hover:text-white hover:bg-white/5"
+                    }`}
+                  >
+                    <Calendar className="w-4 h-4" />
+                    <span>Mes a Mes (el más exacto)</span>
+                  </button>
+                </div>
+              )}
 
               {/* MODE 1: MONTHLY BILL IN CLP */}
               {(formData.consumptionMode || "monthly_bill_clp") === "monthly_bill_clp" && (
                 <div className="p-5 sm:p-8 rounded-2xl bg-black/40 border border-white/10 text-center space-y-5 sm:space-y-6">
                   <div className="text-xs font-mono uppercase tracking-widest text-white/50">
-                    Gasto Promedio Mensual en Boleta
+                    {isEnterprise ? "Gasto Promedio Mensual Comercial" : "Gasto Promedio Mensual en Boleta"}
                   </div>
                   <div className="text-3xl sm:text-4xl md:text-5xl font-light font-mono text-[#FF8300] tracking-tight">
                     {formatCurrency(formData.monthlyBillClp)}
@@ -686,9 +763,9 @@ export function SmartQuoteWizard() {
                   <div className="px-1 py-2">
                     <input
                       type="range"
-                      min="40000"
-                      max="1500000"
-                      step="10000"
+                      min={isEnterprise ? "50000" : "40000"}
+                      max={isEnterprise ? "10000000" : "1500000"}
+                      step={isEnterprise ? "50000" : "10000"}
                       value={formData.monthlyBillClp}
                       onChange={(e) => handleMonthlyBillChange(Number(e.target.value))}
                       className="w-full h-2 bg-white/20 rounded-lg appearance-none cursor-pointer accent-[#FF8300]"
@@ -696,10 +773,24 @@ export function SmartQuoteWizard() {
                   </div>
 
                   <div className="flex justify-between text-[11px] sm:text-xs font-mono text-white/40">
-                    <span>$40.000</span>
-                    <span>$500.000</span>
-                    <span>$1.500.000+</span>
+                    <span>{isEnterprise ? "$50.000" : "$40.000"}</span>
+                    <span>{isEnterprise ? "$5.000.000" : "$500.000"}</span>
+                    <span>{isEnterprise ? "$10.000.000+" : "$1.500.000+"}</span>
                   </div>
+
+                  {!isEnterprise && (
+                    <div className="pt-2">
+                      <button
+                        type="button"
+                        onClick={() => setShowAdvancedMode((prev) => !prev)}
+                        className="text-xs text-white/40 hover:text-white/70 transition-colors underline font-light cursor-pointer"
+                      >
+                        {showAdvancedMode
+                          ? "Ocultar opciones avanzadas (kWh)"
+                          : "¿Tienes tu boleta a mano o prefieres ingresar tus kWh exactos?"}
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -733,30 +824,6 @@ export function SmartQuoteWizard() {
                     <span>1.000 kWh</span>
                     <span>20.000 kWh</span>
                     <span>40.000+ kWh</span>
-                  </div>
-
-                  {/* Preset Chips */}
-                  <div className="pt-2 flex flex-wrap items-center justify-center gap-2">
-                    {[
-                      { label: "3.500 kWh (Casa Compacta)", val: 3500 },
-                      { label: "6.000 kWh (Casa Estándar)", val: 6000 },
-                      { label: "10.000 kWh (Casa Grande / Clima)", val: 10000 },
-                      { label: "18.000 kWh (Parcela / Taller)", val: 18000 },
-                      { label: "30.000 kWh (Comercial / Bombeo)", val: 30000 },
-                    ].map((preset) => (
-                      <button
-                        key={preset.val}
-                        type="button"
-                        onClick={() => handleAnnualKwhChange(preset.val)}
-                        className={`px-3 py-1.5 rounded-full text-xs font-mono border transition-all cursor-pointer ${
-                          formData.annualKwh === preset.val
-                            ? "bg-emerald-500/20 border-emerald-400 text-emerald-300"
-                            : "bg-white/5 border-white/10 text-white/70 hover:bg-white/10 hover:text-white"
-                        }`}
-                      >
-                        {preset.label}
-                      </button>
-                    ))}
                   </div>
                 </div>
               )}
@@ -846,6 +913,73 @@ export function SmartQuoteWizard() {
                 </div>
               )}
 
+              {/* Selector de Rubro / Tipo de Empresa (Sólo para Empresas) */}
+              {isEnterprise && (
+                <div className="p-4 sm:p-5 rounded-2xl bg-black/40 border border-white/10 space-y-2.5">
+                  <label className="text-xs text-white/70 font-light block flex items-center gap-1.5">
+                    <Building2 className="w-3.5 h-3.5 text-[#FF8300]" />
+                    <span>Rubro o Tipo de Empresa *</span>
+                  </label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <select
+                      value={
+                        [
+                          "Agroindustria / Packing / Fundo",
+                          "Acuicultura / Salmonicultura / Plantas",
+                          "Comercio / Retail / Supermercado",
+                          "Hotelería / Cabañas / Gastronomía",
+                          "Industria / Manufactura / Bodegaje",
+                          "Salud / Clínicas / Residencias",
+                          "Servicios / Oficinas Corporativas",
+                        ].includes(formData.businessIndustry || "")
+                          ? formData.businessIndustry
+                          : formData.businessIndustry
+                          ? "Otro"
+                          : ""
+                      }
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        if (val === "Otro") {
+                          setFormData({ ...formData, businessIndustry: "Otro Rubro" });
+                        } else {
+                          setFormData({ ...formData, businessIndustry: val });
+                        }
+                      }}
+                      className="w-full px-4 py-3 sm:py-3.5 rounded-xl bg-black/60 border border-white/15 text-white text-xs sm:text-sm font-light focus:outline-none focus:border-[#FF8300] focus:ring-1 focus:ring-[#FF8300] cursor-pointer"
+                    >
+                      <option value="" disabled className="text-white/40">Selecciona el rubro de tu empresa...</option>
+                      <option value="Agroindustria / Packing / Fundo" className="bg-[#1F1F1F] text-white">Agroindustria / Packing / Fundo Lechero</option>
+                      <option value="Acuicultura / Salmonicultura / Plantas" className="bg-[#1F1F1F] text-white">Acuicultura / Salmonicultura / Plantas</option>
+                      <option value="Comercio / Retail / Supermercado" className="bg-[#1F1F1F] text-white">Comercio / Retail / Supermercado</option>
+                      <option value="Hotelería / Cabañas / Gastronomía" className="bg-[#1F1F1F] text-white">Hotelería / Cabañas / Gastronomía</option>
+                      <option value="Industria / Manufactura / Bodegaje" className="bg-[#1F1F1F] text-white">Industria / Manufactura / Bodegaje</option>
+                      <option value="Salud / Clínicas / Residencias" className="bg-[#1F1F1F] text-white">Salud / Clínicas / Residencias</option>
+                      <option value="Servicios / Oficinas Corporativas" className="bg-[#1F1F1F] text-white">Servicios / Oficinas Corporativas</option>
+                      <option value="Otro" className="bg-[#1F1F1F] text-white">Otro Rubro Comercial / Industrial</option>
+                    </select>
+
+                    <input
+                      type="text"
+                      placeholder="Especifica actividad (opcional, ej: Lechera, Frigorífico)"
+                      value={
+                        [
+                          "Agroindustria / Packing / Fundo",
+                          "Acuicultura / Salmonicultura / Plantas",
+                          "Comercio / Retail / Supermercado",
+                          "Hotelería / Cabañas / Gastronomía",
+                          "Industria / Manufactura / Bodegaje",
+                          "Salud / Clínicas / Residencias",
+                          "Servicios / Oficinas Corporativas",
+                        ].includes(formData.businessIndustry || "")
+                          ? ""
+                          : formData.businessIndustry || ""
+                      }
+                      onChange={(e) => setFormData({ ...formData, businessIndustry: e.target.value })}
+                      className="w-full px-4 py-3 sm:py-3.5 rounded-xl bg-black/60 border border-white/15 text-white placeholder:text-white/30 text-xs sm:text-sm font-light focus:outline-none focus:border-[#FF8300] focus:ring-1 focus:ring-[#FF8300]"
+                    />
+                  </div>
+                </div>
+              )}
 
               {/* Distributor Selector */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
@@ -855,7 +989,14 @@ export function SmartQuoteWizard() {
                   </label>
                   <select
                     value={formData.distributor}
-                    onChange={(e) => setFormData({ ...formData, distributor: e.target.value as DistributorType })}
+                    onChange={(e) => {
+                      const dist = e.target.value as DistributorType;
+                      setFormData((prev) => ({
+                        ...prev,
+                        distributor: dist,
+                        ...(dist === "aislada" ? { systemType: "offgrid" } : prev.systemType === "offgrid" ? { systemType: "ongrid" } : {}),
+                      }));
+                    }}
                     className="w-full px-4 py-3 sm:py-3.5 rounded-xl bg-black/40 border border-white/15 text-white text-xs sm:text-sm font-light focus:outline-none focus:border-[#FF8300] focus:ring-1 focus:ring-[#FF8300] cursor-pointer"
                   >
                     <option value="saesa">Grupo Saesa (Llanquihue, Osorno, Los Ríos, Chiloé)</option>
@@ -863,6 +1004,7 @@ export function SmartQuoteWizard() {
                     <option value="frontel">Frontel (La Araucanía Rural / Malleco)</option>
                     <option value="cge">CGE (Temuco, Villarrica, Pucón)</option>
                     <option value="edelaysen">Edelaysen (Palena / Chaitén)</option>
+                    <option value="aislada">Sitio Aislado / Sin Red Eléctrica (Off-Grid 100%)</option>
                     <option value="otra">Otra Distribuidora / Cooperativa</option>
                   </select>
                 </div>
@@ -918,10 +1060,12 @@ export function SmartQuoteWizard() {
             >
               <div>
                 <h2 className="text-xl sm:text-2xl md:text-3xl font-light tracking-tight text-white mb-2">
-                  Objetivos de tu Proyecto Solar
+                  {isEnterprise ? "¿Qué solución energética necesita tu empresa?" : "¿Qué buscas lograr con la energía solar?"}
                 </h2>
                 <p className="text-white/60 text-xs md:text-sm font-light">
-                  Elige el tipo de planta solar que quieres cotizar. Presiona el botón Saber más para ver mas detalles de cada tipo de planta
+                  {isEnterprise
+                    ? "Selecciona la tecnología según tus requerimientos de ahorro, operación diurna y respaldo continuo."
+                    : "Selecciona la alternativa que mejor se adapte a tus necesidades. No te preocupes por el tecnicismo, un ingeniero ajustará los detalles contigo luego."}
                 </p>
               </div>
 
@@ -934,38 +1078,84 @@ export function SmartQuoteWizard() {
                       key={sys.id}
                       role="button"
                       tabIndex={0}
-                      onClick={() => setFormData({ ...formData, systemType: sys.id })}
+                      onClick={() => {
+                        setFormData((prev) => ({
+                          ...prev,
+                          systemType: sys.id,
+                          distributor: sys.id === "offgrid" ? "aislada" : prev.distributor === "aislada" ? "saesa" : prev.distributor,
+                        }));
+                      }}
                       onKeyDown={(e) => {
                         if (e.key === "Enter" || e.key === " ") {
                           e.preventDefault();
-                          setFormData({ ...formData, systemType: sys.id });
+                          setFormData((prev) => ({
+                            ...prev,
+                            systemType: sys.id,
+                            distributor: sys.id === "offgrid" ? "aislada" : prev.distributor === "aislada" ? "saesa" : prev.distributor,
+                          }));
                         }
                       }}
-                      className={`w-full p-4 sm:p-6 rounded-2xl border text-left transition-all duration-300 cursor-pointer flex items-start justify-between gap-3.5 sm:gap-4 ${
+                      className={`w-full p-4 sm:p-6 rounded-2xl border text-left transition-all duration-300 cursor-pointer flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4 ${
                         isSelected
                           ? "bg-white text-black border-white shadow-xl scale-[1.01]"
                           : "bg-black/30 border-white/10 text-white hover:bg-black/50"
                       }`}
                     >
-                      <div className="flex-1 pr-2">
-                        <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                          <h3 className="text-base sm:text-lg font-medium leading-snug">{sys.title}</h3>
-                          <span
-                            className={`text-[9px] sm:text-[10px] font-mono uppercase tracking-wider px-2.5 py-0.5 rounded-full ${
-                              isSelected
-                                ? "bg-[#FF8300] text-white"
-                                : "bg-white/10 text-white/60"
+                      {/* Contenido Principal: Ocupa todo el contenedor en Mobile */}
+                      <div className="flex-1 w-full">
+                        {/* Cabecera de la tarjeta: Título + Tag en ambos; en Mobile se incluye el radio selector en la esquina superior derecha */}
+                        <div className="flex items-start justify-between gap-2.5 mb-1.5">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <h3 className="text-base sm:text-lg font-medium leading-snug">{sys.title}</h3>
+                            <span
+                              className={`text-[10px] sm:text-[11px] font-mono uppercase tracking-wider px-2.5 py-0.5 rounded-full ${
+                                isSelected
+                                  ? "bg-[#FF8300] text-white"
+                                  : "bg-white/10 text-white/60"
+                              }`}
+                            >
+                              {sys.tag}
+                            </span>
+                          </div>
+
+                          {/* Selector circular SOLO en Mobile (esquina superior derecha) */}
+                          <div
+                            className={`sm:hidden w-5 h-5 rounded-full border flex items-center justify-center flex-shrink-0 mt-0.5 ${
+                              isSelected ? "border-[#FF8300] bg-[#FF8300] text-white" : "border-white/30"
                             }`}
                           >
-                            {sys.tag}
-                          </span>
+                            {isSelected && <CheckCircle2 className="w-3.5 h-3.5" />}
+                          </div>
                         </div>
+
+                        {/* Descripción completa que aprovecha todo el ancho del contenedor */}
                         <p className={`text-xs md:text-sm font-light leading-relaxed ${isSelected ? "text-black/70" : "text-white/60"}`}>
                           {sys.desc}
                         </p>
+
+                        {/* Botón Saber Más SOLO en Mobile (ubicado en la esquina inferior derecha) */}
+                        <div className="flex sm:hidden justify-end pt-2.5">
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setActivePlantModal(sys.id as PlantModalType);
+                            }}
+                            className={`text-[11px] font-normal px-2.5 py-1 rounded-full border transition-all cursor-pointer flex items-center gap-1 shadow-xs ${
+                              isSelected
+                                ? "border-black/15 bg-black/[0.04] text-black/75 hover:text-black hover:border-black/30 hover:bg-black/[0.08]"
+                                : "border-white/15 bg-white/[0.04] text-white/70 hover:text-[#FF8300] hover:border-[#FF8300]/40 hover:bg-white/[0.08]"
+                            }`}
+                            title={`Ver detalles de ${sys.title}`}
+                          >
+                            <span>Saber más</span>
+                            <ChevronRight className="w-3 h-3 opacity-70" />
+                          </button>
+                        </div>
                       </div>
 
-                      <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0 mt-0.5">
+                      {/* Controles en Desktop: Saber Más y Selector Circular juntos a la derecha */}
+                      <div className="hidden sm:flex items-center gap-2 sm:gap-3 flex-shrink-0 mt-0.5">
                         <button
                           type="button"
                           onClick={(e) => {
@@ -996,172 +1186,234 @@ export function SmartQuoteWizard() {
                 })}
               </div>
 
-              {/* BATTERY OBJECTIVES (Only for Híbrida or Off-Grid) */}
-              {(formData.systemType === "hibrida" || formData.systemType === "offgrid") && (
+              {/* PRIORIDAD DE RESPALDO (Hogar con Sistema Híbrido) */}
+              {!isEnterprise && formData.systemType === "hibrida" && (
                 <motion.div
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.25 }}
-                  className="p-4 sm:p-5 rounded-2xl bg-black/30 border border-white/10 space-y-3"
+                  className="p-4 sm:p-6 rounded-2xl bg-black/30 border border-white/10 space-y-3.5"
                 >
                   <div className="flex items-center justify-between">
                     <label className="text-xs sm:text-sm text-white font-medium flex items-center gap-2">
-                      <BatteryCharging className="w-4 h-4 text-[#FF8300]" />
-                      <span>Objetivo de batería</span>
+                      <ShieldCheck className="w-4 h-4 text-[#FF8300]" />
+                      <span>¿Qué nivel de respaldo necesitas ante cortes de luz?</span>
                     </label>
-                    <span className="text-[10px] font-mono text-white/50">Selecciona una o más</span>
+                    <span className="text-[10px] font-mono text-[#FF8300] uppercase tracking-wider">
+                      Respaldo Inteligente
+                    </span>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                    {[
-                      "Respaldo ante cortes",
-                      "Consumo nocturno",
-                      "Full independencia de la red",
-                      "Bajar consumo en horas punta",
-                    ].map((opt) => {
-                      const isChecked = (formData.batteryObjectives || []).includes(opt);
-                      return (
-                        <button
-                          key={opt}
-                          type="button"
-                          onClick={() => {
-                            const current = formData.batteryObjectives || [];
-                            const next = current.includes(opt)
-                              ? current.filter((item) => item !== opt)
-                              : [...current, opt];
-                            setFormData({ ...formData, batteryObjectives: next });
-                          }}
-                          className={`px-3.5 py-2.5 rounded-xl border text-left text-xs font-light transition-all flex items-center justify-between gap-2 cursor-pointer ${
-                            isChecked
-                              ? "bg-[#FF8300]/15 border-[#FF8300] text-white shadow-sm font-normal"
-                              : "bg-black/20 border-white/10 text-white/70 hover:bg-white/5 hover:border-white/20"
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          backupPriority: "cargas_criticas",
+                          batteryObjectives: ["Respaldo ante cortes", "Consumo nocturno"],
+                        }))
+                      }
+                      className={`p-3.5 sm:p-4 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between gap-2 ${
+                        (formData.backupPriority || "cargas_criticas") === "cargas_criticas"
+                          ? "bg-white text-black border-white shadow-lg"
+                          : "bg-black/40 border-white/10 text-white/80 hover:bg-black/60 hover:border-white/20"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs sm:text-sm font-medium">
+                          Respaldo Esencial (Recomendado)
+                        </span>
+                        <div
+                          className={`w-4 h-4 rounded-full border flex items-center justify-center flex-shrink-0 ${
+                            (formData.backupPriority || "cargas_criticas") === "cargas_criticas"
+                              ? "bg-[#FF8300] border-[#FF8300] text-white"
+                              : "border-white/30"
                           }`}
                         >
-                          <span>{opt}</span>
-                          <div
-                            className={`w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 transition-colors ${
-                              isChecked
-                                ? "bg-[#FF8300] border-[#FF8300] text-white"
-                                : "border-white/30 bg-transparent"
-                            }`}
-                          >
-                            {isChecked && <Check className="w-3 h-3 stroke-[2.5]" />}
-                          </div>
-                        </button>
-                      );
-                    })}
+                          {(formData.backupPriority || "cargas_criticas") === "cargas_criticas" && (
+                            <Check className="w-2.5 h-2.5 stroke-[3]" />
+                          )}
+                        </div>
+                      </div>
+                      <p
+                        className={`text-[11px] sm:text-xs font-light leading-relaxed ${
+                          (formData.backupPriority || "cargas_criticas") === "cargas_criticas"
+                            ? "text-black/70"
+                            : "text-white/50"
+                        }`}
+                      >
+                        Mantiene refrigerador, iluminación LED, WiFi/Starlink, portón y enchufes clave durante todo el corte.
+                      </p>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          backupPriority: "total_casa",
+                          batteryObjectives: ["Respaldo ante cortes", "Full independencia de la red"],
+                        }))
+                      }
+                      className={`p-3.5 sm:p-4 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between gap-2 ${
+                        formData.backupPriority === "total_casa"
+                          ? "bg-white text-black border-white shadow-lg"
+                          : "bg-black/40 border-white/10 text-white/80 hover:bg-black/60 hover:border-white/20"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs sm:text-sm font-medium">Respaldo Total</span>
+                        <div
+                          className={`w-4 h-4 rounded-full border flex items-center justify-center flex-shrink-0 ${
+                            formData.backupPriority === "total_casa"
+                              ? "bg-[#FF8300] border-[#FF8300] text-white"
+                              : "border-white/30"
+                          }`}
+                        >
+                          {formData.backupPriority === "total_casa" && (
+                            <Check className="w-2.5 h-2.5 stroke-[3]" />
+                          )}
+                        </div>
+                      </div>
+                      <p
+                        className={`text-[11px] sm:text-xs font-light leading-relaxed ${
+                          formData.backupPriority === "total_casa"
+                            ? "text-black/70"
+                            : "text-white/50"
+                        }`}
+                      >
+                        Mantiene toda la casa 100% operativa en el corte, incluyendo bombas de pozo profundo y climatización.
+                      </p>
+                    </button>
                   </div>
                 </motion.div>
               )}
 
-              {/* EV Charger Add-on Checkbox */}
-              <div className="p-4 sm:p-5 rounded-2xl bg-black/30 border border-white/10 flex items-center justify-between cursor-pointer gap-3" onClick={() => setFormData({ ...formData, includeEvCharger: !formData.includeEvCharger })}>
-                <div className="flex items-center gap-3">
-                  <Zap className="w-5 h-5 text-[#FF8300] flex-shrink-0" />
+              {/* AVISO ESPECIAL PARA BESS INDUSTRIAL (Sin Paneles en Techo) */}
+              {isEnterprise && formData.systemType === "bess" && (
+                <div className="p-4 sm:p-5 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-start gap-3">
+                  <Battery className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+                  <div className="text-xs sm:text-sm font-light text-white/80 leading-relaxed">
+                    <strong className="text-white font-medium">Instalación en Sala Eléctrica o Bodega:</strong> El sistema BESS no requiere montaje en techos ni paneles solares. Se conecta directamente al tablero general de tu empresa (TGBT) mediante racks modulares LiFePO4 de alta densidad energética para Peak Shaving y respaldo UPS.
+                  </div>
+                </div>
+              )}
+
+              {/* EV Charger Add-on Checkbox (Sólo Hogar) */}
+              {!isEnterprise && (
+                <div
+                  className="p-4 sm:p-5 rounded-2xl bg-black/30 border border-white/10 flex items-center justify-between cursor-pointer gap-3 hover:bg-black/40 transition-colors"
+                  onClick={() => setFormData({ ...formData, includeEvCharger: !formData.includeEvCharger })}
+                >
+                  <div className="flex items-center gap-3">
+                    <Zap className="w-5 h-5 text-[#FF8300] flex-shrink-0" />
+                    <h4 className="text-xs sm:text-sm font-medium text-white">
+                      ¿Deseas incluir Cargador para Vehículo Eléctrico?
+                    </h4>
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={formData.includeEvCharger}
+                    onChange={() => {}}
+                    className="w-5 h-5 accent-[#FF8300] rounded cursor-pointer flex-shrink-0"
+                  />
+                </div>
+              )}
+
+              {/* TIPO DE INSTALACIÓN & MATERIAL DE TECHO (Solo si el sistema incluye paneles solares) */}
+              {formData.systemType !== "bess" && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 pt-1">
+                  {/* Tipo de Instalación */}
                   <div>
-                    <h4 className="text-xs sm:text-sm font-medium text-white">¿Deseas incluir Cargador para Vehículo Eléctrico?</h4>
-                    <p className="text-[11px] sm:text-xs text-white/50 font-light">Wallbox inteligente 7.4 kW / 22 kW con certificación SEC TE-6.</p>
+                    <label className="text-xs text-white/70 font-light block mb-2">
+                      Tipo de instalación
+                    </label>
+                    <div className="grid grid-cols-3 gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setFormData({ ...formData, roofType: "inclinado" })}
+                        className={`p-3 sm:p-4 rounded-xl border flex flex-col sm:flex-row items-center justify-center gap-1.5 sm:gap-2 transition-all cursor-pointer text-center ${
+                          formData.roofType === "inclinado"
+                            ? "bg-white text-black border-white shadow-lg font-medium"
+                            : "bg-black/30 border-white/10 text-white/80 hover:bg-black/50 hover:border-white/20"
+                        }`}
+                      >
+                        <svg className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M3 11L12 3L21 11" />
+                          <path d="M5 10V20H19V10" />
+                        </svg>
+                        <span className="text-[11px] sm:text-xs leading-tight">Techo inclinado</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setFormData({ ...formData, roofType: "plano" })}
+                        className={`p-3 sm:p-4 rounded-xl border flex flex-col sm:flex-row items-center justify-center gap-1.5 sm:gap-2 transition-all cursor-pointer text-center ${
+                          formData.roofType === "plano"
+                            ? "bg-white text-black border-white shadow-lg font-medium"
+                            : "bg-black/30 border-white/10 text-white/80 hover:bg-black/50 hover:border-white/20"
+                        }`}
+                      >
+                        <svg className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M3 8H21" />
+                          <rect x="4" y="8" width="16" height="12" rx="1" />
+                        </svg>
+                        <span className="text-[11px] sm:text-xs leading-tight">Techo plano</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setFormData({ ...formData, roofType: "suelo", roofMaterial: "En suelo" })}
+                        className={`p-3 sm:p-4 rounded-xl border flex flex-col sm:flex-row items-center justify-center gap-1.5 sm:gap-2 transition-all cursor-pointer text-center ${
+                          formData.roofType === "suelo"
+                            ? "bg-white text-black border-white shadow-lg font-medium"
+                            : "bg-black/30 border-white/10 text-white/80 hover:bg-black/50 hover:border-white/20"
+                        }`}
+                      >
+                        <svg className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M2 20h20" />
+                          <path d="M6 20v-4" />
+                          <path d="M18 20v-4" />
+                          <path d="M4 16l16-4" />
+                          <path d="M12 14v6" />
+                        </svg>
+                        <span className="text-[11px] sm:text-xs leading-tight">En Suelo</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Material de Techo */}
+                  <div>
+                    <label className="text-xs text-white/70 font-light block mb-2">
+                      Material de techo
+                    </label>
+                    <select
+                      disabled={formData.roofType === "suelo"}
+                      value={formData.roofType === "suelo" ? "En suelo" : (formData.roofMaterial || "")}
+                      onChange={(e) => setFormData({ ...formData, roofMaterial: e.target.value })}
+                      className="w-full px-4 py-3.5 sm:py-4 rounded-xl bg-black/40 border border-white/15 text-white text-xs sm:text-sm font-light focus:outline-none focus:border-[#FF8300] focus:ring-1 focus:ring-[#FF8300] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {formData.roofType === "suelo" ? (
+                        <option value="En suelo" className="bg-[#1F1F1F] text-white">No aplica (Estructura en suelo)</option>
+                      ) : (
+                        <>
+                          <option value="" disabled className="text-white/40">Selecciona el material de tu techo...</option>
+                          <option value="Zinc" className="bg-[#1F1F1F] text-white">Zinc</option>
+                          <option value="Teja Asfáltica" className="bg-[#1F1F1F] text-white">Teja Asfáltica</option>
+                          <option value="Teja Chilena" className="bg-[#1F1F1F] text-white">Teja Chilena</option>
+                          <option value="Hormigón/Losa" className="bg-[#1F1F1F] text-white">Hormigón/Losa</option>
+                          <option value="Madera" className="bg-[#1F1F1F] text-white">Madera</option>
+                          <option value="Fibrocemento" className="bg-[#1F1F1F] text-white">Fibrocemento</option>
+                          <option value="No estoy seguro" className="bg-[#1F1F1F] text-white">No estoy seguro</option>
+                          <option value="Otro" className="bg-[#1F1F1F] text-white">Otro</option>
+                        </>
+                      )}
+                    </select>
                   </div>
                 </div>
-                <input
-                  type="checkbox"
-                  checked={formData.includeEvCharger}
-                  onChange={() => {}}
-                  className="w-5 h-5 accent-[#FF8300] rounded cursor-pointer flex-shrink-0"
-                />
-              </div>
-
-              {/* TIPO DE INSTALACIÓN & MATERIAL DE TECHO */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 pt-1">
-                {/* Tipo de Instalación */}
-                <div>
-                  <label className="text-xs text-white/70 font-light block mb-2">
-                    Tipo de instalación
-                  </label>
-                  <div className="grid grid-cols-3 gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setFormData({ ...formData, roofType: "inclinado" })}
-                      className={`p-3 sm:p-4 rounded-xl border flex flex-col sm:flex-row items-center justify-center gap-1.5 sm:gap-2 transition-all cursor-pointer text-center ${
-                        formData.roofType === "inclinado"
-                          ? "bg-white text-black border-white shadow-lg font-medium"
-                          : "bg-black/30 border-white/10 text-white/80 hover:bg-black/50 hover:border-white/20"
-                      }`}
-                    >
-                      <svg className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M3 11L12 3L21 11" />
-                        <path d="M5 10V20H19V10" />
-                      </svg>
-                      <span className="text-[11px] sm:text-xs leading-tight">Techo inclinado</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => setFormData({ ...formData, roofType: "plano" })}
-                      className={`p-3 sm:p-4 rounded-xl border flex flex-col sm:flex-row items-center justify-center gap-1.5 sm:gap-2 transition-all cursor-pointer text-center ${
-                        formData.roofType === "plano"
-                          ? "bg-white text-black border-white shadow-lg font-medium"
-                          : "bg-black/30 border-white/10 text-white/80 hover:bg-black/50 hover:border-white/20"
-                      }`}
-                    >
-                      <svg className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M3 8H21" />
-                        <rect x="4" y="8" width="16" height="12" rx="1" />
-                      </svg>
-                      <span className="text-[11px] sm:text-xs leading-tight">Techo plano</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => setFormData({ ...formData, roofType: "suelo", roofMaterial: "En suelo" })}
-                      className={`p-3 sm:p-4 rounded-xl border flex flex-col sm:flex-row items-center justify-center gap-1.5 sm:gap-2 transition-all cursor-pointer text-center ${
-                        formData.roofType === "suelo"
-                          ? "bg-white text-black border-white shadow-lg font-medium"
-                          : "bg-black/30 border-white/10 text-white/80 hover:bg-black/50 hover:border-white/20"
-                      }`}
-                    >
-                      <svg className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M2 20h20" />
-                        <path d="M6 20v-4" />
-                        <path d="M18 20v-4" />
-                        <path d="M4 16l16-4" />
-                        <path d="M12 14v6" />
-                      </svg>
-                      <span className="text-[11px] sm:text-xs leading-tight">En Suelo</span>
-                    </button>
-                  </div>
-                </div>
-
-                {/* Material de Techo */}
-                <div>
-                  <label className="text-xs text-white/70 font-light block mb-2">
-                    Material de techo
-                  </label>
-                  <select
-                    disabled={formData.roofType === "suelo"}
-                    value={formData.roofType === "suelo" ? "En suelo" : (formData.roofMaterial || "")}
-                    onChange={(e) => setFormData({ ...formData, roofMaterial: e.target.value })}
-                    className="w-full px-4 py-3.5 sm:py-4 rounded-xl bg-black/40 border border-white/15 text-white text-xs sm:text-sm font-light focus:outline-none focus:border-[#FF8300] focus:ring-1 focus:ring-[#FF8300] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {formData.roofType === "suelo" ? (
-                      <option value="En suelo" className="bg-[#1F1F1F] text-white">No aplica (Estructura en suelo)</option>
-                    ) : (
-                      <>
-                        <option value="" disabled className="text-white/40">Selecciona el material de tu techo...</option>
-                        <option value="Zinc" className="bg-[#1F1F1F] text-white">Zinc</option>
-                        <option value="Teja Asfáltica" className="bg-[#1F1F1F] text-white">Teja Asfáltica</option>
-                        <option value="Teja Chilena" className="bg-[#1F1F1F] text-white">Teja Chilena</option>
-                        <option value="Hormigón/Losa" className="bg-[#1F1F1F] text-white">Hormigón/Losa</option>
-                        <option value="Madera" className="bg-[#1F1F1F] text-white">Madera</option>
-                        <option value="Fibrocemento" className="bg-[#1F1F1F] text-white">Fibrocemento</option>
-                        <option value="No estoy seguro" className="bg-[#1F1F1F] text-white">No estoy seguro</option>
-                        <option value="Otro" className="bg-[#1F1F1F] text-white">Otro</option>
-                      </>
-                    )}
-                  </select>
-                </div>
-              </div>
+              )}
 
               {/* Navigation Actions Step 3 */}
               <div className="pt-6 border-t border-white/10 flex flex-col-reverse sm:flex-row items-center justify-between gap-3">
@@ -1208,10 +1460,10 @@ export function SmartQuoteWizard() {
             >
               <div>
                 <h2 className="text-xl sm:text-2xl md:text-3xl font-light tracking-tight text-white mb-2">
-                  ¿A dónde enviamos tu propuesta solar?
+                  ¿A dónde enviamos tu pre-informe?
                 </h2>
                 <p className="text-white/60 text-xs md:text-sm font-light">
-                  Ingresa tus datos para desplegar inmediatamente tu pre-informe técnico y recibirlo por WhatsApp.
+                  Tus datos están 100% seguros y odiamos el spam tanto como tú. Solo los utilizaremos para generar tu pre-informe y enviártelo por WhatsApp o correo.
                 </p>
               </div>
 
@@ -1385,6 +1637,7 @@ export function SmartQuoteWizard() {
         {/* Modal Explicativo de Tipos de Planta Solar */}
         <PlantTypeModal
           type={activePlantModal}
+          context={isEnterprise ? "empresa" : "hogar"}
           onClose={() => setActivePlantModal(null)}
           onSelect={(selectedType) => {
             setFormData((prev) => ({ ...prev, systemType: selectedType }));

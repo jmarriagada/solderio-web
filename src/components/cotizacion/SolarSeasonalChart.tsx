@@ -15,9 +15,10 @@ interface Props {
   comuna: string;
   distributor: string;
   sizing: SolarSizingResult;
+  isOffGrid?: boolean;
 }
 
-export function SolarSeasonalChart({ monthlyData, comuna, distributor, sizing }: Props) {
+export function SolarSeasonalChart({ monthlyData, comuna, distributor, sizing, isOffGrid }: Props) {
   const [activeViewMode, setActiveViewMode] = useState<"dual" | "net">("dual");
   const [selectedMonth, setSelectedMonth] = useState<MonthlyGenBreakdown | null>(null);
   const [hoveredMonth, setHoveredMonth] = useState<MonthlyGenBreakdown | null>(null);
@@ -51,7 +52,7 @@ export function SolarSeasonalChart({ monthlyData, comuna, distributor, sizing }:
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5 mb-6 relative z-10">
         <div>
           <h3 className="text-xl sm:text-2xl font-light text-white tracking-tight">
-            Simulación de Generación y Demanda
+            {isOffGrid ? "Simulación de Generación Solar y Autonomía Aislada" : "Simulación de Generación y Demanda"}
           </h3>
         </div>
 
@@ -77,7 +78,7 @@ export function SolarSeasonalChart({ monthlyData, comuna, distributor, sizing }:
                   : "text-white/60 hover:text-white hover:bg-white/5"
               }`}
             >
-              ⚡ Balance Energético
+              {isOffGrid ? "⚡ Autonomía & Batería" : "⚡ Balance Energético"}
             </button>
           </div>
         </div>
@@ -112,7 +113,7 @@ export function SolarSeasonalChart({ monthlyData, comuna, distributor, sizing }:
 
         <div>
           <span className="text-[10px] uppercase font-mono text-slate-300 block flex items-center gap-1">
-            <Zap className="w-3 h-3 text-slate-400" /> Consumo Casa
+            <Zap className="w-3 h-3 text-slate-400" /> {isOffGrid ? "Consumo Predio" : "Consumo Casa"}
           </span>
           <div className="text-base font-mono font-bold text-slate-200 mt-0.5">
             {currentMonth.monthlyDemandKwh.toLocaleString("es-CL")} <span className="text-xs font-normal text-white/50">kWh</span>
@@ -123,20 +124,40 @@ export function SolarSeasonalChart({ monthlyData, comuna, distributor, sizing }:
         </div>
 
         <div>
-          <span className="text-[10px] uppercase font-mono text-white/40 block">Balance Netbilling</span>
-          {currentMonth.monthlyGenKwh >= currentMonth.monthlyDemandKwh ? (
-            <div className="text-emerald-400 font-mono font-semibold text-sm sm:text-base mt-0.5 flex items-center gap-1">
-              <ArrowUpRight className="w-4 h-4 text-emerald-400" />
-              <span>+{ (currentMonth.monthlyGenKwh - currentMonth.monthlyDemandKwh).toLocaleString("es-CL") } kWh Inyectados</span>
-            </div>
+          <span className="text-[10px] uppercase font-mono text-white/40 block">
+            {isOffGrid ? "Balance de Autonomía" : "Balance Netbilling"}
+          </span>
+          {isOffGrid ? (
+            currentMonth.monthlyGenKwh >= currentMonth.monthlyDemandKwh ? (
+              <div className="text-emerald-400 font-mono font-semibold text-sm sm:text-base mt-0.5 flex items-center gap-1">
+                <ArrowUpRight className="w-4 h-4 text-emerald-400" />
+                <span>+{ (currentMonth.monthlyGenKwh - currentMonth.monthlyDemandKwh).toLocaleString("es-CL") } kWh Energía Disponible</span>
+              </div>
+            ) : (
+              <div className="text-amber-400 font-mono font-semibold text-sm sm:text-base mt-0.5 flex items-center gap-1">
+                <ArrowDownRight className="w-4 h-4 text-amber-400" />
+                <span>-{ (currentMonth.monthlyDemandKwh - currentMonth.monthlyGenKwh).toLocaleString("es-CL") } kWh Batería / Auxiliar</span>
+              </div>
+            )
           ) : (
-            <div className="text-blue-300 font-mono font-semibold text-sm sm:text-base mt-0.5 flex items-center gap-1">
-              <ArrowDownRight className="w-4 h-4 text-blue-300" />
-              <span>-{ (currentMonth.monthlyDemandKwh - currentMonth.monthlyGenKwh).toLocaleString("es-CL") } kWh Red / Batería</span>
-            </div>
+            currentMonth.monthlyGenKwh >= currentMonth.monthlyDemandKwh ? (
+              <div className="text-emerald-400 font-mono font-semibold text-sm sm:text-base mt-0.5 flex items-center gap-1">
+                <ArrowUpRight className="w-4 h-4 text-emerald-400" />
+                <span>+{ (currentMonth.monthlyGenKwh - currentMonth.monthlyDemandKwh).toLocaleString("es-CL") } kWh Inyectados</span>
+              </div>
+            ) : (
+              <div className="text-blue-300 font-mono font-semibold text-sm sm:text-base mt-0.5 flex items-center gap-1">
+                <ArrowDownRight className="w-4 h-4 text-blue-300" />
+                <span>-{ (currentMonth.monthlyDemandKwh - currentMonth.monthlyGenKwh).toLocaleString("es-CL") } kWh Red / Batería</span>
+              </div>
+            )
           )}
           <span className="text-[10px] text-white/50 block mt-0.5">
-            {currentMonth.monthlyGenKwh >= currentMonth.monthlyDemandKwh 
+            {isOffGrid
+              ? currentMonth.monthlyGenKwh >= currentMonth.monthlyDemandKwh
+                ? "Producción solar supera consumo: banco LiFePO4 al 100% de carga"
+                : "Consumo cubierto por banco LiFePO4 con asistencia de generador en temporales"
+              : currentMonth.monthlyGenKwh >= currentMonth.monthlyDemandKwh 
               ? "Genera saldo a favor para compensar meses fríos" 
               : "Consumo cubierto con saldo acumulado y batería"}
           </span>
@@ -245,24 +266,32 @@ export function SolarSeasonalChart({ monthlyData, comuna, distributor, sizing }:
             </span>
             <span className="flex items-center gap-2">
               <span className="w-3 h-3 rounded-sm bg-slate-700 border border-white/20" />
-              <strong className="text-white/80 font-normal">Consumo del Hogar</strong>
+              <strong className="text-white/80 font-normal">{isOffGrid ? "Consumo del Predio" : "Consumo del Hogar"}</strong>
             </span>
           </div>
         ) : (
           <div className="flex items-center gap-4 text-[11px]">
             <span className="flex items-center gap-2">
               <span className="w-3 h-3 rounded-sm bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
-              <strong className="text-emerald-400 font-medium">+ Excedente Inyectado (Saldo a Favor)</strong>
+              <strong className="text-emerald-400 font-medium">
+                {isOffGrid ? "+ Excedente Solar / Carga Baterías" : "+ Excedente Inyectado (Saldo a Favor)"}
+              </strong>
             </span>
             <span className="flex items-center gap-2">
               <span className="w-3 h-3 rounded-sm bg-blue-500" />
-              <strong className="text-blue-300 font-normal">- Déficit Cubierto con Red / Batería</strong>
+              <strong className="text-blue-300 font-normal">
+                {isOffGrid ? "- Demanda Nocturna / Batería LiFePO4" : "- Déficit Cubierto con Red / Batería"}
+              </strong>
             </span>
           </div>
         )}
 
         <div className="text-emerald-400 text-[11px]">
-          <span>Ley Netbilling: En verano acumulas los excedentes que bajan tus boletas de invierno.</span>
+          <span>
+            {isOffGrid
+              ? "Autonomía 100% Off-Grid: En primavera y verano tus baterías operan a ciclo diario completo con sol. En invierno austral, el inversor coordina respaldo de generador en temporales."
+              : "Ley Netbilling: En verano acumulas los excedentes que bajan tus boletas de invierno."}
+          </span>
         </div>
       </div>
     </div>

@@ -1,5 +1,5555 @@
 [
   {
+    "id": "SOL-2026-6319",
+    "createdAt": "2026-10-08T21:32:04.285Z",
+    "formData": {
+      "fullName": "zxczsc",
+      "whatsapp": "23123123123123",
+      "email": "asd@asd.com",
+      "comuna": "San Juan de la Costa",
+      "region": "Región de Los Lagos",
+      "address": "",
+      "propertyType": "residencial",
+      "systemType": "offgrid",
+      "distributor": "saesa",
+      "hasPhases": "monofasico",
+      "consumptionMode": "monthly_bill_clp",
+      "monthlyBillClp": 120000,
+      "annualKwh": 6000,
+      "monthlyKwhBreakdown": [
+        420,
+        400,
+        450,
+        550,
+        680,
+        780,
+        810,
+        720,
+        590,
+        500,
+        460,
+        430
+      ],
+      "batteryObjectives": [],
+      "includeEvCharger": false,
+      "backupPriority": "cargas_criticas",
+      "omPackage": "basic",
+      "acceptTerms": true,
+      "billFile": null,
+      "turnstileToken": "1.TNiF3Aqc2gNKHUtDqONBmz6MFzzql5FJV3o5xwU8zH86IkX420mbcCTqHTmnukMTsagBadKzwBUnbhLyxjAjep1uGEWmvikHb1syEdaAYz8eBN_Zmg1nC-xtmpADGpgeYEryj9n7f4etHWPyW5NY985inOUOZ8alsiBYJ0HanPc_GNmoAIvl9QHaQx2XTkV3esAdYA3c0JA0xRJwnWzcs-kvaqHS1OJQHVrElcHDMJgP6g48meEs3IOm2JB5I-EdjtWdlc6wEaMQMvlZxN--DAFIfUH6rYH3xr8U6_1lTRGhKtvlKaDBEog8TN1mDyOVpFC9b5aDiE9sWXAmEMwMikcQEKq5C80tV_58sHrzRhH30DqA_W75Cth85h_H6nM_t0mUjGjZT0ooEVKLyiybsue0CGzLBZanrujY1XQOXwAWcojATu88vZLdifRjzPcOojHlfJNUrg3mYi9j4k2G2hX_XABdh3Ejji7Lu_b8qB0MxI5BKaJtJ7Q4WRZcDB-2a9DGQSqc_5vfp0AAkpzcFSYV-GBxVkTVmbzhZj83RiH9hAoQwhD2zPj4HxaKokQjZLSD49KkG1nuE_A7jM-sxPh04-6HG7llokHtBMW7SI4.23r7-FhegzIRrToiJ8y_tg.96d4f2ec823dd405342a4b144d11212d903f9382f5683ef11257ddebc9e5df6e",
+      "website_url": ""
+    },
+    "sizingResult": {
+      "recommendedKwp": 5.9,
+      "panelsCount": 10,
+      "panelWatts": 585,
+      "inverterKw": 5,
+      "batteryKwh": 10.2,
+      "estimatedMonthlyGenKwh": 595,
+      "estimatedAnnualGenKwh": 7144,
+      "estimatedAnnualSavingsClp": 1296000,
+      "estimated25YearSavingsClp": 42584649,
+      "paybackYears": 8.1,
+      "co2TonsAvoidedPerYear": 2.8,
+      "equivalentTreesPlanted": 45,
+      "autoconsumoPct": 100,
+      "averageMonthlyDemandKwh": 438,
+      "secNorms": [
+        "RIC N°09 (Sec. 6.1) - Instalaciones de Autoconsumo Fotovoltaico",
+        "RIC N°15 (Sec. 5) - Interconexión y Protección Anti-Isla",
+        "Límite Empalme SEC - Empalme Monofásico 220V",
+        "RIC N°09 (BESS) - Sistemas de Almacenamiento Electroquímico LiFePO4",
+        "Trámite Certificación TE-1 SEC"
+      ],
+      "estimatedSystemCostNetoClp": 10738344,
+      "estimatedSystemCostIvaClp": 12778629,
+      "downpaymentHito1Clp": 5369172,
+      "faenaHito2Clp": 3758420,
+      "finalHito3Clp": 1610752,
+      "margenBrutoPct": 18.5,
+      "selectedOmPackage": {
+        "id": "basic",
+        "name": "Garantía Estándar SoldeRío",
+        "badge": "Incluida",
+        "monthlyPriceClp": 0,
+        "monthlyPriceUf": 0,
+        "tagline": "Garantía de producto de fábrica y soporte de instalación",
+        "features": [
+          "25 Años de Garantía de Rendimiento en Módulos Tier 1 (≥85%)",
+          "10 a 15 Años de Garantía de Inversores y Baterías LUNA Huawei",
+          "1 Año de Garantía de Mano de Obra y Estanqueidad de Techo",
+          "Monitoreo Básico en App Huawei FusionSolar Cloud",
+          "Certificado TE-4 SEC y Tramitación Net Billing ante Distribuidora"
+        ],
+        "isDefault": true
+      },
+      "usableBatteryKwh": 8.7,
+      "seasonalVariationRatio": 3.2,
+      "summerAvgMonthlyGenKwh": 950,
+      "winterAvgMonthlyGenKwh": 293,
+      "monthlyBreakdown": [
+        {
+          "month": 1,
+          "monthName": "Enero",
+          "monthlyGenKwh": 991,
+          "monthlyDemandKwh": 338,
+          "poaKwhM2Day": 7.11,
+          "tCellCelsius": 46.2,
+          "surplusKwh": 653,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 2,
+          "monthName": "Febrero",
+          "monthlyGenKwh": 809,
+          "monthlyDemandKwh": 330,
+          "poaKwhM2Day": 6.43,
+          "tCellCelsius": 46,
+          "surplusKwh": 479,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 3,
+          "monthName": "Marzo",
+          "monthlyGenKwh": 712,
+          "monthlyDemandKwh": 363,
+          "poaKwhM2Day": 5.07,
+          "tCellCelsius": 43.7,
+          "surplusKwh": 349,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 4,
+          "monthName": "Abril",
+          "monthlyGenKwh": 432,
+          "monthlyDemandKwh": 433,
+          "poaKwhM2Day": 3.05,
+          "tCellCelsius": 30.2,
+          "surplusKwh": 0,
+          "gridImportKwh": 1
+        },
+        {
+          "month": 5,
+          "monthName": "Mayo",
+          "monthlyGenKwh": 315,
+          "monthlyDemandKwh": 516,
+          "poaKwhM2Day": 2.1,
+          "tCellCelsius": 22.7,
+          "surplusKwh": 0,
+          "gridImportKwh": 201
+        },
+        {
+          "month": 6,
+          "monthName": "Junio",
+          "monthlyGenKwh": 256,
+          "monthlyDemandKwh": 578,
+          "poaKwhM2Day": 1.76,
+          "tCellCelsius": 18.2,
+          "surplusKwh": 0,
+          "gridImportKwh": 322
+        },
+        {
+          "month": 7,
+          "monthName": "Julio",
+          "monthlyGenKwh": 266,
+          "monthlyDemandKwh": 598,
+          "poaKwhM2Day": 1.77,
+          "tCellCelsius": 18.1,
+          "surplusKwh": 0,
+          "gridImportKwh": 332
+        },
+        {
+          "month": 8,
+          "monthName": "Agosto",
+          "monthlyGenKwh": 357,
+          "monthlyDemandKwh": 545,
+          "poaKwhM2Day": 2.38,
+          "tCellCelsius": 22.3,
+          "surplusKwh": 0,
+          "gridImportKwh": 188
+        },
+        {
+          "month": 9,
+          "monthName": "Septiembre",
+          "monthlyGenKwh": 535,
+          "monthlyDemandKwh": 454,
+          "poaKwhM2Day": 3.81,
+          "tCellCelsius": 33,
+          "surplusKwh": 81,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 10,
+          "monthName": "Octubre",
+          "monthlyGenKwh": 648,
+          "monthlyDemandKwh": 392,
+          "poaKwhM2Day": 4.56,
+          "tCellCelsius": 39.9,
+          "surplusKwh": 256,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 11,
+          "monthName": "Noviembre",
+          "monthlyGenKwh": 772,
+          "monthlyDemandKwh": 363,
+          "poaKwhM2Day": 5.64,
+          "tCellCelsius": 41.5,
+          "surplusKwh": 409,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 12,
+          "monthName": "Diciembre",
+          "monthlyGenKwh": 1051,
+          "monthlyDemandKwh": 347,
+          "poaKwhM2Day": 7.51,
+          "tCellCelsius": 44.7,
+          "surplusKwh": 704,
+          "gridImportKwh": 0
+        }
+      ],
+      "vanClp": 7109339,
+      "tirPercent": 9,
+      "lcoeClpPerKwh": 65,
+      "requiresThreePhase": false,
+      "recommendedPhaseType": "monofasico",
+      "estimatedNewMonthlyBillClp": 0,
+      "winterLimitSavingsClp": 0,
+      "coberturaTotalAnualPct": 100,
+      "applianceEquivalencies": [
+        {
+          "title": "Refrigerador + Freezer No-Frost",
+          "description": "Alimentado 24/7 sin cortes, incluso durante temporales y caídas de red.",
+          "icon": "Refrigerator"
+        },
+        {
+          "title": "Conectividad Starlink & Iluminación",
+          "description": "Mantiene internet de alta velocidad, teletrabajo y toda la casa iluminada.",
+          "icon": "Wifi"
+        },
+        {
+          "title": "Calefacción / Pellet & Bombas de Pozo",
+          "description": "Respaldo continuo para motores de estufas a pellet y extracción de agua.",
+          "icon": "Flame"
+        },
+        {
+          "title": "Electrodomésticos & Lavado",
+          "description": "Lavadora, lavavajillas, microondas y hervidor cubiertos con energía solar.",
+          "icon": "Zap"
+        }
+      ],
+      "taxShieldArt33BisClp": 0,
+      "recoverableVatClp": 0,
+      "annualOpexClp": 107383,
+      "inverterReplacementCostYear12Clp": 1288601,
+      "isB2B": false,
+      "regulatoryTrack": "aislada_ric9.1",
+      "regulatoryTitle": "Instalación Aislada Off-Grid (Sin Conexión a Red)",
+      "regulatoryDecree": "Pliego Técnico RIC N° 09.1 - Autogeneración Aislada",
+      "regulatoryNorm": "RIC 01 al RIC 19 + Protecciones Atmosféricas",
+      "regulatoryTramite": "Declaración Eléctrica TE1 ante SEC",
+      "hourlyProfileSample": [
+        {
+          "hour": 0,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.36,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.36
+        },
+        {
+          "hour": 1,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.29,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.29
+        },
+        {
+          "hour": 2,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.26,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.26
+        },
+        {
+          "hour": 3,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.26,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.26
+        },
+        {
+          "hour": 4,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.29,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.29
+        },
+        {
+          "hour": 5,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.36,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.36
+        },
+        {
+          "hour": 6,
+          "solarGenKwh": 0.2,
+          "consumptionKwh": 0.5,
+          "selfConsumedKwh": 0.2,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.3
+        },
+        {
+          "hour": 7,
+          "solarGenKwh": 0.59,
+          "consumptionKwh": 0.79,
+          "selfConsumedKwh": 0.59,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.2
+        },
+        {
+          "hour": 8,
+          "solarGenKwh": 1.17,
+          "consumptionKwh": 0.94,
+          "selfConsumedKwh": 0.94,
+          "injectedKwh": 0.23,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 9,
+          "solarGenKwh": 1.76,
+          "consumptionKwh": 0.72,
+          "selfConsumedKwh": 0.72,
+          "injectedKwh": 1.04,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 10,
+          "solarGenKwh": 2.35,
+          "consumptionKwh": 0.65,
+          "selfConsumedKwh": 0.65,
+          "injectedKwh": 1.7,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 11,
+          "solarGenKwh": 2.74,
+          "consumptionKwh": 0.65,
+          "selfConsumedKwh": 0.65,
+          "injectedKwh": 2.09,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 12,
+          "solarGenKwh": 2.94,
+          "consumptionKwh": 0.72,
+          "selfConsumedKwh": 0.72,
+          "injectedKwh": 2.22,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 13,
+          "solarGenKwh": 2.74,
+          "consumptionKwh": 0.79,
+          "selfConsumedKwh": 0.79,
+          "injectedKwh": 1.95,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 14,
+          "solarGenKwh": 2.15,
+          "consumptionKwh": 0.72,
+          "selfConsumedKwh": 0.72,
+          "injectedKwh": 1.43,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 15,
+          "solarGenKwh": 1.57,
+          "consumptionKwh": 0.65,
+          "selfConsumedKwh": 0.65,
+          "injectedKwh": 0.92,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 16,
+          "solarGenKwh": 0.98,
+          "consumptionKwh": 0.72,
+          "selfConsumedKwh": 0.72,
+          "injectedKwh": 0.26,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 17,
+          "solarGenKwh": 0.39,
+          "consumptionKwh": 0.79,
+          "selfConsumedKwh": 0.39,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.4
+        },
+        {
+          "hour": 18,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.94,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.94
+        },
+        {
+          "hour": 19,
+          "solarGenKwh": 0,
+          "consumptionKwh": 1.08,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.08
+        },
+        {
+          "hour": 20,
+          "solarGenKwh": 0,
+          "consumptionKwh": 1.22,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.22
+        },
+        {
+          "hour": 21,
+          "solarGenKwh": 0,
+          "consumptionKwh": 1.15,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.15
+        },
+        {
+          "hour": 22,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.94,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.94
+        },
+        {
+          "hour": 23,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.68,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.68
+        }
+      ],
+      "netBillingMonthlyLedger": [
+        {
+          "monthName": "Enero",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 653,
+          "creditClp": 81625,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 81625,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Febrero",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 479,
+          "creditClp": 59875,
+          "initialBalanceClp": 81625,
+          "finalBalanceClp": 141500,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Marzo",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 349,
+          "creditClp": 43625,
+          "initialBalanceClp": 141500,
+          "finalBalanceClp": 185125,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Abril",
+          "boughtKwh": 131,
+          "boughtClp": 45195,
+          "injectedKwh": 130,
+          "creditClp": 16250,
+          "initialBalanceClp": 185125,
+          "finalBalanceClp": 156180,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Mayo",
+          "boughtKwh": 296,
+          "boughtClp": 102120,
+          "injectedKwh": 95,
+          "creditClp": 11875,
+          "initialBalanceClp": 156180,
+          "finalBalanceClp": 65935,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Junio",
+          "boughtKwh": 399,
+          "boughtClp": 137655,
+          "injectedKwh": 77,
+          "creditClp": 9625,
+          "initialBalanceClp": 65935,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 63945
+        },
+        {
+          "monthName": "Julio",
+          "boughtKwh": 412,
+          "boughtClp": 142140,
+          "injectedKwh": 80,
+          "creditClp": 10000,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 133990
+        },
+        {
+          "monthName": "Agosto",
+          "boughtKwh": 295,
+          "boughtClp": 101775,
+          "injectedKwh": 107,
+          "creditClp": 13375,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 90250
+        },
+        {
+          "monthName": "Septiembre",
+          "boughtKwh": 80,
+          "boughtClp": 27600,
+          "injectedKwh": 161,
+          "creditClp": 20125,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 9325
+        },
+        {
+          "monthName": "Octubre",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 256,
+          "creditClp": 32000,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 32000,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Noviembre",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 409,
+          "creditClp": 51125,
+          "initialBalanceClp": 32000,
+          "finalBalanceClp": 83125,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Diciembre",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 704,
+          "creditClp": 88000,
+          "initialBalanceClp": 83125,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 1850,
+          "annualSurplusPayoutClp": 171125
+        }
+      ],
+      "rightsAndCommitments": {
+        "whatYouCanDemand": [
+          {
+            "step": 1,
+            "question": "¿Qué tecnología y certificaciones respaldan los equipos?",
+            "title": "Tecnología Tier 1 y Certificación SEC",
+            "details": "Módulos Tier 1 N-Type TOPCon con 25 años de garantía de producto y 30 años de potencia lineal. Inversores híbridos certificados SEC con protocolo PE Nº 1/26 anti-isla y monitoreo WiFi/4G integrado."
+          },
+          {
+            "step": 2,
+            "question": "¿Quién asume la responsabilidad del servicio técnico local?",
+            "title": "Soporte Técnico Local & Estanqueidad Garantizada",
+            "details": "Garantía formal por escrito de 1 año en estanqueidad de techumbre (cero filtraciones) y mano de obra. Cuadrilla técnica propia en el sur de Chile (Llanquihue, Osorno, Valdivia, Chiloé)."
+          },
+          {
+            "step": 3,
+            "question": "¿Cómo se legaliza la inyección y el cambio de medidor?",
+            "title": "Tramitación SEC TE4 y Proceso Net Billing Completo",
+            "details": "Ingreso formal de Formularios F1 a F5 ante la distribuidora (SAESA, CRELL, etc.) y obtención del Certificado TE4 SEC por instalador eléctrico autorizado Clase A o B. Medidor bidireccional gestionado."
+          },
+          {
+            "step": 4,
+            "question": "¿Cuáles son los hitos de pago contra avance real?",
+            "title": "Hitos Transparentes 50% / 35% / 15%",
+            "details": "50% de anticipo para orden de compra y reserva de hardware. 35% contra arribo a faena y montaje en techo. 15% final únicamente contra puesta en marcha conforme y TE4 ingresado a la SEC."
+          }
+        ],
+        "ownerCommitments": [
+          {
+            "title": "Condiciones de Acceso y Empalme Eléctrico",
+            "details": "Facilitar acceso seguro a techumbre, tablero general y empalme en las fechas acordadas de montaje e inspección."
+          },
+          {
+            "title": "Mantenimiento Periódico de Módulos",
+            "details": "Realizar o programar 1 a 2 lavados anuales con agua desmineralizada y mantener despejado el entorno de sombras por vegetación."
+          },
+          {
+            "title": "Integridad de las Instalaciones",
+            "details": "No intervenir el inversor, protecciones DC/AC ni conexionado eléctrico sin la presencia o autorización escrita de personal técnico calificado."
+          },
+          {
+            "title": "Monitoreo Proactivo de la Planta",
+            "details": "Mantener el inversor conectado a internet y revisar periódicamente la App FusionSolar para alertar anomalías o desconexiones."
+          }
+        ]
+      }
+    },
+    "status": "NUEVO"
+  },
+  {
+    "id": "SOL-2026-7604",
+    "createdAt": "2026-10-08T21:04:26.302Z",
+    "formData": {
+      "fullName": "aesda",
+      "whatsapp": "121231212312",
+      "email": "asd@asda.com",
+      "comuna": "Puerto Varas",
+      "region": "Región de Los Lagos",
+      "address": "",
+      "propertyType": "residencial",
+      "systemType": "offgrid",
+      "distributor": "saesa",
+      "hasPhases": "monofasico",
+      "consumptionMode": "monthly_bill_clp",
+      "monthlyBillClp": 210000,
+      "annualKwh": 6000,
+      "monthlyKwhBreakdown": [
+        420,
+        400,
+        450,
+        550,
+        680,
+        780,
+        810,
+        720,
+        590,
+        500,
+        460,
+        430
+      ],
+      "batteryObjectives": [],
+      "includeEvCharger": false,
+      "backupPriority": "cargas_criticas",
+      "omPackage": "basic",
+      "acceptTerms": true,
+      "billFile": null,
+      "turnstileToken": "1.jAxyNGR2DfK7oyVOcHH3PssvZmNpCXcyRS3nemhxYWW4rA18X6E4fkyGE-sJa1fEwfnVxzTkNNc28Yi2RHyjDvMZz3XhtiEbNPYoVOYiTu7DavXwbpoewLX8dWKjqK3W1wHe0APncjG2TX6cnF_jeaI92H3oQ407-RtpuFwvUTWg8T8F3AQfieDtAZx9d4H2j9HD-Xk5VqXawui58VwIpE-jzzycGRhe43cI8hZP4d9ZqZqIw1MAlRKB5AFOTmvF1JFH0xypTWS4AFXs3MiHIZivweYcVgcRe5TiwR9OHGOi19pcdDeeLV0FfLlBFsLljsljBG4tE6GNptRRAZ1LTyRRGPomYHhgzyYm1JQdDFsKLsRx6KluF2dG-_EMVfpuhA3dE3MrjVBIaJXOjDEyMJBVG2K90vqFiXITN-rrF8GuBXTI0vds7JcXStCWDu65S9kuiAwgdTb8v_kt7FKrj4yMjZIN7UB8SiwRG0L2q7qaSVplBWd2v3RJ5yjQ3AJ8TADYbRcrzpK051aXvNFNwu_ZLcnvd6hfErqoYib_-71n0dDAIi-CSxwo_rDxay4CSNWciJzvoc6qcB5bzNTfii0Uejnrc_zuXcnNORDYpgM.Ib305PIK9_y78_skGC3lkQ.0642fe31aab11502fe8acb374c430626190a6ea2b535fee74839a23260a6e725",
+      "website_url": ""
+    },
+    "sizingResult": {
+      "recommendedKwp": 10.5,
+      "panelsCount": 18,
+      "panelWatts": 585,
+      "inverterKw": 8,
+      "batteryKwh": 15.4,
+      "estimatedMonthlyGenKwh": 1007,
+      "estimatedAnnualGenKwh": 12084,
+      "estimatedAnnualSavingsClp": 4397220,
+      "estimated25YearSavingsClp": 153701636,
+      "paybackYears": 3.9,
+      "co2TonsAvoidedPerYear": 4.7,
+      "equivalentTreesPlanted": 75,
+      "autoconsumoPct": 100,
+      "averageMonthlyDemandKwh": 771,
+      "secNorms": [
+        "RIC N°09 (Sec. 6.1) - Instalaciones de Autoconsumo Fotovoltaico",
+        "RIC N°15 (Sec. 5) - Interconexión y Protección Anti-Isla",
+        "Límite Empalme SEC - Empalme Monofásico 220V",
+        "RIC N°09 (BESS) - Sistemas de Almacenamiento Electroquímico LiFePO4",
+        "Trámite Certificación TE-1 SEC"
+      ],
+      "estimatedSystemCostNetoClp": 17417362,
+      "estimatedSystemCostIvaClp": 20726661,
+      "downpaymentHito1Clp": 8708681,
+      "faenaHito2Clp": 6096077,
+      "finalHito3Clp": 2612604,
+      "margenBrutoPct": 18.5,
+      "selectedOmPackage": {
+        "id": "basic",
+        "name": "Garantía Estándar SoldeRío",
+        "badge": "Incluida",
+        "monthlyPriceClp": 0,
+        "monthlyPriceUf": 0,
+        "tagline": "Garantía de producto de fábrica y soporte de instalación",
+        "features": [
+          "25 Años de Garantía de Rendimiento en Módulos Tier 1 (≥85%)",
+          "10 a 15 Años de Garantía de Inversores y Baterías LUNA Huawei",
+          "1 Año de Garantía de Mano de Obra y Estanqueidad de Techo",
+          "Monitoreo Básico en App Huawei FusionSolar Cloud",
+          "Certificado TE-4 SEC y Tramitación Net Billing ante Distribuidora"
+        ],
+        "isDefault": true
+      },
+      "usableBatteryKwh": 13.2,
+      "seasonalVariationRatio": 2.8,
+      "summerAvgMonthlyGenKwh": 1513,
+      "winterAvgMonthlyGenKwh": 544,
+      "monthlyBreakdown": [
+        {
+          "month": 1,
+          "monthName": "Enero",
+          "monthlyGenKwh": 1710,
+          "monthlyDemandKwh": 595,
+          "poaKwhM2Day": 6.86,
+          "tCellCelsius": 44.4,
+          "surplusKwh": 1115,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 2,
+          "monthName": "Febrero",
+          "monthlyGenKwh": 1352,
+          "monthlyDemandKwh": 581,
+          "poaKwhM2Day": 5.98,
+          "tCellCelsius": 43,
+          "surplusKwh": 771,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 3,
+          "monthName": "Marzo",
+          "monthlyGenKwh": 1136,
+          "monthlyDemandKwh": 639,
+          "poaKwhM2Day": 4.54,
+          "tCellCelsius": 43.2,
+          "surplusKwh": 497,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 4,
+          "monthName": "Abril",
+          "monthlyGenKwh": 785,
+          "monthlyDemandKwh": 763,
+          "poaKwhM2Day": 3.12,
+          "tCellCelsius": 30.8,
+          "surplusKwh": 22,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 5,
+          "monthName": "Mayo",
+          "monthlyGenKwh": 581,
+          "monthlyDemandKwh": 908,
+          "poaKwhM2Day": 2.18,
+          "tCellCelsius": 22.9,
+          "surplusKwh": 0,
+          "gridImportKwh": 327
+        },
+        {
+          "month": 6,
+          "monthName": "Junio",
+          "monthlyGenKwh": 399,
+          "monthlyDemandKwh": 1017,
+          "poaKwhM2Day": 1.54,
+          "tCellCelsius": 16.1,
+          "surplusKwh": 0,
+          "gridImportKwh": 618
+        },
+        {
+          "month": 7,
+          "monthName": "Julio",
+          "monthlyGenKwh": 540,
+          "monthlyDemandKwh": 1053,
+          "poaKwhM2Day": 2.02,
+          "tCellCelsius": 19.7,
+          "surplusKwh": 0,
+          "gridImportKwh": 513
+        },
+        {
+          "month": 8,
+          "monthName": "Agosto",
+          "monthlyGenKwh": 692,
+          "monthlyDemandKwh": 959,
+          "poaKwhM2Day": 2.62,
+          "tCellCelsius": 25.7,
+          "surplusKwh": 0,
+          "gridImportKwh": 267
+        },
+        {
+          "month": 9,
+          "monthName": "Septiembre",
+          "monthlyGenKwh": 968,
+          "monthlyDemandKwh": 799,
+          "poaKwhM2Day": 3.89,
+          "tCellCelsius": 34.5,
+          "surplusKwh": 169,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 10,
+          "monthName": "Octubre",
+          "monthlyGenKwh": 1131,
+          "monthlyDemandKwh": 690,
+          "poaKwhM2Day": 4.46,
+          "tCellCelsius": 39,
+          "surplusKwh": 441,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 11,
+          "monthName": "Noviembre",
+          "monthlyGenKwh": 1312,
+          "monthlyDemandKwh": 639,
+          "poaKwhM2Day": 5.36,
+          "tCellCelsius": 39.9,
+          "surplusKwh": 673,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 12,
+          "monthName": "Diciembre",
+          "monthlyGenKwh": 1478,
+          "monthlyDemandKwh": 610,
+          "poaKwhM2Day": 5.89,
+          "tCellCelsius": 42.2,
+          "surplusKwh": 868,
+          "gridImportKwh": 0
+        }
+      ],
+      "vanClp": 47071752,
+      "tirPercent": 22,
+      "lcoeClpPerKwh": 65,
+      "requiresThreePhase": false,
+      "recommendedPhaseType": "monofasico",
+      "estimatedNewMonthlyBillClp": 0,
+      "winterLimitSavingsClp": 0,
+      "coberturaTotalAnualPct": 100,
+      "applianceEquivalencies": [
+        {
+          "title": "Refrigerador + Freezer No-Frost",
+          "description": "Alimentado 24/7 sin cortes, incluso durante temporales y caídas de red.",
+          "icon": "Refrigerator"
+        },
+        {
+          "title": "Conectividad Starlink & Iluminación",
+          "description": "Mantiene internet de alta velocidad, teletrabajo y toda la casa iluminada.",
+          "icon": "Wifi"
+        },
+        {
+          "title": "Calefacción / Pellet & Bombas de Pozo",
+          "description": "Respaldo continuo para motores de estufas a pellet y extracción de agua.",
+          "icon": "Flame"
+        },
+        {
+          "title": "Electrodomésticos & Lavado",
+          "description": "Lavadora, lavavajillas, microondas y hervidor cubiertos con energía solar.",
+          "icon": "Zap"
+        }
+      ],
+      "taxShieldArt33BisClp": 0,
+      "recoverableVatClp": 0,
+      "annualOpexClp": 174174,
+      "inverterReplacementCostYear12Clp": 2090083,
+      "isB2B": false,
+      "regulatoryTrack": "aislada_ric9.1",
+      "regulatoryTitle": "Instalación Aislada Off-Grid (Sin Conexión a Red)",
+      "regulatoryDecree": "Pliego Técnico RIC N° 09.1 - Autogeneración Aislada",
+      "regulatoryNorm": "RIC 01 al RIC 19 + Protecciones Atmosféricas",
+      "regulatoryTramite": "Declaración Eléctrica TE1 ante SEC",
+      "hourlyProfileSample": [
+        {
+          "hour": 0,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.63,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.63
+        },
+        {
+          "hour": 1,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.51,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.51
+        },
+        {
+          "hour": 2,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.46,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.46
+        },
+        {
+          "hour": 3,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.46,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.46
+        },
+        {
+          "hour": 4,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.51,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.51
+        },
+        {
+          "hour": 5,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.63,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.63
+        },
+        {
+          "hour": 6,
+          "solarGenKwh": 0.33,
+          "consumptionKwh": 0.89,
+          "selfConsumedKwh": 0.33,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.56
+        },
+        {
+          "hour": 7,
+          "solarGenKwh": 0.99,
+          "consumptionKwh": 1.39,
+          "selfConsumedKwh": 0.99,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.4
+        },
+        {
+          "hour": 8,
+          "solarGenKwh": 1.99,
+          "consumptionKwh": 1.65,
+          "selfConsumedKwh": 1.65,
+          "injectedKwh": 0.34,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 9,
+          "solarGenKwh": 2.98,
+          "consumptionKwh": 1.27,
+          "selfConsumedKwh": 1.27,
+          "injectedKwh": 1.71,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 10,
+          "solarGenKwh": 3.97,
+          "consumptionKwh": 1.14,
+          "selfConsumedKwh": 1.14,
+          "injectedKwh": 2.83,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 11,
+          "solarGenKwh": 4.63,
+          "consumptionKwh": 1.14,
+          "selfConsumedKwh": 1.14,
+          "injectedKwh": 3.49,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 12,
+          "solarGenKwh": 4.97,
+          "consumptionKwh": 1.27,
+          "selfConsumedKwh": 1.27,
+          "injectedKwh": 3.7,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 13,
+          "solarGenKwh": 4.63,
+          "consumptionKwh": 1.39,
+          "selfConsumedKwh": 1.39,
+          "injectedKwh": 3.24,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 14,
+          "solarGenKwh": 3.64,
+          "consumptionKwh": 1.27,
+          "selfConsumedKwh": 1.27,
+          "injectedKwh": 2.37,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 15,
+          "solarGenKwh": 2.65,
+          "consumptionKwh": 1.14,
+          "selfConsumedKwh": 1.14,
+          "injectedKwh": 1.51,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 16,
+          "solarGenKwh": 1.66,
+          "consumptionKwh": 1.27,
+          "selfConsumedKwh": 1.27,
+          "injectedKwh": 0.39,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 17,
+          "solarGenKwh": 0.66,
+          "consumptionKwh": 1.39,
+          "selfConsumedKwh": 0.66,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.73
+        },
+        {
+          "hour": 18,
+          "solarGenKwh": 0,
+          "consumptionKwh": 1.65,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.65
+        },
+        {
+          "hour": 19,
+          "solarGenKwh": 0,
+          "consumptionKwh": 1.9,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.9
+        },
+        {
+          "hour": 20,
+          "solarGenKwh": 0,
+          "consumptionKwh": 2.15,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 2.15
+        },
+        {
+          "hour": 21,
+          "solarGenKwh": 0,
+          "consumptionKwh": 2.03,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 2.03
+        },
+        {
+          "hour": 22,
+          "solarGenKwh": 0,
+          "consumptionKwh": 1.65,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.65
+        },
+        {
+          "hour": 23,
+          "solarGenKwh": 0,
+          "consumptionKwh": 1.19,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.19
+        }
+      ],
+      "netBillingMonthlyLedger": [
+        {
+          "monthName": "Enero",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 1115,
+          "creditClp": 139375,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 139375,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Febrero",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 771,
+          "creditClp": 96375,
+          "initialBalanceClp": 139375,
+          "finalBalanceClp": 235750,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Marzo",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 497,
+          "creditClp": 62125,
+          "initialBalanceClp": 235750,
+          "finalBalanceClp": 297875,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Abril",
+          "boughtKwh": 214,
+          "boughtClp": 73830,
+          "injectedKwh": 236,
+          "creditClp": 29500,
+          "initialBalanceClp": 297875,
+          "finalBalanceClp": 253545,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Mayo",
+          "boughtKwh": 501,
+          "boughtClp": 172845,
+          "injectedKwh": 174,
+          "creditClp": 21750,
+          "initialBalanceClp": 253545,
+          "finalBalanceClp": 102450,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Junio",
+          "boughtKwh": 738,
+          "boughtClp": 254610,
+          "injectedKwh": 120,
+          "creditClp": 15000,
+          "initialBalanceClp": 102450,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 139010
+        },
+        {
+          "monthName": "Julio",
+          "boughtKwh": 675,
+          "boughtClp": 232875,
+          "injectedKwh": 162,
+          "creditClp": 20250,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 214475
+        },
+        {
+          "monthName": "Agosto",
+          "boughtKwh": 475,
+          "boughtClp": 163875,
+          "injectedKwh": 208,
+          "creditClp": 26000,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 139725
+        },
+        {
+          "monthName": "Septiembre",
+          "boughtKwh": 121,
+          "boughtClp": 41745,
+          "injectedKwh": 290,
+          "creditClp": 36250,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 7345
+        },
+        {
+          "monthName": "Octubre",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 441,
+          "creditClp": 55125,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 55125,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Noviembre",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 673,
+          "creditClp": 84125,
+          "initialBalanceClp": 55125,
+          "finalBalanceClp": 139250,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Diciembre",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 868,
+          "creditClp": 108500,
+          "initialBalanceClp": 139250,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 1850,
+          "annualSurplusPayoutClp": 247750
+        }
+      ],
+      "rightsAndCommitments": {
+        "whatYouCanDemand": [
+          {
+            "step": 1,
+            "question": "¿Qué tecnología y certificaciones respaldan los equipos?",
+            "title": "Tecnología Tier 1 y Certificación SEC",
+            "details": "Módulos Tier 1 N-Type TOPCon con 25 años de garantía de producto y 30 años de potencia lineal. Inversores híbridos certificados SEC con protocolo PE Nº 1/26 anti-isla y monitoreo WiFi/4G integrado."
+          },
+          {
+            "step": 2,
+            "question": "¿Quién asume la responsabilidad del servicio técnico local?",
+            "title": "Soporte Técnico Local & Estanqueidad Garantizada",
+            "details": "Garantía formal por escrito de 1 año en estanqueidad de techumbre (cero filtraciones) y mano de obra. Cuadrilla técnica propia en el sur de Chile (Llanquihue, Osorno, Valdivia, Chiloé)."
+          },
+          {
+            "step": 3,
+            "question": "¿Cómo se legaliza la inyección y el cambio de medidor?",
+            "title": "Tramitación SEC TE4 y Proceso Net Billing Completo",
+            "details": "Ingreso formal de Formularios F1 a F5 ante la distribuidora (SAESA, CRELL, etc.) y obtención del Certificado TE4 SEC por instalador eléctrico autorizado Clase A o B. Medidor bidireccional gestionado."
+          },
+          {
+            "step": 4,
+            "question": "¿Cuáles son los hitos de pago contra avance real?",
+            "title": "Hitos Transparentes 50% / 35% / 15%",
+            "details": "50% de anticipo para orden de compra y reserva de hardware. 35% contra arribo a faena y montaje en techo. 15% final únicamente contra puesta en marcha conforme y TE4 ingresado a la SEC."
+          }
+        ],
+        "ownerCommitments": [
+          {
+            "title": "Condiciones de Acceso y Empalme Eléctrico",
+            "details": "Facilitar acceso seguro a techumbre, tablero general y empalme en las fechas acordadas de montaje e inspección."
+          },
+          {
+            "title": "Mantenimiento Periódico de Módulos",
+            "details": "Realizar o programar 1 a 2 lavados anuales con agua desmineralizada y mantener despejado el entorno de sombras por vegetación."
+          },
+          {
+            "title": "Integridad de las Instalaciones",
+            "details": "No intervenir el inversor, protecciones DC/AC ni conexionado eléctrico sin la presencia o autorización escrita de personal técnico calificado."
+          },
+          {
+            "title": "Monitoreo Proactivo de la Planta",
+            "details": "Mantener el inversor conectado a internet y revisar periódicamente la App FusionSolar para alertar anomalías o desconexiones."
+          }
+        ]
+      }
+    },
+    "status": "NUEVO"
+  },
+  {
+    "id": "SOL-2026-9298",
+    "createdAt": "2026-10-08T21:02:15.309Z",
+    "formData": {
+      "fullName": "adqawd",
+      "whatsapp": "21212131",
+      "email": "asd@asda.com",
+      "comuna": "Puerto Varas",
+      "region": "Región de Los Lagos",
+      "address": "",
+      "propertyType": "residencial",
+      "systemType": "offgrid",
+      "distributor": "saesa",
+      "hasPhases": "monofasico",
+      "consumptionMode": "monthly_bill_clp",
+      "monthlyBillClp": 240000,
+      "annualKwh": 6000,
+      "monthlyKwhBreakdown": [
+        420,
+        400,
+        450,
+        550,
+        680,
+        780,
+        810,
+        720,
+        590,
+        500,
+        460,
+        430
+      ],
+      "batteryObjectives": [],
+      "includeEvCharger": false,
+      "backupPriority": "cargas_criticas",
+      "omPackage": "basic",
+      "acceptTerms": true,
+      "billFile": null,
+      "turnstileToken": "1.573VwVj-ZpmVUKkN4UMztNpoPKTgEwv1sgU-caNPZJUNSBZykn3aaOrgcc40TjqDf4Iy5yT1ltrVSNC4JYd9Atp-nTG3MTWpyAcNvABoTaaVGjDboHiNqYljYtledKMmlJOLc-LuzwCXTsivBwfZDdx8RIzX_476VRMsm88x247TiMbANxjSjtxpyoEaxMbCvlB5eojAcZpCLYC0qC_u0a_mR3u3OZFhzmsFVNX5smP0Rzu22DcxsHQ8xr8FUF-JhFMAefZHtc0hkjGjQIzYCgtW1ST0F8nPIBPH5yb7ALdYXj0OnqjTCyHvXBs76hvAIN_ZuWRcc8RIuBYdoPuk52MYbDGoBNCVIHmBpkxTaQH0x29CKmHUrN4pax8VKaO44s1ak-ch_4iKunHrLyM5o14i4RS-IJ-aXDXUWUNzC7NdPM3pG8hucGbPRy9ZCuGAo9wJ3Qj9YKYXucif4uUlsOjtRwq0VaDAO_2Qqww726hFsMgNY2Wy3ZuxR9DsGAtqxvsNiWvGq0l4Oh7eWcX_CJhnF0DKzLIR2JLhU5-EJFjjGtEQ4X1T6Dr0TxeBh7Acjv2E4ndUxUHfCYm8heZow29w_Ka7XRRAmQQLRrRb3Zg.B4UEr7ficoYZLDQXGWweiQ.b33f86ee56ac4fa5869ce391db4d6b825f7faceaaf72cb25fba5e89f663743e2",
+      "website_url": ""
+    },
+    "sizingResult": {
+      "recommendedKwp": 11.7,
+      "panelsCount": 20,
+      "panelWatts": 585,
+      "inverterKw": 10,
+      "batteryKwh": 15.4,
+      "estimatedMonthlyGenKwh": 1122,
+      "estimatedAnnualGenKwh": 13468,
+      "estimatedAnnualSavingsClp": 5029560,
+      "estimated25YearSavingsClp": 176876658,
+      "paybackYears": 3.5,
+      "co2TonsAvoidedPerYear": 5.2,
+      "equivalentTreesPlanted": 83,
+      "autoconsumoPct": 100,
+      "averageMonthlyDemandKwh": 882,
+      "secNorms": [
+        "RIC N°09 (Sec. 6.1) - Instalaciones de Autoconsumo Fotovoltaico",
+        "RIC N°15 (Sec. 5) - Interconexión y Protección Anti-Isla",
+        "Límite Empalme SEC - Empalme Monofásico 220V",
+        "RIC N°09 (BESS) - Sistemas de Almacenamiento Electroquímico LiFePO4",
+        "Trámite Certificación TE-1 SEC"
+      ],
+      "estimatedSystemCostNetoClp": 17709816,
+      "estimatedSystemCostIvaClp": 21074681,
+      "downpaymentHito1Clp": 8854908,
+      "faenaHito2Clp": 6198436,
+      "finalHito3Clp": 2656472,
+      "margenBrutoPct": 18.5,
+      "selectedOmPackage": {
+        "id": "basic",
+        "name": "Garantía Estándar SoldeRío",
+        "badge": "Incluida",
+        "monthlyPriceClp": 0,
+        "monthlyPriceUf": 0,
+        "tagline": "Garantía de producto de fábrica y soporte de instalación",
+        "features": [
+          "25 Años de Garantía de Rendimiento en Módulos Tier 1 (≥85%)",
+          "10 a 15 Años de Garantía de Inversores y Baterías LUNA Huawei",
+          "1 Año de Garantía de Mano de Obra y Estanqueidad de Techo",
+          "Monitoreo Básico en App Huawei FusionSolar Cloud",
+          "Certificado TE-4 SEC y Tramitación Net Billing ante Distribuidora"
+        ],
+        "isDefault": true
+      },
+      "usableBatteryKwh": 13.2,
+      "seasonalVariationRatio": 2.8,
+      "summerAvgMonthlyGenKwh": 1687,
+      "winterAvgMonthlyGenKwh": 606,
+      "monthlyBreakdown": [
+        {
+          "month": 1,
+          "monthName": "Enero",
+          "monthlyGenKwh": 1906,
+          "monthlyDemandKwh": 681,
+          "poaKwhM2Day": 6.86,
+          "tCellCelsius": 44.4,
+          "surplusKwh": 1225,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 2,
+          "monthName": "Febrero",
+          "monthlyGenKwh": 1507,
+          "monthlyDemandKwh": 665,
+          "poaKwhM2Day": 5.98,
+          "tCellCelsius": 43,
+          "surplusKwh": 842,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 3,
+          "monthName": "Marzo",
+          "monthlyGenKwh": 1266,
+          "monthlyDemandKwh": 731,
+          "poaKwhM2Day": 4.54,
+          "tCellCelsius": 43.2,
+          "surplusKwh": 535,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 4,
+          "monthName": "Abril",
+          "monthlyGenKwh": 875,
+          "monthlyDemandKwh": 872,
+          "poaKwhM2Day": 3.12,
+          "tCellCelsius": 30.8,
+          "surplusKwh": 3,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 5,
+          "monthName": "Mayo",
+          "monthlyGenKwh": 648,
+          "monthlyDemandKwh": 1038,
+          "poaKwhM2Day": 2.18,
+          "tCellCelsius": 22.9,
+          "surplusKwh": 0,
+          "gridImportKwh": 390
+        },
+        {
+          "month": 6,
+          "monthName": "Junio",
+          "monthlyGenKwh": 444,
+          "monthlyDemandKwh": 1163,
+          "poaKwhM2Day": 1.54,
+          "tCellCelsius": 16.1,
+          "surplusKwh": 0,
+          "gridImportKwh": 719
+        },
+        {
+          "month": 7,
+          "monthName": "Julio",
+          "monthlyGenKwh": 602,
+          "monthlyDemandKwh": 1205,
+          "poaKwhM2Day": 2.02,
+          "tCellCelsius": 19.7,
+          "surplusKwh": 0,
+          "gridImportKwh": 603
+        },
+        {
+          "month": 8,
+          "monthName": "Agosto",
+          "monthlyGenKwh": 772,
+          "monthlyDemandKwh": 1097,
+          "poaKwhM2Day": 2.62,
+          "tCellCelsius": 25.7,
+          "surplusKwh": 0,
+          "gridImportKwh": 325
+        },
+        {
+          "month": 9,
+          "monthName": "Septiembre",
+          "monthlyGenKwh": 1079,
+          "monthlyDemandKwh": 914,
+          "poaKwhM2Day": 3.89,
+          "tCellCelsius": 34.5,
+          "surplusKwh": 165,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 10,
+          "monthName": "Octubre",
+          "monthlyGenKwh": 1260,
+          "monthlyDemandKwh": 789,
+          "poaKwhM2Day": 4.46,
+          "tCellCelsius": 39,
+          "surplusKwh": 471,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 11,
+          "monthName": "Noviembre",
+          "monthlyGenKwh": 1462,
+          "monthlyDemandKwh": 731,
+          "poaKwhM2Day": 5.36,
+          "tCellCelsius": 39.9,
+          "surplusKwh": 731,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 12,
+          "monthName": "Diciembre",
+          "monthlyGenKwh": 1647,
+          "monthlyDemandKwh": 698,
+          "poaKwhM2Day": 5.89,
+          "tCellCelsius": 42.2,
+          "surplusKwh": 949,
+          "gridImportKwh": 0
+        }
+      ],
+      "vanClp": 56510696,
+      "tirPercent": 22,
+      "lcoeClpPerKwh": 65,
+      "requiresThreePhase": false,
+      "recommendedPhaseType": "monofasico",
+      "estimatedNewMonthlyBillClp": 0,
+      "winterLimitSavingsClp": 0,
+      "coberturaTotalAnualPct": 100,
+      "applianceEquivalencies": [
+        {
+          "title": "Refrigerador + Freezer No-Frost",
+          "description": "Alimentado 24/7 sin cortes, incluso durante temporales y caídas de red.",
+          "icon": "Refrigerator"
+        },
+        {
+          "title": "Conectividad Starlink & Iluminación",
+          "description": "Mantiene internet de alta velocidad, teletrabajo y toda la casa iluminada.",
+          "icon": "Wifi"
+        },
+        {
+          "title": "Calefacción / Pellet & Bombas de Pozo",
+          "description": "Respaldo continuo para motores de estufas a pellet y extracción de agua.",
+          "icon": "Flame"
+        },
+        {
+          "title": "Electrodomésticos & Lavado",
+          "description": "Lavadora, lavavajillas, microondas y hervidor cubiertos con energía solar.",
+          "icon": "Zap"
+        }
+      ],
+      "taxShieldArt33BisClp": 0,
+      "recoverableVatClp": 0,
+      "annualOpexClp": 177098,
+      "inverterReplacementCostYear12Clp": 2125178,
+      "isB2B": false,
+      "regulatoryTrack": "aislada_ric9.1",
+      "regulatoryTitle": "Instalación Aislada Off-Grid (Sin Conexión a Red)",
+      "regulatoryDecree": "Pliego Técnico RIC N° 09.1 - Autogeneración Aislada",
+      "regulatoryNorm": "RIC 01 al RIC 19 + Protecciones Atmosféricas",
+      "regulatoryTramite": "Declaración Eléctrica TE1 ante SEC",
+      "hourlyProfileSample": [
+        {
+          "hour": 0,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.72,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.72
+        },
+        {
+          "hour": 1,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.58,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.58
+        },
+        {
+          "hour": 2,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.52,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.52
+        },
+        {
+          "hour": 3,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.52,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.52
+        },
+        {
+          "hour": 4,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.58,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.58
+        },
+        {
+          "hour": 5,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.72,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.72
+        },
+        {
+          "hour": 6,
+          "solarGenKwh": 0.37,
+          "consumptionKwh": 1.01,
+          "selfConsumedKwh": 0.37,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.64
+        },
+        {
+          "hour": 7,
+          "solarGenKwh": 1.11,
+          "consumptionKwh": 1.59,
+          "selfConsumedKwh": 1.11,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.48
+        },
+        {
+          "hour": 8,
+          "solarGenKwh": 2.21,
+          "consumptionKwh": 1.88,
+          "selfConsumedKwh": 1.88,
+          "injectedKwh": 0.33,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 9,
+          "solarGenKwh": 3.32,
+          "consumptionKwh": 1.45,
+          "selfConsumedKwh": 1.45,
+          "injectedKwh": 1.87,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 10,
+          "solarGenKwh": 4.43,
+          "consumptionKwh": 1.3,
+          "selfConsumedKwh": 1.3,
+          "injectedKwh": 3.13,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 11,
+          "solarGenKwh": 5.17,
+          "consumptionKwh": 1.3,
+          "selfConsumedKwh": 1.3,
+          "injectedKwh": 3.87,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 12,
+          "solarGenKwh": 5.53,
+          "consumptionKwh": 1.45,
+          "selfConsumedKwh": 1.45,
+          "injectedKwh": 4.08,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 13,
+          "solarGenKwh": 5.17,
+          "consumptionKwh": 1.59,
+          "selfConsumedKwh": 1.59,
+          "injectedKwh": 3.58,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 14,
+          "solarGenKwh": 4.06,
+          "consumptionKwh": 1.45,
+          "selfConsumedKwh": 1.45,
+          "injectedKwh": 2.61,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 15,
+          "solarGenKwh": 2.95,
+          "consumptionKwh": 1.3,
+          "selfConsumedKwh": 1.3,
+          "injectedKwh": 1.65,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 16,
+          "solarGenKwh": 1.84,
+          "consumptionKwh": 1.45,
+          "selfConsumedKwh": 1.45,
+          "injectedKwh": 0.39,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 17,
+          "solarGenKwh": 0.74,
+          "consumptionKwh": 1.59,
+          "selfConsumedKwh": 0.74,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.85
+        },
+        {
+          "hour": 18,
+          "solarGenKwh": 0,
+          "consumptionKwh": 1.88,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.88
+        },
+        {
+          "hour": 19,
+          "solarGenKwh": 0,
+          "consumptionKwh": 2.17,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 2.17
+        },
+        {
+          "hour": 20,
+          "solarGenKwh": 0,
+          "consumptionKwh": 2.46,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 2.46
+        },
+        {
+          "hour": 21,
+          "solarGenKwh": 0,
+          "consumptionKwh": 2.32,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 2.32
+        },
+        {
+          "hour": 22,
+          "solarGenKwh": 0,
+          "consumptionKwh": 1.88,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.88
+        },
+        {
+          "hour": 23,
+          "solarGenKwh": 0,
+          "consumptionKwh": 1.36,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.36
+        }
+      ],
+      "netBillingMonthlyLedger": [
+        {
+          "monthName": "Enero",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 1225,
+          "creditClp": 153125,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 153125,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Febrero",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 842,
+          "creditClp": 105250,
+          "initialBalanceClp": 153125,
+          "finalBalanceClp": 258375,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Marzo",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 535,
+          "creditClp": 66875,
+          "initialBalanceClp": 258375,
+          "finalBalanceClp": 325250,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Abril",
+          "boughtKwh": 260,
+          "boughtClp": 89700,
+          "injectedKwh": 263,
+          "creditClp": 32875,
+          "initialBalanceClp": 325250,
+          "finalBalanceClp": 268425,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Mayo",
+          "boughtKwh": 584,
+          "boughtClp": 201480,
+          "injectedKwh": 194,
+          "creditClp": 24250,
+          "initialBalanceClp": 268425,
+          "finalBalanceClp": 91195,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Junio",
+          "boughtKwh": 852,
+          "boughtClp": 293940,
+          "injectedKwh": 133,
+          "creditClp": 16625,
+          "initialBalanceClp": 91195,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 187970
+        },
+        {
+          "monthName": "Julio",
+          "boughtKwh": 784,
+          "boughtClp": 270480,
+          "injectedKwh": 181,
+          "creditClp": 22625,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 249705
+        },
+        {
+          "monthName": "Agosto",
+          "boughtKwh": 557,
+          "boughtClp": 192165,
+          "injectedKwh": 232,
+          "creditClp": 29000,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 165015
+        },
+        {
+          "monthName": "Septiembre",
+          "boughtKwh": 159,
+          "boughtClp": 54855,
+          "injectedKwh": 324,
+          "creditClp": 40500,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 16205
+        },
+        {
+          "monthName": "Octubre",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 471,
+          "creditClp": 58875,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 58875,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Noviembre",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 731,
+          "creditClp": 91375,
+          "initialBalanceClp": 58875,
+          "finalBalanceClp": 150250,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Diciembre",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 949,
+          "creditClp": 118625,
+          "initialBalanceClp": 150250,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 1850,
+          "annualSurplusPayoutClp": 268875
+        }
+      ],
+      "rightsAndCommitments": {
+        "whatYouCanDemand": [
+          {
+            "step": 1,
+            "question": "¿Qué tecnología y certificaciones respaldan los equipos?",
+            "title": "Tecnología Tier 1 y Certificación SEC",
+            "details": "Módulos Tier 1 N-Type TOPCon con 25 años de garantía de producto y 30 años de potencia lineal. Inversores híbridos certificados SEC con protocolo PE Nº 1/26 anti-isla y monitoreo WiFi/4G integrado."
+          },
+          {
+            "step": 2,
+            "question": "¿Quién asume la responsabilidad del servicio técnico local?",
+            "title": "Soporte Técnico Local & Estanqueidad Garantizada",
+            "details": "Garantía formal por escrito de 1 año en estanqueidad de techumbre (cero filtraciones) y mano de obra. Cuadrilla técnica propia en el sur de Chile (Llanquihue, Osorno, Valdivia, Chiloé)."
+          },
+          {
+            "step": 3,
+            "question": "¿Cómo se legaliza la inyección y el cambio de medidor?",
+            "title": "Tramitación SEC TE4 y Proceso Net Billing Completo",
+            "details": "Ingreso formal de Formularios F1 a F5 ante la distribuidora (SAESA, CRELL, etc.) y obtención del Certificado TE4 SEC por instalador eléctrico autorizado Clase A o B. Medidor bidireccional gestionado."
+          },
+          {
+            "step": 4,
+            "question": "¿Cuáles son los hitos de pago contra avance real?",
+            "title": "Hitos Transparentes 50% / 35% / 15%",
+            "details": "50% de anticipo para orden de compra y reserva de hardware. 35% contra arribo a faena y montaje en techo. 15% final únicamente contra puesta en marcha conforme y TE4 ingresado a la SEC."
+          }
+        ],
+        "ownerCommitments": [
+          {
+            "title": "Condiciones de Acceso y Empalme Eléctrico",
+            "details": "Facilitar acceso seguro a techumbre, tablero general y empalme en las fechas acordadas de montaje e inspección."
+          },
+          {
+            "title": "Mantenimiento Periódico de Módulos",
+            "details": "Realizar o programar 1 a 2 lavados anuales con agua desmineralizada y mantener despejado el entorno de sombras por vegetación."
+          },
+          {
+            "title": "Integridad de las Instalaciones",
+            "details": "No intervenir el inversor, protecciones DC/AC ni conexionado eléctrico sin la presencia o autorización escrita de personal técnico calificado."
+          },
+          {
+            "title": "Monitoreo Proactivo de la Planta",
+            "details": "Mantener el inversor conectado a internet y revisar periódicamente la App FusionSolar para alertar anomalías o desconexiones."
+          }
+        ]
+      }
+    },
+    "status": "NUEVO"
+  },
+  {
+    "id": "SOL-2026-1509",
+    "createdAt": "2026-10-08T20:42:43.153Z",
+    "formData": {
+      "fullName": "sasd",
+      "whatsapp": "12312312",
+      "email": "aad@asda.com",
+      "comuna": "Puerto Varas",
+      "region": "Región de Los Lagos",
+      "address": "",
+      "propertyType": "residencial",
+      "systemType": "hibrida",
+      "distributor": "saesa",
+      "hasPhases": "monofasico",
+      "consumptionMode": "monthly_bill_clp",
+      "monthlyBillClp": 120000,
+      "annualKwh": 6000,
+      "monthlyKwhBreakdown": [
+        420,
+        400,
+        450,
+        550,
+        680,
+        780,
+        810,
+        720,
+        590,
+        500,
+        460,
+        430
+      ],
+      "batteryObjectives": [],
+      "includeEvCharger": false,
+      "backupPriority": "cargas_criticas",
+      "omPackage": "basic",
+      "acceptTerms": true,
+      "billFile": null,
+      "turnstileToken": "1.Oiyi-iDO1UvWYHRo3zwYrBKN1isWPgvYGj-UbDesT58RhF7DT2z5gbwMydgdu9qr_-_eTDUliX-pNmKZGfMmCzzTjNrhynYxTQByDpLrTHw81wnc3k0E_szwDPawGuZJQuOC88QqxmKrTE9MxjvZ3MwEBsDXb31eHdyYVpn_vDR8SiVigFjsRE0FFDz6i4klqhP4ONtYIafspcAw3GYcqSeXhedkQgvntrg5pimCz0cxlDz6NidSz3ObTk1braEKTgcBwVGnxyCVJhXGlfvdWvPfapCiZgs1g3re9mjErMlerp3JYN57L4GT7VbkWs9-EQxbJ3nK-7autDThPxXgwQoOQCis5qKnIoABryDYYQCYz_8-_eq4CnRuZtRK_Od-PktEkVj6cTKBRKJoOd8PkAlxwediuYS-LsPq2Xhv7811xC_swF7CpmNoxiILsj6DToZzUE0P8ObNBattrCDPVbc3jckPCx0g9HclNqk5SNDN9F8DfLuO1tvtZzOl-1TqOibXW14wyfYLtzRMQl7kT263K-NyeUepMHFVbw43zZDxfoJ02EF9W6EGgtjHszie0jzcL0fcAZBNK1Gk9P5aAEXgQCghNdQ1qwrwZR6XHTQ.UcrmP13Q3m4nZmsjqrjgnA.24088db432cb8b4179e7ff7a0d661c7987f481062bc8b6be46eaad797c3c5be8",
+      "website_url": ""
+    },
+    "sizingResult": {
+      "recommendedKwp": 4.1,
+      "panelsCount": 7,
+      "panelWatts": 585,
+      "inverterKw": 4,
+      "batteryKwh": 5.1,
+      "estimatedMonthlyGenKwh": 393,
+      "estimatedAnnualGenKwh": 4720,
+      "estimatedAnnualSavingsClp": 1223778,
+      "estimated25YearSavingsClp": 41471968,
+      "paybackYears": 6.1,
+      "co2TonsAvoidedPerYear": 1.8,
+      "equivalentTreesPlanted": 29,
+      "autoconsumoPct": 82,
+      "averageMonthlyDemandKwh": 438,
+      "secNorms": [
+        "RIC N°09 (Sec. 6.1) - Instalaciones de Autoconsumo Fotovoltaico",
+        "RIC N°15 (Sec. 5) - Interconexión y Protección Anti-Isla",
+        "Límite Empalme SEC - Empalme Monofásico 220V",
+        "RIC N°09 (BESS) - Sistemas de Almacenamiento Electroquímico LiFePO4",
+        "Trámite Certificación TE-4 SEC"
+      ],
+      "estimatedSystemCostNetoClp": 7538926,
+      "estimatedSystemCostIvaClp": 8971322,
+      "downpaymentHito1Clp": 3769463,
+      "faenaHito2Clp": 2638624,
+      "finalHito3Clp": 1130839,
+      "margenBrutoPct": 18.5,
+      "selectedOmPackage": {
+        "id": "basic",
+        "name": "Garantía Estándar SoldeRío",
+        "badge": "Incluida",
+        "monthlyPriceClp": 0,
+        "monthlyPriceUf": 0,
+        "tagline": "Garantía de producto de fábrica y soporte de instalación",
+        "features": [
+          "25 Años de Garantía de Rendimiento en Módulos Tier 1 (≥85%)",
+          "10 a 15 Años de Garantía de Inversores y Baterías LUNA Huawei",
+          "1 Año de Garantía de Mano de Obra y Estanqueidad de Techo",
+          "Monitoreo Básico en App Huawei FusionSolar Cloud",
+          "Certificado TE-4 SEC y Tramitación Net Billing ante Distribuidora"
+        ],
+        "isDefault": true
+      },
+      "usableBatteryKwh": 4.4,
+      "seasonalVariationRatio": 2.8,
+      "summerAvgMonthlyGenKwh": 591,
+      "winterAvgMonthlyGenKwh": 212,
+      "monthlyBreakdown": [
+        {
+          "month": 1,
+          "monthName": "Enero",
+          "monthlyGenKwh": 668,
+          "monthlyDemandKwh": 338,
+          "poaKwhM2Day": 6.86,
+          "tCellCelsius": 44.4,
+          "surplusKwh": 330,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 2,
+          "monthName": "Febrero",
+          "monthlyGenKwh": 528,
+          "monthlyDemandKwh": 330,
+          "poaKwhM2Day": 5.98,
+          "tCellCelsius": 43,
+          "surplusKwh": 198,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 3,
+          "monthName": "Marzo",
+          "monthlyGenKwh": 444,
+          "monthlyDemandKwh": 363,
+          "poaKwhM2Day": 4.54,
+          "tCellCelsius": 43.2,
+          "surplusKwh": 81,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 4,
+          "monthName": "Abril",
+          "monthlyGenKwh": 307,
+          "monthlyDemandKwh": 433,
+          "poaKwhM2Day": 3.12,
+          "tCellCelsius": 30.8,
+          "surplusKwh": 0,
+          "gridImportKwh": 126
+        },
+        {
+          "month": 5,
+          "monthName": "Mayo",
+          "monthlyGenKwh": 227,
+          "monthlyDemandKwh": 516,
+          "poaKwhM2Day": 2.18,
+          "tCellCelsius": 22.9,
+          "surplusKwh": 0,
+          "gridImportKwh": 289
+        },
+        {
+          "month": 6,
+          "monthName": "Junio",
+          "monthlyGenKwh": 156,
+          "monthlyDemandKwh": 578,
+          "poaKwhM2Day": 1.54,
+          "tCellCelsius": 16.1,
+          "surplusKwh": 0,
+          "gridImportKwh": 422
+        },
+        {
+          "month": 7,
+          "monthName": "Julio",
+          "monthlyGenKwh": 211,
+          "monthlyDemandKwh": 598,
+          "poaKwhM2Day": 2.02,
+          "tCellCelsius": 19.7,
+          "surplusKwh": 0,
+          "gridImportKwh": 387
+        },
+        {
+          "month": 8,
+          "monthName": "Agosto",
+          "monthlyGenKwh": 270,
+          "monthlyDemandKwh": 545,
+          "poaKwhM2Day": 2.62,
+          "tCellCelsius": 25.7,
+          "surplusKwh": 0,
+          "gridImportKwh": 275
+        },
+        {
+          "month": 9,
+          "monthName": "Septiembre",
+          "monthlyGenKwh": 378,
+          "monthlyDemandKwh": 454,
+          "poaKwhM2Day": 3.89,
+          "tCellCelsius": 34.5,
+          "surplusKwh": 0,
+          "gridImportKwh": 76
+        },
+        {
+          "month": 10,
+          "monthName": "Octubre",
+          "monthlyGenKwh": 442,
+          "monthlyDemandKwh": 392,
+          "poaKwhM2Day": 4.46,
+          "tCellCelsius": 39,
+          "surplusKwh": 50,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 11,
+          "monthName": "Noviembre",
+          "monthlyGenKwh": 512,
+          "monthlyDemandKwh": 363,
+          "poaKwhM2Day": 5.36,
+          "tCellCelsius": 39.9,
+          "surplusKwh": 149,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 12,
+          "monthName": "Diciembre",
+          "monthlyGenKwh": 577,
+          "monthlyDemandKwh": 347,
+          "poaKwhM2Day": 5.89,
+          "tCellCelsius": 42.2,
+          "surplusKwh": 230,
+          "gridImportKwh": 0
+        }
+      ],
+      "vanClp": 9852146,
+      "tirPercent": 12,
+      "lcoeClpPerKwh": 65,
+      "requiresThreePhase": false,
+      "recommendedPhaseType": "monofasico",
+      "estimatedNewMonthlyBillClp": 18019,
+      "winterLimitSavingsClp": 72570,
+      "coberturaTotalAnualPct": 90,
+      "applianceEquivalencies": [
+        {
+          "title": "Refrigerador + Freezer No-Frost",
+          "description": "Alimentado 24/7 sin cortes, incluso durante temporales y caídas de red.",
+          "icon": "Refrigerator"
+        },
+        {
+          "title": "Conectividad Starlink & Iluminación",
+          "description": "Mantiene internet de alta velocidad, teletrabajo y toda la casa iluminada.",
+          "icon": "Wifi"
+        },
+        {
+          "title": "Calefacción / Pellet & Bombas de Pozo",
+          "description": "Respaldo continuo para motores de estufas a pellet y extracción de agua.",
+          "icon": "Flame"
+        },
+        {
+          "title": "Electrodomésticos & Lavado",
+          "description": "Lavadora, lavavajillas, microondas y hervidor cubiertos con energía solar.",
+          "icon": "Zap"
+        }
+      ],
+      "taxShieldArt33BisClp": 0,
+      "recoverableVatClp": 0,
+      "annualOpexClp": 75389,
+      "inverterReplacementCostYear12Clp": 904671,
+      "isB2B": false,
+      "regulatoryTrack": "netbilling_ley21118",
+      "regulatoryTitle": "Ley 21.118 Netbilling (Generación Distribuida ≤ 300 kW)",
+      "regulatoryDecree": "DFL 4/2006 + DS 57/2019 + DS 8/2019",
+      "regulatoryNorm": "Pliegos RIC N° 01-19 + NTCO-EG + RGR 01/2024",
+      "regulatoryTramite": "Trámite Eléctrico TE4 vía Plataforma GDA SEC (F1 a F5)",
+      "hourlyProfileSample": [
+        {
+          "hour": 0,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.36,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.36
+        },
+        {
+          "hour": 1,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.29,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.29
+        },
+        {
+          "hour": 2,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.26,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.26
+        },
+        {
+          "hour": 3,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.26,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.26
+        },
+        {
+          "hour": 4,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.29,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.29
+        },
+        {
+          "hour": 5,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.36,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.36
+        },
+        {
+          "hour": 6,
+          "solarGenKwh": 0.13,
+          "consumptionKwh": 0.5,
+          "selfConsumedKwh": 0.13,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.37
+        },
+        {
+          "hour": 7,
+          "solarGenKwh": 0.39,
+          "consumptionKwh": 0.79,
+          "selfConsumedKwh": 0.39,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.4
+        },
+        {
+          "hour": 8,
+          "solarGenKwh": 0.78,
+          "consumptionKwh": 0.94,
+          "selfConsumedKwh": 0.78,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.16
+        },
+        {
+          "hour": 9,
+          "solarGenKwh": 1.16,
+          "consumptionKwh": 0.72,
+          "selfConsumedKwh": 0.72,
+          "injectedKwh": 0.44,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 10,
+          "solarGenKwh": 1.55,
+          "consumptionKwh": 0.65,
+          "selfConsumedKwh": 0.65,
+          "injectedKwh": 0.9,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 11,
+          "solarGenKwh": 1.81,
+          "consumptionKwh": 0.65,
+          "selfConsumedKwh": 0.65,
+          "injectedKwh": 1.16,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 12,
+          "solarGenKwh": 1.94,
+          "consumptionKwh": 0.72,
+          "selfConsumedKwh": 0.72,
+          "injectedKwh": 1.22,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 13,
+          "solarGenKwh": 1.81,
+          "consumptionKwh": 0.79,
+          "selfConsumedKwh": 0.79,
+          "injectedKwh": 1.02,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 14,
+          "solarGenKwh": 1.42,
+          "consumptionKwh": 0.72,
+          "selfConsumedKwh": 0.72,
+          "injectedKwh": 0.7,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 15,
+          "solarGenKwh": 1.03,
+          "consumptionKwh": 0.65,
+          "selfConsumedKwh": 0.65,
+          "injectedKwh": 0.38,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 16,
+          "solarGenKwh": 0.65,
+          "consumptionKwh": 0.72,
+          "selfConsumedKwh": 0.65,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.07
+        },
+        {
+          "hour": 17,
+          "solarGenKwh": 0.26,
+          "consumptionKwh": 0.79,
+          "selfConsumedKwh": 0.26,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.53
+        },
+        {
+          "hour": 18,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.94,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.94
+        },
+        {
+          "hour": 19,
+          "solarGenKwh": 0,
+          "consumptionKwh": 1.08,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.08
+        },
+        {
+          "hour": 20,
+          "solarGenKwh": 0,
+          "consumptionKwh": 1.22,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.22
+        },
+        {
+          "hour": 21,
+          "solarGenKwh": 0,
+          "consumptionKwh": 1.15,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.15
+        },
+        {
+          "hour": 22,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.94,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.94
+        },
+        {
+          "hour": 23,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.68,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.68
+        }
+      ],
+      "netBillingMonthlyLedger": [
+        {
+          "monthName": "Enero",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 330,
+          "creditClp": 41250,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 41250,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Febrero",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 198,
+          "creditClp": 24750,
+          "initialBalanceClp": 41250,
+          "finalBalanceClp": 66000,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Marzo",
+          "boughtKwh": 52,
+          "boughtClp": 14040,
+          "injectedKwh": 133,
+          "creditClp": 16625,
+          "initialBalanceClp": 66000,
+          "finalBalanceClp": 68585,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Abril",
+          "boughtKwh": 218,
+          "boughtClp": 75210,
+          "injectedKwh": 92,
+          "creditClp": 11500,
+          "initialBalanceClp": 68585,
+          "finalBalanceClp": 4875,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Mayo",
+          "boughtKwh": 357,
+          "boughtClp": 123165,
+          "injectedKwh": 68,
+          "creditClp": 8500,
+          "initialBalanceClp": 4875,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 111640
+        },
+        {
+          "monthName": "Junio",
+          "boughtKwh": 469,
+          "boughtClp": 161805,
+          "injectedKwh": 47,
+          "creditClp": 5875,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 157780
+        },
+        {
+          "monthName": "Julio",
+          "boughtKwh": 450,
+          "boughtClp": 155250,
+          "injectedKwh": 63,
+          "creditClp": 7875,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 149225
+        },
+        {
+          "monthName": "Agosto",
+          "boughtKwh": 356,
+          "boughtClp": 122820,
+          "injectedKwh": 81,
+          "creditClp": 10125,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 114545
+        },
+        {
+          "monthName": "Septiembre",
+          "boughtKwh": 189,
+          "boughtClp": 65205,
+          "injectedKwh": 113,
+          "creditClp": 14125,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 52930
+        },
+        {
+          "monthName": "Octubre",
+          "boughtKwh": 83,
+          "boughtClp": 22410,
+          "injectedKwh": 133,
+          "creditClp": 16625,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 7635
+        },
+        {
+          "monthName": "Noviembre",
+          "boughtKwh": 5,
+          "boughtClp": 1350,
+          "injectedKwh": 154,
+          "creditClp": 19250,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 17900,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Diciembre",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 230,
+          "creditClp": 28750,
+          "initialBalanceClp": 17900,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 1850,
+          "annualSurplusPayoutClp": 46650
+        }
+      ],
+      "rightsAndCommitments": {
+        "whatYouCanDemand": [
+          {
+            "step": 1,
+            "question": "¿Qué tecnología y certificaciones respaldan los equipos?",
+            "title": "Tecnología Tier 1 y Certificación SEC",
+            "details": "Módulos Tier 1 N-Type TOPCon con 25 años de garantía de producto y 30 años de potencia lineal. Inversores híbridos certificados SEC con protocolo PE Nº 1/26 anti-isla y monitoreo WiFi/4G integrado."
+          },
+          {
+            "step": 2,
+            "question": "¿Quién asume la responsabilidad del servicio técnico local?",
+            "title": "Soporte Técnico Local & Estanqueidad Garantizada",
+            "details": "Garantía formal por escrito de 1 año en estanqueidad de techumbre (cero filtraciones) y mano de obra. Cuadrilla técnica propia en el sur de Chile (Llanquihue, Osorno, Valdivia, Chiloé)."
+          },
+          {
+            "step": 3,
+            "question": "¿Cómo se legaliza la inyección y el cambio de medidor?",
+            "title": "Tramitación SEC TE4 y Proceso Net Billing Completo",
+            "details": "Ingreso formal de Formularios F1 a F5 ante la distribuidora (SAESA, CRELL, etc.) y obtención del Certificado TE4 SEC por instalador eléctrico autorizado Clase A o B. Medidor bidireccional gestionado."
+          },
+          {
+            "step": 4,
+            "question": "¿Cuáles son los hitos de pago contra avance real?",
+            "title": "Hitos Transparentes 50% / 35% / 15%",
+            "details": "50% de anticipo para orden de compra y reserva de hardware. 35% contra arribo a faena y montaje en techo. 15% final únicamente contra puesta en marcha conforme y TE4 ingresado a la SEC."
+          }
+        ],
+        "ownerCommitments": [
+          {
+            "title": "Condiciones de Acceso y Empalme Eléctrico",
+            "details": "Facilitar acceso seguro a techumbre, tablero general y empalme en las fechas acordadas de montaje e inspección."
+          },
+          {
+            "title": "Mantenimiento Periódico de Módulos",
+            "details": "Realizar o programar 1 a 2 lavados anuales con agua desmineralizada y mantener despejado el entorno de sombras por vegetación."
+          },
+          {
+            "title": "Integridad de las Instalaciones",
+            "details": "No intervenir el inversor, protecciones DC/AC ni conexionado eléctrico sin la presencia o autorización escrita de personal técnico calificado."
+          },
+          {
+            "title": "Monitoreo Proactivo de la Planta",
+            "details": "Mantener el inversor conectado a internet y revisar periódicamente la App FusionSolar para alertar anomalías o desconexiones."
+          }
+        ]
+      }
+    },
+    "status": "NUEVO"
+  },
+  {
+    "id": "SOL-2026-1726",
+    "createdAt": "2026-10-07T22:33:24.656Z",
+    "formData": {
+      "fullName": "CASA DOS",
+      "whatsapp": "2323234234",
+      "email": "soporte@ckli.cl",
+      "comuna": "Valdivia",
+      "region": "Región de Los Ríos",
+      "address": "",
+      "propertyType": "residencial",
+      "systemType": "hibrida",
+      "distributor": "saesa",
+      "hasPhases": "monofasico",
+      "consumptionMode": "monthly_bill_clp",
+      "monthlyBillClp": 120000,
+      "annualKwh": 6000,
+      "monthlyKwhBreakdown": [
+        420,
+        400,
+        450,
+        550,
+        680,
+        780,
+        810,
+        720,
+        590,
+        500,
+        460,
+        430
+      ],
+      "batteryObjectives": [],
+      "includeEvCharger": false,
+      "backupPriority": "cargas_criticas",
+      "omPackage": "basic",
+      "acceptTerms": true,
+      "billFile": null,
+      "turnstileToken": "1.dn2ZixFPXscwv4pTZC66c_KrMpW3HzxkZVz_8-oWg2K6uGNwpHogxuFMUE2k0UUuf6qZ0gwiYNEH1EqlSsKg3sdu7gseNfOQNGCLBjV26yam2bj0mcIdvW_BK1K0-5zj78axyn4pOuRf0yxVTYjvrwJGchfcmhwO6Muga9wasFH3zym7lUfh0nfk4u3HhF4Z-14nznAOQlwTuf_ZsTTRPhieBRQDzPQOYIu3ioTL-E9IljxIs_XfSvNk2H6JqIAzKFHl_xMVkAzef_wktlYdSqreb83kN-vExTftOuadKk0oKN44khio_Mr2zALZ1FyXt3e5xcHj96QJhkLEYxCiy3ms_IxxgVzmpb1Pgk8ISpE0vCKEmV5eUFcZsHszwNamJcB6esaSgULjVluV08RvQDzwgV23tSxNf9LZKGUOHHwTvNLRt7Kd8V-byWXRaHHO4BB8zHvlAV7HMWquNhH0vPYBfYJCEG5yh8_PRvxCZZTe2gVELoM06kxyFZ-KlTgJ4kz8fgnVBwjPCaU5J5N-RYNWksj451dsOl-Lc8XjoumRVV_e6UIDuyu_ERTTXfo7EAB-cibYW9Gyk8eNyqmKHJDG0EuAxGmZf1nZpIPDpH0pKnLbTjgfGiFItWwOBKA0IDio4teUKjM9anrUjQDw0Q.t7dyOqz2pyhS84ydiPYYyQ.85c8e6db746648c0a466d1f4e2b2164632b527a0132afe631b96f469cec98708",
+      "website_url": ""
+    },
+    "sizingResult": {
+      "recommendedKwp": 4.1,
+      "panelsCount": 7,
+      "panelWatts": 580,
+      "inverterKw": 4,
+      "batteryKwh": 5.1,
+      "estimatedMonthlyGenKwh": 491,
+      "estimatedAnnualGenKwh": 5897,
+      "estimatedAnnualSavingsClp": 1417800,
+      "estimated25YearSavingsClp": 47831725,
+      "paybackYears": 6.4,
+      "co2TonsAvoidedPerYear": 2.3,
+      "equivalentTreesPlanted": 37,
+      "autoconsumoPct": 90,
+      "averageMonthlyDemandKwh": 438,
+      "secNorms": [
+        "RIC N°09 (Sec. 6.1) - Instalaciones de Autoconsumo Fotovoltaico",
+        "RIC N°15 (Sec. 5) - Interconexión y Protección Anti-Isla",
+        "Límite Empalme SEC - Empalme Monofásico 220V",
+        "RIC N°09 (BESS) - Sistemas de Almacenamiento Electroquímico LiFePO4",
+        "Trámite Certificación TE-4 SEC"
+      ],
+      "estimatedSystemCostNetoClp": 9178571,
+      "estimatedSystemCostIvaClp": 10922499,
+      "downpaymentHito1Clp": 4589286,
+      "faenaHito2Clp": 3212500,
+      "finalHito3Clp": 1376786,
+      "margenBrutoPct": 19.5,
+      "selectedOmPackage": {
+        "id": "basic",
+        "name": "Garantía Estándar SoldeRío",
+        "badge": "Incluida",
+        "monthlyPriceClp": 0,
+        "monthlyPriceUf": 0,
+        "tagline": "Garantía de producto de fábrica y soporte de instalación",
+        "features": [
+          "25 Años de Garantía de Rendimiento en Módulos Tier 1 (≥85%)",
+          "10 a 15 Años de Garantía de Inversores y Baterías LUNA Huawei",
+          "1 Año de Garantía de Mano de Obra y Estanqueidad de Techo",
+          "Monitoreo Básico en App Huawei FusionSolar Cloud",
+          "Certificado TE-4 SEC y Tramitación Net Billing ante Distribuidora"
+        ],
+        "isDefault": true
+      },
+      "usableBatteryKwh": 4.4,
+      "seasonalVariationRatio": 3.1,
+      "summerAvgMonthlyGenKwh": 738,
+      "winterAvgMonthlyGenKwh": 237,
+      "monthlyBreakdown": [
+        {
+          "month": 1,
+          "monthName": "Enero",
+          "monthlyGenKwh": 778,
+          "monthlyDemandKwh": 338,
+          "poaKwhM2Day": 7,
+          "tCellCelsius": 45.6,
+          "surplusKwh": 440,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 2,
+          "monthName": "Febrero",
+          "monthlyGenKwh": 644,
+          "monthlyDemandKwh": 330,
+          "poaKwhM2Day": 6.4,
+          "tCellCelsius": 45,
+          "surplusKwh": 314,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 3,
+          "monthName": "Marzo",
+          "monthlyGenKwh": 583,
+          "monthlyDemandKwh": 363,
+          "poaKwhM2Day": 5.2,
+          "tCellCelsius": 42.9,
+          "surplusKwh": 220,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 4,
+          "monthName": "Abril",
+          "monthlyGenKwh": 391,
+          "monthlyDemandKwh": 433,
+          "poaKwhM2Day": 3.5,
+          "tCellCelsius": 33.6,
+          "surplusKwh": 0,
+          "gridImportKwh": 42
+        },
+        {
+          "month": 5,
+          "monthName": "Mayo",
+          "monthlyGenKwh": 262,
+          "monthlyDemandKwh": 516,
+          "poaKwhM2Day": 2.2,
+          "tCellCelsius": 23.2,
+          "surplusKwh": 0,
+          "gridImportKwh": 254
+        },
+        {
+          "month": 6,
+          "monthName": "Junio",
+          "monthlyGenKwh": 176,
+          "monthlyDemandKwh": 578,
+          "poaKwhM2Day": 1.5,
+          "tCellCelsius": 17.1,
+          "surplusKwh": 0,
+          "gridImportKwh": 402
+        },
+        {
+          "month": 7,
+          "monthName": "Julio",
+          "monthlyGenKwh": 217,
+          "monthlyDemandKwh": 598,
+          "poaKwhM2Day": 1.8,
+          "tCellCelsius": 18.6,
+          "surplusKwh": 0,
+          "gridImportKwh": 381
+        },
+        {
+          "month": 8,
+          "monthName": "Agosto",
+          "monthlyGenKwh": 319,
+          "monthlyDemandKwh": 545,
+          "poaKwhM2Day": 2.7,
+          "tCellCelsius": 25.3,
+          "surplusKwh": 0,
+          "gridImportKwh": 226
+        },
+        {
+          "month": 9,
+          "monthName": "Septiembre",
+          "monthlyGenKwh": 444,
+          "monthlyDemandKwh": 454,
+          "poaKwhM2Day": 4,
+          "tCellCelsius": 35.4,
+          "surplusKwh": 0,
+          "gridImportKwh": 10
+        },
+        {
+          "month": 10,
+          "monthName": "Octubre",
+          "monthlyGenKwh": 598,
+          "monthlyDemandKwh": 392,
+          "poaKwhM2Day": 5.3,
+          "tCellCelsius": 40.7,
+          "surplusKwh": 206,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 11,
+          "monthName": "Noviembre",
+          "monthlyGenKwh": 694,
+          "monthlyDemandKwh": 363,
+          "poaKwhM2Day": 6.4,
+          "tCellCelsius": 42.8,
+          "surplusKwh": 331,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 12,
+          "monthName": "Diciembre",
+          "monthlyGenKwh": 791,
+          "monthlyDemandKwh": 347,
+          "poaKwhM2Day": 7.1,
+          "tCellCelsius": 44.7,
+          "surplusKwh": 444,
+          "gridImportKwh": 0
+        }
+      ],
+      "vanClp": 10877824,
+      "tirPercent": 12,
+      "lcoeClpPerKwh": 65,
+      "requiresThreePhase": false,
+      "recommendedPhaseType": "monofasico",
+      "estimatedNewMonthlyBillClp": 1850,
+      "winterLimitSavingsClp": 76800,
+      "coberturaTotalAnualPct": 100,
+      "applianceEquivalencies": [
+        {
+          "title": "Refrigerador + Freezer No-Frost",
+          "description": "Alimentado 24/7 sin cortes, incluso durante temporales y caídas de red.",
+          "icon": "Refrigerator"
+        },
+        {
+          "title": "Conectividad Starlink & Iluminación",
+          "description": "Mantiene internet de alta velocidad, teletrabajo y toda la casa iluminada.",
+          "icon": "Wifi"
+        },
+        {
+          "title": "Calefacción / Pellet & Bombas de Pozo",
+          "description": "Respaldo continuo para motores de estufas a pellet y extracción de agua.",
+          "icon": "Flame"
+        },
+        {
+          "title": "Electrodomésticos & Lavado",
+          "description": "Lavadora, lavavajillas, microondas y hervidor cubiertos con energía solar.",
+          "icon": "Zap"
+        }
+      ],
+      "taxShieldArt33BisClp": 0,
+      "recoverableVatClp": 0,
+      "annualOpexClp": 91786,
+      "inverterReplacementCostYear12Clp": 1101429,
+      "isB2B": false,
+      "regulatoryTrack": "netbilling_ley21118",
+      "regulatoryTitle": "Ley 21.118 Netbilling (Generación Distribuida ≤ 300 kW)",
+      "regulatoryDecree": "DFL 4/2006 + DS 57/2019 + DS 8/2019",
+      "regulatoryNorm": "Pliegos RIC N° 01-19 + NTCO-EG + RGR 01/2024",
+      "regulatoryTramite": "Trámite Eléctrico TE4 vía Plataforma GDA SEC (F1 a F5)",
+      "hourlyProfileSample": [
+        {
+          "hour": 0,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.36,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.36
+        },
+        {
+          "hour": 1,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.29,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.29
+        },
+        {
+          "hour": 2,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.26,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.26
+        },
+        {
+          "hour": 3,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.26,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.26
+        },
+        {
+          "hour": 4,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.29,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.29
+        },
+        {
+          "hour": 5,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.36,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.36
+        },
+        {
+          "hour": 6,
+          "solarGenKwh": 0.16,
+          "consumptionKwh": 0.5,
+          "selfConsumedKwh": 0.16,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.34
+        },
+        {
+          "hour": 7,
+          "solarGenKwh": 0.48,
+          "consumptionKwh": 0.79,
+          "selfConsumedKwh": 0.48,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.31
+        },
+        {
+          "hour": 8,
+          "solarGenKwh": 0.97,
+          "consumptionKwh": 0.94,
+          "selfConsumedKwh": 0.94,
+          "injectedKwh": 0.03,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 9,
+          "solarGenKwh": 1.45,
+          "consumptionKwh": 0.72,
+          "selfConsumedKwh": 0.72,
+          "injectedKwh": 0.73,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 10,
+          "solarGenKwh": 1.94,
+          "consumptionKwh": 0.65,
+          "selfConsumedKwh": 0.65,
+          "injectedKwh": 1.29,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 11,
+          "solarGenKwh": 2.26,
+          "consumptionKwh": 0.65,
+          "selfConsumedKwh": 0.65,
+          "injectedKwh": 1.61,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 12,
+          "solarGenKwh": 2.42,
+          "consumptionKwh": 0.72,
+          "selfConsumedKwh": 0.72,
+          "injectedKwh": 1.7,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 13,
+          "solarGenKwh": 2.26,
+          "consumptionKwh": 0.79,
+          "selfConsumedKwh": 0.79,
+          "injectedKwh": 1.47,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 14,
+          "solarGenKwh": 1.78,
+          "consumptionKwh": 0.72,
+          "selfConsumedKwh": 0.72,
+          "injectedKwh": 1.06,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 15,
+          "solarGenKwh": 1.29,
+          "consumptionKwh": 0.65,
+          "selfConsumedKwh": 0.65,
+          "injectedKwh": 0.64,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 16,
+          "solarGenKwh": 0.81,
+          "consumptionKwh": 0.72,
+          "selfConsumedKwh": 0.72,
+          "injectedKwh": 0.09,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 17,
+          "solarGenKwh": 0.32,
+          "consumptionKwh": 0.79,
+          "selfConsumedKwh": 0.32,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.47
+        },
+        {
+          "hour": 18,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.94,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.94
+        },
+        {
+          "hour": 19,
+          "solarGenKwh": 0,
+          "consumptionKwh": 1.08,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.08
+        },
+        {
+          "hour": 20,
+          "solarGenKwh": 0,
+          "consumptionKwh": 1.22,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.22
+        },
+        {
+          "hour": 21,
+          "solarGenKwh": 0,
+          "consumptionKwh": 1.15,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.15
+        },
+        {
+          "hour": 22,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.94,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.94
+        },
+        {
+          "hour": 23,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.68,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.68
+        }
+      ],
+      "netBillingMonthlyLedger": [
+        {
+          "monthName": "Enero",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 440,
+          "creditClp": 55000,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 55000,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Febrero",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 314,
+          "creditClp": 39250,
+          "initialBalanceClp": 55000,
+          "finalBalanceClp": 94250,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Marzo",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 220,
+          "creditClp": 27500,
+          "initialBalanceClp": 94250,
+          "finalBalanceClp": 121750,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Abril",
+          "boughtKwh": 159,
+          "boughtClp": 54855,
+          "injectedKwh": 117,
+          "creditClp": 14625,
+          "initialBalanceClp": 121750,
+          "finalBalanceClp": 81520,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Mayo",
+          "boughtKwh": 333,
+          "boughtClp": 114885,
+          "injectedKwh": 79,
+          "creditClp": 9875,
+          "initialBalanceClp": 81520,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 25340
+        },
+        {
+          "monthName": "Junio",
+          "boughtKwh": 455,
+          "boughtClp": 156975,
+          "injectedKwh": 53,
+          "creditClp": 6625,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 152200
+        },
+        {
+          "monthName": "Julio",
+          "boughtKwh": 446,
+          "boughtClp": 153870,
+          "injectedKwh": 65,
+          "creditClp": 8125,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 147595
+        },
+        {
+          "monthName": "Agosto",
+          "boughtKwh": 322,
+          "boughtClp": 111090,
+          "injectedKwh": 96,
+          "creditClp": 12000,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 100940
+        },
+        {
+          "monthName": "Septiembre",
+          "boughtKwh": 143,
+          "boughtClp": 49335,
+          "injectedKwh": 133,
+          "creditClp": 16625,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 34560
+        },
+        {
+          "monthName": "Octubre",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 206,
+          "creditClp": 25750,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 25750,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Noviembre",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 331,
+          "creditClp": 41375,
+          "initialBalanceClp": 25750,
+          "finalBalanceClp": 67125,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Diciembre",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 444,
+          "creditClp": 55500,
+          "initialBalanceClp": 67125,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 1850,
+          "annualSurplusPayoutClp": 122625
+        }
+      ],
+      "rightsAndCommitments": {
+        "whatYouCanDemand": [
+          {
+            "step": 1,
+            "question": "¿Qué tecnología y certificaciones respaldan los equipos?",
+            "title": "Tecnología Tier 1 y Certificación SEC",
+            "details": "Módulos Tier 1 N-Type TOPCon con 25 años de garantía de producto y 30 años de potencia lineal. Inversores híbridos certificados SEC con protocolo PE Nº 1/26 anti-isla y monitoreo WiFi/4G integrado."
+          },
+          {
+            "step": 2,
+            "question": "¿Quién asume la responsabilidad del servicio técnico local?",
+            "title": "Soporte Técnico Local & Estanqueidad Garantizada",
+            "details": "Garantía formal por escrito de 1 año en estanqueidad de techumbre (cero filtraciones) y mano de obra. Cuadrilla técnica propia en el sur de Chile (Llanquihue, Osorno, Valdivia, Chiloé)."
+          },
+          {
+            "step": 3,
+            "question": "¿Cómo se legaliza la inyección y el cambio de medidor?",
+            "title": "Tramitación SEC TE4 y Proceso Net Billing Completo",
+            "details": "Ingreso formal de Formularios F1 a F5 ante la distribuidora (SAESA, CRELL, etc.) y obtención del Certificado TE4 SEC por instalador eléctrico autorizado Clase A o B. Medidor bidireccional gestionado."
+          },
+          {
+            "step": 4,
+            "question": "¿Cuáles son los hitos de pago contra avance real?",
+            "title": "Hitos Transparentes 50% / 35% / 15%",
+            "details": "50% de anticipo para orden de compra y reserva de hardware. 35% contra arribo a faena y montaje en techo. 15% final únicamente contra puesta en marcha conforme y TE4 ingresado a la SEC."
+          }
+        ],
+        "ownerCommitments": [
+          {
+            "title": "Condiciones de Acceso y Empalme Eléctrico",
+            "details": "Facilitar acceso seguro a techumbre, tablero general y empalme en las fechas acordadas de montaje e inspección."
+          },
+          {
+            "title": "Mantenimiento Periódico de Módulos",
+            "details": "Realizar o programar 1 a 2 lavados anuales con agua desmineralizada y mantener despejado el entorno de sombras por vegetación."
+          },
+          {
+            "title": "Integridad de las Instalaciones",
+            "details": "No intervenir el inversor, protecciones DC/AC ni conexionado eléctrico sin la presencia o autorización escrita de personal técnico calificado."
+          },
+          {
+            "title": "Monitoreo Proactivo de la Planta",
+            "details": "Mantener el inversor conectado a internet y revisar periódicamente la App FusionSolar para alertar anomalías o desconexiones."
+          }
+        ]
+      }
+    },
+    "status": "NUEVO"
+  },
+  {
+    "id": "SOL-2026-4717",
+    "createdAt": "2026-10-07T22:29:35.395Z",
+    "formData": {
+      "fullName": "empresa dos",
+      "whatsapp": "+569661786667",
+      "email": "soporte@ckli.cl",
+      "comuna": "Puerto Montt",
+      "region": "Región de Los Lagos",
+      "address": "",
+      "propertyType": "comercial",
+      "systemType": "ongrid",
+      "distributor": "saesa",
+      "hasPhases": "monofasico",
+      "consumptionMode": "monthly_bill_clp",
+      "monthlyBillClp": 1050000,
+      "annualKwh": 6000,
+      "monthlyKwhBreakdown": [
+        420,
+        400,
+        450,
+        550,
+        680,
+        780,
+        810,
+        720,
+        590,
+        500,
+        460,
+        430
+      ],
+      "batteryObjectives": [],
+      "roofMaterial": "No estoy seguro",
+      "includeEvCharger": false,
+      "backupPriority": "cargas_criticas",
+      "omPackage": "basic",
+      "acceptTerms": true,
+      "billFile": null,
+      "turnstileToken": "1._BEef3AVA-h-_uLqJeLovZMNFtpuAry6p9AY6xzlsDTnm8yUwKCPbsLyR8ryUOuj1R5pH00btrPozb_APXKyxbb5sgR_2vB9JDhoCy5ggijNJZ86GW6_rVtMR6lJa8v1G0D0pj6x0LPLs0cy915DS0LEWvbALn2jZ8PL-M9pjxBo5t2PK2YT97J73mkkLiY6euLnARfBw96ja7baYuPd9si1XfALSkbZZi_7Sl8km_GTuHolAAOPS9R6GLgmMPtqVB-5KBX48D3r8h1RNoJyGPyd4M3EIGGRY0jntzUp4risP5ByF-rOHDoES3GQ0twE-_dpUxTzmz0BnS-4KznWd0Muvy8nsf0nI-ZY9ZoqPkDeanTADGYz0UkfdDA9RfD7zfUkfPYb8bBUMN3e9HnNXTIeVPHpG6rZ9YyF0-XMHe4gKLDsnZOlYGndhQkjRN-Lba5TPTEuMelhOZvoGm0SluICbq_IBkvBrhJdc4jwWuXtgINsyatw08j_ExiRrFfXxHFJaeyzScLMuPDljAZKXU1UIiMUT5tPjIrImdniecAQgg6otIN-Awl8PGdI8FdZPIUnSgkYnJJugeCSrGYI9yDhlhWIv0ae9Vin9FnDs0z4XuJ8p2bQ98LYVuRwctumgEPGKg6RiDapw80d0FRfHA.SKmot08efXsF6PKa7V6yBg.d583980497cc5d034423b43ba28195f03ea92afc7ac71cf9b4e64c3ba0ba3914",
+      "website_url": ""
+    },
+    "sizingResult": {
+      "recommendedKwp": 37.7,
+      "panelsCount": 65,
+      "panelWatts": 580,
+      "inverterKw": 31,
+      "batteryKwh": 0,
+      "estimatedMonthlyGenKwh": 4151,
+      "estimatedAnnualGenKwh": 49817,
+      "estimatedAnnualSavingsClp": 8190000,
+      "estimated25YearSavingsClp": 291387725,
+      "paybackYears": 2.8,
+      "co2TonsAvoidedPerYear": 19.2,
+      "equivalentTreesPlanted": 307,
+      "autoconsumoPct": 78,
+      "averageMonthlyDemandKwh": 3882,
+      "secNorms": [
+        "RIC N°09 (Sec. 6.1) - Instalaciones de Autoconsumo Fotovoltaico",
+        "RIC N°15 (Sec. 5) - Interconexión y Protección Anti-Isla",
+        "Límite Empalme SEC - Empalme Trifásico 380V",
+        "Trámite Certificación TE-4 SEC"
+      ],
+      "estimatedSystemCostNetoClp": 24409600,
+      "estimatedSystemCostIvaClp": 29047424,
+      "downpaymentHito1Clp": 12204800,
+      "faenaHito2Clp": 8543360,
+      "finalHito3Clp": 3661440,
+      "margenBrutoPct": 25,
+      "selectedOmPackage": {
+        "id": "basic",
+        "name": "Garantía Estándar SoldeRío",
+        "badge": "Incluida",
+        "monthlyPriceClp": 0,
+        "monthlyPriceUf": 0,
+        "tagline": "Garantía de producto de fábrica y soporte de instalación",
+        "features": [
+          "25 Años de Garantía de Rendimiento en Módulos Tier 1 (≥85%)",
+          "10 a 15 Años de Garantía de Inversores y Baterías LUNA Huawei",
+          "1 Año de Garantía de Mano de Obra y Estanqueidad de Techo",
+          "Monitoreo Básico en App Huawei FusionSolar Cloud",
+          "Certificado TE-4 SEC y Tramitación Net Billing ante Distribuidora"
+        ],
+        "isDefault": true
+      },
+      "usableBatteryKwh": 0,
+      "seasonalVariationRatio": 3.5,
+      "summerAvgMonthlyGenKwh": 6417,
+      "winterAvgMonthlyGenKwh": 1840,
+      "monthlyBreakdown": [
+        {
+          "month": 1,
+          "monthName": "Enero",
+          "monthlyGenKwh": 6780,
+          "monthlyDemandKwh": 2998,
+          "poaKwhM2Day": 6.6,
+          "tCellCelsius": 44.3,
+          "surplusKwh": 3782,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 2,
+          "monthName": "Febrero",
+          "monthlyGenKwh": 5574,
+          "monthlyDemandKwh": 2925,
+          "poaKwhM2Day": 6,
+          "tCellCelsius": 43.8,
+          "surplusKwh": 2649,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 3,
+          "monthName": "Marzo",
+          "monthlyGenKwh": 4970,
+          "monthlyDemandKwh": 3218,
+          "poaKwhM2Day": 4.8,
+          "tCellCelsius": 41.6,
+          "surplusKwh": 1752,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 4,
+          "monthName": "Abril",
+          "monthlyGenKwh": 3222,
+          "monthlyDemandKwh": 3839,
+          "poaKwhM2Day": 3.1,
+          "tCellCelsius": 29.9,
+          "surplusKwh": 0,
+          "gridImportKwh": 617
+        },
+        {
+          "month": 5,
+          "monthName": "Mayo",
+          "monthlyGenKwh": 1994,
+          "monthlyDemandKwh": 4571,
+          "poaKwhM2Day": 1.8,
+          "tCellCelsius": 19.5,
+          "surplusKwh": 0,
+          "gridImportKwh": 2577
+        },
+        {
+          "month": 6,
+          "monthName": "Junio",
+          "monthlyGenKwh": 1307,
+          "monthlyDemandKwh": 5119,
+          "poaKwhM2Day": 1.2,
+          "tCellCelsius": 14.2,
+          "surplusKwh": 0,
+          "gridImportKwh": 3812
+        },
+        {
+          "month": 7,
+          "monthName": "Julio",
+          "monthlyGenKwh": 1681,
+          "monthlyDemandKwh": 5302,
+          "poaKwhM2Day": 1.5,
+          "tCellCelsius": 15.7,
+          "surplusKwh": 0,
+          "gridImportKwh": 3621
+        },
+        {
+          "month": 8,
+          "monthName": "Agosto",
+          "monthlyGenKwh": 2532,
+          "monthlyDemandKwh": 4827,
+          "poaKwhM2Day": 2.3,
+          "tCellCelsius": 21.6,
+          "surplusKwh": 0,
+          "gridImportKwh": 2295
+        },
+        {
+          "month": 9,
+          "monthName": "Septiembre",
+          "monthlyGenKwh": 3726,
+          "monthlyDemandKwh": 4022,
+          "poaKwhM2Day": 3.6,
+          "tCellCelsius": 31.5,
+          "surplusKwh": 0,
+          "gridImportKwh": 296
+        },
+        {
+          "month": 10,
+          "monthName": "Octubre",
+          "monthlyGenKwh": 5114,
+          "monthlyDemandKwh": 3474,
+          "poaKwhM2Day": 4.9,
+          "tCellCelsius": 39.4,
+          "surplusKwh": 1640,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 11,
+          "monthName": "Noviembre",
+          "monthlyGenKwh": 6019,
+          "monthlyDemandKwh": 3218,
+          "poaKwhM2Day": 6,
+          "tCellCelsius": 41.5,
+          "surplusKwh": 2801,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 12,
+          "monthName": "Diciembre",
+          "monthlyGenKwh": 6898,
+          "monthlyDemandKwh": 3071,
+          "poaKwhM2Day": 6.7,
+          "tCellCelsius": 43.4,
+          "surplusKwh": 3827,
+          "gridImportKwh": 0
+        }
+      ],
+      "vanClp": 76738568,
+      "tirPercent": 28,
+      "lcoeClpPerKwh": 38,
+      "requiresThreePhase": true,
+      "recommendedPhaseType": "trifasico",
+      "estimatedNewMonthlyBillClp": 367500,
+      "winterLimitSavingsClp": 0,
+      "coberturaTotalAnualPct": 100,
+      "applianceEquivalencies": [
+        {
+          "title": "Refrigerador + Freezer No-Frost",
+          "description": "Alimentado 24/7 sin cortes, incluso durante temporales y caídas de red.",
+          "icon": "Refrigerator"
+        },
+        {
+          "title": "Conectividad Starlink & Iluminación",
+          "description": "Mantiene internet de alta velocidad, teletrabajo y toda la casa iluminada.",
+          "icon": "Wifi"
+        },
+        {
+          "title": "Calefacción / Pellet & Bombas de Pozo",
+          "description": "Respaldo continuo para motores de estufas a pellet y extracción de agua.",
+          "icon": "Flame"
+        },
+        {
+          "title": "Electrodomésticos & Lavado",
+          "description": "Lavadora, lavavajillas, microondas y hervidor cubiertos con energía solar.",
+          "icon": "Zap"
+        }
+      ],
+      "taxShieldArt33BisClp": 1220480,
+      "recoverableVatClp": 4637824,
+      "peakHourDemandSavingsClp": 2268000,
+      "annualOpexClp": 244096,
+      "inverterReplacementCostYear12Clp": 2929152,
+      "isB2B": true,
+      "regulatoryTrack": "netbilling_ley21118",
+      "regulatoryTitle": "Ley 21.118 Netbilling (Generación Distribuida ≤ 300 kW)",
+      "regulatoryDecree": "DFL 4/2006 + DS 57/2019 + DS 8/2019",
+      "regulatoryNorm": "Pliegos RIC N° 01-19 + NTCO-EG + RGR 01/2024",
+      "regulatoryTramite": "Trámite Eléctrico TE4 vía Plataforma GDA SEC (F1 a F5)",
+      "hourlyProfileSample": [
+        {
+          "hour": 0,
+          "solarGenKwh": 0,
+          "consumptionKwh": 1.28,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.28
+        },
+        {
+          "hour": 1,
+          "solarGenKwh": 0,
+          "consumptionKwh": 1.28,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.28
+        },
+        {
+          "hour": 2,
+          "solarGenKwh": 0,
+          "consumptionKwh": 1.28,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.28
+        },
+        {
+          "hour": 3,
+          "solarGenKwh": 0,
+          "consumptionKwh": 1.28,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.28
+        },
+        {
+          "hour": 4,
+          "solarGenKwh": 0,
+          "consumptionKwh": 1.28,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.28
+        },
+        {
+          "hour": 5,
+          "solarGenKwh": 0,
+          "consumptionKwh": 1.91,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.91
+        },
+        {
+          "hour": 6,
+          "solarGenKwh": 1.36,
+          "consumptionKwh": 3.19,
+          "selfConsumedKwh": 1.36,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.83
+        },
+        {
+          "hour": 7,
+          "solarGenKwh": 4.09,
+          "consumptionKwh": 5.11,
+          "selfConsumedKwh": 4.09,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.02
+        },
+        {
+          "hour": 8,
+          "solarGenKwh": 8.19,
+          "consumptionKwh": 8.93,
+          "selfConsumedKwh": 8.19,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.74
+        },
+        {
+          "hour": 9,
+          "solarGenKwh": 12.28,
+          "consumptionKwh": 10.85,
+          "selfConsumedKwh": 10.85,
+          "injectedKwh": 1.43,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 10,
+          "solarGenKwh": 16.38,
+          "consumptionKwh": 12.12,
+          "selfConsumedKwh": 12.12,
+          "injectedKwh": 4.26,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 11,
+          "solarGenKwh": 19.11,
+          "consumptionKwh": 12.12,
+          "selfConsumedKwh": 12.12,
+          "injectedKwh": 6.99,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 12,
+          "solarGenKwh": 20.47,
+          "consumptionKwh": 10.85,
+          "selfConsumedKwh": 10.85,
+          "injectedKwh": 9.62,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 13,
+          "solarGenKwh": 19.11,
+          "consumptionKwh": 8.93,
+          "selfConsumedKwh": 8.93,
+          "injectedKwh": 10.18,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 14,
+          "solarGenKwh": 15.01,
+          "consumptionKwh": 10.85,
+          "selfConsumedKwh": 10.85,
+          "injectedKwh": 4.16,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 15,
+          "solarGenKwh": 10.92,
+          "consumptionKwh": 11.49,
+          "selfConsumedKwh": 10.92,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.57
+        },
+        {
+          "hour": 16,
+          "solarGenKwh": 6.82,
+          "consumptionKwh": 10.85,
+          "selfConsumedKwh": 6.82,
+          "injectedKwh": 0,
+          "gridImportKwh": 4.03
+        },
+        {
+          "hour": 17,
+          "solarGenKwh": 2.73,
+          "consumptionKwh": 9.57,
+          "selfConsumedKwh": 2.73,
+          "injectedKwh": 0,
+          "gridImportKwh": 6.84
+        },
+        {
+          "hour": 18,
+          "solarGenKwh": 0,
+          "consumptionKwh": 6.38,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 6.38
+        },
+        {
+          "hour": 19,
+          "solarGenKwh": 0,
+          "consumptionKwh": 3.19,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 3.19
+        },
+        {
+          "hour": 20,
+          "solarGenKwh": 0,
+          "consumptionKwh": 1.91,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.91
+        },
+        {
+          "hour": 21,
+          "solarGenKwh": 0,
+          "consumptionKwh": 1.28,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.28
+        },
+        {
+          "hour": 22,
+          "solarGenKwh": 0,
+          "consumptionKwh": 1.28,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.28
+        },
+        {
+          "hour": 23,
+          "solarGenKwh": 0,
+          "consumptionKwh": 1.28,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.28
+        }
+      ],
+      "netBillingMonthlyLedger": [
+        {
+          "monthName": "Enero",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 3782,
+          "creditClp": 472750,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 472750,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Febrero",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 2649,
+          "creditClp": 331125,
+          "initialBalanceClp": 472750,
+          "finalBalanceClp": 803875,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Marzo",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 1752,
+          "creditClp": 219000,
+          "initialBalanceClp": 803875,
+          "finalBalanceClp": 1022875,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Abril",
+          "boughtKwh": 1584,
+          "boughtClp": 546480,
+          "injectedKwh": 967,
+          "creditClp": 120875,
+          "initialBalanceClp": 1022875,
+          "finalBalanceClp": 597270,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Mayo",
+          "boughtKwh": 3175,
+          "boughtClp": 1095375,
+          "injectedKwh": 598,
+          "creditClp": 74750,
+          "initialBalanceClp": 597270,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 425205
+        },
+        {
+          "monthName": "Junio",
+          "boughtKwh": 4204,
+          "boughtClp": 1450380,
+          "injectedKwh": 392,
+          "creditClp": 49000,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 1403230
+        },
+        {
+          "monthName": "Julio",
+          "boughtKwh": 4125,
+          "boughtClp": 1423125,
+          "injectedKwh": 504,
+          "creditClp": 63000,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 1361975
+        },
+        {
+          "monthName": "Agosto",
+          "boughtKwh": 3055,
+          "boughtClp": 1053975,
+          "injectedKwh": 760,
+          "creditClp": 95000,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 960825
+        },
+        {
+          "monthName": "Septiembre",
+          "boughtKwh": 1414,
+          "boughtClp": 487830,
+          "injectedKwh": 1118,
+          "creditClp": 139750,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 349930
+        },
+        {
+          "monthName": "Octubre",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 1640,
+          "creditClp": 205000,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 205000,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Noviembre",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 2801,
+          "creditClp": 350125,
+          "initialBalanceClp": 205000,
+          "finalBalanceClp": 555125,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Diciembre",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 3827,
+          "creditClp": 478375,
+          "initialBalanceClp": 555125,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 1850,
+          "annualSurplusPayoutClp": 1033500
+        }
+      ],
+      "rightsAndCommitments": {
+        "whatYouCanDemand": [
+          {
+            "step": 1,
+            "question": "¿Qué tecnología y certificaciones respaldan los equipos?",
+            "title": "Tecnología Tier 1 y Certificación SEC",
+            "details": "Módulos Tier 1 N-Type TOPCon con 25 años de garantía de producto y 30 años de potencia lineal. Inversores híbridos certificados SEC con protocolo PE Nº 1/26 anti-isla y monitoreo WiFi/4G integrado."
+          },
+          {
+            "step": 2,
+            "question": "¿Quién asume la responsabilidad del servicio técnico local?",
+            "title": "Soporte Técnico Local & Estanqueidad Garantizada",
+            "details": "Garantía formal por escrito de 1 año en estanqueidad de techumbre (cero filtraciones) y mano de obra. Cuadrilla técnica propia en el sur de Chile (Llanquihue, Osorno, Valdivia, Chiloé)."
+          },
+          {
+            "step": 3,
+            "question": "¿Cómo se legaliza la inyección y el cambio de medidor?",
+            "title": "Tramitación SEC TE4 y Proceso Net Billing Completo",
+            "details": "Ingreso formal de Formularios F1 a F5 ante la distribuidora (SAESA, CRELL, etc.) y obtención del Certificado TE4 SEC por instalador eléctrico autorizado Clase A o B. Medidor bidireccional gestionado."
+          },
+          {
+            "step": 4,
+            "question": "¿Cuáles son los hitos de pago contra avance real?",
+            "title": "Hitos Transparentes 50% / 35% / 15%",
+            "details": "50% de anticipo para orden de compra y reserva de hardware. 35% contra arribo a faena y montaje en techo. 15% final únicamente contra puesta en marcha conforme y TE4 ingresado a la SEC."
+          }
+        ],
+        "ownerCommitments": [
+          {
+            "title": "Condiciones de Acceso y Empalme Eléctrico",
+            "details": "Facilitar acceso seguro a techumbre, tablero general y empalme en las fechas acordadas de montaje e inspección."
+          },
+          {
+            "title": "Mantenimiento Periódico de Módulos",
+            "details": "Realizar o programar 1 a 2 lavados anuales con agua desmineralizada y mantener despejado el entorno de sombras por vegetación."
+          },
+          {
+            "title": "Integridad de las Instalaciones",
+            "details": "No intervenir el inversor, protecciones DC/AC ni conexionado eléctrico sin la presencia o autorización escrita de personal técnico calificado."
+          },
+          {
+            "title": "Monitoreo Proactivo de la Planta",
+            "details": "Mantener el inversor conectado a internet y revisar periódicamente la App FusionSolar para alertar anomalías o desconexiones."
+          }
+        ]
+      }
+    },
+    "status": "NUEVO"
+  },
+  {
+    "id": "SOL-2026-9589",
+    "createdAt": "2026-10-07T21:52:19.238Z",
+    "formData": {
+      "fullName": "asd",
+      "whatsapp": "123212121",
+      "email": "comercial@clicad.cl",
+      "comuna": "Puerto Varas",
+      "region": "Región de Los Lagos",
+      "address": "",
+      "propertyType": "residencial",
+      "systemType": "hibrida",
+      "distributor": "saesa",
+      "hasPhases": "monofasico",
+      "consumptionMode": "monthly_bill_clp",
+      "monthlyBillClp": 120000,
+      "annualKwh": 6000,
+      "monthlyKwhBreakdown": [
+        420,
+        400,
+        450,
+        550,
+        680,
+        780,
+        810,
+        720,
+        590,
+        500,
+        460,
+        430
+      ],
+      "batteryObjectives": [],
+      "roofMaterial": "Zinc",
+      "includeEvCharger": false,
+      "backupPriority": "cargas_criticas",
+      "omPackage": "basic",
+      "acceptTerms": true,
+      "billFile": null,
+      "turnstileToken": "1.XB0qNw76MXa7QbydLxLNGW0OXAqsmR-UADUvtNd88BapEd-n7HfNdBg6OFjh7JgpwT35AwtlfCI6_4DDHUGTcTLut4cSfzZ71hV923MLFcVphvuaNRrGorVtKmxcCLIeUuBTG2U-N7PPkJrYDXfq71OA9iQVfWaH8_82ocY_BtINU92x4aC6t701PnpKjjJcLlMMDsLLT-y9eEyr_rIbtiFaD5cPKKj_-yZAv07GWzEEd8fLgZLAjKDocLzCTODEHtVZsI-ix06xvwNW0yprKENfvmKLqbMFHnWtFwbt2_LG0j79ycvUVXMHn_1VC04y0-0gV7nBaGkBh4H4lUWwYo0tFDgWFHTGJnoXwKX_FgKz07MKspw-llcvqwdMMXiNt-1Aag5arcQdG-AhOY7go5Bid0Udkv2ZmVvHuDyilIWJucD9LOK_ks9Y69t2JufFIrSTvPuSbSfAUO8uor09NQywZRsbz87Ew3zNMXaWlT3XzaMdPFe4-vad0ibWwS2LAJDEtJeMe778MKXYwG_VNKUmydE-5BruXuQcRuuVNDyhytm0vGeRAFw1_hiA5PG-IDJPR_NNxxOhfrlgWY5y5lJmyU6GI4PCsaZit60knWUT-AnZlI5qlGldJqJHrfD4Paduako9RuDz9jPtr7F5hg.DhCYoSsB61ytaL9uVNSw0Q.bf34b82967c1b37540778dae434f744cc07cc6895f05acb9d9fbcb351cf3c130",
+      "website_url": ""
+    },
+    "sizingResult": {
+      "recommendedKwp": 4.1,
+      "panelsCount": 7,
+      "panelWatts": 580,
+      "inverterKw": 4,
+      "batteryKwh": 5.1,
+      "estimatedMonthlyGenKwh": 462,
+      "estimatedAnnualGenKwh": 5549,
+      "estimatedAnnualSavingsClp": 1417800,
+      "estimated25YearSavingsClp": 47831725,
+      "paybackYears": 6.4,
+      "co2TonsAvoidedPerYear": 2.1,
+      "equivalentTreesPlanted": 34,
+      "autoconsumoPct": 90,
+      "averageMonthlyDemandKwh": 438,
+      "secNorms": [
+        "RIC N°09 (Sec. 6.1) - Instalaciones de Autoconsumo Fotovoltaico",
+        "RIC N°15 (Sec. 5) - Interconexión y Protección Anti-Isla",
+        "Límite Empalme SEC - Empalme Monofásico 220V",
+        "RIC N°09 (BESS) - Sistemas de Almacenamiento Electroquímico LiFePO4",
+        "Trámite Certificación TE-4 SEC"
+      ],
+      "estimatedSystemCostNetoClp": 9178571,
+      "estimatedSystemCostIvaClp": 10922499,
+      "downpaymentHito1Clp": 4589286,
+      "faenaHito2Clp": 3212500,
+      "finalHito3Clp": 1376786,
+      "margenBrutoPct": 19.5,
+      "selectedOmPackage": {
+        "id": "basic",
+        "name": "Garantía Estándar SoldeRío",
+        "badge": "Incluida",
+        "monthlyPriceClp": 0,
+        "monthlyPriceUf": 0,
+        "tagline": "Garantía de producto de fábrica y soporte de instalación",
+        "features": [
+          "25 Años de Garantía de Rendimiento en Módulos Tier 1 (≥85%)",
+          "10 a 15 Años de Garantía de Inversores y Baterías LUNA Huawei",
+          "1 Año de Garantía de Mano de Obra y Estanqueidad de Techo",
+          "Monitoreo Básico en App Huawei FusionSolar Cloud",
+          "Certificado TE-4 SEC y Tramitación Net Billing ante Distribuidora"
+        ],
+        "isDefault": true
+      },
+      "usableBatteryKwh": 4.4,
+      "seasonalVariationRatio": 3.3,
+      "summerAvgMonthlyGenKwh": 708,
+      "winterAvgMonthlyGenKwh": 212,
+      "monthlyBreakdown": [
+        {
+          "month": 1,
+          "monthName": "Enero",
+          "monthlyGenKwh": 748,
+          "monthlyDemandKwh": 338,
+          "poaKwhM2Day": 6.7,
+          "tCellCelsius": 44.6,
+          "surplusKwh": 410,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 2,
+          "monthName": "Febrero",
+          "monthlyGenKwh": 616,
+          "monthlyDemandKwh": 330,
+          "poaKwhM2Day": 6.1,
+          "tCellCelsius": 44.1,
+          "surplusKwh": 286,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 3,
+          "monthName": "Marzo",
+          "monthlyGenKwh": 552,
+          "monthlyDemandKwh": 363,
+          "poaKwhM2Day": 4.9,
+          "tCellCelsius": 41.9,
+          "surplusKwh": 189,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 4,
+          "monthName": "Abril",
+          "monthlyGenKwh": 361,
+          "monthlyDemandKwh": 433,
+          "poaKwhM2Day": 3.2,
+          "tCellCelsius": 30.7,
+          "surplusKwh": 0,
+          "gridImportKwh": 72
+        },
+        {
+          "month": 5,
+          "monthName": "Mayo",
+          "monthlyGenKwh": 228,
+          "monthlyDemandKwh": 516,
+          "poaKwhM2Day": 1.9,
+          "tCellCelsius": 20.3,
+          "surplusKwh": 0,
+          "gridImportKwh": 288
+        },
+        {
+          "month": 6,
+          "monthName": "Junio",
+          "monthlyGenKwh": 154,
+          "monthlyDemandKwh": 578,
+          "poaKwhM2Day": 1.3,
+          "tCellCelsius": 15,
+          "surplusKwh": 0,
+          "gridImportKwh": 424
+        },
+        {
+          "month": 7,
+          "monthName": "Julio",
+          "monthlyGenKwh": 195,
+          "monthlyDemandKwh": 598,
+          "poaKwhM2Day": 1.6,
+          "tCellCelsius": 16.5,
+          "surplusKwh": 0,
+          "gridImportKwh": 403
+        },
+        {
+          "month": 8,
+          "monthName": "Agosto",
+          "monthlyGenKwh": 287,
+          "monthlyDemandKwh": 545,
+          "poaKwhM2Day": 2.4,
+          "tCellCelsius": 22.4,
+          "surplusKwh": 0,
+          "gridImportKwh": 258
+        },
+        {
+          "month": 9,
+          "monthName": "Septiembre",
+          "monthlyGenKwh": 415,
+          "monthlyDemandKwh": 454,
+          "poaKwhM2Day": 3.7,
+          "tCellCelsius": 32.4,
+          "surplusKwh": 0,
+          "gridImportKwh": 39
+        },
+        {
+          "month": 10,
+          "monthName": "Octubre",
+          "monthlyGenKwh": 567,
+          "monthlyDemandKwh": 392,
+          "poaKwhM2Day": 5,
+          "tCellCelsius": 39.7,
+          "surplusKwh": 175,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 11,
+          "monthName": "Noviembre",
+          "monthlyGenKwh": 665,
+          "monthlyDemandKwh": 363,
+          "poaKwhM2Day": 6.1,
+          "tCellCelsius": 41.8,
+          "surplusKwh": 302,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 12,
+          "monthName": "Diciembre",
+          "monthlyGenKwh": 761,
+          "monthlyDemandKwh": 347,
+          "poaKwhM2Day": 6.8,
+          "tCellCelsius": 43.7,
+          "surplusKwh": 414,
+          "gridImportKwh": 0
+        }
+      ],
+      "vanClp": 10877824,
+      "tirPercent": 13,
+      "lcoeClpPerKwh": 65,
+      "requiresThreePhase": false,
+      "recommendedPhaseType": "monofasico",
+      "estimatedNewMonthlyBillClp": 1850,
+      "winterLimitSavingsClp": 76800,
+      "coberturaTotalAnualPct": 100,
+      "applianceEquivalencies": [
+        {
+          "title": "Refrigerador + Freezer No-Frost",
+          "description": "Alimentado 24/7 sin cortes, incluso durante temporales y caídas de red.",
+          "icon": "Refrigerator"
+        },
+        {
+          "title": "Conectividad Starlink & Iluminación",
+          "description": "Mantiene internet de alta velocidad, teletrabajo y toda la casa iluminada.",
+          "icon": "Wifi"
+        },
+        {
+          "title": "Calefacción / Pellet & Bombas de Pozo",
+          "description": "Respaldo continuo para motores de estufas a pellet y extracción de agua.",
+          "icon": "Flame"
+        },
+        {
+          "title": "Electrodomésticos & Lavado",
+          "description": "Lavadora, lavavajillas, microondas y hervidor cubiertos con energía solar.",
+          "icon": "Zap"
+        }
+      ],
+      "taxShieldArt33BisClp": 0,
+      "recoverableVatClp": 0,
+      "annualOpexClp": 91786,
+      "inverterReplacementCostYear12Clp": 1101429,
+      "isB2B": false,
+      "regulatoryTrack": "netbilling_ley21118",
+      "regulatoryTitle": "Ley 21.118 Netbilling (Generación Distribuida ≤ 300 kW)",
+      "regulatoryDecree": "DFL 4/2006 + DS 57/2019 + DS 8/2019",
+      "regulatoryNorm": "Pliegos RIC N° 01-19 + NTCO-EG + RGR 01/2024",
+      "regulatoryTramite": "Trámite Eléctrico TE4 vía Plataforma GDA SEC (F1 a F5)",
+      "hourlyProfileSample": [
+        {
+          "hour": 0,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.36,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.36
+        },
+        {
+          "hour": 1,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.29,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.29
+        },
+        {
+          "hour": 2,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.26,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.26
+        },
+        {
+          "hour": 3,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.26,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.26
+        },
+        {
+          "hour": 4,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.29,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.29
+        },
+        {
+          "hour": 5,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.36,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.36
+        },
+        {
+          "hour": 6,
+          "solarGenKwh": 0.15,
+          "consumptionKwh": 0.5,
+          "selfConsumedKwh": 0.15,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.35
+        },
+        {
+          "hour": 7,
+          "solarGenKwh": 0.46,
+          "consumptionKwh": 0.79,
+          "selfConsumedKwh": 0.46,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.33
+        },
+        {
+          "hour": 8,
+          "solarGenKwh": 0.91,
+          "consumptionKwh": 0.94,
+          "selfConsumedKwh": 0.91,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.03
+        },
+        {
+          "hour": 9,
+          "solarGenKwh": 1.37,
+          "consumptionKwh": 0.72,
+          "selfConsumedKwh": 0.72,
+          "injectedKwh": 0.65,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 10,
+          "solarGenKwh": 1.82,
+          "consumptionKwh": 0.65,
+          "selfConsumedKwh": 0.65,
+          "injectedKwh": 1.17,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 11,
+          "solarGenKwh": 2.13,
+          "consumptionKwh": 0.65,
+          "selfConsumedKwh": 0.65,
+          "injectedKwh": 1.48,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 12,
+          "solarGenKwh": 2.28,
+          "consumptionKwh": 0.72,
+          "selfConsumedKwh": 0.72,
+          "injectedKwh": 1.56,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 13,
+          "solarGenKwh": 2.13,
+          "consumptionKwh": 0.79,
+          "selfConsumedKwh": 0.79,
+          "injectedKwh": 1.34,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 14,
+          "solarGenKwh": 1.67,
+          "consumptionKwh": 0.72,
+          "selfConsumedKwh": 0.72,
+          "injectedKwh": 0.95,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 15,
+          "solarGenKwh": 1.22,
+          "consumptionKwh": 0.65,
+          "selfConsumedKwh": 0.65,
+          "injectedKwh": 0.57,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 16,
+          "solarGenKwh": 0.76,
+          "consumptionKwh": 0.72,
+          "selfConsumedKwh": 0.72,
+          "injectedKwh": 0.04,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 17,
+          "solarGenKwh": 0.3,
+          "consumptionKwh": 0.79,
+          "selfConsumedKwh": 0.3,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.49
+        },
+        {
+          "hour": 18,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.94,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.94
+        },
+        {
+          "hour": 19,
+          "solarGenKwh": 0,
+          "consumptionKwh": 1.08,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.08
+        },
+        {
+          "hour": 20,
+          "solarGenKwh": 0,
+          "consumptionKwh": 1.22,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.22
+        },
+        {
+          "hour": 21,
+          "solarGenKwh": 0,
+          "consumptionKwh": 1.15,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.15
+        },
+        {
+          "hour": 22,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.94,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.94
+        },
+        {
+          "hour": 23,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.68,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.68
+        }
+      ],
+      "netBillingMonthlyLedger": [
+        {
+          "monthName": "Enero",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 410,
+          "creditClp": 51250,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 51250,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Febrero",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 286,
+          "creditClp": 35750,
+          "initialBalanceClp": 51250,
+          "finalBalanceClp": 87000,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Marzo",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 189,
+          "creditClp": 23625,
+          "initialBalanceClp": 87000,
+          "finalBalanceClp": 110625,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Abril",
+          "boughtKwh": 180,
+          "boughtClp": 62100,
+          "injectedKwh": 108,
+          "creditClp": 13500,
+          "initialBalanceClp": 110625,
+          "finalBalanceClp": 62025,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Mayo",
+          "boughtKwh": 356,
+          "boughtClp": 122820,
+          "injectedKwh": 68,
+          "creditClp": 8500,
+          "initialBalanceClp": 62025,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 54145
+        },
+        {
+          "monthName": "Junio",
+          "boughtKwh": 470,
+          "boughtClp": 162150,
+          "injectedKwh": 46,
+          "creditClp": 5750,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 158250
+        },
+        {
+          "monthName": "Julio",
+          "boughtKwh": 462,
+          "boughtClp": 159390,
+          "injectedKwh": 59,
+          "creditClp": 7375,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 153865
+        },
+        {
+          "monthName": "Agosto",
+          "boughtKwh": 344,
+          "boughtClp": 118680,
+          "injectedKwh": 86,
+          "creditClp": 10750,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 109780
+        },
+        {
+          "monthName": "Septiembre",
+          "boughtKwh": 164,
+          "boughtClp": 56580,
+          "injectedKwh": 125,
+          "creditClp": 15625,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 42805
+        },
+        {
+          "monthName": "Octubre",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 175,
+          "creditClp": 21875,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 21875,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Noviembre",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 302,
+          "creditClp": 37750,
+          "initialBalanceClp": 21875,
+          "finalBalanceClp": 59625,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Diciembre",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 414,
+          "creditClp": 51750,
+          "initialBalanceClp": 59625,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 1850,
+          "annualSurplusPayoutClp": 111375
+        }
+      ],
+      "rightsAndCommitments": {
+        "whatYouCanDemand": [
+          {
+            "step": 1,
+            "question": "¿Qué tecnología y certificaciones respaldan los equipos?",
+            "title": "Tecnología Tier 1 y Certificación SEC",
+            "details": "Módulos Tier 1 N-Type TOPCon con 25 años de garantía de producto y 30 años de potencia lineal. Inversores híbridos certificados SEC con protocolo PE Nº 1/26 anti-isla y monitoreo WiFi/4G integrado."
+          },
+          {
+            "step": 2,
+            "question": "¿Quién asume la responsabilidad del servicio técnico local?",
+            "title": "Soporte Técnico Local & Estanqueidad Garantizada",
+            "details": "Garantía formal por escrito de 1 año en estanqueidad de techumbre (cero filtraciones) y mano de obra. Cuadrilla técnica propia en el sur de Chile (Llanquihue, Osorno, Valdivia, Chiloé)."
+          },
+          {
+            "step": 3,
+            "question": "¿Cómo se legaliza la inyección y el cambio de medidor?",
+            "title": "Tramitación SEC TE4 y Proceso Net Billing Completo",
+            "details": "Ingreso formal de Formularios F1 a F5 ante la distribuidora (SAESA, CRELL, etc.) y obtención del Certificado TE4 SEC por instalador eléctrico autorizado Clase A o B. Medidor bidireccional gestionado."
+          },
+          {
+            "step": 4,
+            "question": "¿Cuáles son los hitos de pago contra avance real?",
+            "title": "Hitos Transparentes 50% / 35% / 15%",
+            "details": "50% de anticipo para orden de compra y reserva de hardware. 35% contra arribo a faena y montaje en techo. 15% final únicamente contra puesta en marcha conforme y TE4 ingresado a la SEC."
+          }
+        ],
+        "ownerCommitments": [
+          {
+            "title": "Condiciones de Acceso y Empalme Eléctrico",
+            "details": "Facilitar acceso seguro a techumbre, tablero general y empalme en las fechas acordadas de montaje e inspección."
+          },
+          {
+            "title": "Mantenimiento Periódico de Módulos",
+            "details": "Realizar o programar 1 a 2 lavados anuales con agua desmineralizada y mantener despejado el entorno de sombras por vegetación."
+          },
+          {
+            "title": "Integridad de las Instalaciones",
+            "details": "No intervenir el inversor, protecciones DC/AC ni conexionado eléctrico sin la presencia o autorización escrita de personal técnico calificado."
+          },
+          {
+            "title": "Monitoreo Proactivo de la Planta",
+            "details": "Mantener el inversor conectado a internet y revisar periódicamente la App FusionSolar para alertar anomalías o desconexiones."
+          }
+        ]
+      }
+    },
+    "status": "NUEVO"
+  },
+  {
+    "id": "SOL-2026-4383",
+    "createdAt": "2026-10-07T21:50:51.399Z",
+    "formData": {
+      "fullName": "Hogar 1",
+      "whatsapp": "659684145",
+      "email": "comercial@clicad.cl",
+      "comuna": "Osorno",
+      "region": "Región de Los Lagos",
+      "address": "",
+      "propertyType": "residencial",
+      "systemType": "hibrida",
+      "distributor": "saesa",
+      "hasPhases": "monofasico",
+      "consumptionMode": "monthly_bill_clp",
+      "monthlyBillClp": 140000,
+      "annualKwh": 6000,
+      "monthlyKwhBreakdown": [
+        420,
+        400,
+        450,
+        550,
+        680,
+        780,
+        810,
+        720,
+        590,
+        500,
+        460,
+        430
+      ],
+      "batteryObjectives": [],
+      "roofType": "plano",
+      "roofMaterial": "Hormigón/Losa",
+      "includeEvCharger": false,
+      "backupPriority": "cargas_criticas",
+      "omPackage": "basic",
+      "acceptTerms": true,
+      "billFile": null,
+      "turnstileToken": "1.Hpb9CKR3HVXke7GfwNNVP2h7oK-wG_YdzhV19N0y9MAGGKe8RNYv_I2TMTcmBF3Y57xe4fg5sIYDHxsIUPFCYBdjk-eqcChFfIqkTr3xmz3o5EQSUn9QCsbnAzKm74848dj6XPXpmurnBISJt8g0a9R52APemgW6RVBvvDbaHhLWaqvTzFmyW6jikfAR1cVeehHGuD7NM0Dbvvl116S7wBqVPSxoug9LvVqxm2ZcI4naMIniO4Ma0hBc1VPzWz1Ghl4BzGWF6BQxljCnVKBuG8h9XIHoKHF3n3gUB6366A2T7lhi25yOuZhb8K61fNNVjlaAVAaX1wt-lcr1H0sDQ6-pg5r-KbnIgaGSOOduyBgOP-GrcZZoOdGSoV7b1RHNETXDPDzApUZMa4as_BwgLhksUtHsCDynEZajQAF6sz1QJhcGq4Lkl6dgRzyIMK7uS-HfgzLC2EmaWrjLxej0rB8nH7wqcqRuUJ6PuIkKbhVSSp9_o-JukifL5Z-kja5hxyeW-AIAhv_-MttE6cxBtArczpyrdO3KO04vyKFVtozLLHLpBL2jXxV27w3FusYflcLjjCkelJOv1eBo2t8HPs2-OKnn9p-sZTKULcmREn-CFWA5_eDCgGjUR8mh3xnMu_oG12Xg9FNoMP7I7_qe_Q.-P6FFWNYBS2SyR6JU-nJLA.6d6de212320e512158d4e73244654f525aa21e2c5766be2f64401418d82cadac",
+      "website_url": ""
+    },
+    "sizingResult": {
+      "recommendedKwp": 4.6,
+      "panelsCount": 8,
+      "panelWatts": 580,
+      "inverterKw": 4,
+      "batteryKwh": 5.1,
+      "estimatedMonthlyGenKwh": 529,
+      "estimatedAnnualGenKwh": 6352,
+      "estimatedAnnualSavingsClp": 1657800,
+      "estimated25YearSavingsClp": 56611443,
+      "paybackYears": 5.5,
+      "co2TonsAvoidedPerYear": 2.4,
+      "equivalentTreesPlanted": 38,
+      "autoconsumoPct": 90,
+      "averageMonthlyDemandKwh": 512,
+      "secNorms": [
+        "RIC N°09 (Sec. 6.1) - Instalaciones de Autoconsumo Fotovoltaico",
+        "RIC N°15 (Sec. 5) - Interconexión y Protección Anti-Isla",
+        "Límite Empalme SEC - Empalme Monofásico 220V",
+        "RIC N°09 (BESS) - Sistemas de Almacenamiento Electroquímico LiFePO4",
+        "Trámite Certificación TE-4 SEC"
+      ],
+      "estimatedSystemCostNetoClp": 9322981,
+      "estimatedSystemCostIvaClp": 11094347,
+      "downpaymentHito1Clp": 4661491,
+      "faenaHito2Clp": 3263043,
+      "finalHito3Clp": 1398447,
+      "margenBrutoPct": 19.5,
+      "selectedOmPackage": {
+        "id": "basic",
+        "name": "Garantía Estándar SoldeRío",
+        "badge": "Incluida",
+        "monthlyPriceClp": 0,
+        "monthlyPriceUf": 0,
+        "tagline": "Garantía de producto de fábrica y soporte de instalación",
+        "features": [
+          "25 Años de Garantía de Rendimiento en Módulos Tier 1 (≥85%)",
+          "10 a 15 Años de Garantía de Inversores y Baterías LUNA Huawei",
+          "1 Año de Garantía de Mano de Obra y Estanqueidad de Techo",
+          "Monitoreo Básico en App Huawei FusionSolar Cloud",
+          "Certificado TE-4 SEC y Tramitación Net Billing ante Distribuidora"
+        ],
+        "isDefault": true
+      },
+      "usableBatteryKwh": 4.4,
+      "seasonalVariationRatio": 3.2,
+      "summerAvgMonthlyGenKwh": 804,
+      "winterAvgMonthlyGenKwh": 250,
+      "monthlyBreakdown": [
+        {
+          "month": 1,
+          "monthName": "Enero",
+          "monthlyGenKwh": 848,
+          "monthlyDemandKwh": 395,
+          "poaKwhM2Day": 6.8,
+          "tCellCelsius": 45,
+          "surplusKwh": 453,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 2,
+          "monthName": "Febrero",
+          "monthlyGenKwh": 700,
+          "monthlyDemandKwh": 386,
+          "poaKwhM2Day": 6.2,
+          "tCellCelsius": 44.4,
+          "surplusKwh": 314,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 3,
+          "monthName": "Marzo",
+          "monthlyGenKwh": 630,
+          "monthlyDemandKwh": 424,
+          "poaKwhM2Day": 5,
+          "tCellCelsius": 42.3,
+          "surplusKwh": 206,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 4,
+          "monthName": "Abril",
+          "monthlyGenKwh": 415,
+          "monthlyDemandKwh": 506,
+          "poaKwhM2Day": 3.3,
+          "tCellCelsius": 31.7,
+          "surplusKwh": 0,
+          "gridImportKwh": 91
+        },
+        {
+          "month": 5,
+          "monthName": "Mayo",
+          "monthlyGenKwh": 268,
+          "monthlyDemandKwh": 603,
+          "poaKwhM2Day": 2,
+          "tCellCelsius": 21.3,
+          "surplusKwh": 0,
+          "gridImportKwh": 335
+        },
+        {
+          "month": 6,
+          "monthName": "Junio",
+          "monthlyGenKwh": 185,
+          "monthlyDemandKwh": 675,
+          "poaKwhM2Day": 1.4,
+          "tCellCelsius": 15.8,
+          "surplusKwh": 0,
+          "gridImportKwh": 490
+        },
+        {
+          "month": 7,
+          "monthName": "Julio",
+          "monthlyGenKwh": 231,
+          "monthlyDemandKwh": 699,
+          "poaKwhM2Day": 1.7,
+          "tCellCelsius": 17.4,
+          "surplusKwh": 0,
+          "gridImportKwh": 468
+        },
+        {
+          "month": 8,
+          "monthName": "Agosto",
+          "monthlyGenKwh": 333,
+          "monthlyDemandKwh": 637,
+          "poaKwhM2Day": 2.5,
+          "tCellCelsius": 23.4,
+          "surplusKwh": 0,
+          "gridImportKwh": 304
+        },
+        {
+          "month": 9,
+          "monthName": "Septiembre",
+          "monthlyGenKwh": 476,
+          "monthlyDemandKwh": 530,
+          "poaKwhM2Day": 3.8,
+          "tCellCelsius": 33.4,
+          "surplusKwh": 0,
+          "gridImportKwh": 54
+        },
+        {
+          "month": 10,
+          "monthName": "Octubre",
+          "monthlyGenKwh": 647,
+          "monthlyDemandKwh": 458,
+          "poaKwhM2Day": 5.1,
+          "tCellCelsius": 40,
+          "surplusKwh": 189,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 11,
+          "monthName": "Noviembre",
+          "monthlyGenKwh": 755,
+          "monthlyDemandKwh": 424,
+          "poaKwhM2Day": 6.2,
+          "tCellCelsius": 42.2,
+          "surplusKwh": 331,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 12,
+          "monthName": "Diciembre",
+          "monthlyGenKwh": 864,
+          "monthlyDemandKwh": 405,
+          "poaKwhM2Day": 6.9,
+          "tCellCelsius": 44.1,
+          "surplusKwh": 459,
+          "gridImportKwh": 0
+        }
+      ],
+      "vanClp": 14419984,
+      "tirPercent": 13,
+      "lcoeClpPerKwh": 65,
+      "requiresThreePhase": false,
+      "recommendedPhaseType": "monofasico",
+      "estimatedNewMonthlyBillClp": 1850,
+      "winterLimitSavingsClp": 116250,
+      "coberturaTotalAnualPct": 100,
+      "applianceEquivalencies": [
+        {
+          "title": "Refrigerador + Freezer No-Frost",
+          "description": "Alimentado 24/7 sin cortes, incluso durante temporales y caídas de red.",
+          "icon": "Refrigerator"
+        },
+        {
+          "title": "Conectividad Starlink & Iluminación",
+          "description": "Mantiene internet de alta velocidad, teletrabajo y toda la casa iluminada.",
+          "icon": "Wifi"
+        },
+        {
+          "title": "Calefacción / Pellet & Bombas de Pozo",
+          "description": "Respaldo continuo para motores de estufas a pellet y extracción de agua.",
+          "icon": "Flame"
+        },
+        {
+          "title": "Electrodomésticos & Lavado",
+          "description": "Lavadora, lavavajillas, microondas y hervidor cubiertos con energía solar.",
+          "icon": "Zap"
+        }
+      ],
+      "taxShieldArt33BisClp": 0,
+      "recoverableVatClp": 0,
+      "annualOpexClp": 93230,
+      "inverterReplacementCostYear12Clp": 1118758,
+      "isB2B": false,
+      "regulatoryTrack": "netbilling_ley21118",
+      "regulatoryTitle": "Ley 21.118 Netbilling (Generación Distribuida ≤ 300 kW)",
+      "regulatoryDecree": "DFL 4/2006 + DS 57/2019 + DS 8/2019",
+      "regulatoryNorm": "Pliegos RIC N° 01-19 + NTCO-EG + RGR 01/2024",
+      "regulatoryTramite": "Trámite Eléctrico TE4 vía Plataforma GDA SEC (F1 a F5)",
+      "hourlyProfileSample": [
+        {
+          "hour": 0,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.42,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.42
+        },
+        {
+          "hour": 1,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.34,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.34
+        },
+        {
+          "hour": 2,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.3,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.3
+        },
+        {
+          "hour": 3,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.3,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.3
+        },
+        {
+          "hour": 4,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.34,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.34
+        },
+        {
+          "hour": 5,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.42,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.42
+        },
+        {
+          "hour": 6,
+          "solarGenKwh": 0.17,
+          "consumptionKwh": 0.59,
+          "selfConsumedKwh": 0.17,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.42
+        },
+        {
+          "hour": 7,
+          "solarGenKwh": 0.52,
+          "consumptionKwh": 0.93,
+          "selfConsumedKwh": 0.52,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.41
+        },
+        {
+          "hour": 8,
+          "solarGenKwh": 1.04,
+          "consumptionKwh": 1.09,
+          "selfConsumedKwh": 1.04,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.05
+        },
+        {
+          "hour": 9,
+          "solarGenKwh": 1.57,
+          "consumptionKwh": 0.84,
+          "selfConsumedKwh": 0.84,
+          "injectedKwh": 0.73,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 10,
+          "solarGenKwh": 2.09,
+          "consumptionKwh": 0.76,
+          "selfConsumedKwh": 0.76,
+          "injectedKwh": 1.33,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 11,
+          "solarGenKwh": 2.44,
+          "consumptionKwh": 0.76,
+          "selfConsumedKwh": 0.76,
+          "injectedKwh": 1.68,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 12,
+          "solarGenKwh": 2.61,
+          "consumptionKwh": 0.84,
+          "selfConsumedKwh": 0.84,
+          "injectedKwh": 1.77,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 13,
+          "solarGenKwh": 2.44,
+          "consumptionKwh": 0.93,
+          "selfConsumedKwh": 0.93,
+          "injectedKwh": 1.51,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 14,
+          "solarGenKwh": 1.91,
+          "consumptionKwh": 0.84,
+          "selfConsumedKwh": 0.84,
+          "injectedKwh": 1.07,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 15,
+          "solarGenKwh": 1.39,
+          "consumptionKwh": 0.76,
+          "selfConsumedKwh": 0.76,
+          "injectedKwh": 0.63,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 16,
+          "solarGenKwh": 0.87,
+          "consumptionKwh": 0.84,
+          "selfConsumedKwh": 0.84,
+          "injectedKwh": 0.03,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 17,
+          "solarGenKwh": 0.35,
+          "consumptionKwh": 0.93,
+          "selfConsumedKwh": 0.35,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.58
+        },
+        {
+          "hour": 18,
+          "solarGenKwh": 0,
+          "consumptionKwh": 1.09,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.09
+        },
+        {
+          "hour": 19,
+          "solarGenKwh": 0,
+          "consumptionKwh": 1.26,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.26
+        },
+        {
+          "hour": 20,
+          "solarGenKwh": 0,
+          "consumptionKwh": 1.43,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.43
+        },
+        {
+          "hour": 21,
+          "solarGenKwh": 0,
+          "consumptionKwh": 1.35,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.35
+        },
+        {
+          "hour": 22,
+          "solarGenKwh": 0,
+          "consumptionKwh": 1.09,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.09
+        },
+        {
+          "hour": 23,
+          "solarGenKwh": 0,
+          "consumptionKwh": 0.79,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.79
+        }
+      ],
+      "netBillingMonthlyLedger": [
+        {
+          "monthName": "Enero",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 453,
+          "creditClp": 56625,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 56625,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Febrero",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 314,
+          "creditClp": 39250,
+          "initialBalanceClp": 56625,
+          "finalBalanceClp": 95875,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Marzo",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 206,
+          "creditClp": 25750,
+          "initialBalanceClp": 95875,
+          "finalBalanceClp": 121625,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Abril",
+          "boughtKwh": 216,
+          "boughtClp": 74520,
+          "injectedKwh": 125,
+          "creditClp": 15625,
+          "initialBalanceClp": 121625,
+          "finalBalanceClp": 62730,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Mayo",
+          "boughtKwh": 415,
+          "boughtClp": 143175,
+          "injectedKwh": 80,
+          "creditClp": 10000,
+          "initialBalanceClp": 62730,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 72295
+        },
+        {
+          "monthName": "Junio",
+          "boughtKwh": 546,
+          "boughtClp": 188370,
+          "injectedKwh": 56,
+          "creditClp": 7000,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 183220
+        },
+        {
+          "monthName": "Julio",
+          "boughtKwh": 537,
+          "boughtClp": 185265,
+          "injectedKwh": 69,
+          "creditClp": 8625,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 178490
+        },
+        {
+          "monthName": "Agosto",
+          "boughtKwh": 404,
+          "boughtClp": 139380,
+          "injectedKwh": 100,
+          "creditClp": 12500,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 128730
+        },
+        {
+          "monthName": "Septiembre",
+          "boughtKwh": 197,
+          "boughtClp": 67965,
+          "injectedKwh": 143,
+          "creditClp": 17875,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 51940
+        },
+        {
+          "monthName": "Octubre",
+          "boughtKwh": 5,
+          "boughtClp": 1350,
+          "injectedKwh": 194,
+          "creditClp": 24250,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 22900,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Noviembre",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 331,
+          "creditClp": 41375,
+          "initialBalanceClp": 22900,
+          "finalBalanceClp": 64275,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Diciembre",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 459,
+          "creditClp": 57375,
+          "initialBalanceClp": 64275,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 1850,
+          "annualSurplusPayoutClp": 121650
+        }
+      ],
+      "rightsAndCommitments": {
+        "whatYouCanDemand": [
+          {
+            "step": 1,
+            "question": "¿Qué tecnología y certificaciones respaldan los equipos?",
+            "title": "Tecnología Tier 1 y Certificación SEC",
+            "details": "Módulos Tier 1 N-Type TOPCon con 25 años de garantía de producto y 30 años de potencia lineal. Inversores híbridos certificados SEC con protocolo PE Nº 1/26 anti-isla y monitoreo WiFi/4G integrado."
+          },
+          {
+            "step": 2,
+            "question": "¿Quién asume la responsabilidad del servicio técnico local?",
+            "title": "Soporte Técnico Local & Estanqueidad Garantizada",
+            "details": "Garantía formal por escrito de 1 año en estanqueidad de techumbre (cero filtraciones) y mano de obra. Cuadrilla técnica propia en el sur de Chile (Llanquihue, Osorno, Valdivia, Chiloé)."
+          },
+          {
+            "step": 3,
+            "question": "¿Cómo se legaliza la inyección y el cambio de medidor?",
+            "title": "Tramitación SEC TE4 y Proceso Net Billing Completo",
+            "details": "Ingreso formal de Formularios F1 a F5 ante la distribuidora (SAESA, CRELL, etc.) y obtención del Certificado TE4 SEC por instalador eléctrico autorizado Clase A o B. Medidor bidireccional gestionado."
+          },
+          {
+            "step": 4,
+            "question": "¿Cuáles son los hitos de pago contra avance real?",
+            "title": "Hitos Transparentes 50% / 35% / 15%",
+            "details": "50% de anticipo para orden de compra y reserva de hardware. 35% contra arribo a faena y montaje en techo. 15% final únicamente contra puesta en marcha conforme y TE4 ingresado a la SEC."
+          }
+        ],
+        "ownerCommitments": [
+          {
+            "title": "Condiciones de Acceso y Empalme Eléctrico",
+            "details": "Facilitar acceso seguro a techumbre, tablero general y empalme en las fechas acordadas de montaje e inspección."
+          },
+          {
+            "title": "Mantenimiento Periódico de Módulos",
+            "details": "Realizar o programar 1 a 2 lavados anuales con agua desmineralizada y mantener despejado el entorno de sombras por vegetación."
+          },
+          {
+            "title": "Integridad de las Instalaciones",
+            "details": "No intervenir el inversor, protecciones DC/AC ni conexionado eléctrico sin la presencia o autorización escrita de personal técnico calificado."
+          },
+          {
+            "title": "Monitoreo Proactivo de la Planta",
+            "details": "Mantener el inversor conectado a internet y revisar periódicamente la App FusionSolar para alertar anomalías o desconexiones."
+          }
+        ]
+      }
+    },
+    "status": "NUEVO"
+  },
+  {
+    "id": "SOL-2026-4028",
+    "createdAt": "2026-10-07T21:49:51.966Z",
+    "formData": {
+      "fullName": "Prueba Empresa 1",
+      "whatsapp": "+56966186667",
+      "email": "soporte@clicad.cl",
+      "comuna": "Río Negro",
+      "region": "Región de Los Lagos",
+      "address": "",
+      "propertyType": "comercial",
+      "systemType": "ongrid",
+      "distributor": "saesa",
+      "hasPhases": "trifasico",
+      "consumptionMode": "monthly_bill_clp",
+      "monthlyBillClp": 1050000,
+      "annualKwh": 6000,
+      "monthlyKwhBreakdown": [
+        420,
+        400,
+        450,
+        550,
+        680,
+        780,
+        810,
+        720,
+        590,
+        500,
+        460,
+        430
+      ],
+      "batteryObjectives": [],
+      "roofType": "suelo",
+      "roofMaterial": "En suelo",
+      "includeEvCharger": false,
+      "backupPriority": "cargas_criticas",
+      "omPackage": "basic",
+      "acceptTerms": true,
+      "billFile": null,
+      "turnstileToken": "1.gZ__YLiUnpH5XJvklELIQKlWg3pMUGlipAW162mV3ZpLkb6es0puWv4vAL1anTHmidRiLl_zSx1vPtqgQshm5fQ3UUhdW7PZxHWox1Zo5St3z4O9OdPJEtQP0OkfS3CSB3MlZBJ0WIVhHAotg84BgWtMz9s8zeUWwXbnTfhuKkCsFxHd7eflusCgjUHvVlrZ4frRTK86vP4hctVAzjzzWlCNm0WjIZcD4Q3t-2lAewquSIH97mw3Vvl2fptqv07ZfM-FmZwK9nTPfvC5-KAgPQvLVuftPUo_UhG7nkSvxmREUitpL95kfG1_ssVH1qHpA3G1yk7s5yUSZX9MqTh4b8Y-_flI4jtd0Hg0i44Xaf1b9PFrUYwjHAbafPfir6LOUcYYQqaGRM91trc1npjSKcivru7avuSXYuCR6VuwQ96oYgnV-tfZYAR-Zv89hWmIQQsZeHebILjy8873CdFHnUBKjj_WDo4_Ebp1mG__hQS-rMUQ9GyStd0_APqtJiN25xFIa7MvA07GAZzOpJ_wXzo_GIXerIxfbBFlrmPh2F-7DswlS18kn9cmXVjpvLMQOzClGwu6LTUD3TpXk2dydMtkGEDlMxyrGe-Q_jroX1M9tTIt3uASuoydgZVzvbJU32gzO3P2bYaYLGFjobbiAw.bmm0-ORDdDOSXk_pTFBiTw.2daa547a0441dae8fa848c112ee8bde1c1f6e62972dfafab376848e6b53bd30d",
+      "website_url": ""
+    },
+    "sizingResult": {
+      "recommendedKwp": 36.5,
+      "panelsCount": 63,
+      "panelWatts": 580,
+      "inverterKw": 30,
+      "batteryKwh": 0,
+      "estimatedMonthlyGenKwh": 4201,
+      "estimatedAnnualGenKwh": 50411,
+      "estimatedAnnualSavingsClp": 12577800,
+      "estimated25YearSavingsClp": 457467995,
+      "paybackYears": 1.1,
+      "co2TonsAvoidedPerYear": 19.4,
+      "equivalentTreesPlanted": 310,
+      "autoconsumoPct": 85,
+      "averageMonthlyDemandKwh": 3882,
+      "secNorms": [
+        "RIC N°09 (Sec. 6.1) - Instalaciones de Autoconsumo Fotovoltaico",
+        "RIC N°15 (Sec. 5) - Interconexión y Protección Anti-Isla",
+        "Límite Empalme SEC - Empalme Trifásico 380V",
+        "Trámite Certificación TE-4 SEC"
+      ],
+      "estimatedSystemCostNetoClp": 14548276,
+      "estimatedSystemCostIvaClp": 17312448,
+      "downpaymentHito1Clp": 7274138,
+      "faenaHito2Clp": 5091897,
+      "finalHito3Clp": 2182241,
+      "margenBrutoPct": 27.5,
+      "selectedOmPackage": {
+        "id": "basic",
+        "name": "Garantía Estándar SoldeRío",
+        "badge": "Incluida",
+        "monthlyPriceClp": 0,
+        "monthlyPriceUf": 0,
+        "tagline": "Garantía de producto de fábrica y soporte de instalación",
+        "features": [
+          "25 Años de Garantía de Rendimiento en Módulos Tier 1 (≥85%)",
+          "10 a 15 Años de Garantía de Inversores y Baterías LUNA Huawei",
+          "1 Año de Garantía de Mano de Obra y Estanqueidad de Techo",
+          "Monitoreo Básico en App Huawei FusionSolar Cloud",
+          "Certificado TE-4 SEC y Tramitación Net Billing ante Distribuidora"
+        ],
+        "isDefault": true
+      },
+      "usableBatteryKwh": 0,
+      "seasonalVariationRatio": 3.2,
+      "summerAvgMonthlyGenKwh": 6381,
+      "winterAvgMonthlyGenKwh": 1981,
+      "monthlyBreakdown": [
+        {
+          "month": 1,
+          "monthName": "Enero",
+          "monthlyGenKwh": 6732,
+          "monthlyDemandKwh": 2998,
+          "poaKwhM2Day": 6.8,
+          "tCellCelsius": 45,
+          "surplusKwh": 3734,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 2,
+          "monthName": "Febrero",
+          "monthlyGenKwh": 5557,
+          "monthlyDemandKwh": 2925,
+          "poaKwhM2Day": 6.2,
+          "tCellCelsius": 44.4,
+          "surplusKwh": 2632,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 3,
+          "monthName": "Marzo",
+          "monthlyGenKwh": 4996,
+          "monthlyDemandKwh": 3218,
+          "poaKwhM2Day": 5,
+          "tCellCelsius": 42.3,
+          "surplusKwh": 1778,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 4,
+          "monthName": "Abril",
+          "monthlyGenKwh": 3296,
+          "monthlyDemandKwh": 3839,
+          "poaKwhM2Day": 3.3,
+          "tCellCelsius": 31.7,
+          "surplusKwh": 0,
+          "gridImportKwh": 543
+        },
+        {
+          "month": 5,
+          "monthName": "Mayo",
+          "monthlyGenKwh": 2129,
+          "monthlyDemandKwh": 4571,
+          "poaKwhM2Day": 2,
+          "tCellCelsius": 21.3,
+          "surplusKwh": 0,
+          "gridImportKwh": 2442
+        },
+        {
+          "month": 6,
+          "monthName": "Junio",
+          "monthlyGenKwh": 1467,
+          "monthlyDemandKwh": 5119,
+          "poaKwhM2Day": 1.4,
+          "tCellCelsius": 15.8,
+          "surplusKwh": 0,
+          "gridImportKwh": 3652
+        },
+        {
+          "month": 7,
+          "monthName": "Julio",
+          "monthlyGenKwh": 1831,
+          "monthlyDemandKwh": 5302,
+          "poaKwhM2Day": 1.7,
+          "tCellCelsius": 17.4,
+          "surplusKwh": 0,
+          "gridImportKwh": 3471
+        },
+        {
+          "month": 8,
+          "monthName": "Agosto",
+          "monthlyGenKwh": 2645,
+          "monthlyDemandKwh": 4827,
+          "poaKwhM2Day": 2.5,
+          "tCellCelsius": 23.4,
+          "surplusKwh": 0,
+          "gridImportKwh": 2182
+        },
+        {
+          "month": 9,
+          "monthName": "Septiembre",
+          "monthlyGenKwh": 3778,
+          "monthlyDemandKwh": 4022,
+          "poaKwhM2Day": 3.8,
+          "tCellCelsius": 33.4,
+          "surplusKwh": 0,
+          "gridImportKwh": 244
+        },
+        {
+          "month": 10,
+          "monthName": "Octubre",
+          "monthlyGenKwh": 5130,
+          "monthlyDemandKwh": 3474,
+          "poaKwhM2Day": 5.1,
+          "tCellCelsius": 40,
+          "surplusKwh": 1656,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 11,
+          "monthName": "Noviembre",
+          "monthlyGenKwh": 5995,
+          "monthlyDemandKwh": 3218,
+          "poaKwhM2Day": 6.2,
+          "tCellCelsius": 42.2,
+          "surplusKwh": 2777,
+          "gridImportKwh": 0
+        },
+        {
+          "month": 12,
+          "monthName": "Diciembre",
+          "monthlyGenKwh": 6855,
+          "monthlyDemandKwh": 3071,
+          "poaKwhM2Day": 6.9,
+          "tCellCelsius": 44.1,
+          "surplusKwh": 3784,
+          "gridImportKwh": 0
+        }
+      ],
+      "vanClp": 143611375,
+      "tirPercent": 22,
+      "lcoeClpPerKwh": 38,
+      "requiresThreePhase": true,
+      "recommendedPhaseType": "trifasico",
+      "estimatedNewMonthlyBillClp": 1850,
+      "winterLimitSavingsClp": 1918500,
+      "coberturaTotalAnualPct": 100,
+      "applianceEquivalencies": [
+        {
+          "title": "Refrigerador + Freezer No-Frost",
+          "description": "Alimentado 24/7 sin cortes, incluso durante temporales y caídas de red.",
+          "icon": "Refrigerator"
+        },
+        {
+          "title": "Conectividad Starlink & Iluminación",
+          "description": "Mantiene internet de alta velocidad, teletrabajo y toda la casa iluminada.",
+          "icon": "Wifi"
+        },
+        {
+          "title": "Calefacción / Pellet & Bombas de Pozo",
+          "description": "Respaldo continuo para motores de estufas a pellet y extracción de agua.",
+          "icon": "Flame"
+        },
+        {
+          "title": "Electrodomésticos & Lavado",
+          "description": "Lavadora, lavavajillas, microondas y hervidor cubiertos con energía solar.",
+          "icon": "Zap"
+        }
+      ],
+      "taxShieldArt33BisClp": 727414,
+      "recoverableVatClp": 2764172,
+      "peakHourDemandSavingsClp": 2268000,
+      "annualOpexClp": 145483,
+      "inverterReplacementCostYear12Clp": 1745793,
+      "isB2B": true,
+      "regulatoryTrack": "netbilling_ley21118",
+      "regulatoryTitle": "Ley 21.118 Netbilling (Generación Distribuida ≤ 300 kW)",
+      "regulatoryDecree": "DFL 4/2006 + DS 57/2019 + DS 8/2019",
+      "regulatoryNorm": "Pliegos RIC N° 01-19 + NTCO-EG + RGR 01/2024",
+      "regulatoryTramite": "Trámite Eléctrico TE4 vía Plataforma GDA SEC (F1 a F5)",
+      "hourlyProfileSample": [
+        {
+          "hour": 0,
+          "solarGenKwh": 0,
+          "consumptionKwh": 1.28,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.28
+        },
+        {
+          "hour": 1,
+          "solarGenKwh": 0,
+          "consumptionKwh": 1.28,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.28
+        },
+        {
+          "hour": 2,
+          "solarGenKwh": 0,
+          "consumptionKwh": 1.28,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.28
+        },
+        {
+          "hour": 3,
+          "solarGenKwh": 0,
+          "consumptionKwh": 1.28,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.28
+        },
+        {
+          "hour": 4,
+          "solarGenKwh": 0,
+          "consumptionKwh": 1.28,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.28
+        },
+        {
+          "hour": 5,
+          "solarGenKwh": 0,
+          "consumptionKwh": 1.91,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.91
+        },
+        {
+          "hour": 6,
+          "solarGenKwh": 1.38,
+          "consumptionKwh": 3.19,
+          "selfConsumedKwh": 1.38,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.81
+        },
+        {
+          "hour": 7,
+          "solarGenKwh": 4.14,
+          "consumptionKwh": 5.11,
+          "selfConsumedKwh": 4.14,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.97
+        },
+        {
+          "hour": 8,
+          "solarGenKwh": 8.29,
+          "consumptionKwh": 8.93,
+          "selfConsumedKwh": 8.29,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.64
+        },
+        {
+          "hour": 9,
+          "solarGenKwh": 12.43,
+          "consumptionKwh": 10.85,
+          "selfConsumedKwh": 10.85,
+          "injectedKwh": 1.58,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 10,
+          "solarGenKwh": 16.57,
+          "consumptionKwh": 12.12,
+          "selfConsumedKwh": 12.12,
+          "injectedKwh": 4.45,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 11,
+          "solarGenKwh": 19.34,
+          "consumptionKwh": 12.12,
+          "selfConsumedKwh": 12.12,
+          "injectedKwh": 7.22,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 12,
+          "solarGenKwh": 20.72,
+          "consumptionKwh": 10.85,
+          "selfConsumedKwh": 10.85,
+          "injectedKwh": 9.87,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 13,
+          "solarGenKwh": 19.34,
+          "consumptionKwh": 8.93,
+          "selfConsumedKwh": 8.93,
+          "injectedKwh": 10.41,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 14,
+          "solarGenKwh": 15.19,
+          "consumptionKwh": 10.85,
+          "selfConsumedKwh": 10.85,
+          "injectedKwh": 4.34,
+          "gridImportKwh": 0
+        },
+        {
+          "hour": 15,
+          "solarGenKwh": 11.05,
+          "consumptionKwh": 11.49,
+          "selfConsumedKwh": 11.05,
+          "injectedKwh": 0,
+          "gridImportKwh": 0.44
+        },
+        {
+          "hour": 16,
+          "solarGenKwh": 6.91,
+          "consumptionKwh": 10.85,
+          "selfConsumedKwh": 6.91,
+          "injectedKwh": 0,
+          "gridImportKwh": 3.94
+        },
+        {
+          "hour": 17,
+          "solarGenKwh": 2.76,
+          "consumptionKwh": 9.57,
+          "selfConsumedKwh": 2.76,
+          "injectedKwh": 0,
+          "gridImportKwh": 6.81
+        },
+        {
+          "hour": 18,
+          "solarGenKwh": 0,
+          "consumptionKwh": 6.38,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 6.38
+        },
+        {
+          "hour": 19,
+          "solarGenKwh": 0,
+          "consumptionKwh": 3.19,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 3.19
+        },
+        {
+          "hour": 20,
+          "solarGenKwh": 0,
+          "consumptionKwh": 1.91,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.91
+        },
+        {
+          "hour": 21,
+          "solarGenKwh": 0,
+          "consumptionKwh": 1.28,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.28
+        },
+        {
+          "hour": 22,
+          "solarGenKwh": 0,
+          "consumptionKwh": 1.28,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.28
+        },
+        {
+          "hour": 23,
+          "solarGenKwh": 0,
+          "consumptionKwh": 1.28,
+          "selfConsumedKwh": 0,
+          "injectedKwh": 0,
+          "gridImportKwh": 1.28
+        }
+      ],
+      "netBillingMonthlyLedger": [
+        {
+          "monthName": "Enero",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 3734,
+          "creditClp": 466750,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 466750,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Febrero",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 2632,
+          "creditClp": 329000,
+          "initialBalanceClp": 466750,
+          "finalBalanceClp": 795750,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Marzo",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 1778,
+          "creditClp": 222250,
+          "initialBalanceClp": 795750,
+          "finalBalanceClp": 1018000,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Abril",
+          "boughtKwh": 1532,
+          "boughtClp": 528540,
+          "injectedKwh": 989,
+          "creditClp": 123625,
+          "initialBalanceClp": 1018000,
+          "finalBalanceClp": 613085,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Mayo",
+          "boughtKwh": 3081,
+          "boughtClp": 1062945,
+          "injectedKwh": 639,
+          "creditClp": 79875,
+          "initialBalanceClp": 613085,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 371835
+        },
+        {
+          "monthName": "Junio",
+          "boughtKwh": 4092,
+          "boughtClp": 1411740,
+          "injectedKwh": 440,
+          "creditClp": 55000,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 1358590
+        },
+        {
+          "monthName": "Julio",
+          "boughtKwh": 4020,
+          "boughtClp": 1386900,
+          "injectedKwh": 549,
+          "creditClp": 68625,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 1320125
+        },
+        {
+          "monthName": "Agosto",
+          "boughtKwh": 2976,
+          "boughtClp": 1026720,
+          "injectedKwh": 794,
+          "creditClp": 99250,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 929320
+        },
+        {
+          "monthName": "Septiembre",
+          "boughtKwh": 1377,
+          "boughtClp": 475065,
+          "injectedKwh": 1133,
+          "creditClp": 141625,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 335290
+        },
+        {
+          "monthName": "Octubre",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 1656,
+          "creditClp": 207000,
+          "initialBalanceClp": 0,
+          "finalBalanceClp": 207000,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Noviembre",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 2777,
+          "creditClp": 347125,
+          "initialBalanceClp": 207000,
+          "finalBalanceClp": 554125,
+          "customerPaysClp": 1850
+        },
+        {
+          "monthName": "Diciembre",
+          "boughtKwh": 0,
+          "boughtClp": 0,
+          "injectedKwh": 3784,
+          "creditClp": 473000,
+          "initialBalanceClp": 554125,
+          "finalBalanceClp": 0,
+          "customerPaysClp": 1850,
+          "annualSurplusPayoutClp": 1027125
+        }
+      ],
+      "rightsAndCommitments": {
+        "whatYouCanDemand": [
+          {
+            "step": 1,
+            "question": "¿Qué tecnología y certificaciones respaldan los equipos?",
+            "title": "Tecnología Tier 1 y Certificación SEC",
+            "details": "Módulos Tier 1 N-Type TOPCon con 25 años de garantía de producto y 30 años de potencia lineal. Inversores híbridos certificados SEC con protocolo PE Nº 1/26 anti-isla y monitoreo WiFi/4G integrado."
+          },
+          {
+            "step": 2,
+            "question": "¿Quién asume la responsabilidad del servicio técnico local?",
+            "title": "Soporte Técnico Local & Estanqueidad Garantizada",
+            "details": "Garantía formal por escrito de 1 año en estanqueidad de techumbre (cero filtraciones) y mano de obra. Cuadrilla técnica propia en el sur de Chile (Llanquihue, Osorno, Valdivia, Chiloé)."
+          },
+          {
+            "step": 3,
+            "question": "¿Cómo se legaliza la inyección y el cambio de medidor?",
+            "title": "Tramitación SEC TE4 y Proceso Net Billing Completo",
+            "details": "Ingreso formal de Formularios F1 a F5 ante la distribuidora (SAESA, CRELL, etc.) y obtención del Certificado TE4 SEC por instalador eléctrico autorizado Clase A o B. Medidor bidireccional gestionado."
+          },
+          {
+            "step": 4,
+            "question": "¿Cuáles son los hitos de pago contra avance real?",
+            "title": "Hitos Transparentes 50% / 35% / 15%",
+            "details": "50% de anticipo para orden de compra y reserva de hardware. 35% contra arribo a faena y montaje en techo. 15% final únicamente contra puesta en marcha conforme y TE4 ingresado a la SEC."
+          }
+        ],
+        "ownerCommitments": [
+          {
+            "title": "Condiciones de Acceso y Empalme Eléctrico",
+            "details": "Facilitar acceso seguro a techumbre, tablero general y empalme en las fechas acordadas de montaje e inspección."
+          },
+          {
+            "title": "Mantenimiento Periódico de Módulos",
+            "details": "Realizar o programar 1 a 2 lavados anuales con agua desmineralizada y mantener despejado el entorno de sombras por vegetación."
+          },
+          {
+            "title": "Integridad de las Instalaciones",
+            "details": "No intervenir el inversor, protecciones DC/AC ni conexionado eléctrico sin la presencia o autorización escrita de personal técnico calificado."
+          },
+          {
+            "title": "Monitoreo Proactivo de la Planta",
+            "details": "Mantener el inversor conectado a internet y revisar periódicamente la App FusionSolar para alertar anomalías o desconexiones."
+          }
+        ]
+      }
+    },
+    "status": "NUEVO"
+  },
+  {
     "id": "SOL-2026-3873",
     "createdAt": "2026-08-22T07:16:42.117Z",
     "formData": {

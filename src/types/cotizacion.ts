@@ -1,8 +1,8 @@
 export type PropertyType = "residencial" | "parcela" | "comercial" | "agricola";
 
-export type TopologyType = "hibrida" | "ongrid" | "offgrid";
+export type TopologyType = "hibrida" | "ongrid" | "offgrid" | "bess";
 
-export type DistributorType = "saesa" | "crell" | "cge" | "frontel" | "edelaysen" | "otra";
+export type DistributorType = "saesa" | "crell" | "cge" | "frontel" | "edelaysen" | "otra" | "aislada";
 
 export type OMPackageType = "basic" | "essential" | "total_guard";
 
@@ -11,6 +11,7 @@ export type ConsumptionInputMode = "monthly_bill_clp" | "annual_kwh" | "monthly_
 export interface QuoteFormData {
   // Step 1: Property & Location
   propertyType: PropertyType;
+  businessIndustry?: string;
   region?: string;
   comuna: string;
   address?: string;
@@ -29,7 +30,8 @@ export interface QuoteFormData {
   roofType?: "inclinado" | "plano" | "suelo";
   roofMaterial?: string;
   includeEvCharger: boolean;
-  backupPriority: "cargas_criticas" | "hogar_completo" | "solo_ahorro";
+  includeZeroInjection?: boolean;
+  backupPriority: "cargas_criticas" | "hogar_completo" | "total_casa" | "solo_ahorro";
   omPackage?: OMPackageType;
 
   // Step 4: Bill Upload
@@ -137,6 +139,58 @@ export interface SolarSizingResult {
     montoTotalCredito: number;
     costoTotalCredito: number;
     pdfBase64?: string; // If we can fetch the PDF
+  };
+
+  // Métricas Financieras y Tributarias B2B (Corporativo / Agrícola / Pymes)
+  taxShieldArt33BisClp?: number; // 4% a 6% crédito tributario sobre activo fijo (Art. 33 bis LIR)
+  recoverableVatClp?: number; // 19% IVA crédito fiscal F29
+  peakHourDemandSavingsClp?: number; // Ahorro proyectado por mitigación de horas punta (BT2/BT3/AT)
+  annualOpexClp?: number; // O&M anual estimado (~1% CAPEX con escalamiento)
+  inverterReplacementCostYear12Clp?: number; // Costo proyectado de recambio de inversor en año 12
+  isB2B?: boolean;
+
+  // Mapa Regulatorio Oficial Chileno (DFL 4/2006 LGSE)
+  regulatoryTrack?: "netbilling_ley21118" | "inyeccion_cero_ric09" | "aislada_ric9.1" | "bess_almacenamiento";
+  regulatoryTitle?: string; // Ej: "Ley 21.118 Netbilling (≤ 300 kW)"
+  regulatoryDecree?: string; // Ej: "DS 57/2019 + DS 8/2019"
+  regulatoryNorm?: string; // Ej: "Pliegos RIC + NTCO-EG + RGR 01/2024"
+  regulatoryTramite?: string; // Ej: "Trámite Eléctrico TE4 vía Plataforma GDA SEC"
+
+  // Perfil Horario de Día Típico (Para gráfico "Saber más": Generación, Consumo, Autoconsumo, Inyección, Compra)
+  hourlyProfileSample?: Array<{
+    hour: number; // 0 a 24
+    solarGenKwh: number;
+    consumptionKwh: number;
+    selfConsumedKwh: number;
+    injectedKwh: number;
+    gridImportKwh: number;
+  }>;
+
+  // Desglose Mensual Net Billing (Para gráfico "Saber más": Compra, Crédito, Saldo a favor, Paga $0)
+  netBillingMonthlyLedger?: Array<{
+    monthName: string;
+    boughtKwh: number;
+    boughtClp: number;
+    injectedKwh: number;
+    creditClp: number;
+    initialBalanceClp: number;
+    finalBalanceClp: number;
+    customerPaysClp: number;
+    annualSurplusPayoutClp?: number;
+  }>;
+
+  // Transparencia y Alcance ("Qué puede exigir quien contrata" vs "Compromisos del propietario")
+  rightsAndCommitments?: {
+    whatYouCanDemand: Array<{
+      step: number;
+      question: string;
+      title: string;
+      details: string;
+    }>;
+    ownerCommitments: Array<{
+      title: string;
+      details: string;
+    }>;
   };
 }
 

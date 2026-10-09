@@ -35,7 +35,7 @@ export function EmpresasCTA() {
           transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
         >
           <Link
-            href="/cotizacion"
+            href="/cotizacion?tipo=empresa"
             className="inline-flex items-center gap-2 px-10 py-3.5 rounded-full bg-white text-black font-light text-[14px] md:text-sm hover:bg-[#FF8300] hover:text-white transition-all duration-300 shadow-xl hover:shadow-[0_0_30px_rgba(255,131,0,0.5)] cursor-pointer group"
           >
             <span>Iniciar Cotización</span>

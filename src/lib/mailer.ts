@@ -214,19 +214,15 @@ export async function sendVisitaTecnicaEmail(
     const emailHtml = await render(
       React.createElement(VisitaTecnicaConfirmationEmail, {
         folio,
-        nombre,
-        telefono,
-        email: validRecipient,
+        nombreCliente: nombre,
         direccion,
         comuna,
         region,
-        coordenadasTexto,
-        fechaTexto: fechaTexto || fechaIso,
-        bloqueHorarioTexto: blockLabel,
-        tipoPropiedad: tipoPropiedad || "Parcela",
+        fechaLegible: fechaTexto || fechaIso,
+        horarioLegible: blockLabel,
         googleCalendarUrl: calendarUrls.google,
         outlookCalendarUrl: calendarUrls.outlook,
-        mapsUrl: mapsLink,
+        hasIcsAttachment: true,
       })
     );
 

@@ -129,7 +129,7 @@ export default async function PropuestaPage({ params, searchParams }: Props) {
       <div className="absolute top-[60px] left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-[#FF8300]/10 rounded-full blur-[200px] pointer-events-none" />
 
       <div className="px-4 sm:px-6 md:px-8 pt-8 pb-24 relative z-10">
-        {isExpired ? (
+        {isExpired || !proposalData ? (
           /* Expired / Not Found Screen */
           <div className="max-w-2xl mx-auto my-12 bg-white/5 border border-white/10 rounded-3xl p-8 sm:p-12 text-center backdrop-blur-xl shadow-2xl">
             <div className="w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center mx-auto mb-6">

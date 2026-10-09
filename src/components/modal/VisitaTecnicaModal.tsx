@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useRef, useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X,
@@ -23,6 +24,8 @@ import {
   ChevronDown,
   Trash2,
   Loader2,
+  FileText,
+  Wrench,
 } from "lucide-react";
 import { useVisitaModal } from "@/context/VisitaModalContext";
 import { TurnstileWidget } from "@/components/security/TurnstileWidget";
@@ -122,6 +125,41 @@ export function VisitaTecnicaModal() {
 
   const contentRef = useRef<HTMLDivElement>(null);
   const calendarMenuRef = useRef<HTMLDivElement>(null);
+
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Lock body & html scroll while drawer is open
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        if (showCloseConfirm) {
+          setShowCloseConfirm(false);
+        } else if (showCancelVisitModal) {
+          setShowCancelVisitModal(false);
+        } else {
+          handleRequestClose();
+        }
+      }
+    };
+
+    const prevBodyOverflow = document.body.style.overflow;
+    const prevHtmlOverflow = document.documentElement.style.overflow;
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = prevBodyOverflow || "";
+      document.documentElement.style.overflow = prevHtmlOverflow || "";
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen, showCloseConfirm, showCancelVisitModal]);
 
   useEffect(() => {
     contentRef.current?.scrollTo({ top: 0, behavior: "instant" });
@@ -330,7 +368,7 @@ export function VisitaTecnicaModal() {
   };
 
   const getWhatsAppUrl = () => {
-    const tipoTexto = "Visita Técnica ($14.990 CLP - 100% Reembolsable al adquirir el proyecto)";
+    const tipoTexto = "Visita Técnica ($11.990 CLP - 100% Reembolsable al adquirir el proyecto)";
     const horarioTexto =
       formData.bloqueHorario === "manana"
         ? "Mañana (09:30 - 12:30 hrs)"
@@ -426,45 +464,48 @@ export function VisitaTecnicaModal() {
     setShowCalendarMenu(false);
   };
 
-  if (!isOpen) return null;
+  if (!mounted || !isOpen) return null;
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 md:p-6 overflow-y-auto">
-      {/* Dark Blur Backdrop */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        onClick={handleRequestClose}
-        className="fixed inset-0 bg-black/80 backdrop-blur-md transition-opacity"
-      />
-
-      {/* Modal Card - Consistent Dark Theme */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95, y: 20 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.95, y: 20 }}
-        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-        className="relative w-full max-w-3xl bg-[#181818] text-white rounded-3xl md:rounded-[32px] shadow-2xl border border-white/10 overflow-hidden z-10 flex flex-col max-h-[92vh]"
-      >
-        {/* Modal Top Bar */}
-        <div className="p-6 md:px-8 md:pt-7 pb-4 border-b border-white/10 flex items-center justify-between bg-[#1F1F1F] relative">
-          <div>
-            <h2 className="text-xl md:text-2xl font-light text-white tracking-tight">
-              {step === 1 && "Solicitud de Visita Técnica"}
-              {step === 2 && "Coordinación y Datos de la Visita"}
-              {step === 3 && "¡Solicitud Registrada con Éxito!"}
-            </h2>
-          </div>
-
-          <button
+  return createPortal(
+    <AnimatePresence>
+      {isOpen && (
+        <div key="visita-portal-wrapper" className="fixed inset-0 z-[99999] overflow-hidden">
+          {/* Backdrop con oscurecimiento leve (Desktop & Mobile) */}
+          <motion.div
+            key="visita-drawer-backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
             onClick={handleRequestClose}
-            className="p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white/70 hover:text-white transition-colors cursor-pointer"
-            title="Cerrar modal"
+            className="fixed inset-0 bg-black/60 backdrop-blur-xs cursor-pointer z-0"
+            aria-label="Cerrar modal"
+          />
+
+          {/* Lateral Drawer Panel: 100% en Mobile, max 50% de ancho en Desktop, 100vh de alto */}
+          <motion.div
+            key="visita-drawer-panel"
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{ type: "spring", damping: 30, stiffness: 280 }}
+            className="fixed top-0 right-0 bottom-0 z-10 h-screen w-full md:w-[600px] lg:w-[50vw] max-w-full bg-[#121316] text-white flex flex-col overflow-hidden shadow-[-20px_0_50px_rgba(0,0,0,0.85)] border-l border-white/10"
           >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
+            {/* Sticky Drawer Top Bar */}
+            <header className="sticky top-0 z-30 w-full bg-[#18191D]/95 backdrop-blur-xl border-b border-white/10 px-5 sm:px-8 py-4 flex items-center justify-between shadow-md shrink-0">
+              <h2 className="text-base sm:text-lg md:text-xl font-light tracking-tight text-white font-sans">
+                Visita Técnica en Terreno
+              </h2>
+
+              <button
+                type="button"
+                onClick={handleRequestClose}
+                className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white/70 hover:text-white transition-colors cursor-pointer"
+                aria-label="Cerrar modal"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </header>
 
         {/* Step Progress Indicators */}
         <div className="px-4 sm:px-8 py-2.5 sm:py-3 bg-black/40 border-b border-white/10 flex items-center justify-between text-[11px] sm:text-xs font-light text-white/50 font-mono">
@@ -506,77 +547,125 @@ export function VisitaTecnicaModal() {
           </div>
         </div>
 
-        {/* Modal Scrollable Body */}
-        <div ref={contentRef} className="p-5 sm:p-6 md:p-8 overflow-y-auto flex-1 custom-scrollbar">
+        {/* Drawer Scrollable Body */}
+        <div ref={contentRef} className="p-4 sm:p-6 md:p-8 overflow-y-auto overscroll-contain flex-1 custom-scrollbar">
           {/* STEP 1: VISIT DETAILS */}
           {step === 1 && (
-            <div className="space-y-6">
-              <div className="max-w-2xl mx-auto">
-                <div className="rounded-2xl p-5 sm:p-7 border-2 border-[#FF8300] bg-gradient-to-b from-[#1F1F1F] to-[#181818] shadow-xl shadow-[#FF8300]/5 relative">
-                  {/* Header Row: Title + Enroque (100% Reembolsable under title, $14.990 CLP badge on right without icon) */}
-                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-4">
-                    <div>
-                      <h3 className="text-xl sm:text-2xl font-medium text-white">
-                        Visita Técnica
-                      </h3>
-                      <div className="flex items-baseline gap-2 mt-0.5">
-                        <span className="text-sm sm:text-base font-semibold text-emerald-400 font-mono">
-                          100% Reembolsable
-                        </span>
-                      </div>
-                    </div>
+            <div className="space-y-6 max-w-3xl mx-auto">
+              {/* Hero row: Title, Subtitle & Price Badge */}
+              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 pb-6 border-b border-white/10">
+                <div className="space-y-2">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs font-mono">
+                    <ShieldCheck className="w-3.5 h-3.5" />
+                    <span>100% Reembolsable</span>
+                  </div>
+                  <h3 className="text-xl sm:text-2xl md:text-3xl font-light text-white tracking-tight font-sans">
+                    Diagnóstico y Evaluación en Terreno
+                  </h3>
+                  <p className="text-xs sm:text-sm text-white/60 font-light max-w-xl leading-relaxed">
+                    Inspección técnica in situ para validar orientación, sombras, empalme eléctrico y factibilidad real de tu proyecto solar.
+                  </p>
+                </div>
 
-                    <div className="self-start sm:self-auto bg-[#FF8300] text-white text-xs sm:text-sm font-bold tracking-wider px-3.5 py-1.5 rounded-full shadow-md font-mono flex-shrink-0">
-                      $14.990 CLP
+                <div className="p-3.5 sm:p-4 rounded-2xl bg-white/[0.04] border border-white/10 flex sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-1.5 shrink-0">
+                  <span className="text-[10px] text-white/40 uppercase font-mono tracking-wider">
+                    Costo
+                  </span>
+                  <span className="text-xl sm:text-2xl font-mono font-bold text-[#FF8300]">
+                    $11.990 <span className="text-xs text-white/50 font-normal">CLP</span>
+                  </span>
+                  <span className="text-[10px] text-emerald-400 font-light">
+                    Descontable de tu proyecto
+                  </span>
+                </div>
+              </div>
+
+              {/* Reimbursable Guarantee Banner */}
+              <div className="p-4 sm:p-5 rounded-2xl bg-[#FF8300]/10 border border-[#FF8300]/25 flex items-start gap-3.5">
+                <div className="p-2 rounded-xl bg-[#FF8300]/20 text-[#FF8300] shrink-0 mt-0.5">
+                  <ShieldCheck className="w-5 h-5" />
+                </div>
+                <div className="space-y-1">
+                  <h4 className="text-xs sm:text-sm font-medium text-white">
+                    Costo 100% Reembolsable al Adquirir el Proyecto
+                  </h4>
+                  <p className="text-xs sm:text-sm text-white/75 font-light leading-relaxed">
+                    El valor de <span className="font-mono font-medium text-[#FF8300]">$11.990 CLP</span> cubre el traslado y dedicación horaria del Ingeniero en terreno, y se descuenta íntegramente de tu presupuesto final al contratar la instalación.
+                  </p>
+                </div>
+              </div>
+
+              {/* Inspection Deliverables 2x2 Grid */}
+              <div className="space-y-3">
+                <span className="text-xs font-mono uppercase tracking-wider text-white/50 block">
+                  ¿Qué incluye la inspección técnica?
+                </span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                  <div className="p-4 rounded-xl bg-white/[0.03] border border-white/10 hover:border-white/20 transition-all flex items-start gap-3">
+                    <div className="p-2 rounded-lg bg-[#FF8300]/15 text-[#FF8300] shrink-0 mt-0.5">
+                      <FileText className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h5 className="text-xs sm:text-sm font-medium text-white">Análisis de Consumo & Boleta</h5>
+                      <p className="text-xs text-white/60 font-light mt-0.5 leading-relaxed">
+                        Evaluación de historial de consumo mensual y estacional para optimizar la potencia requerida.
+                      </p>
                     </div>
                   </div>
 
-                  <p className="text-xs sm:text-sm text-white/60 font-light mb-4">
-                    Diagnóstico inicial de viabilidad solar y perfil de consumo in situ.
-                  </p>
-
-                    {/* Reimbursable guarantee banner */}
-                    <div className="mb-5 p-3.5 rounded-xl bg-[#FF8300]/10 border border-[#FF8300]/25 flex items-start gap-2.5">
-                      <ShieldCheck className="w-4 h-4 text-[#FF8300] flex-shrink-0 mt-0.5" />
-                      <div className="text-xs text-white/90 font-light leading-relaxed">
-                        <strong className="text-white font-medium">Costo 100% Reembolsable:</strong>{" "}
-                        El valor de <span className="font-mono font-semibold text-[#FF8300]">$14.990 CLP</span> es completamente reembolsable al adquirir el proyecto, descontándose íntegramente de tu presupuesto final.
-                      </div>
+                  <div className="p-4 rounded-xl bg-white/[0.03] border border-white/10 hover:border-white/20 transition-all flex items-start gap-3">
+                    <div className="p-2 rounded-lg bg-[#FF8300]/15 text-[#FF8300] shrink-0 mt-0.5">
+                      <Sun className="w-4 h-4" />
                     </div>
-
-                    <div className="space-y-2.5 pt-3 border-t border-white/10 mb-6 text-xs sm:text-sm text-white/80 font-light">
-                      <div className="flex items-start gap-2.5">
-                        <CheckCircle2 className="w-4 h-4 text-[#FF8300] flex-shrink-0 mt-0.5" />
-                        <span>Evaluación de boleta, consumo mensual y estacional.</span>
-                      </div>
-                      <div className="flex items-start gap-2.5">
-                        <CheckCircle2 className="w-4 h-4 text-[#FF8300] flex-shrink-0 mt-0.5" />
-                        <span>Cálculo solar según la estación meteorológica más cercana.</span>
-                      </div>
-                      <div className="flex items-start gap-2.5">
-                        <CheckCircle2 className="w-4 h-4 text-[#FF8300] flex-shrink-0 mt-0.5" />
-                        <span>Inspección visual de cubierta, orientación y empalme.</span>
-                      </div>
-                      <div className="flex items-start gap-2.5">
-                        <CheckCircle2 className="w-4 h-4 text-[#FF8300] flex-shrink-0 mt-0.5" />
-                        <span>Propuesta técnico-comercial.</span>
-                      </div>
+                    <div>
+                      <h5 className="text-xs sm:text-sm font-medium text-white">Cálculo Solar Localizado</h5>
+                      <p className="text-xs text-white/60 font-light mt-0.5 leading-relaxed">
+                        Simulación con radiación solar real TMY de la estación meteorológica más cercana.
+                      </p>
                     </div>
+                  </div>
 
-                    <div className="pt-4 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <span className="text-[11px] text-white/50 font-mono">
-                      ⏱ Duración estimada: ~30-45 min
-                    </span>
-                    <button
-                      type="button"
-                      onClick={handleContinue}
-                      className="px-6 py-3 rounded-full bg-[#FF8300] hover:bg-[#e07400] text-white text-xs sm:text-sm font-light uppercase tracking-wider shadow-lg hover:shadow-[0_0_20px_rgba(255,131,0,0.4)] flex items-center justify-center gap-2 transition-all cursor-pointer group"
-                    >
-                      <span className="font-light">Continuar al Agendamiento</span>
-                      <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                    </button>
+                  <div className="p-4 rounded-xl bg-white/[0.03] border border-white/10 hover:border-white/20 transition-all flex items-start gap-3">
+                    <div className="p-2 rounded-lg bg-[#FF8300]/15 text-[#FF8300] shrink-0 mt-0.5">
+                      <Wrench className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h5 className="text-xs sm:text-sm font-medium text-white">Inspección de Cubierta & Empalme</h5>
+                      <p className="text-xs text-white/60 font-light mt-0.5 leading-relaxed">
+                        Revisión de orientación, ángulo, sombras y capacidad técnica del empalme eléctrico SEC.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="p-4 rounded-xl bg-white/[0.03] border border-white/10 hover:border-white/20 transition-all flex items-start gap-3">
+                    <div className="p-2 rounded-lg bg-[#FF8300]/15 text-[#FF8300] shrink-0 mt-0.5">
+                      <CheckCircle2 className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h5 className="text-xs sm:text-sm font-medium text-white">Presupuesto Llave en Mano</h5>
+                      <p className="text-xs text-white/60 font-light mt-0.5 leading-relaxed">
+                        Propuesta técnico-comercial definitiva, con especificación de equipos y sin sobrecostos.
+                      </p>
+                    </div>
                   </div>
                 </div>
+              </div>
+
+              {/* Step 1 Footer Action Bar */}
+              <div className="pt-6 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="flex items-center gap-2 text-xs text-white/50 font-mono">
+                  <Clock className="w-4 h-4 text-[#FF8300]" />
+                  <span>Duración estimada: ~30-45 min</span>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleContinue}
+                  className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-[#FF8300] hover:bg-[#e07400] text-white text-xs sm:text-sm font-medium uppercase tracking-wider shadow-lg hover:shadow-[0_0_20px_rgba(255,131,0,0.4)] flex items-center justify-center gap-2 transition-all cursor-pointer group"
+                >
+                  <span className="font-light">Continuar al Agendamiento</span>
+                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                </button>
               </div>
             </div>
           )}
@@ -599,39 +688,27 @@ export function VisitaTecnicaModal() {
               </div>
 
               {/* Selected Plan Summary Banner */}
-              {/* Selected Plan Summary Banner */}
-              <div className="bg-[#1F1F1F] rounded-2xl p-4 border border-white/10 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="p-2.5 rounded-xl bg-black/40 border border-[#FF8300]/30 text-[#FF8300]">
-                    <Sun className="w-5 h-5 text-[#FF8300]" />
-                  </div>
-                  <div>
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="text-xs font-semibold text-white">
-                        Visita Técnica ($14.990 CLP)
-                      </span>
-                      <span className="text-[10px] font-semibold text-emerald-400 bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 rounded-full font-mono">
-                        100% Reembolsable
-                      </span>
-                    </div>
-                    <span className="text-[11px] text-white/60 font-light block mt-0.5">
-                      Diagnóstico in situ, evaluación de cubierta y propuesta tecnico-comercial
-                    </span>
-                  </div>
+              <div className="py-2.5 px-4 rounded-xl bg-white/[0.04] border border-white/10 flex items-center justify-between text-xs">
+                <div className="flex items-center gap-2.5">
+                  <Sun className="w-4 h-4 text-[#FF8300] shrink-0" />
+                  <span className="font-medium text-white">Visita Técnica ($11.990 CLP)</span>
+                  <span className="text-[10px] text-emerald-400 bg-emerald-500/15 border border-emerald-500/25 px-2 py-0.5 rounded-full font-mono">
+                    100% Reembolsable
+                  </span>
                 </div>
                 <button
                   type="button"
                   onClick={() => setStep(1)}
-                  className="text-xs font-medium text-[#FF8300] hover:underline cursor-pointer"
+                  className="text-xs text-[#FF8300] hover:underline cursor-pointer shrink-0"
                 >
                   Ver detalle
                 </button>
               </div>
 
               {/* Form Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5">
                 <div>
-                  <label htmlFor="visita_nombre" className="text-xs font-light text-white/70 block mb-1.5 flex items-center gap-1.5">
+                  <label htmlFor="visita_nombre" className="text-[11px] font-light text-white/70 block mb-1 flex items-center gap-1.5">
                     <User className="w-3.5 h-3.5 text-[#FF8300]" />
                     Nombre y Apellido *
                   </label>
@@ -643,12 +720,12 @@ export function VisitaTecnicaModal() {
                     value={formData.nombre}
                     onChange={handleInputChange}
                     placeholder="Ej. Jorge Arriagada"
-                    className="w-full px-4 py-2.5 rounded-xl border border-white/15 bg-black/40 text-xs text-white placeholder:text-white/30 focus:outline-none focus:border-[#FF8300] transition-colors"
+                    className="w-full px-3.5 py-2 rounded-xl border border-white/15 bg-black/40 text-xs text-white placeholder:text-white/30 focus:outline-none focus:border-[#FF8300] transition-colors"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="visita_telefono" className="text-xs font-light text-white/70 block mb-1.5 flex items-center gap-1.5">
+                  <label htmlFor="visita_telefono" className="text-[11px] font-light text-white/70 block mb-1 flex items-center gap-1.5">
                     <Phone className="w-3.5 h-3.5 text-[#FF8300]" />
                     WhatsApp / Teléfono *
                   </label>
@@ -660,12 +737,12 @@ export function VisitaTecnicaModal() {
                     value={formData.telefono}
                     onChange={handleInputChange}
                     placeholder="+56 9 1234 5678"
-                    className="w-full px-4 py-2.5 rounded-xl border border-white/15 bg-black/40 text-xs text-white placeholder:text-white/30 focus:outline-none focus:border-[#FF8300] transition-colors"
+                    className="w-full px-3.5 py-2 rounded-xl border border-white/15 bg-black/40 text-xs text-white placeholder:text-white/30 focus:outline-none focus:border-[#FF8300] transition-colors"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="visita_email" className="text-xs font-light text-white/70 block mb-1.5 flex items-center gap-1.5">
+                  <label htmlFor="visita_email" className="text-[11px] font-light text-white/70 block mb-1 flex items-center gap-1.5">
                     <Mail className="w-3.5 h-3.5 text-[#FF8300]" />
                     Correo Electrónico *
                   </label>
@@ -677,13 +754,13 @@ export function VisitaTecnicaModal() {
                     value={formData.email}
                     onChange={handleInputChange}
                     placeholder="contacto@ejemplo.cl"
-                    className="w-full px-4 py-2.5 rounded-xl border border-white/15 bg-black/40 text-xs text-white placeholder:text-white/30 focus:outline-none focus:border-[#FF8300] transition-colors"
+                    className="w-full px-3.5 py-2 rounded-xl border border-white/15 bg-black/40 text-xs text-white placeholder:text-white/30 focus:outline-none focus:border-[#FF8300] transition-colors"
                   />
                 </div>
 
                 {/* Selector de Región */}
                 <div>
-                  <label htmlFor="visita_region" className="text-xs font-light text-white/70 block mb-1.5 flex items-center gap-1.5">
+                  <label htmlFor="visita_region" className="text-[11px] font-light text-white/70 block mb-1 flex items-center gap-1.5">
                     <MapPin className="w-3.5 h-3.5 text-[#FF8300]" />
                     Seleccionar Región *
                   </label>
@@ -692,7 +769,7 @@ export function VisitaTecnicaModal() {
                     name="region"
                     value={formData.region}
                     onChange={handleRegionChange}
-                    className="w-full px-4 py-2.5 rounded-xl border border-white/15 bg-black/40 text-xs text-white focus:outline-none focus:border-[#FF8300] transition-colors cursor-pointer"
+                    className="w-full px-3.5 py-2 rounded-xl border border-white/15 bg-black/40 text-xs text-white focus:outline-none focus:border-[#FF8300] transition-colors cursor-pointer"
                   >
                     <option value="Región de Los Lagos" className="bg-[#1F1F1F]">
                       Región de Los Lagos
@@ -706,9 +783,9 @@ export function VisitaTecnicaModal() {
                   </select>
                 </div>
 
-                {/* Selector de Comuna */}
-                <div className="sm:col-span-2">
-                  <label htmlFor="visita_comuna" className="text-xs font-light text-white/70 block mb-1.5 flex items-center gap-1.5">
+                {/* Selector de Comuna (50% de ancho, comparte fila con Dirección) */}
+                <div>
+                  <label htmlFor="visita_comuna" className="text-[11px] font-light text-white/70 block mb-1 flex items-center gap-1.5">
                     <MapPin className="w-3.5 h-3.5 text-[#FF8300]" />
                     Seleccionar Comuna *
                   </label>
@@ -717,7 +794,7 @@ export function VisitaTecnicaModal() {
                     name="comuna"
                     value={formData.comuna}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2.5 rounded-xl border border-white/15 bg-black/40 text-xs text-white focus:outline-none focus:border-[#FF8300] transition-colors cursor-pointer"
+                    className="w-full px-3.5 py-2 rounded-xl border border-white/15 bg-black/40 text-xs text-white focus:outline-none focus:border-[#FF8300] transition-colors cursor-pointer"
                   >
                     {(REGIONES_DATA[formData.region] || []).map((comunaName) => (
                       <option key={comunaName} value={comunaName} className="bg-[#1F1F1F]">
@@ -727,9 +804,9 @@ export function VisitaTecnicaModal() {
                   </select>
                 </div>
 
-                {/* Dirección o Sector */}
-                <div className="sm:col-span-2">
-                  <label htmlFor="visita_direccion" className="text-xs font-light text-white/70 block mb-1.5 flex items-center gap-1.5">
+                {/* Dirección o Sector (comparte fila con Comuna) */}
+                <div>
+                  <label htmlFor="visita_direccion" className="text-[11px] font-light text-white/70 block mb-1 flex items-center gap-1.5">
                     <Home className="w-3.5 h-3.5 text-[#FF8300]" />
                     Dirección / Sector o Condominio *
                   </label>
@@ -741,8 +818,8 @@ export function VisitaTecnicaModal() {
                     required
                     value={formData.direccion}
                     onChange={handleInputChange}
-                    placeholder="Ej. Parcela 14, Camino a Ensenada Km 12 (o Calle Los Alerces 450)"
-                    className={`w-full px-4 py-2.5 rounded-xl border bg-black/40 text-xs text-white placeholder:text-white/30 focus:outline-none transition-colors ${
+                    placeholder="Ej. Parcela 14, Camino a Ensenada Km 12"
+                    className={`w-full px-3.5 py-2 rounded-xl border bg-black/40 text-xs text-white placeholder:text-white/30 focus:outline-none transition-colors ${
                       locationError
                         ? "border-rose-500/70 focus:border-rose-500"
                         : "border-white/15 focus:border-[#FF8300]"
@@ -751,7 +828,7 @@ export function VisitaTecnicaModal() {
 
                   {/* Mensaje de error de validación de ubicación */}
                   {locationError && (
-                    <p className="mt-1.5 text-xs text-rose-400 font-light flex items-center gap-1">
+                    <p className="mt-1 text-[11px] text-rose-400 font-light flex items-center gap-1">
                       <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
                       <span>{locationError}</span>
                     </p>
@@ -759,7 +836,7 @@ export function VisitaTecnicaModal() {
                 </div>
 
                 <div>
-                  <label htmlFor="visita_tipoPropiedad" className="text-xs font-light text-white/70 block mb-1.5">
+                  <label htmlFor="visita_tipoPropiedad" className="text-[11px] font-light text-white/70 block mb-1">
                     Tipo de Propiedad
                   </label>
                   <select
@@ -767,7 +844,7 @@ export function VisitaTecnicaModal() {
                     name="tipoPropiedad"
                     value={formData.tipoPropiedad}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2.5 rounded-xl border border-white/15 bg-black/40 text-xs text-white focus:outline-none focus:border-[#FF8300] transition-colors cursor-pointer"
+                    className="w-full px-3.5 py-2 rounded-xl border border-white/15 bg-black/40 text-xs text-white focus:outline-none focus:border-[#FF8300] transition-colors cursor-pointer"
                   >
                     <option value="Parcela" className="bg-[#1F1F1F]">
                       Parcela de Agrado
@@ -785,7 +862,7 @@ export function VisitaTecnicaModal() {
                 </div>
 
                 <div>
-                  <label htmlFor="visita_montoBoleta" className="text-xs font-light text-white/70 block mb-1.5">
+                  <label htmlFor="visita_montoBoleta" className="text-[11px] font-light text-white/70 block mb-1">
                     Gasto Mensual Boleta de Luz (Promedio)
                   </label>
                   <select
@@ -793,7 +870,7 @@ export function VisitaTecnicaModal() {
                     name="montoBoleta"
                     value={formData.montoBoleta}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2.5 rounded-xl border border-white/15 bg-black/40 text-xs text-white focus:outline-none focus:border-[#FF8300] transition-colors cursor-pointer"
+                    className="w-full px-3.5 py-2 rounded-xl border border-white/15 bg-black/40 text-xs text-white focus:outline-none focus:border-[#FF8300] transition-colors cursor-pointer"
                   >
                     <option value="Menos de 60.000" className="bg-[#1F1F1F]">
                       Menos de $60.000 CLP
@@ -815,14 +892,14 @@ export function VisitaTecnicaModal() {
               </div>
 
               {/* Interactive Calendar Section */}
-              <div className="pt-4 border-t border-white/10">
-                <label className="text-xs font-medium text-white block mb-2 flex items-center gap-1.5">
-                  <CalendarIcon className="w-4 h-4 text-[#FF8300]" />
+              <div className="pt-3 border-t border-white/10">
+                <label className="text-xs font-medium text-white block mb-1.5 flex items-center gap-1.5">
+                  <CalendarIcon className="w-3.5 h-3.5 text-[#FF8300]" />
                   Selecciona la Fecha Preferida de Visita
                 </label>
 
                 {/* Date buttons carousels */}
-                <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
+                <div className="flex gap-2 overflow-x-auto pb-1.5 scrollbar-none">
                   {availableDates.map((item) => {
                     const isSelected = formData.fechaSeleccionada === item.formattedDate;
                     return (
@@ -835,16 +912,16 @@ export function VisitaTecnicaModal() {
                             fechaSeleccionada: item.formattedDate,
                           }))
                         }
-                        className={`flex-shrink-0 px-3.5 py-2.5 rounded-xl border text-center transition-all cursor-pointer ${
+                        className={`flex-shrink-0 px-3 py-1.5 rounded-xl border text-center transition-all cursor-pointer ${
                           isSelected
                             ? "bg-[#FF8300] text-white border-[#FF8300] shadow-md shadow-[#FF8300]/20 scale-105"
                             : "bg-white/5 text-white/80 border-white/10 hover:bg-white/10 hover:border-white/20"
                         }`}
                       >
-                        <span className="text-[10px] font-mono uppercase block opacity-80">
+                        <span className="text-[9px] font-mono uppercase block opacity-80">
                           {item.dayName}
                         </span>
-                        <span className="text-base font-bold block leading-tight my-0.5">
+                        <span className="text-sm font-bold block leading-tight my-0.5">
                           {item.dayNumber}
                         </span>
                         <span className="text-[9px] uppercase block opacity-80">
@@ -856,25 +933,25 @@ export function VisitaTecnicaModal() {
                 </div>
 
                 {/* Time Slot Selection */}
-                <div className="grid grid-cols-2 gap-3 mt-4">
+                <div className="grid grid-cols-2 gap-2.5 mt-2.5">
                   <button
                     type="button"
                     onClick={() =>
                       setFormData((prev) => ({ ...prev, bloqueHorario: "manana" }))
                     }
-                    className={`p-3 rounded-xl border text-left flex items-center justify-between transition-all cursor-pointer ${
+                    className={`p-2.5 rounded-xl border text-left flex items-center justify-between transition-all cursor-pointer ${
                       formData.bloqueHorario === "manana"
                         ? "border-[#FF8300] bg-[#FF8300]/15 text-white font-medium shadow-sm"
                         : "border-white/10 bg-white/5 text-white/60 font-light hover:bg-white/10"
                     }`}
                   >
-                    <div className="flex items-center gap-2.5">
-                      <Sun className="w-4 h-4 text-[#FF8300]" />
+                    <div className="flex items-center gap-2">
+                      <Sun className="w-3.5 h-3.5 text-[#FF8300]" />
                       <div>
-                        <span className="text-xs font-semibold block text-white">
+                        <span className="text-xs font-semibold block text-white leading-tight">
                           Bloque Mañana
                         </span>
-                        <span className="text-[11px] text-white/50">
+                        <span className="text-[10px] text-white/50">
                           09:30 - 12:30 hrs
                         </span>
                       </div>
@@ -889,19 +966,19 @@ export function VisitaTecnicaModal() {
                     onClick={() =>
                       setFormData((prev) => ({ ...prev, bloqueHorario: "tarde" }))
                     }
-                    className={`p-3 rounded-xl border text-left flex items-center justify-between transition-all cursor-pointer ${
+                    className={`p-2.5 rounded-xl border text-left flex items-center justify-between transition-all cursor-pointer ${
                       formData.bloqueHorario === "tarde"
                         ? "border-[#FF8300] bg-[#FF8300]/15 text-white font-medium shadow-sm"
                         : "border-white/10 bg-white/5 text-white/60 font-light hover:bg-white/10"
                     }`}
                   >
-                    <div className="flex items-center gap-2.5">
-                      <Clock className="w-4 h-4 text-[#FF8300]" />
+                    <div className="flex items-center gap-2">
+                      <Clock className="w-3.5 h-3.5 text-[#FF8300]" />
                       <div>
-                        <span className="text-xs font-semibold block text-white">
+                        <span className="text-xs font-semibold block text-white leading-tight">
                           Bloque Tarde
                         </span>
-                        <span className="text-[11px] text-white/50">
+                        <span className="text-[10px] text-white/50">
                           14:30 - 18:00 hrs
                         </span>
                       </div>
@@ -914,7 +991,7 @@ export function VisitaTecnicaModal() {
               </div>
 
               {/* Checkbox de Consentimiento Ley N° 19.628 */}
-              <div className="flex items-start gap-2.5 pt-2">
+              <div className="flex items-start gap-2 pt-1">
                 <input
                   type="checkbox"
                   id="visita_accept_terms"
@@ -924,11 +1001,11 @@ export function VisitaTecnicaModal() {
                   onChange={(e) =>
                     setFormData((prev) => ({ ...prev, acceptTerms: e.target.checked }))
                   }
-                  className="w-4 h-4 mt-0.5 accent-[#FF8300] rounded cursor-pointer flex-shrink-0"
+                  className="w-3.5 h-3.5 mt-0.5 accent-[#FF8300] rounded cursor-pointer flex-shrink-0"
                 />
                 <label
                   htmlFor="visita_accept_terms"
-                  className="text-xs text-white/70 font-light cursor-pointer leading-relaxed"
+                  className="text-[11px] text-white/70 font-light cursor-pointer leading-snug"
                 >
                   He leído y acepto las{" "}
                   <a
@@ -943,37 +1020,40 @@ export function VisitaTecnicaModal() {
                 </label>
               </div>
 
-              {/* Cloudflare Turnstile Anti-Bot Shield */}
-              <TurnstileWidget
-                theme="dark"
-                onSuccess={handleTurnstileSuccess}
-                onExpire={handleTurnstileExpire}
-                className="my-2"
-              />
-
               {/* Submit Error Banner */}
               {submitError && (
-                <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30 flex items-start gap-2.5 text-xs text-rose-300">
+                <div className="p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/30 flex items-start gap-2 text-xs text-rose-300">
                   <AlertCircle className="w-4 h-4 text-rose-400 flex-shrink-0 mt-0.5" />
                   <span>{submitError}</span>
                 </div>
               )}
 
-              {/* Action Buttons */}
-              <div className="pt-4 border-t border-white/10 flex items-center justify-between gap-4">
-                <button
-                  type="button"
-                  onClick={() => setStep(1)}
-                  className="px-5 py-2.5 rounded-full border border-white/15 text-white/80 text-xs font-light hover:bg-white/10 flex items-center gap-1.5 transition-colors cursor-pointer"
-                >
-                  <ArrowLeft className="w-3.5 h-3.5" />
-                  <span>Volver</span>
-                </button>
+              {/* Action Strip: Turnstile on the left, buttons in the same row to gain vertical space */}
+              <div className="pt-3 border-t border-white/10 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setStep(1)}
+                    className="px-4 py-2 rounded-full border border-white/15 text-white/80 text-xs font-light hover:bg-white/10 flex items-center gap-1.5 transition-colors cursor-pointer shrink-0"
+                  >
+                    <ArrowLeft className="w-3.5 h-3.5" />
+                    <span>Volver</span>
+                  </button>
+
+                  {/* Cloudflare Turnstile Anti-Bot Shield alineado a la izquierda */}
+                  <div className="shrink-0 scale-85 sm:scale-90 origin-left">
+                    <TurnstileWidget
+                      theme="dark"
+                      onSuccess={handleTurnstileSuccess}
+                      onExpire={handleTurnstileExpire}
+                    />
+                  </div>
+                </div>
 
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className={`px-8 py-3 rounded-full bg-[#FF8300] hover:bg-[#e07400] text-white text-xs font-medium uppercase tracking-wider shadow-lg hover:shadow-[0_0_20px_rgba(255,131,0,0.4)] flex items-center gap-2 transition-all cursor-pointer ${
+                  className={`w-full sm:w-auto px-7 py-3 rounded-full bg-[#FF8300] hover:bg-[#e07400] text-white text-xs font-medium uppercase tracking-wider shadow-lg hover:shadow-[0_0_20px_rgba(255,131,0,0.4)] flex items-center justify-center gap-2 transition-all cursor-pointer shrink-0 ${
                     isSubmitting ? "opacity-70 cursor-not-allowed" : ""
                   }`}
                 >
@@ -995,113 +1075,102 @@ export function VisitaTecnicaModal() {
 
           {/* STEP 3: SUCCESS CONFIRMATION */}
           {step === 3 && (
-            <div className="text-center py-6 space-y-6">
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ type: "spring", stiffness: 200, damping: 15 }}
-                className="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center mx-auto"
-              >
-                <CheckCircle2 className="w-10 h-10" />
-              </motion.div>
+            <div className="space-y-4 sm:space-y-5 max-w-3xl mx-auto">
+              {/* Header Row: Title, Subtitle & Folio Badge */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-white/10">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-2xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center shrink-0">
+                    <CheckCircle2 className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl sm:text-2xl font-light text-white tracking-tight font-sans">
+                      ¡Visita Técnica Solicitada!
+                    </h3>
+                    <p className="text-xs text-white/60 font-light mt-0.5">
+                      Registrada para el <strong className="text-white">{formData.fechaSeleccionada}</strong> ({formData.bloqueHorario === "manana" ? "Mañana 09:30 - 12:30" : "Tarde 14:30 - 18:00"}) en <strong className="text-white">{formData.comuna}</strong>.
+                    </p>
+                  </div>
+                </div>
 
-              <div>
-                <span className="text-xs font-mono font-bold text-[#FF8300] bg-[#FF8300]/15 border border-[#FF8300]/30 px-3 py-1 rounded-full uppercase tracking-wider">
-                  Folio de Reserva: {folio}
-                </span>
-                <h3 className="text-2xl font-light text-white mt-3 mb-2">
-                  ¡Visita Técnica Solicitada!
-                </h3>
-                <p className="text-xs md:text-sm text-white/70 max-w-md mx-auto font-light leading-relaxed">
-                  Hemos registrado tu solicitud para el día{" "}
-                  <strong className="text-white">{formData.fechaSeleccionada}</strong> en la jornada de la{" "}
-                  <strong className="text-white">
-                    {formData.bloqueHorario === "manana" ? "Mañana" : "Tarde"}
-                  </strong>{" "}
-                  en <strong className="text-white">{formData.comuna}</strong> ({formData.region}).
-                </p>
+                <div className="p-2 sm:p-2.5 rounded-xl bg-white/[0.04] border border-white/10 flex sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-0.5 shrink-0">
+                  <span className="text-[10px] font-mono text-white/40 uppercase">Folio de Reserva</span>
+                  <span className="text-sm font-mono font-bold text-[#FF8300]">{folio}</span>
+                </div>
               </div>
 
-              {/* Summary Card */}
-              <div className="bg-[#1F1F1F] rounded-2xl p-5 border border-white/10 text-left text-xs space-y-2.5 max-w-md mx-auto">
-                <div className="flex justify-between py-1 border-b border-white/10">
-                  <span className="text-white/50">Modalidad:</span>
-                  <span className="font-medium text-white">Visita Técnica</span>
-                </div>
-                <div className="flex justify-between py-1 border-b border-white/10">
-                  <span className="text-white/50">Costo:</span>
-                  <div className="text-right">
-                    <span className="font-bold text-[#FF8300] font-mono block">
-                      $14.990 CLP
+              {/* 2-Column Info Grid: Uses available Drawer space without enclosed boxes */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                {/* Col 1: Detalle de la Cita */}
+                <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 space-y-2 text-xs">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-white/50 block pb-1 border-b border-white/10">
+                    Detalle de Coordinación
+                  </span>
+                  <div className="flex justify-between py-1 border-b border-white/5">
+                    <span className="text-white/50">Titular:</span>
+                    <span className="font-medium text-white">{formData.nombre}</span>
+                  </div>
+                  <div className="flex justify-between py-1 border-b border-white/5">
+                    <span className="text-white/50">Teléfono:</span>
+                    <span className="font-medium text-white">{formData.telefono}</span>
+                  </div>
+                  <div className="flex justify-between py-1 border-b border-white/5">
+                    <span className="text-white/50">Ubicación:</span>
+                    <span className="font-medium text-white text-right max-w-[200px] truncate" title={formData.direccion}>
+                      {formData.direccion || "Punto en mapa"}, {formData.comuna}
                     </span>
-                    <span className="text-[10px] text-emerald-400 font-mono">
-                      100% Reembolsable al adquirir el proyecto
+                  </div>
+                  <div className="flex justify-between py-1">
+                    <span className="text-white/50">Costo:</span>
+                    <div className="text-right">
+                      <span className="font-bold text-[#FF8300] font-mono">
+                        $11.990 CLP
+                      </span>
+                      <span className="text-[10px] text-emerald-400 font-mono block">
+                        100% Reembolsable
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Col 2: Garantía & Notificación por Correo */}
+                <div className="space-y-2.5 flex flex-col justify-between">
+                  <div className="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-300 font-light flex items-start gap-2.5">
+                    <ShieldCheck className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
+                    <span className="leading-relaxed">
+                      <strong className="text-white font-medium">100% Reembolsable:</strong> Los $11.990 CLP se descontarán íntegramente de tu presupuesto final al contratar tu proyecto solar.
+                    </span>
+                  </div>
+
+                  <div className="p-3.5 rounded-2xl bg-[#FF8300]/10 border border-[#FF8300]/25 text-xs text-white/90 font-light flex items-start gap-2.5">
+                    <Mail className="w-4 h-4 text-[#FF8300] flex-shrink-0 mt-0.5" />
+                    <span className="leading-relaxed">
+                      Enviamos confirmación con archivo de calendario (.ics) a <strong className="text-[#FF8300] font-medium">{formData.email}</strong>.
                     </span>
                   </div>
                 </div>
-                <div className="flex justify-between py-1 border-b border-white/10">
-                  <span className="text-white/50">Cliente:</span>
-                  <span className="font-medium text-white">{formData.nombre}</span>
-                </div>
-                <div className="flex justify-between py-1 border-b border-white/10">
-                  <span className="text-white/50">Ubicación:</span>
-                  <div className="text-right font-medium text-white max-w-[240px]">
-                    <div>
-                      {formData.direccion ? formData.direccion : "Punto marcado en mapa"}
-                    </div>
-                    <div className="text-[11px] text-white/60">
-                      {formData.comuna}, {formData.region}
-                    </div>
-                    {formData.coordenadasTexto && (
-                      <div className="text-[10px] text-emerald-400 font-mono mt-0.5">
-                        GPS: {formData.coordenadasTexto}
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <div className="flex justify-between py-1">
-                  <span className="text-white/50">Teléfono:</span>
-                  <span className="font-medium text-white">{formData.telefono}</span>
-                </div>
               </div>
 
-              {/* Reimbursement Notice */}
-              <div className="max-w-md mx-auto p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-300 font-light flex items-start gap-2.5 text-left">
-                <ShieldCheck className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
-                <span className="leading-relaxed">
-                  <strong className="text-white font-medium">100% Reembolsable:</strong> Los $14.990 CLP serán descontados íntegramente de tu presupuesto final al contratar tu proyecto solar.
-                </span>
-              </div>
-
-              {/* Email Sent Notice */}
-              <div className="max-w-md mx-auto p-3.5 rounded-xl bg-[#FF8300]/10 border border-[#FF8300]/30 text-xs text-white/90 font-light flex items-start gap-2.5 text-left">
-                <Mail className="w-4 h-4 text-[#FF8300] flex-shrink-0 mt-0.5" />
-                <span className="leading-relaxed">
-                  Hemos enviado la confirmación con el archivo para tu calendario (Google, Outlook, Apple) a <strong className="text-[#FF8300] font-medium">{formData.email}</strong>.
-                </span>
-              </div>
-
-              {/* CTA Buttons: WhatsApp + Agregar a mi calendario + Cancelar Visita */}
-              <div className="flex flex-col items-center justify-center gap-3 pt-2 max-w-md mx-auto">
-                <div className="flex flex-col sm:flex-row items-center gap-3 w-full">
+              {/* Bottom Action Bar: WhatsApp, Calendar & Cancel */}
+              <div className="pt-3 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div className="flex flex-col sm:flex-row items-center gap-2.5 w-full sm:w-auto">
                   <a
                     href={getWhatsAppUrl()}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full sm:flex-1 px-5 py-3 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-medium flex items-center justify-center gap-2 shadow-lg transition-all cursor-pointer"
+                    className="w-full sm:w-auto px-5 py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-medium flex items-center justify-center gap-2 shadow-lg transition-all cursor-pointer"
                   >
-                    <Phone className="w-4 h-4" />
+                    <Phone className="w-3.5 h-3.5" />
                     <span>Comprobante WhatsApp</span>
                   </a>
 
                   {/* Dropdown Agregar a mi calendario */}
-                  <div className="relative w-full sm:flex-1" ref={calendarMenuRef}>
+                  <div className="relative w-full sm:w-auto" ref={calendarMenuRef}>
                     <button
                       type="button"
                       onClick={() => setShowCalendarMenu((prev) => !prev)}
-                      className="w-full px-5 py-3 rounded-full bg-[#FF8300] hover:bg-[#e07400] text-white text-xs font-medium flex items-center justify-center gap-2 shadow-lg transition-all cursor-pointer"
+                      className="w-full sm:w-auto px-5 py-2.5 rounded-full bg-[#FF8300] hover:bg-[#e07400] text-white text-xs font-medium flex items-center justify-center gap-2 shadow-lg transition-all cursor-pointer"
                     >
-                      <CalendarCheck className="w-4 h-4" />
+                      <CalendarCheck className="w-3.5 h-3.5" />
                       <span>Agregar a mi calendario</span>
                       <ChevronDown
                         className={`w-3.5 h-3.5 transition-transform ${
@@ -1160,7 +1229,7 @@ export function VisitaTecnicaModal() {
                 <button
                   type="button"
                   onClick={() => setShowCancelVisitModal(true)}
-                  className="w-full sm:w-auto px-6 py-2 rounded-full border border-rose-500/30 hover:border-rose-500/60 bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 text-xs font-light flex items-center justify-center gap-1.5 transition-colors cursor-pointer mt-1"
+                  className="w-full sm:w-auto px-4 py-2 rounded-full border border-rose-500/30 hover:border-rose-500/60 bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 text-xs font-light flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                   <span>Cancelar Visita</span>
@@ -1260,8 +1329,10 @@ export function VisitaTecnicaModal() {
           </div>
         )}
       </AnimatePresence>
-
-
     </div>
-  );
+  )}
+</AnimatePresence>,
+document.body
+);
 }
+

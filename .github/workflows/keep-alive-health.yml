@@ -1,0 +1,67 @@
+name: "SoldeRío Infra Keep-Alive & Health Monitor"
+
+on:
+  schedule:
+    # Se ejecuta cada 3 días a las 13:00 UTC (10:00 AM hora de Chile)
+    # Esto garantiza que Supabase NUNCA alcance los 7 días de inactividad
+    - cron: '0 13 */3 * *'
+
+  # Permite ejecutarlo manualmente desde GitHub > Actions > Run workflow
+  workflow_dispatch:
+    inputs:
+      send_email:
+        description: '¿Enviar reporte por correo a dev@solderio.cl?'
+        required: true
+        type: boolean
+        default: true
+
+jobs:
+  health-check:
+    name: "Verificar Servicios y Mantener Supabase Activo"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Determinar si corresponde envío de correo"
+        id: check_email
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "SEND_EMAIL=${{ github.event.inputs.send_email }}" >> $GITHUB_OUTPUT
+          else
+            # En ejecuciones automáticas programadas:
+            # Enviamos el reporte por correo cada 6 o 7 días (ej. los días domingos o si día del mes es divisible por 6)
+            DAY_OF_WEEK=$(date +%u)
+            DAY_OF_MONTH=$(date +%-d)
+            if [ "$DAY_OF_WEEK" -eq 7 ] || [ $((DAY_OF_MONTH % 6)) -eq 0 ]; then
+              echo "SEND_EMAIL=true" >> $GITHUB_OUTPUT
+            else
+              echo "SEND_EMAIL=false" >> $GITHUB_OUTPUT
+            fi
+          fi
+
+      - name: "Ejecutar Health Check & Keep-Alive contra SoldeRío API"
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET || 'sol_sec_2026_prod_key' }}
+          SEND_EMAIL: ${{ steps.check_email.outputs.SEND_EMAIL }}
+        run: |
+          echo "Disparando ping de salud e inactivación de pausa..."
+          echo "Enviar correo: $SEND_EMAIL"
+
+          URL="https://www.solderio.cl/api/cron/health-check?sendEmail=${SEND_EMAIL}"
+
+          RESPONSE=$(curl -s -w "\n%{http_code}" -X GET "$URL" \
+            -H "Authorization: Bearer ${CRON_SECRET}" \
+            -H "User-Agent: GitHub-Actions-SoldeRio-KeepAlive")
+
+          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+
+          echo "Código HTTP recibido: $HTTP_CODE"
+          echo "Respuesta:"
+          echo "$BODY"
+
+          if [ "$HTTP_CODE" -ne 200 ]; then
+            echo "::error::El health check falló con código HTTP $HTTP_CODE"
+            exit 1
+          fi
+
+          echo "✅ Keep-alive completado exitosamente. Supabase se mantendrá activo."

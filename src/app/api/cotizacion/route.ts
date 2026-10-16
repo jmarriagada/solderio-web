@@ -239,15 +239,18 @@ export async function POST(request: Request) {
       : `https://solderio.cl/propuesta/${leadId}`;
 
     // 4. Notificaciones internas inmediatas al equipo de SoldeRío (Telegram Bot + Correo Interno)
+    let internalNotification: any = null;
     try {
-      await notifyInternalQuoteLead({
+      internalNotification = await notifyInternalQuoteLead({
         leadId,
         formData: newLead.formData,
         sizingResult,
         portalUrl,
       });
+      console.log("[Notificación Interna Cotización]:", internalNotification);
     } catch (notifErr) {
       console.warn("[Notificación Interna Cotización Falló]:", notifErr);
+      internalNotification = { success: false, error: String(notifErr) };
     }
 
     // 5. Dispatch official transactional email from @solderio.cl al cliente
@@ -274,6 +277,7 @@ export async function POST(request: Request) {
       leadId,
       sizingResult,
       emailDelivery,
+      internalNotification,
       message: "Cotización procesada exitosamente y sincronizada.",
     });
   } catch (error: any) {

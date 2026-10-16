@@ -2,7 +2,7 @@ import { Resend } from "resend";
 import { QuoteFormData, SolarSizingResult } from "@/types/cotizacion";
 
 const DEFAULT_INTERNAL_EMAIL = "contacto@solderio.cl";
-const DEFAULT_INTERNAL_SENDER = "SoldeRio Notificaciones <notificaciones@solderio.cl>";
+const DEFAULT_INTERNAL_SENDER = "SoldeRio Notificaciones <contacto@solderio.cl>";
 
 function cleanPhoneNumber(phone: string): string {
   let cleaned = (phone || "").replace(/[^0-9]/g, "");
@@ -43,6 +43,13 @@ export async function sendTelegramMessage(htmlMessage: string): Promise<{ succes
     return { success: false, error: "Credenciales de Telegram no configuradas." };
   }
 
+  // Telegram API tiene un límite estricto de 4.096 caracteres por mensaje
+  let textToSend = htmlMessage;
+  if (textToSend.length > 4000) {
+    console.warn(`[Telegram Notifier] Mensaje excede 4000 caracteres (${textToSend.length}). Truncando para evitar HTTP 400.`);
+    textToSend = textToSend.slice(0, 3950) + "\n... [truncado por límite de Telegram]";
+  }
+
   try {
     const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
     const res = await fetch(url, {
@@ -50,7 +57,7 @@ export async function sendTelegramMessage(htmlMessage: string): Promise<{ succes
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         chat_id: chatId,
-        text: htmlMessage,
+        text: textToSend,
         parse_mode: "HTML",
         disable_web_page_preview: false,
       }),
@@ -82,6 +89,9 @@ export async function notifyInternalQuoteLead(params: {
 }): Promise<{ telegram: any; email: any }> {
   const { leadId, formData, sizingResult, portalUrl } = params;
   const cleanPhone = cleanPhoneNumber(formData.whatsapp);
+  const phoneDisplay = cleanPhone
+    ? `<a href="https://wa.me/${cleanPhone}">+${cleanPhone}</a>`
+    : escapeHtml(formData.whatsapp || "No informado");
 
   const safeName = escapeHtml(formData.fullName);
   const safeComuna = escapeHtml(formData.comuna);
@@ -90,11 +100,15 @@ export async function notifyInternalQuoteLead(params: {
   const safePropertyType = escapeHtml(formData.propertyType || "Residencial");
   const safeSystemType = escapeHtml(formData.systemType || "Híbrido");
 
+  // En Telegram se usa la URL limpia directa al portal (/propuesta/FOLIO)
+  // ya que la propuesta se guarda en base de datos PostgreSQL y evita exceder el límite de 4096 caracteres
+  const cleanPortalUrl = `https://solderio.cl/propuesta/${leadId}`;
+
   // 1. TELEGRAM
   const telegramHtml = `⚡ <b>NUEVO LEAD DE COTIZACIÓN SOLAR</b>
 ━━━━━━━━━━━━━━━━━━━━━
 👤 <b>Cliente:</b> ${safeName}
-📱 <b>WhatsApp:</b> <a href="https://wa.me/${cleanPhone}">+${cleanPhone}</a>
+📱 <b>WhatsApp:</b> ${phoneDisplay}
 ✉️ <b>Email:</b> <a href="mailto:${formData.email}">${formData.email}</a>
 📍 <b>Ubicación:</b> ${safeComuna}, ${safeRegion}
 ⚡ <b>Distribuidora:</b> ${safeDistributor}
@@ -106,7 +120,7 @@ export async function notifyInternalQuoteLead(params: {
 📈 <b>Ahorro Proyectado:</b> ${formatCLP(sizingResult.estimatedAnnualSavingsClp)}/año
 💡 <b>Gasto Mensual Actual:</b> ${formatCLP(formData.monthlyBillClp)}/mes
 
-🔗 <a href="${escapeHtml(portalUrl)}"><b>VER PROPUESTA DEL CLIENTE</b></a>
+🔗 <a href="${cleanPortalUrl}"><b>VER PROPUESTA DEL CLIENTE</b></a>
 🏷️ <b>Folio:</b> <code>${leadId}</code>`;
 
   const telegramRes = await sendTelegramMessage(telegramHtml).catch((e) => ({
@@ -208,7 +222,7 @@ export async function notifyInternalQuoteLead(params: {
       </table>
 
       <div style="text-align: center; margin-top: 24px;">
-        <a href="${portalUrl}" style="display: inline-block; background-color: #ff8300; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 9999px; font-weight: 700; font-size: 14px;">
+        <a href="${cleanPortalUrl}" style="display: inline-block; background-color: #ff8300; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 9999px; font-weight: 700; font-size: 14px;">
           Ver Propuesta del Cliente en Vivo &rarr;
         </a>
       </div>
@@ -217,8 +231,9 @@ export async function notifyInternalQuoteLead(params: {
 </body>
 </html>`;
 
+      const internalSender = process.env.SENDER_EMAIL?.trim() || DEFAULT_INTERNAL_SENDER;
       const { data, error } = await resend.emails.send({
-        from: DEFAULT_INTERNAL_SENDER,
+        from: internalSender,
         to: internalRecipient.split(",").map((e) => e.trim()),
         replyTo: formData.email,
         subject: emailSubject,
@@ -422,8 +437,9 @@ export async function notifyInternalVisitaLead(params: {
 </body>
 </html>`;
 
+      const internalSender = process.env.SENDER_EMAIL?.trim() || DEFAULT_INTERNAL_SENDER;
       const { data, error } = await resend.emails.send({
-        from: DEFAULT_INTERNAL_SENDER,
+        from: internalSender,
         to: internalRecipient.split(",").map((e) => e.trim()),
         replyTo: email,
         subject: emailSubject,
@@ -573,8 +589,9 @@ ${safeMensaje}`;
 </body>
 </html>`;
 
+      const internalSender = process.env.SENDER_EMAIL?.trim() || DEFAULT_INTERNAL_SENDER;
       const { data, error } = await resend.emails.send({
-        from: DEFAULT_INTERNAL_SENDER,
+        from: internalSender,
         to: internalRecipient.split(",").map((e) => e.trim()),
         replyTo: email,
         subject: emailSubject,

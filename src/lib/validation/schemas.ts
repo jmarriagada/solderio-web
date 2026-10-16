@@ -55,7 +55,7 @@ export const quoteFormSchema = z.object({
     .optional(),
 
   distributor: z
-    .enum(["saesa", "crell", "cge", "frontel", "edelaysen", "otra"])
+    .enum(["saesa", "crell", "cge", "frontel", "edelaysen", "aislada", "otra"])
     .catch("saesa"),
 
   hasPhases: z

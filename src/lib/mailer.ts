@@ -4,6 +4,7 @@ import { render } from "@react-email/render";
 import { QuoteSummaryEmail } from "@/emails/QuoteSummaryEmail";
 import { VisitaTecnicaConfirmationEmail } from "@/emails/VisitaTecnicaConfirmationEmail";
 import { PostulacionConfirmationEmail } from "@/emails/PostulacionConfirmationEmail";
+import { BessAuditConfirmationEmail } from "@/emails/BessAuditConfirmationEmail";
 import { SolarSizingResult } from "@/types/cotizacion";
 import { validateAndNormalizeEmail } from "./email-validator";
 import {
@@ -364,3 +365,94 @@ export async function sendJobApplicationConfirmationEmail(
 }
 
 
+
+
+export interface SendBessAuditConfirmationParams {
+  to: string;
+  contacto: string;
+  empresa: string;
+  cargo: string;
+  comuna: string;
+  tarifa?: string;
+  potenciaKva?: string;
+}
+
+/**
+ * Envía correo oficial de confirmación de solicitud de auditoría BESS C&I al cliente corporativo.
+ */
+export async function sendBessAuditConfirmationEmail(
+  params: SendBessAuditConfirmationParams
+): Promise<SendEmailResult> {
+  const { to, contacto, empresa, cargo, comuna, tarifa, potenciaKva } = params;
+
+  // 1. Email format validation
+  const validation = validateAndNormalizeEmail(to);
+  if (!validation.isValid) {
+    console.warn(`[Mailer BESS] Envío cancelado: correo inválido "${to}". Motivo: ${validation.error}`);
+    return {
+      success: false,
+      error: validation.error || "Correo corporativo inválido.",
+    };
+  }
+
+  const validRecipient = validation.normalizedEmail;
+  const apiKey = process.env.RESEND_API_KEY?.trim();
+  const sender = process.env.SENDER_EMAIL?.trim() || DEFAULT_SENDER;
+
+  if (!apiKey) {
+    console.warn(`[Mailer BESS: Modo Simulación] RESEND_API_KEY no detectada.`);
+    return {
+      success: false,
+      simulated: true,
+      error: "RESEND_API_KEY no configurada.",
+    };
+  }
+
+  const resend = new Resend(apiKey);
+  const subject = `Confirmación de Solicitud: Auditoría de Redes BESS C&I para ${empresa} | SoldeRío Energía`;
+
+  try {
+    const emailHtml = await render(
+      React.createElement(BessAuditConfirmationEmail, {
+        contacto,
+        empresa,
+        cargo,
+        comuna,
+        tarifa: tarifa || "BT4.3 (Baja Tensión con Punta)",
+        potenciaKva: potenciaKva || "A relevar en terreno",
+      })
+    );
+
+    const { data, error } = await resend.emails.send({
+      from: sender,
+      to: [validRecipient],
+      replyTo: REPLY_TO,
+      subject,
+      html: emailHtml,
+      headers: {
+        "List-Unsubscribe": `<mailto:${REPLY_TO}?subject=Unsubscribe%20BESS%20Audit>`,
+        "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+      },
+    });
+
+    if (error) {
+      console.error(`[Mailer BESS Error] Fallo en Resend API para ${validRecipient}:`, error);
+      return {
+        success: false,
+        error: error.message,
+      };
+    }
+
+    console.log(`[Mailer BESS Éxito] Correo de confirmación enviado a ${validRecipient}. Resend ID: ${data?.id}`);
+    return {
+      success: true,
+      messageId: data?.id,
+    };
+  } catch (err: any) {
+    console.error(`[Mailer BESS Excepción] Error al enviar a ${validRecipient}:`, err);
+    return {
+      success: false,
+      error: err?.message || String(err),
+    };
+  }
+}

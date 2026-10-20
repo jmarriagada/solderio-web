@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
-import { ShieldCheck, Send, CheckCircle2, MessageSquare, Activity, Clock, FileSpreadsheet } from "lucide-react";
-import { CtaButton } from "@/components/ui/cta-button";
+import { Send, CheckCircle2, MessageSquare, Activity, Clock, FileSpreadsheet, AlertCircle, Loader2 } from "lucide-react";
+import { TurnstileWidget } from "@/components/security/TurnstileWidget";
 
 export function BessAuditFormCTA() {
   const [formData, setFormData] = useState({
@@ -18,18 +19,78 @@ export function BessAuditFormCTA() {
     comentarios: "",
   });
 
+  const [acceptTerms, setAcceptTerms] = useState(true);
+  const [honeypot, setHoneypot] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleTurnstileSuccess = useCallback((token: string) => {
+    setTurnstileToken(token);
+  }, []);
+
+  const handleTurnstileExpire = useCallback(() => {
+    setTurnstileToken("");
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitError(null);
+
+    if (!acceptTerms) {
+      setSubmitError("Debes aceptar las políticas de privacidad para solicitar la auditoría.");
+      return;
+    }
+
     setLoading(true);
 
-    // Simulate quick submission
-    setTimeout(() => {
+    try {
+      const res = await fetch("/api/empresas/bess-industrial", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...formData,
+          acceptTerms,
+          turnstileToken,
+          website_url: honeypot,
+        }),
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setSubmitted(true);
+      } else {
+        setSubmitError(
+          data.error ||
+            "Ocurrió un error al procesar tu solicitud de auditoría. Por favor verifica tus datos e intenta nuevamente."
+        );
+      }
+    } catch (err) {
+      setSubmitError(
+        "Ocurrió un error de conexión al enviar la solicitud. Por favor intenta nuevamente."
+      );
+    } finally {
       setLoading(false);
-      setSubmitted(true);
-    }, 800);
+    }
+  };
+
+  const handleReset = () => {
+    setSubmitted(false);
+    setSubmitError(null);
+    setHoneypot("");
+    setTurnstileToken("");
+    setFormData({
+      empresa: "",
+      contacto: "",
+      cargo: "",
+      telefono: "",
+      email: "",
+      comuna: "",
+      tarifa: "BT4.3",
+      potenciaKva: "",
+      comentarios: "",
+    });
   };
 
   return (
@@ -123,11 +184,15 @@ export function BessAuditFormCTA() {
                   <CheckCircle2 className="w-8 h-8" />
                 </div>
                 <h3 className="text-2xl font-light text-white mb-2">Solicitud de Auditoría Ingresada</h3>
-                <p className="text-sm text-white/70 font-light max-w-md mx-auto mb-6">
-                  Un ingeniero eléctrico de SoldeRío revisará los datos de tu faena y te contactará en menos de 24 horas para coordinar la visita técnica in-situ.
+                <p className="text-sm text-white/70 font-light max-w-md mx-auto mb-4">
+                  Un ingeniero eléctrico de SoldeRío revisará los datos de tu faena y te contactará en menos de 24 horas hábiles para coordinar la visita técnica in-situ.
+                </p>
+                <p className="text-xs text-emerald-400 font-mono mb-6">
+                  ✉️ Hemos enviado un correo de confirmación con los detalles a tu casilla corporativa.
                 </p>
                 <button
-                  onClick={() => setSubmitted(false)}
+                  type="button"
+                  onClick={handleReset}
                   className="px-6 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-xs font-mono text-white transition-colors cursor-pointer"
                 >
                   Enviar otra solicitud
@@ -135,6 +200,20 @@ export function BessAuditFormCTA() {
               </motion.div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
+                {/* Honeypot anti-spam invisible para usuarios reales */}
+                <div className="hidden" aria-hidden="true">
+                  <label htmlFor="bess_website_url">No llenar este campo</label>
+                  <input
+                    type="text"
+                    id="bess_website_url"
+                    name="website_url"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={honeypot}
+                    onChange={(e) => setHoneypot(e.target.value)}
+                  />
+                </div>
+
                 <div className="mb-4">
                   <h3 className="text-lg md:text-xl font-medium text-white mb-1">
                     Formulario de Calificación para Faenas C&amp;I
@@ -146,12 +225,14 @@ export function BessAuditFormCTA() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-[11px] font-mono uppercase text-white/60 block mb-1">
+                    <label htmlFor="bess_empresa" className="text-[11px] font-mono uppercase text-white/60 block mb-1">
                       Razón Social / Empresa *
                     </label>
                     <input
+                      id="bess_empresa"
                       type="text"
                       required
+                      aria-required="true"
                       value={formData.empresa}
                       onChange={(e) => setFormData({ ...formData, empresa: e.target.value })}
                       placeholder="Ej. Agrícola y Lechera Los Alerces"
@@ -160,12 +241,14 @@ export function BessAuditFormCTA() {
                   </div>
 
                   <div>
-                    <label className="text-[11px] font-mono uppercase text-white/60 block mb-1">
+                    <label htmlFor="bess_comuna" className="text-[11px] font-mono uppercase text-white/60 block mb-1">
                       Comuna / Ubicación Faena *
                     </label>
                     <input
+                      id="bess_comuna"
                       type="text"
                       required
+                      aria-required="true"
                       value={formData.comuna}
                       onChange={(e) => setFormData({ ...formData, comuna: e.target.value })}
                       placeholder="Ej. Osorno / Frutillar / Puerto Montt"
@@ -176,12 +259,14 @@ export function BessAuditFormCTA() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-[11px] font-mono uppercase text-white/60 block mb-1">
+                    <label htmlFor="bess_contacto" className="text-[11px] font-mono uppercase text-white/60 block mb-1">
                       Nombre y Apellido *
                     </label>
                     <input
+                      id="bess_contacto"
                       type="text"
                       required
+                      aria-required="true"
                       value={formData.contacto}
                       onChange={(e) => setFormData({ ...formData, contacto: e.target.value })}
                       placeholder="Ej. Carlos Valenzuela"
@@ -190,12 +275,14 @@ export function BessAuditFormCTA() {
                   </div>
 
                   <div>
-                    <label className="text-[11px] font-mono uppercase text-white/60 block mb-1">
+                    <label htmlFor="bess_cargo" className="text-[11px] font-mono uppercase text-white/60 block mb-1">
                       Cargo en la Empresa *
                     </label>
                     <input
+                      id="bess_cargo"
                       type="text"
                       required
+                      aria-required="true"
                       value={formData.cargo}
                       onChange={(e) => setFormData({ ...formData, cargo: e.target.value })}
                       placeholder="Ej. Gerente de Operaciones / Jefe de Planta"
@@ -206,12 +293,14 @@ export function BessAuditFormCTA() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-[11px] font-mono uppercase text-white/60 block mb-1">
+                    <label htmlFor="bess_telefono" className="text-[11px] font-mono uppercase text-white/60 block mb-1">
                       Teléfono / WhatsApp *
                     </label>
                     <input
+                      id="bess_telefono"
                       type="tel"
                       required
+                      aria-required="true"
                       value={formData.telefono}
                       onChange={(e) => setFormData({ ...formData, telefono: e.target.value })}
                       placeholder="+56 9 1234 5678"
@@ -220,12 +309,14 @@ export function BessAuditFormCTA() {
                   </div>
 
                   <div>
-                    <label className="text-[11px] font-mono uppercase text-white/60 block mb-1">
+                    <label htmlFor="bess_email" className="text-[11px] font-mono uppercase text-white/60 block mb-1">
                       Email Corporativo *
                     </label>
                     <input
+                      id="bess_email"
                       type="email"
                       required
+                      aria-required="true"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       placeholder="cvalenzuela@empresa.cl"
@@ -236,13 +327,14 @@ export function BessAuditFormCTA() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-[11px] font-mono uppercase text-white/60 block mb-1">
+                    <label htmlFor="bess_tarifa" className="text-[11px] font-mono uppercase text-white/60 block mb-1">
                       Tarifa Eléctrica Actual
                     </label>
                     <select
+                      id="bess_tarifa"
                       value={formData.tarifa}
                       onChange={(e) => setFormData({ ...formData, tarifa: e.target.value })}
-                      className="w-full bg-[#242424] border border-white/15 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-[#FF8300] transition-colors"
+                      className="w-full bg-[#242424] border border-white/15 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-[#FF8300] transition-colors cursor-pointer"
                     >
                       <option value="BT4.3">BT4.3 (Baja Tensión con Punta)</option>
                       <option value="AT4.3">AT4.3 (Alta Tensión con Punta)</option>
@@ -253,10 +345,11 @@ export function BessAuditFormCTA() {
                   </div>
 
                   <div>
-                    <label className="text-[11px] font-mono uppercase text-white/60 block mb-1">
+                    <label htmlFor="bess_potencia" className="text-[11px] font-mono uppercase text-white/60 block mb-1">
                       Capacidad Transformador / Generador (kVA)
                     </label>
                     <input
+                      id="bess_potencia"
                       type="text"
                       value={formData.potenciaKva}
                       onChange={(e) => setFormData({ ...formData, potenciaKva: e.target.value })}
@@ -267,10 +360,11 @@ export function BessAuditFormCTA() {
                 </div>
 
                 <div>
-                  <label className="text-[11px] font-mono uppercase text-white/60 block mb-1">
+                  <label htmlFor="bess_comentarios" className="text-[11px] font-mono uppercase text-white/60 block mb-1">
                     Descripción Breve de Cargas Críticas / Objetivos
                   </label>
                   <textarea
+                    id="bess_comentarios"
                     rows={3}
                     value={formData.comentarios}
                     onChange={(e) => setFormData({ ...formData, comentarios: e.target.value })}
@@ -279,14 +373,60 @@ export function BessAuditFormCTA() {
                   />
                 </div>
 
+                {/* Consent Checkbox Conforme Ley N° 19.628 */}
+                <div className="flex items-start gap-3 pt-1">
+                  <input
+                    type="checkbox"
+                    id="bess_terms"
+                    required
+                    aria-required="true"
+                    checked={acceptTerms}
+                    onChange={(e) => setAcceptTerms(e.target.checked)}
+                    className="mt-1 h-4 w-4 rounded border-white/20 bg-black/40 text-[#FF8300] focus:ring-[#FF8300] focus:ring-offset-0 cursor-pointer"
+                  />
+                  <label htmlFor="bess_terms" className="text-xs text-white/70 font-light leading-relaxed cursor-pointer">
+                    He leído y acepto las{" "}
+                    <Link
+                      href="/politicas-de-privacidad"
+                      className="text-[#FF8300] underline hover:text-[#e07400] transition-colors"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      políticas de privacidad
+                    </Link>{" "}
+                    y autorizo el tratamiento de los datos corporativos para la evaluación técnica y coordinación de la auditoría conforme a la Ley N° 19.628. *
+                  </label>
+                </div>
+
+                {/* Cloudflare Turnstile Anti-Bot Shield */}
+                <TurnstileWidget
+                  theme="dark"
+                  onSuccess={handleTurnstileSuccess}
+                  onExpire={handleTurnstileExpire}
+                  className="my-2"
+                />
+
+                {submitError && (
+                  <div
+                    role="alert"
+                    className="p-3.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs flex items-start gap-2.5"
+                  >
+                    <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                    <p className="leading-relaxed">{submitError}</p>
+                  </div>
+                )}
+
                 <div className="pt-2">
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full bg-[#FF8300] hover:bg-[#e07300] text-white font-medium text-xs md:text-sm py-3.5 rounded-full transition-all shadow-xl hover:shadow-[0_0_30px_rgba(255,131,0,0.5)] cursor-pointer flex items-center justify-center gap-2"
+                    className="w-full bg-[#FF8300] hover:bg-[#e07300] text-white font-medium text-xs md:text-sm py-3.5 rounded-full transition-all shadow-xl hover:shadow-[0_0_30px_rgba(255,131,0,0.5)] cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {loading ? (
-                      <span>Procesando solicitud...</span>
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <span>Procesando Solicitud...</span>
+                      </>
                     ) : (
                       <>
                         <span>Solicitar Instalación de Analizador de Redes</span>

@@ -344,3 +344,74 @@ export const trabajaFormSchema = z.object({
   website_url: z.string().optional(),
 });
 
+
+
+/**
+ * Esquema de validación y sanitización para Auditoría BESS Industrial (/api/empresas/bess-industrial)
+ */
+export const bessAuditFormSchema = z.object({
+  empresa: z
+    .string()
+    .min(2, "Razón Social o Empresa es requerida (mínimo 2 caracteres)")
+    .max(120, "Nombre de empresa no puede exceder 120 caracteres")
+    .transform((val) => sanitizeString(val, 120)),
+
+  contacto: z
+    .string()
+    .min(2, "Nombre de contacto es requerido (mínimo 2 caracteres)")
+    .max(100, "Nombre de contacto no puede exceder 100 caracteres")
+    .transform((val) => sanitizeString(val, 100)),
+
+  cargo: z
+    .string()
+    .min(2, "Cargo en la empresa es requerido (mínimo 2 caracteres)")
+    .max(100, "Cargo no puede exceder 100 caracteres")
+    .transform((val) => sanitizeString(val, 100)),
+
+  telefono: z
+    .string()
+    .min(8, "Número de teléfono debe tener al menos 8 dígitos")
+    .max(25, "Número de teléfono no puede exceder 25 caracteres")
+    .transform((val) => sanitizeString(val, 25)),
+
+  email: z
+    .string()
+    .email("Correo corporativo inválido")
+    .max(120, "Correo no puede exceder 120 caracteres")
+    .transform((val) => val.trim().toLowerCase()),
+
+  comuna: z
+    .string()
+    .min(2, "Comuna o ubicación de la faena es requerida")
+    .max(100, "Comuna no puede exceder 100 caracteres")
+    .transform((val) => sanitizeString(val, 100)),
+
+  tarifa: z
+    .string()
+    .max(50, "Tarifa no puede exceder 50 caracteres")
+    .default("BT4.3")
+    .transform((val) => sanitizeString(val, 50)),
+
+  potenciaKva: z
+    .string()
+    .max(100, "Capacidad de transformador no puede exceder 100 caracteres")
+    .optional()
+    .transform((val) => (val ? sanitizeString(val, 100) : "")),
+
+  comentarios: z
+    .string()
+    .max(1500, "La descripción no puede exceder 1500 caracteres")
+    .optional()
+    .transform((val) => (val ? sanitizeMultilineText(val, 1500) : "")),
+
+  acceptTerms: z
+    .boolean()
+    .optional()
+    .default(true),
+
+  // Token de seguridad Cloudflare Turnstile
+  turnstileToken: z.string().optional(),
+
+  // Campo Honeypot invisible para bots (debe venir vacío)
+  website_url: z.string().optional(),
+});

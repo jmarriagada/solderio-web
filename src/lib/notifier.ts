@@ -635,3 +635,157 @@ ${safeMensaje}`;
 
   return { telegram: telegramRes, email: emailRes };
 }
+
+
+/**
+ * Notificación interna para una NUEVA SOLICITUD DE AUDITORÍA BESS C&I
+ * (Telegram + Correo interno al equipo de ingeniería)
+ */
+export async function notifyInternalBessAudit(params: {
+  empresa: string;
+  contacto: string;
+  cargo: string;
+  telefono: string;
+  email: string;
+  comuna: string;
+  tarifa: string;
+  potenciaKva?: string;
+  comentarios?: string;
+}): Promise<{ telegram: any; email: any }> {
+  const { empresa, contacto, cargo, telefono, email, comuna, tarifa, potenciaKva, comentarios } = params;
+  const cleanPhone = cleanPhoneNumber(telefono);
+
+  const safeEmpresa = escapeHtml(empresa);
+  const safeContacto = escapeHtml(contacto);
+  const safeCargo = escapeHtml(cargo);
+  const safeComuna = escapeHtml(comuna || "Sur de Chile");
+  const safeTarifa = escapeHtml(tarifa || "BT4.3");
+  const safePotencia = escapeHtml(potenciaKva || "No especificada / A relevar");
+  const safeComentarios = escapeHtml(comentarios || "Sin comentarios adicionales");
+
+  // 1. TELEGRAM
+  const telegramHtml = `🔋 <b>NUEVA AUDITORÍA BESS C&amp;I</b>
+━━━━━━━━━━━━━━━━━━━━━
+🏢 <b>Empresa:</b> ${safeEmpresa}
+👤 <b>Contacto:</b> ${safeContacto} (${safeCargo})
+📱 <b>WhatsApp:</b> <a href="https://wa.me/${cleanPhone}">+${cleanPhone}</a>
+✉️ <b>Email:</b> <a href="mailto:${email}">${email}</a>
+📍 <b>Ubicación Faena:</b> ${safeComuna}
+⚡ <b>Tarifa Eléctrica:</b> ${safeTarifa}
+🔌 <b>Trafo / Generador:</b> ${safePotencia}
+
+📝 <b>Cargas Críticas / Objetivos:</b>
+${safeComentarios}`;
+
+  const telegramRes = await sendTelegramMessage(telegramHtml).catch((e) => ({
+    success: false,
+    error: e?.message || String(e),
+  }));
+
+  // 2. CORREO INTERNO
+  let emailRes: any = { success: false };
+  const apiKey = process.env.RESEND_API_KEY?.trim();
+  const internalRecipient = process.env.INTERNAL_NOTIFICATION_EMAIL?.trim() || DEFAULT_INTERNAL_EMAIL;
+
+  if (apiKey) {
+    try {
+      const resend = new Resend(apiKey);
+      const emailSubject = `🔋 [AUDITORÍA BESS C&I] ${empresa} - ${tarifa} (${comuna})`;
+
+      const htmlContent = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Nueva Solicitud de Auditoría BESS C&amp;I</title>
+</head>
+<body style="margin: 0; padding: 24px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f4f5f7; color: #1f1f1f;">
+  <div style="max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 12px; border: 1px solid #e5e7eb; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+    <div style="background-color: #141414; padding: 20px 24px; border-bottom: 3px solid #ff8300;">
+      <h2 style="color: #ffffff; margin: 0; font-size: 18px; font-weight: 700; letter-spacing: -0.01em;">
+        🔋 Nueva Solicitud de Auditoría BESS C&amp;I
+      </h2>
+      <p style="color: #ff8300; margin: 4px 0 0 0; font-size: 12px; font-mono;">
+        ${empresa} • ${new Date().toLocaleString("es-CL", { timeZone: "America/Santiago" })}
+      </p>
+    </div>
+
+    <div style="padding: 24px;">
+      <h3 style="margin: 0 0 12px 0; font-size: 14px; text-transform: uppercase; color: #ff8300; letter-spacing: 0.05em;">
+        Datos de la Faena Industrial
+      </h3>
+      <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 14px;">
+        <tr style="border-bottom: 1px solid #f3f4f6;">
+          <td style="padding: 8px 0; color: #6b7280; width: 160px;">Empresa / Razón Social:</td>
+          <td style="padding: 8px 0; font-weight: 700; color: #1f1f1f;">${safeEmpresa}</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #f3f4f6;">
+          <td style="padding: 8px 0; color: #6b7280;">Contacto y Cargo:</td>
+          <td style="padding: 8px 0; font-weight: 600; color: #1f1f1f;">${safeContacto} (${safeCargo})</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #f3f4f6;">
+          <td style="padding: 8px 0; color: #6b7280;">Teléfono / WhatsApp:</td>
+          <td style="padding: 8px 0; font-weight: 600;">
+            <a href="https://wa.me/${cleanPhone}" style="color: #25d366; text-decoration: none;">+${cleanPhone} (Abrir Chat)</a>
+          </td>
+        </tr>
+        <tr style="border-bottom: 1px solid #f3f4f6;">
+          <td style="padding: 8px 0; color: #6b7280;">Correo Corporativo:</td>
+          <td style="padding: 8px 0;">
+            <a href="mailto:${email}" style="color: #ff8300; text-decoration: none;">${email}</a>
+          </td>
+        </tr>
+        <tr style="border-bottom: 1px solid #f3f4f6;">
+          <td style="padding: 8px 0; color: #6b7280;">Ubicación / Comuna:</td>
+          <td style="padding: 8px 0; color: #1f1f1f;">${safeComuna}</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #f3f4f6;">
+          <td style="padding: 8px 0; color: #6b7280;">Tarifa Eléctrica:</td>
+          <td style="padding: 8px 0; font-weight: 700; color: #ff8300;">${safeTarifa}</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #f3f4f6;">
+          <td style="padding: 8px 0; color: #6b7280;">Capacidad Trafo/Gen:</td>
+          <td style="padding: 8px 0; color: #1f1f1f;">${safePotencia}</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px 0; color: #6b7280;">Cargas Críticas / Objetivos:</td>
+          <td style="padding: 8px 0; color: #4b5563; font-style: italic; white-space: pre-wrap;">${safeComentarios}</td>
+        </tr>
+      </table>
+
+      <div style="text-align: center; margin-top: 20px;">
+        <a href="https://wa.me/${cleanPhone}?text=Hola%20${encodeURIComponent(contacto)},%20te%20contacto%20de%20SoldeR%C3%ADo%20respecto%20a%20la%20auditor%C3%ADa%20BESS%20para%20${encodeURIComponent(empresa)}" style="display: inline-block; background-color: #25d366; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 9999px; font-weight: 700; font-size: 14px; margin-right: 8px;">
+          Contactar por WhatsApp &rarr;
+        </a>
+        <a href="mailto:${email}" style="display: inline-block; background-color: #141414; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 9999px; font-weight: 700; font-size: 14px;">
+          Responder por Correo &rarr;
+        </a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>`;
+
+      const internalSender = process.env.SENDER_EMAIL?.trim() || DEFAULT_INTERNAL_SENDER;
+      const { data, error } = await resend.emails.send({
+        from: internalSender,
+        to: internalRecipient.split(",").map((e) => e.trim()),
+        replyTo: email,
+        subject: emailSubject,
+        html: htmlContent,
+      });
+
+      emailRes = { success: !error, messageId: data?.id, error };
+      if (error) {
+        console.error("[Internal BESS Email Error]:", error);
+      } else {
+        console.log(`[Internal BESS Email] Enviado a ${internalRecipient}`);
+      }
+    } catch (err: any) {
+      console.error("[Internal BESS Email Exception]:", err);
+      emailRes = { success: false, error: err?.message || String(err) };
+    }
+  }
+
+  return { telegram: telegramRes, email: emailRes };
+}

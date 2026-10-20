@@ -116,7 +116,7 @@ export function BessAuditFormCTA() {
               Auditoría Real de Potencia con Analizador de Redes
             </h2>
             <p className="text-base text-white/70 font-light leading-relaxed mb-8">
-              Si tu empresa califica, nuestros ingenieros eléctricos certificados SEC instalarán un analizador de redes trifásico clase A durante 15 a 30 días, sin costo alguno.
+              Si tu empresa califica, nuestros ingenieros instalarán un analizador de red durante 15 a 30 días, para obtener información real de la operación eléctrica de tu empresa:
             </p>
 
             <div className="space-y-4 mb-8">
@@ -139,7 +139,7 @@ export function BessAuditFormCTA() {
                 <div>
                   <h4 className="text-sm font-medium text-white">Informe de Ingeniería y ROI Garantizado</h4>
                   <p className="text-xs text-white/60 font-light leading-relaxed">
-                    Dimensionamiento exacto de batería y potencia para no sobrepagar CAPEX ni subdimensionar en punta.
+                    Dimensionamiento exacto del proyecto solar y baterías (BESS) para optimizar la inversión y no subdimensionar en el horario punta.
                   </p>
                 </div>
               </div>
@@ -216,7 +216,7 @@ export function BessAuditFormCTA() {
 
                 <div className="mb-4">
                   <h3 className="text-lg md:text-xl font-medium text-white mb-1">
-                    Formulario de Calificación para Faenas C&amp;I
+                    Formulario de calificación para consumo eléctrico Industrial o Comercial
                   </h3>
                   <p className="text-xs text-white/60 font-light">
                     Ingresa los datos para verificar pre-factibilidad técnica y coordinar la instalación del equipo de medición.

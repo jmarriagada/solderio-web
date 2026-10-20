@@ -3,6 +3,7 @@ import { Resend } from "resend";
 import { render } from "@react-email/render";
 import { QuoteSummaryEmail } from "@/emails/QuoteSummaryEmail";
 import { VisitaTecnicaConfirmationEmail } from "@/emails/VisitaTecnicaConfirmationEmail";
+import { PostulacionConfirmationEmail } from "@/emails/PostulacionConfirmationEmail";
 import { SolarSizingResult } from "@/types/cotizacion";
 import { validateAndNormalizeEmail } from "./email-validator";
 import {
@@ -275,4 +276,91 @@ export async function sendVisitaTecnicaEmail(
     };
   }
 }
+
+export interface SendJobApplicationConfirmationParams {
+  to: string;
+  nombre: string;
+  cargo: string;
+  comuna?: string;
+  cvFileName?: string;
+}
+
+/**
+ * Envía correo oficial de confirmación de postulación laboral al candidato.
+ */
+export async function sendJobApplicationConfirmationEmail(
+  params: SendJobApplicationConfirmationParams
+): Promise<SendEmailResult> {
+  const { to, nombre, cargo, comuna, cvFileName } = params;
+
+  // 1. Email format & anti-disposable validation
+  const validation = validateAndNormalizeEmail(to);
+  if (!validation.isValid) {
+    console.warn(`[Mailer Postulación] Envío cancelado: correo inválido "${to}". Motivo: ${validation.error}`);
+    return {
+      success: false,
+      error: validation.error || "Correo inválido.",
+    };
+  }
+
+  const validRecipient = validation.normalizedEmail;
+  const apiKey = process.env.RESEND_API_KEY?.trim();
+  const sender = process.env.SENDER_EMAIL?.trim() || DEFAULT_SENDER;
+
+  if (!apiKey) {
+    console.warn(`[Mailer Postulación: Modo Simulación] RESEND_API_KEY no detectada.`);
+    return {
+      success: false,
+      simulated: true,
+      error: "RESEND_API_KEY no configurada.",
+    };
+  }
+
+  const resend = new Resend(apiKey);
+  const subject = `Confirmación de Postulación: ${cargo} | SoldeRío Energía`;
+
+  try {
+    const emailHtml = await render(
+      React.createElement(PostulacionConfirmationEmail, {
+        nombre,
+        cargo,
+        comuna: comuna || "Sur de Chile",
+        cvFileName: cvFileName || "Curriculum Vitae adjunto",
+      })
+    );
+
+    const { data, error } = await resend.emails.send({
+      from: sender,
+      to: [validRecipient],
+      replyTo: REPLY_TO,
+      subject,
+      html: emailHtml,
+      headers: {
+        "List-Unsubscribe": `<mailto:${REPLY_TO}?subject=Unsubscribe%20Job%20Application>`,
+        "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+      },
+    });
+
+    if (error) {
+      console.error(`[Mailer Postulación Error] Fallo en Resend API para ${validRecipient}:`, error);
+      return {
+        success: false,
+        error: error.message,
+      };
+    }
+
+    console.log(`[Mailer Postulación Éxito] Correo de confirmación enviado a ${validRecipient}. Resend ID: ${data?.id}`);
+    return {
+      success: true,
+      messageId: data?.id,
+    };
+  } catch (err: any) {
+    console.error(`[Mailer Postulación Excepción] Error al enviar a ${validRecipient}:`, err);
+    return {
+      success: false,
+      error: err?.message || String(err),
+    };
+  }
+}
+
 

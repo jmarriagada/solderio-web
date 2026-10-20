@@ -4,6 +4,7 @@ import { getClientIp, checkRateLimit } from "@/lib/rate-limiter";
 import { validateAndNormalizeEmail } from "@/lib/email-validator";
 import { notifyInternalJobApplication } from "@/lib/notifier";
 import { verifyTurnstileToken } from "@/lib/turnstile";
+import { sendJobApplicationConfirmationEmail } from "@/lib/mailer";
 
 export async function POST(request: Request) {
   try {
@@ -78,6 +79,19 @@ export async function POST(request: Request) {
       });
     } catch (notifErr) {
       console.warn("[Notificación Interna Postulación Falló]:", notifErr);
+    }
+
+    // 4. Correo de confirmación y agradecimiento al postulante
+    try {
+      await sendJobApplicationConfirmationEmail({
+        to: emailValidation.normalizedEmail,
+        nombre: body.nombre,
+        cargo: body.cargo,
+        comuna: body.comuna,
+        cvFileName: body.cvFile?.name,
+      });
+    } catch (confErr) {
+      console.warn("[Confirmación Postulante Falló]:", confErr);
     }
 
     return NextResponse.json({

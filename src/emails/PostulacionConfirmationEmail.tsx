@@ -54,131 +54,136 @@ export function PostulacionConfirmationEmail({
           <Section style={card}>
             {/* Header with Logo */}
             <Section style={header}>
-              <Img
-                src={logoUrl}
-                alt="SoldeRío Energía SpA"
-                width="160"
-                height="auto"
-                style={logoImg}
-              />
-              <div style={statusBadge}>POSTULACIÓN RECIBIDA</div>
+              <Row style={{ width: "100%" }}>
+                <Column style={{ verticalAlign: "middle" }}>
+                  <Img
+                    src={logoUrl}
+                    alt="SoldeRío Energía SpA"
+                    width="150"
+                    height="auto"
+                    style={logoImg}
+                  />
+                </Column>
+                <Column style={{ textAlign: "right", verticalAlign: "middle" }}>
+                  <div style={statusBadge}>POSTULACIÓN RECIBIDA</div>
+                </Column>
+              </Row>
             </Section>
 
-            {/* Headline & Intro */}
-            <Section style={heroSection}>
+            {/* Inner Content with Safe Padding */}
+            <Section style={contentBody}>
+              {/* Headline & Intro */}
               <Heading as="h1" style={mainTitle}>
                 ¡Gracias por postular a SoldeRío!
               </Heading>
               <Text style={introText}>
                 Hola <strong>{nombre}</strong>, confirmamos que hemos recibido exitosamente tus antecedentes profesionales para formar parte de nuestro equipo de ingeniería e instalaciones fotovoltaicas en el sur de Chile.
               </Text>
-            </Section>
 
-            {/* Application Summary Box */}
-            <Section style={detailsBox}>
-              <Row style={detailRow}>
-                <Column style={detailCol}>
+              {/* Application Summary Box - Full Width Stacked to Avoid Any Overflow */}
+              <Section style={detailsBox}>
+                {/* 1. Cargo */}
+                <div style={detailItem}>
                   <Text style={detailLabel}>CARGO POSTULADO</Text>
                   <Text style={detailValueHighlight}>{cargo}</Text>
-                </Column>
-                <Column style={detailColRight}>
+                </div>
+
+                <Hr style={innerDivider} />
+
+                {/* 2. Ubicación / Zona */}
+                <div style={detailItem}>
                   <Text style={detailLabel}>UBICACIÓN / ZONA</Text>
-                  <Text style={detailValueDark}>{comuna}</Text>
-                </Column>
-              </Row>
+                  <Text style={detailValueDark}>{comuna || "Sur de Chile"}</Text>
+                </div>
 
-              <Hr style={innerDivider} />
+                <Hr style={innerDivider} />
 
-              <Row style={detailRow}>
-                <Column style={{ width: "100%" }}>
+                {/* 3. Documento */}
+                <div style={detailItem}>
                   <Text style={detailLabel}>DOCUMENTO REGISTRADO</Text>
                   <Text style={detailValueFile}>📎 {cvFileName}</Text>
-                </Column>
-              </Row>
+                </div>
 
-              <Hr style={innerDivider} />
+                <Hr style={innerDivider} />
 
-              <Row style={detailRow}>
-                <Column style={{ width: "100%" }}>
+                {/* 4. Fecha */}
+                <div style={detailItem}>
                   <Text style={detailLabel}>FECHA DE RECEPCIÓN</Text>
                   <Text style={detailValueText}>{fechaPostulacion}</Text>
-                </Column>
-              </Row>
+                </div>
+              </Section>
+
+              {/* What's Next / Selection Steps */}
+              <Section style={prepSection}>
+                <Text style={prepHeading}>¿CÓMO CONTINÚA NUESTRO PROCESO?</Text>
+
+                <Row style={prepRow}>
+                  <Column style={prepNumCol}>
+                    <div style={stepNumberBadge}>1</div>
+                  </Column>
+                  <Column style={prepTextCol}>
+                    <Text style={prepTitle}>Revisión de Antecedentes</Text>
+                    <Text style={prepDesc}>
+                      Nuestro equipo técnico y de proyectos evaluará tu perfil, experiencia y certificaciones conforme a los requerimientos de la posición.
+                    </Text>
+                  </Column>
+                </Row>
+
+                <Row style={prepRow}>
+                  <Column style={prepNumCol}>
+                    <div style={stepNumberBadge}>2</div>
+                  </Column>
+                  <Column style={prepTextCol}>
+                    <Text style={prepTitle}>Contacto Directo</Text>
+                    <Text style={prepDesc}>
+                      Si tu perfil calza con las vacantes activas o nuevas aperturas, te contactaremos vía correo o WhatsApp para coordinar una primera conversación.
+                    </Text>
+                  </Column>
+                </Row>
+
+                <Row style={prepRow}>
+                  <Column style={prepNumCol}>
+                    <div style={stepNumberBadge}>3</div>
+                  </Column>
+                  <Column style={prepTextCol}>
+                    <Text style={prepTitle}>Privacidad y Resguardo</Text>
+                    <Text style={prepDesc}>
+                      Tus datos curriculares son tratados bajo estricta confidencialidad conforme a la Ley N° 19.628 de Protección de la Vida Privada de Chile.
+                    </Text>
+                  </Column>
+                </Row>
+              </Section>
+
+              {/* CTA Button */}
+              <Section style={ctaSection}>
+                <Button href={webUrl} style={primaryButton}>
+                  Conoce Más Sobre Nuestros Proyectos &rarr;
+                </Button>
+              </Section>
+
+              <Hr style={sectionDivider} />
+
+              {/* Contact Box */}
+              <Section style={contactCard}>
+                <Text style={contactTitle}>¿Tienes alguna consulta sobre tu postulación?</Text>
+                <Text style={contactDesc}>
+                  Puedes responder directamente a este correo o escribirnos a{" "}
+                  <Link href="mailto:contacto@solderio.cl" style={contactLink}>
+                    contacto@solderio.cl
+                  </Link>
+                  . También estamos disponibles en WhatsApp al{" "}
+                  <Link href={whatsappUrl} style={contactLink}>
+                    +56 9 6618 6667
+                  </Link>
+                  .
+                </Text>
+              </Section>
             </Section>
 
-            {/* What's Next / Selection Steps */}
-            <Section style={prepSection}>
-              <Text style={prepHeading}>¿CÓMO CONTINÚA NUESTRO PROCESO?</Text>
-
-              <Row style={prepRow}>
-                <Column style={prepNumCol}>
-                  <div style={stepNumberBadge}>1</div>
-                </Column>
-                <Column style={prepTextCol}>
-                  <Text style={prepTitle}>Revisión de Antecedentes</Text>
-                  <Text style={prepDesc}>
-                    Nuestro equipo técnico y de proyectos evaluará tu perfil, experiencia y certificaciones conforme a los requerimientos del cargo.
-                  </Text>
-                </Column>
-              </Row>
-
-              <Row style={prepRow}>
-                <Column style={prepNumCol}>
-                  <div style={stepNumberBadge}>2</div>
-                </Column>
-                <Column style={prepTextCol}>
-                  <Text style={prepTitle}>Contacto Directo</Text>
-                  <Text style={prepDesc}>
-                    Si tu perfil calza con las vacantes activas o nuevas aperturas, te contactaremos vía correo o WhatsApp para coordinar una primera conversación.
-                  </Text>
-                </Column>
-              </Row>
-
-              <Row style={prepRow}>
-                <Column style={prepNumCol}>
-                  <div style={stepNumberBadge}>3</div>
-                </Column>
-                <Column style={prepTextCol}>
-                  <Text style={prepTitle}>Privacidad y Resguardo</Text>
-                  <Text style={prepDesc}>
-                    Tus datos curriculares son tratados bajo estricta confidencialidad conforme a la Ley N° 19.628 de Protección de la Vida Privada de Chile.
-                  </Text>
-                </Column>
-              </Row>
-            </Section>
-
-            {/* CTA Button */}
-            <Section style={ctaSection}>
-              <Button href={webUrl} style={primaryButton}>
-                Conoce Más Sobre Nuestros Proyectos &rarr;
-              </Button>
-            </Section>
-
-            <Hr style={sectionDivider} />
-
-            {/* Contact Box */}
-            <Section style={contactCard}>
-              <Text style={contactTitle}>¿Tienes alguna consulta sobre tu postulación?</Text>
-              <Text style={contactDesc}>
-                Puedes responder directamente a este correo o escribirnos a{" "}
-                <Link href="mailto:contacto@solderio.cl" style={contactLink}>
-                  contacto@solderio.cl
-                </Link>
-                . También estamos disponibles en WhatsApp al{" "}
-                <Link href={whatsappUrl} style={contactLink}>
-                  +56 9 6618 6667
-                </Link>
-                .
-              </Text>
-            </Section>
-
-            {/* Footer */}
+            {/* Clean Footer (without RUT or address line) */}
             <Section style={footer}>
               <Text style={footerBrand}>
                 <strong>SoldeRío Energía SpA</strong> • Soluciones Solares de Alta Ingeniería
-              </Text>
-              <Text style={footerAddress}>
-                Puerto Varas, Región de Los Lagos, Chile • RUT 77.838.452-9
               </Text>
               <Text style={footerLegal}>
                 Este mensaje fue enviado automáticamente como confirmación de tu postulación laboral en{" "}
@@ -203,37 +208,39 @@ export default PostulacionConfirmationEmail;
 
 /* STYLES */
 const main: React.CSSProperties = {
-  backgroundColor: "#0d0d0d",
+  backgroundColor: "#F4F5F7",
   fontFamily:
     "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
-  padding: "40px 0",
+  margin: 0,
+  padding: "36px 12px",
+  color: "#1F2937",
 };
 
 const container: React.CSSProperties = {
   margin: "0 auto",
   maxWidth: "580px",
-  padding: "0 16px",
+  width: "100%",
 };
 
 const card: React.CSSProperties = {
   backgroundColor: "#FFFFFF",
   borderRadius: "16px",
   overflow: "hidden",
-  boxShadow: "0 4px 24px rgba(0, 0, 0, 0.25)",
+  boxShadow: "0 4px 20px rgba(0, 0, 0, 0.06)",
   border: "1px solid #E5E7EB",
+  width: "100%",
 };
 
 const header: React.CSSProperties = {
-  padding: "28px 36px 20px 36px",
+  padding: "24px 28px",
   borderBottom: "1px solid #F3F4F6",
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
+  backgroundColor: "#FAFAFA",
+  width: "100%",
 };
 
 const logoImg: React.CSSProperties = {
   display: "block",
-  maxWidth: "160px",
+  maxWidth: "150px",
   height: "auto",
 };
 
@@ -243,22 +250,25 @@ const statusBadge: React.CSSProperties = {
   border: "1px solid #A7F3D0",
   fontSize: "11px",
   fontWeight: 700,
-  letterSpacing: "0.08em",
+  letterSpacing: "0.06em",
   padding: "5px 12px",
   borderRadius: "9999px",
   display: "inline-block",
+  whiteSpace: "nowrap",
 };
 
-const heroSection: React.CSSProperties = {
-  padding: "28px 36px 8px 36px",
+const contentBody: React.CSSProperties = {
+  padding: "28px 28px 8px 28px",
+  width: "100%",
+  boxSizing: "border-box",
 };
 
 const mainTitle: React.CSSProperties = {
   color: "#111827",
-  fontSize: "24px",
+  fontSize: "22px",
   fontWeight: 800,
   letterSpacing: "-0.02em",
-  lineHeight: "1.25",
+  lineHeight: "1.3",
   margin: "0 0 12px 0",
 };
 
@@ -266,38 +276,31 @@ const introText: React.CSSProperties = {
   color: "#4B5563",
   fontSize: "14px",
   lineHeight: "1.6",
-  margin: "0 0 16px 0",
+  margin: "0 0 20px 0",
 };
 
 const detailsBox: React.CSSProperties = {
   backgroundColor: "#F9FAFB",
   borderRadius: "12px",
   border: "1px solid #E5E7EB",
-  margin: "8px 36px 24px 36px",
-  padding: "20px",
-};
-
-const detailRow: React.CSSProperties = {
+  padding: "16px 20px",
+  marginBottom: "28px",
   width: "100%",
+  boxSizing: "border-box",
 };
 
-const detailCol: React.CSSProperties = {
-  width: "60%",
-  verticalAlign: "top",
-};
-
-const detailColRight: React.CSSProperties = {
-  width: "40%",
-  verticalAlign: "top",
-  textAlign: "right",
+const detailItem: React.CSSProperties = {
+  padding: "2px 0",
+  width: "100%",
 };
 
 const detailLabel: React.CSSProperties = {
   color: "#9CA3AF",
   fontSize: "10px",
   fontWeight: 700,
-  letterSpacing: "0.1em",
+  letterSpacing: "0.08em",
   margin: "0 0 4px 0",
+  textTransform: "uppercase",
 };
 
 const detailValueHighlight: React.CSSProperties = {
@@ -305,13 +308,15 @@ const detailValueHighlight: React.CSSProperties = {
   fontSize: "15px",
   fontWeight: 700,
   margin: 0,
+  wordBreak: "break-word",
 };
 
 const detailValueDark: React.CSSProperties = {
   color: "#1F2937",
-  fontSize: "13px",
+  fontSize: "14px",
   fontWeight: 600,
   margin: 0,
+  wordBreak: "break-word",
 };
 
 const detailValueFile: React.CSSProperties = {
@@ -319,6 +324,7 @@ const detailValueFile: React.CSSProperties = {
   fontSize: "13px",
   fontWeight: 600,
   margin: 0,
+  wordBreak: "break-all",
 };
 
 const detailValueText: React.CSSProperties = {
@@ -326,16 +332,18 @@ const detailValueText: React.CSSProperties = {
   fontSize: "13px",
   fontWeight: 500,
   margin: 0,
+  wordBreak: "break-word",
 };
 
 const innerDivider: React.CSSProperties = {
   borderColor: "#E5E7EB",
   margin: "12px 0",
+  width: "100%",
 };
 
 const prepSection: React.CSSProperties = {
-  padding: "0 36px",
-  marginBottom: "24px",
+  marginBottom: "28px",
+  width: "100%",
 };
 
 const prepHeading: React.CSSProperties = {
@@ -348,7 +356,8 @@ const prepHeading: React.CSSProperties = {
 };
 
 const prepRow: React.CSSProperties = {
-  marginBottom: "16px",
+  marginBottom: "14px",
+  width: "100%",
 };
 
 const prepNumCol: React.CSSProperties = {
@@ -370,7 +379,7 @@ const stepNumberBadge: React.CSSProperties = {
 
 const prepTextCol: React.CSSProperties = {
   verticalAlign: "top",
-  paddingLeft: "8px",
+  paddingLeft: "10px",
 };
 
 const prepTitle: React.CSSProperties = {
@@ -389,7 +398,8 @@ const prepDesc: React.CSSProperties = {
 
 const ctaSection: React.CSSProperties = {
   textAlign: "center",
-  padding: "8px 36px 20px 36px",
+  padding: "4px 0 20px 0",
+  width: "100%",
 };
 
 const primaryButton: React.CSSProperties = {
@@ -402,12 +412,13 @@ const primaryButton: React.CSSProperties = {
   textDecoration: "none",
   display: "inline-block",
   textAlign: "center",
-  boxShadow: "0 4px 12px rgba(255, 131, 0, 0.3)",
+  boxShadow: "0 4px 12px rgba(255, 131, 0, 0.25)",
 };
 
 const sectionDivider: React.CSSProperties = {
   borderColor: "#F3F4F6",
-  margin: "20px 36px",
+  margin: "20px 0",
+  width: "100%",
 };
 
 const contactCard: React.CSSProperties = {
@@ -416,7 +427,9 @@ const contactCard: React.CSSProperties = {
   border: "1px solid #E5E7EB",
   padding: "16px 20px",
   textAlign: "center",
-  margin: "0 36px 28px 36px",
+  marginBottom: "24px",
+  width: "100%",
+  boxSizing: "border-box",
 };
 
 const contactTitle: React.CSSProperties = {
@@ -441,30 +454,26 @@ const contactLink: React.CSSProperties = {
 
 const footer: React.CSSProperties = {
   backgroundColor: "#111827",
-  padding: "24px 36px",
+  padding: "24px 28px",
   textAlign: "center",
+  width: "100%",
+  boxSizing: "border-box",
 };
 
 const footerBrand: React.CSSProperties = {
   color: "#F3F4F6",
   fontSize: "12px",
-  margin: "0 0 4px 0",
-};
-
-const footerAddress: React.CSSProperties = {
-  color: "#9CA3AF",
-  fontSize: "11px",
-  margin: "0 0 10px 0",
+  margin: "0 0 8px 0",
 };
 
 const footerLegal: React.CSSProperties = {
-  color: "#6B7280",
-  fontSize: "10px",
-  lineHeight: "1.4",
+  color: "#9CA3AF",
+  fontSize: "11px",
+  lineHeight: "1.5",
   margin: 0,
 };
 
 const footerLink: React.CSSProperties = {
-  color: "#9CA3AF",
+  color: "#D1D5DB",
   textDecoration: "underline",
 };

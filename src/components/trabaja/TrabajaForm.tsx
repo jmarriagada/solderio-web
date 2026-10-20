@@ -144,7 +144,7 @@ export function TrabajaForm() {
               Envíanos tus Antecedentes
             </h2>
             <p className="text-white/70 text-sm md:text-base font-light leading-relaxed">
-              Completa tus datos y adjunta tu Curriculum Vitae. Nuestro equipo de ingeniería revisará tu perfil con estricta confidencialidad bajo la Ley N° 19.628.
+              Completa tus datos y adjunta tu Curriculum Vitae. Nuestro equipo de ingeniería revisará tu perfil con estricta confidencialidad.
             </p>
           </div>
 

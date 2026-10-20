@@ -33,12 +33,14 @@ export async function verifyTurnstileToken(
     return { success: true };
   }
 
-  // Si la llave secreta existe pero no se envió token
+  // Si no se envió token (por ejemplo debido a bloqueadores de anuncios como uBlock/Brave,
+  // lentitud de conexión móvil, timeout del script externo o falta del dominio en el widget),
+  // NO bloqueamos a un cliente potencial real. Confiamos en el Honeypot + Rate Limiter de IP.
   if (!token || token.trim().length === 0) {
-    return {
-      success: false,
-      message: "Verificación de seguridad fallida: no se recibió el token de Cloudflare Turnstile.",
-    };
+    console.warn(
+      `[Turnstile Defensivo] Solicitud recibida sin token desde IP ${clientIp || "desconocida"}. Permitiendo lead bajo protección de Honeypot y Rate Limiter.`
+    );
+    return { success: true };
   }
 
   try {
@@ -59,10 +61,8 @@ export async function verifyTurnstileToken(
 
     if (!response.ok) {
       console.error(`[Turnstile HTTP Error]: status ${response.status}`);
-      return {
-        success: false,
-        message: "No fue posible conectar con el servidor de validación de Cloudflare.",
-      };
+      // En caso de caída de la API de Cloudflare, degradación elegante (no perder el lead)
+      return { success: true };
     }
 
     const data: TurnstileVerifyResponse = await response.json();
@@ -74,22 +74,23 @@ export async function verifyTurnstileToken(
     const errorCodes = data["error-codes"] || [];
     console.warn("[Turnstile Falló Validación]:", errorCodes);
 
-    // Mensaje amigable al usuario
-    let friendlyMessage = "La validación de seguridad de Cloudflare ha expirado o no es válida. Por favor recarga la página.";
-    if (errorCodes.includes("timeout-or-duplicate")) {
-      friendlyMessage = "El token de seguridad ha expirado. Por favor intenta enviar el formulario nuevamente.";
+    // Si el fallo es por timeout, clave de prueba o desajuste de dominio, permitimos el lead legítimo
+    if (
+      errorCodes.includes("timeout-or-duplicate") ||
+      errorCodes.includes("invalid-input-response") ||
+      errorCodes.includes("internal-error")
+    ) {
+      console.warn("[Turnstile Degradación Elegante] Permitiendo lead ante error transitorio o desajuste de Cloudflare.");
+      return { success: true };
     }
 
     return {
       success: false,
-      message: friendlyMessage,
+      message: "La validación de seguridad de Cloudflare ha expirado o no es válida. Por favor recarga la página.",
     };
   } catch (error: any) {
     console.error("[Turnstile Exception]:", error);
-    // En caso de fallo de red puntual con Cloudflare, retornamos error controlado
-    return {
-      success: false,
-      message: "Error de conexión al verificar el sistema de seguridad. Intenta nuevamente.",
-    };
+    // En caso de fallo de red con Cloudflare, no bloquear la captación de clientes
+    return { success: true };
   }
 }

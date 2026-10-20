@@ -461,13 +461,15 @@ export function SmartQuoteWizard() {
           leadId: data.leadId,
         });
       } else {
+        console.error("[Cotizacion API Error]:", data?.error || res.statusText);
         // Fallback local sizing if API fails
         setSubmissionResult({
           sizing: instantSizing,
-          leadId: `SOL-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`,
+          leadId: data?.leadId || `SOL-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`,
         });
       }
     } catch (err) {
+      console.error("[Cotizacion Network/Fetch Exception]:", err);
       // Offline fallback
       setSubmissionResult({
         sizing: instantSizing,

@@ -57,7 +57,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // 3. Notificación interna (Telegram + Correo oficial a contacto@solderio.cl)
+    // 3. Notificación interna (Telegram + Correo oficial a contacto@solderio.cl con CV adjunto)
     try {
       await notifyInternalJobApplication({
         nombre: body.nombre,
@@ -68,6 +68,13 @@ export async function POST(request: Request) {
         linkedin: body.linkedin,
         mensaje: body.mensaje,
         cvFileName: body.cvFile?.name,
+        cvFile: body.cvFile
+          ? {
+              name: body.cvFile.name,
+              dataUrl: body.cvFile.dataUrl,
+              type: body.cvFile.type,
+            }
+          : undefined,
       });
     } catch (notifErr) {
       console.warn("[Notificación Interna Postulación Falló]:", notifErr);

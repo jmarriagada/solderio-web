@@ -28,19 +28,22 @@ export function TrabajaForm() {
     mensaje: "",
   });
   const [fileName, setFileName] = useState<string | null>(null);
+  const [isReadingFile, setIsReadingFile] = useState(false);
   const [fileDetails, setFileDetails] = useState<{
     name: string;
     size: number;
     type: string;
+    dataUrl?: string;
   } | null>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Validación de tamaño (máx. 10 MB)
-    if (file.size > 10 * 1024 * 1024) {
-      setSubmitError("El archivo seleccionado excede el tamaño máximo permitido de 10 MB.");
+    // Validación de tamaño (máx. 4 MB para adjunto seguro en correo)
+    const MAX_FILE_SIZE = 4 * 1024 * 1024;
+    if (file.size > MAX_FILE_SIZE) {
+      setSubmitError("El archivo excede el tamaño máximo permitido de 4 MB para envío por correo. Por favor comprímelo o sube una versión más ligera.");
       setFileName(null);
       setFileDetails(null);
       return;
@@ -60,11 +63,26 @@ export function TrabajaForm() {
 
     setSubmitError(null);
     setFileName(file.name);
-    setFileDetails({
-      name: file.name,
-      size: file.size,
-      type: file.type || (ext === ".pdf" ? "application/pdf" : "application/msword"),
-    });
+    setIsReadingFile(true);
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64Data = reader.result as string;
+      setFileDetails({
+        name: file.name,
+        size: file.size,
+        type: file.type || (ext === ".pdf" ? "application/pdf" : "application/msword"),
+        dataUrl: base64Data,
+      });
+      setIsReadingFile(false);
+    };
+    reader.onerror = () => {
+      setSubmitError("Error al procesar el archivo seleccionado. Por favor intenta seleccionarlo nuevamente.");
+      setFileName(null);
+      setFileDetails(null);
+      setIsReadingFile(false);
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -281,12 +299,16 @@ export function TrabajaForm() {
                   >
                     <Upload className="w-6 h-6 text-white/40 group-hover:text-[#FF8300] group-focus-within:text-[#FF8300] mb-2 transition-colors" />
                     <span className="text-xs text-white/80 font-light text-center">
-                      {fileName ? (
-                        <span className="text-emerald-400 font-normal">{fileName}</span>
+                      {isReadingFile ? (
+                        <span className="text-[#FF8300] font-normal flex items-center justify-center gap-1.5">
+                          <Loader2 className="w-3.5 h-3.5 animate-spin" /> Procesando archivo...
+                        </span>
+                      ) : fileName ? (
+                        <span className="text-emerald-400 font-normal">📎 {fileName}</span>
                       ) : (
                         <>
                           Haz clic para subir tu archivo o arrástralo aquí <br />
-                          <span className="text-[10px] text-white/40">(PDF o DOCX, Máx. 10 MB)</span>
+                          <span className="text-[10px] text-white/40">(PDF o DOCX, Máx. 4 MB)</span>
                         </>
                       )}
                     </span>
@@ -362,13 +384,18 @@ export function TrabajaForm() {
 
                 <button
                   type="submit"
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || isReadingFile}
                   className="w-full py-4 rounded-full bg-[#FF8300] text-white font-light text-sm uppercase tracking-wider hover:bg-[#e07400] transition-all shadow-xl hover:shadow-[0_0_30px_rgba(255,131,0,0.5)] cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
                       <span>Enviando Antecedentes...</span>
+                    </>
+                  ) : isReadingFile ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>Cargando Documento...</span>
                     </>
                   ) : (
                     <>

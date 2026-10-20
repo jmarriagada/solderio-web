@@ -474,8 +474,13 @@ export async function notifyInternalJobApplication(params: {
   linkedin?: string;
   mensaje?: string;
   cvFileName?: string;
+  cvFile?: {
+    name: string;
+    dataUrl?: string;
+    type?: string;
+  };
 }): Promise<{ telegram: any; email: any }> {
-  const { nombre, email, telefono, cargo, comuna, linkedin, mensaje, cvFileName } = params;
+  const { nombre, email, telefono, cargo, comuna, linkedin, mensaje, cvFileName, cvFile } = params;
   const cleanPhone = cleanPhoneNumber(telefono);
 
   const safeNombre = escapeHtml(nombre);
@@ -483,7 +488,7 @@ export async function notifyInternalJobApplication(params: {
   const safeComuna = escapeHtml(comuna || "No especificada");
   const safeLinkedin = escapeHtml(linkedin || "No indicado");
   const safeMensaje = escapeHtml(mensaje || "Sin mensaje adicional");
-  const safeCvName = escapeHtml(cvFileName || "Archivo adjunto");
+  const safeCvName = escapeHtml(cvFile?.name || cvFileName || "Archivo adjunto");
 
   // 1. TELEGRAM
   const telegramHtml = `💼 <b>NUEVA POSTULACIÓN LABORAL</b>
@@ -568,10 +573,10 @@ ${safeMensaje}`;
             <a href="${escapeHtml(linkedin)}" target="_blank" rel="noopener noreferrer" style="color: #2563eb; text-decoration: underline;">${safeLinkedin}</a>
           </td>
         </tr>` : ""}
-        ${cvFileName ? `
+        ${cvFile || cvFileName ? `
         <tr style="border-bottom: 1px solid #f3f4f6;">
           <td style="padding: 8px 0; color: #6b7280;">Archivo Adjunto:</td>
-          <td style="padding: 8px 0; font-weight: 600; color: #059669;">📎 ${safeCvName}</td>
+          <td style="padding: 8px 0; font-weight: 600; color: #059669;">📎 ${safeCvName} <span style="font-size: 12px; font-weight: normal; color: #6b7280;">${cvFile?.dataUrl ? "(Adjunto descargable en este correo)" : ""}</span></td>
         </tr>` : ""}
         <tr>
           <td style="padding: 8px 0; color: #6b7280;">Mensaje / Carta:</td>
@@ -589,6 +594,23 @@ ${safeMensaje}`;
 </body>
 </html>`;
 
+      // Preparar adjunto si viene el archivo codificado en Base64
+      const attachments: Array<{ filename: string; content: Buffer }> = [];
+      if (cvFile?.dataUrl) {
+        try {
+          const rawBase64 = cvFile.dataUrl.includes(",")
+            ? cvFile.dataUrl.split(",")[1]
+            : cvFile.dataUrl;
+          const fileBuffer = Buffer.from(rawBase64, "base64");
+          attachments.push({
+            filename: cvFile.name || "Curriculum_Vitae.pdf",
+            content: fileBuffer,
+          });
+        } catch (bufferErr) {
+          console.error("[Notifier Job Attachment Error]:", bufferErr);
+        }
+      }
+
       const internalSender = process.env.SENDER_EMAIL?.trim() || DEFAULT_INTERNAL_SENDER;
       const { data, error } = await resend.emails.send({
         from: internalSender,
@@ -596,6 +618,7 @@ ${safeMensaje}`;
         replyTo: email,
         subject: emailSubject,
         html: htmlContent,
+        attachments: attachments.length > 0 ? attachments : undefined,
       });
 
       emailRes = { success: !error, messageId: data?.id, error };

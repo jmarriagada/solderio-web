@@ -312,7 +312,7 @@ export const trabajaFormSchema = z.object({
   cvFile: z
     .object({
       name: z.string().transform((n) => sanitizeFilename(n, 120)),
-      size: z.number().max(10 * 1024 * 1024, "El archivo excede el límite de 10 MB"),
+      size: z.number().max(4.5 * 1024 * 1024, "El archivo excede el límite de 4.5 MB"),
       type: z
         .string()
         .refine(

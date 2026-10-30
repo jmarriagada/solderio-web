@@ -82,29 +82,31 @@ async function handleHealthCheck(request: NextRequest) {
     const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
     if (supabaseUrl && anonKey) {
-      // Querying PostgREST registers directly in Supabase's "API Requests" telemetry
-      const res = await fetch(`${supabaseUrl}/rest/v1/User?select=id&limit=1`, {
+      // Calling RPC health_ping executes inside PostgreSQL and registers directly in Supabase's API metrics
+      const res = await fetch(`${supabaseUrl}/rest/v1/rpc/health_ping`, {
+        method: "POST",
         headers: {
           apikey: anonKey,
           Authorization: `Bearer ${anonKey}`,
+          "Content-Type": "application/json",
         },
         signal: AbortSignal.timeout(8000),
       });
       const latency = Date.now() - restStart;
-      const ok = res.ok || res.status === 200 || res.status === 206 || res.status === 401;
+      const isOk = res.ok && res.status === 200;
       results.push({
-        name: "Supabase PostgREST API",
+        name: "Supabase PostgREST API (RPC Ping)",
         category: "Actividad Base de Datos",
-        status: res.ok ? "OK" : res.status === 401 ? "WARNING" : "ERROR",
+        status: isOk ? "OK" : "ERROR",
         latencyMs: latency,
-        details: res.ok
-          ? `HTTP ${res.status} OK. Consulta registrada en API Gateway de Supabase.`
+        details: isOk
+          ? `HTTP 200 OK ("pong"). Consulta registrada en API Gateway de Supabase.`
           : `HTTP ${res.status} desde PostgREST.`,
       });
     }
   } catch (err: any) {
     results.push({
-      name: "Supabase PostgREST API",
+      name: "Supabase PostgREST API (RPC Ping)",
       category: "Actividad Base de Datos",
       status: "ERROR",
       latencyMs: -1,

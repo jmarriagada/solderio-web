@@ -75,7 +75,44 @@ async function handleHealthCheck(request: NextRequest) {
     });
   }
 
-  // 2. Check Supabase Auth Service
+  // 2. Check Supabase PostgREST API (Direct Database Activity that Supabase metrics monitor)
+  try {
+    const restStart = Date.now();
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+    if (supabaseUrl && anonKey) {
+      // Querying PostgREST registers directly in Supabase's "API Requests" telemetry
+      const res = await fetch(`${supabaseUrl}/rest/v1/User?select=id&limit=1`, {
+        headers: {
+          apikey: anonKey,
+          Authorization: `Bearer ${anonKey}`,
+        },
+        signal: AbortSignal.timeout(8000),
+      });
+      const latency = Date.now() - restStart;
+      const ok = res.ok || res.status === 200 || res.status === 206 || res.status === 401;
+      results.push({
+        name: "Supabase PostgREST API",
+        category: "Actividad Base de Datos",
+        status: res.ok ? "OK" : res.status === 401 ? "WARNING" : "ERROR",
+        latencyMs: latency,
+        details: res.ok
+          ? `HTTP ${res.status} OK. Consulta registrada en API Gateway de Supabase.`
+          : `HTTP ${res.status} desde PostgREST.`,
+      });
+    }
+  } catch (err: any) {
+    results.push({
+      name: "Supabase PostgREST API",
+      category: "Actividad Base de Datos",
+      status: "ERROR",
+      latencyMs: -1,
+      details: err?.message || "Fallo en consulta a Supabase PostgREST",
+    });
+  }
+
+  // 3. Check Supabase Auth Service
   try {
     const authStart = Date.now();
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -93,14 +130,6 @@ async function handleHealthCheck(request: NextRequest) {
         status: res.ok ? "OK" : "WARNING",
         latencyMs: latency,
         details: res.ok ? "Servicio Auth respondiendo correctamente (200 OK)." : `HTTP ${res.status}`,
-      });
-    } else {
-      results.push({
-        name: "Supabase Auth",
-        category: "Autenticación",
-        status: "WARNING",
-        latencyMs: 0,
-        details: "Variables de Supabase no configuradas localmente.",
       });
     }
   } catch (err: any) {

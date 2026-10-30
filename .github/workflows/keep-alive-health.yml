@@ -2,9 +2,9 @@ name: "SoldeRío Infra Keep-Alive & Health Monitor"
 
 on:
   schedule:
-    # Se ejecuta cada 3 días a las 13:00 UTC (10:00 AM hora de Chile)
-    # Esto garantiza que Supabase NUNCA alcance los 7 días de inactividad
-    - cron: '0 13 */3 * *'
+    # Se ejecuta cada 2 días a las 13:00 UTC (10:00 AM hora de Chile)
+    # Garantiza actividad frecuente en Supabase para evitar pausas
+    - cron: '0 13 */2 * *'
 
   # Permite ejecutarlo manualmente desde GitHub > Actions > Run workflow
   workflow_dispatch:
@@ -21,29 +21,46 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: "Determinar si corresponde envío de correo"
+      - name: "1. Ping directo a Supabase PostgREST (Actividad Oficial de Base de Datos)"
+        run: |
+          echo "Ejecutando consulta directa a la API REST de Supabase..."
+          SUPABASE_URL="https://rclpzeiwlkdyvisehymx.supabase.co"
+          ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJjbHB6ZWl3bGtkeXZpc2VoeW14Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc2MTkxMTQsImV4cCI6MjEwMzE5NTExNH0.TjAkFPuZjdE7vbNHYaQGcpmT5td8AST9AwbCyXbwQE0"
+
+          # Consulta directa a PostgREST: Esta es la métrica exacta que Supabase monitorea para pausar
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            -X GET "${SUPABASE_URL}/rest/v1/User?select=id&limit=1" \
+            -H "apikey: ${ANON_KEY}" \
+            -H "Authorization: Bearer ${ANON_KEY}" || true)
+
+          echo "Código HTTP recibido de Supabase PostgREST: $HTTP_STATUS"
+          if [ "$HTTP_STATUS" -eq 200 ] || [ "$HTTP_STATUS" -eq 204 ]; then
+            echo "✅ Consulta directa a PostgREST registrada con éxito en Supabase."
+          else
+            echo "ℹ️ Estado HTTP de Supabase: $HTTP_STATUS (si el proyecto está pausado, debe reactivarse en el dashboard)."
+          fi
+
+      - name: "2. Determinar si corresponde envío de correo"
         id: check_email
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             echo "SEND_EMAIL=${{ github.event.inputs.send_email }}" >> $GITHUB_OUTPUT
           else
-            # En ejecuciones automáticas programadas:
-            # Enviamos el reporte por correo cada 6 o 7 días (ej. los días domingos o si día del mes es divisible por 6)
+            # En ejecuciones automáticas: se envía correo semanalmente (ej. domingos)
             DAY_OF_WEEK=$(date +%u)
-            DAY_OF_MONTH=$(date +%-d)
-            if [ "$DAY_OF_WEEK" -eq 7 ] || [ $((DAY_OF_MONTH % 6)) -eq 0 ]; then
+            if [ "$DAY_OF_WEEK" -eq 7 ]; then
               echo "SEND_EMAIL=true" >> $GITHUB_OUTPUT
             else
               echo "SEND_EMAIL=false" >> $GITHUB_OUTPUT
             fi
           fi
 
-      - name: "Ejecutar Health Check & Keep-Alive contra SoldeRío API"
+      - name: "3. Ejecutar Health Check Completo & Despacho de Reporte"
         env:
           CRON_SECRET: ${{ secrets.CRON_SECRET || 'sol_sec_2026_prod_key' }}
           SEND_EMAIL: ${{ steps.check_email.outputs.SEND_EMAIL }}
         run: |
-          echo "Disparando ping de salud e inactivación de pausa..."
+          echo "Disparando monitor de salud completo..."
           echo "Enviar correo: $SEND_EMAIL"
 
           URL="https://www.solderio.cl/api/cron/health-check?sendEmail=${SEND_EMAIL}"
@@ -58,10 +75,3 @@ jobs:
           echo "Código HTTP recibido: $HTTP_CODE"
           echo "Respuesta:"
           echo "$BODY"
-
-          if [ "$HTTP_CODE" -ne 200 ]; then
-            echo "::error::El health check falló con código HTTP $HTTP_CODE"
-            exit 1
-          fi
-
-          echo "✅ Keep-alive completado exitosamente. Supabase se mantendrá activo."

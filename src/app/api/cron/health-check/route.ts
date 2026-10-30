@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { Resend } from "resend";
+import { sendTelegramMessage } from "@/lib/notifier";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 30; // 30 seconds max for Vercel functions
@@ -170,11 +171,15 @@ async function handleHealthCheck(request: NextRequest) {
     });
   }
 
-  // 4. Send Confirmation Report Email via Resend if requested
+  // 4. Automation & Incident Notification System
+  const allHealthy = results.every((r) => r.status === "OK");
+  // Si no está todo OK, disparar correo de alerta de inmediato (aunque no sea día programado)
+  const shouldSendEmail = sendEmail || !allHealthy;
+
   let emailSent = false;
   let emailError: string | null = null;
 
-  if (sendEmail) {
+  if (shouldSendEmail) {
     const resendApiKey = process.env.RESEND_API_KEY?.trim();
     if (!resendApiKey) {
       emailError = "RESEND_API_KEY no configurada en Vercel.";
@@ -182,11 +187,11 @@ async function handleHealthCheck(request: NextRequest) {
       try {
         const resend = new Resend(resendApiKey);
         const sender = process.env.SENDER_EMAIL?.trim() || DEFAULT_SENDER;
-        const allOk = results.every((r) => r.status === "OK");
-        const statusEmoji = allOk ? "🟢" : "🟡";
-        const subject = `${statusEmoji} [SoldeRío] Estado de Servicios e Infraestructura (${new Date().toLocaleDateString("es-CL")})`;
+        const subject = allHealthy
+          ? `🟢 [SoldeRío] Estado de Servicios e Infraestructura (${new Date().toLocaleDateString("es-CL")})`
+          : `🚨 [ALERTA INFRAESTRUCTURA] Servicio no operativo en SoldeRío Energy (${new Date().toLocaleDateString("es-CL")})`;
 
-        const html = generateHealthEmailHtml(results, allOk);
+        const html = generateHealthEmailHtml(results, allOkStatus(results));
 
         const emailRes = await resend.emails.send({
           from: sender,
@@ -206,21 +211,43 @@ async function handleHealthCheck(request: NextRequest) {
     }
   }
 
-  const allHealthy = results.every((r) => r.status === "OK");
+  // Notificación instantánea a Telegram si se detecta alguna anomalía
+  if (!allHealthy) {
+    try {
+      const failedList = results
+        .filter((r) => r.status !== "OK")
+        .map((r) => `• <b>${r.name}</b>: ${r.status}\n  <i>${r.details}</i>`)
+        .join("\n");
 
-  return NextResponse.json({
-    success: true,
-    allHealthy,
-    timestamp: new Date().toISOString(),
-    durationMs: Date.now() - startTime,
-    emailReport: {
-      requested: sendEmail,
-      sent: emailSent,
-      recipient: DEV_RECIPIENT,
-      error: emailError,
+      const tgMessage = `🚨 <b>ALERTA DE INFRAESTRUCTURA - SOLDERÍO</b>\n\nSe ha detectado una degradación en los servicios:\n\n${failedList}\n\n📅 <i>${new Date().toLocaleString("es-CL", { timeZone: "America/Santiago" })}</i>\n⚠️ Se ha enviado un reporte a dev@solderio.cl.`;
+      await sendTelegramMessage(tgMessage);
+    } catch {}
+  }
+
+  return NextResponse.json(
+    {
+      success: true,
+      allHealthy,
+      timestamp: new Date().toISOString(),
+      durationMs: Date.now() - startTime,
+      emailReport: {
+        requested: sendEmail,
+        triggeredByAlert: !allHealthy && !sendEmail,
+        sent: emailSent,
+        recipient: DEV_RECIPIENT,
+        error: emailError,
+      },
+      services: results,
     },
-    services: results,
-  });
+    {
+      // Devolver HTTP 503 si algo falló para que GitHub Actions alerte inmediatamente
+      status: allHealthy ? 200 : 503,
+    }
+  );
+}
+
+function allOkStatus(services: ServiceStatus[]): boolean {
+  return services.every((r) => r.status === "OK");
 }
 
 function generateHealthEmailHtml(services: ServiceStatus[], allOk: boolean): string {
